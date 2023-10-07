@@ -7,10 +7,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Dyrynda\Database\Support\BindsOnUuid;
+use Dyrynda\Database\Support\GeneratesUuid;
+use Dyrynda\Database\Casts\EfficientUuid;
 
+/**
+ * @property string $first_name
+ * @property string $last_name
+ * @property string $username
+ * @property string $email
+ */
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+    use BindsOnUuid;
+    use GeneratesUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -18,8 +29,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'uuid',
+        'first_name',
+        'last_name',
         'email',
+        'username',
         'password',
     ];
 
@@ -39,6 +53,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'uuid' => EfficientUuid::class,
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
