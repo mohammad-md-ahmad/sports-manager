@@ -17,18 +17,16 @@ services:
       - kool_global
   database:
     image: mariadb:10.5
+    container_name: "${COMPOSE_PROJECT_NAME}-db"
     ports:
       - ${KOOL_DATABASE_PORT:-3306}:3306
     environment:
       MARIADB_ROOT_PASSWORD: ${DB_PASSWORD-rootpass}
-      MARIADB_DATABASE: ${DB_DATABASE-database}
-      MARIADB_USER: ${DB_USERNAME-user}
-      MARIADB_PASSWORD: ${DB_PASSWORD-pass}
-      MARIADB_ALLOW_EMPTY_PASSWORD: "yes"
     volumes:
-      - database:/var/lib/mysql:delegated
+      - ./docker/local:/docker-entrypoint-initdb.d
     networks:
       - kool_local
+    ipc: host
     healthcheck:
       test: mysqladmin -p${DB_PASSWORD-pass} ping
   cache:
@@ -40,10 +38,10 @@ services:
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
   node:
-    image: kooldev/node:16
+    image: kooldev/node:18
     command: ["npm", "run", "dev"]
     ports:
-      - "3001:3001"
+      - "${KOOL_NODE_PORT:-3001}:3001"
     volumes:
       - .:/app:delegated
     networks:
