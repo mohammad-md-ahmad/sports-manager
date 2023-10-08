@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Dyrynda\Database\Casts\EfficientUuid;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property string $first_name
@@ -22,6 +23,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
     use BindsOnUuid;
     use GeneratesUuid;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
