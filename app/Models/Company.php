@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
-    use HasFactory;
     use BindsOnUuid;
     use GeneratesUuid;
+    use HasFactory;
     use SoftDeletes;
 
     /**

@@ -2,15 +2,15 @@
 
 namespace App\Models;
 
+use App\Enums\UserType;
+use Dyrynda\Database\Casts\EfficientUuid;
+use Dyrynda\Database\Support\BindsOnUuid;
+use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Dyrynda\Database\Support\BindsOnUuid;
-use Dyrynda\Database\Support\GeneratesUuid;
-use Dyrynda\Database\Casts\EfficientUuid;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Enums\UserType;
 
 /**
  * @property string $first_name
@@ -21,9 +21,9 @@ use App\Enums\UserType;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
     use BindsOnUuid;
     use GeneratesUuid;
+    use HasApiTokens, HasFactory, Notifiable;
     use SoftDeletes;
 
     /**

@@ -10,9 +10,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Address extends Model
 {
-    use HasFactory;
     use BindsOnUuid;
     use GeneratesUuid;
+    use HasFactory;
     use SoftDeletes;
 
     /**

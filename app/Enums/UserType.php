@@ -10,7 +10,7 @@ enum UserType
 
     public function toString()
     {
-        return match($this) {
+        return match ($this) {
             self::ADMIN => __('Admin'),
             self::COMPANY_USER => __('Company User'),
             self::CUSTOMER_USER => __('Customer User'),
