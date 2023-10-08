@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -11,12 +10,14 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Enums\UserType;
 
 /**
  * @property string $first_name
  * @property string $last_name
  * @property string $username
  * @property string $email
+ * @property UserType $type
  */
 class User extends Authenticatable
 {
@@ -37,6 +38,7 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'type',
     ];
 
     /**
@@ -58,5 +60,6 @@ class User extends Authenticatable
         'uuid' => EfficientUuid::class,
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'type' => UserType::class,
     ];
 }

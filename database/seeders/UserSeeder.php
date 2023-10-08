@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -20,6 +21,7 @@ class UserSeeder extends Seeder
             'username' => 'super_admin',
             'email' => 'super_admin@sports-manager.com',
             'password' => Hash::make(Str::random(16)),
+            'type' => UserType::ADMIN->name,
         ]);
     }
 }
