@@ -2,27 +2,28 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserType;
+use Dyrynda\Database\Casts\EfficientUuid;
+use Dyrynda\Database\Support\BindsOnUuid;
+use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use Dyrynda\Database\Support\BindsOnUuid;
-use Dyrynda\Database\Support\GeneratesUuid;
-use Dyrynda\Database\Casts\EfficientUuid;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property string $first_name
  * @property string $last_name
  * @property string $username
  * @property string $email
+ * @property UserType $type
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
     use BindsOnUuid;
     use GeneratesUuid;
+    use HasApiTokens, HasFactory, Notifiable;
     use SoftDeletes;
 
     /**
@@ -37,6 +38,7 @@ class User extends Authenticatable
         'email',
         'username',
         'password',
+        'type',
     ];
 
     /**
@@ -58,5 +60,6 @@ class User extends Authenticatable
         'uuid' => EfficientUuid::class,
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'type' => UserType::class,
     ];
 }

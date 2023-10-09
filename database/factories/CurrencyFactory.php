@@ -17,6 +17,7 @@ class CurrencyFactory extends Factory
     public function definition(): array
     {
         $currencyCode = $this->faker->unique()->currencyCode();
+
         return [
             'name' => $currencyCode,
             'iso_short_code' => $currencyCode,
