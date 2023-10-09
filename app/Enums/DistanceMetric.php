@@ -9,7 +9,7 @@ enum DistanceMetric
 
     public function toString()
     {
-        return match($this) {
+        return match ($this) {
             self::KILOMETRES => __('Kilometres'),
             self::MILES => __('Miles'),
         };

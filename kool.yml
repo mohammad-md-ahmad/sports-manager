@@ -7,6 +7,8 @@ scripts:
   composer: kool exec app composer
   artisan: kool exec app php artisan
   phpunit: kool exec app php ./bin/phpunit
+  pint: kool exec app php ./vendor/bin/pint
+  phpstan: kool exec app php -d memory_limit=512M ./vendor/bin/phpstan
   setup:
     - rsync -u .env.example .env
     - kool start
