@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
 use App\Services\Data\User\GetUserRequest;
+use App\Services\Data\User\UpdateUserRequest;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -43,9 +44,20 @@ class UserService implements UserServiceInterface
         }
     }
 
-    public function update(): array
+    public function update(UpdateUserRequest $data): array
     {
-        return [];
+        try {
+            /** @var User $user */
+            $user = User::findOrFail($data->id);
+
+            $user->update($data->toArray());
+
+            return $user->toArray();
+        } catch (Exception $exception) {
+            Log::error('UserService::update: '.$exception->getMessage());
+
+            throw $exception;
+        }
     }
 
     public function delete(DeleteUserRequest $data): bool

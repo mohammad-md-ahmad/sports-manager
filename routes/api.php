@@ -23,6 +23,7 @@ Route::prefix('users')->group(function () {
 
     Route::post('/', [UserController::class, 'storeAdmin'])->name('users.create-admin');
     Route::get('/{uuid}', [UserController::class, 'get'])->name('users.get');
+    Route::put('/{uuid}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/{uuid}', [UserController::class, 'delete'])->name('users.delete');
 });
 

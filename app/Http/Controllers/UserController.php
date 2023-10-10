@@ -7,6 +7,7 @@ use App\Enums\UserType;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
 use App\Services\Data\User\GetUserRequest;
+use App\Services\Data\User\UpdateUserRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -64,10 +65,26 @@ class UserController extends Controller
         }
     }
 
+    public function update(UpdateUserRequest $request): JsonResponse
+    {
+        try {
+            $user = $this->userService->update($request);
+
+            return response()->json([
+                'message' => __('User has been updated successfully.'),
+                'data' => $user,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to update user: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to update user.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function delete(DeleteUserRequest $request): JsonResponse
     {
         try {
-            $user = $this->userService->delete($request);
+            $this->userService->delete($request);
 
             return response()->json([
                 'message' => __('User has been deleted successfully.'),

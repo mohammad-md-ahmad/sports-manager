@@ -5,6 +5,7 @@ namespace App\Contracts\Services;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
 use App\Services\Data\User\GetUserRequest;
+use App\Services\Data\User\UpdateUserRequest;
 
 interface UserServiceInterface
 {
@@ -12,7 +13,7 @@ interface UserServiceInterface
 
     public function store(CreateUserRequest $data): array;
 
-    public function update(): array;
+    public function update(UpdateUserRequest $data): array;
 
     public function delete(DeleteUserRequest $data): bool;
 }
