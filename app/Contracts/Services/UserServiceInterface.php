@@ -1,16 +1,19 @@
 <?php
 
-namespace App\Contracts;
+namespace App\Contracts\Services;
 
-use App\Models\User;
+use App\Services\Data\User\CreateUserRequest;
+use App\Services\Data\User\DeleteUserRequest;
+use App\Services\Data\User\GetUserRequest;
+use App\Services\Data\User\UpdateUserRequest;
 
 interface UserServiceInterface
 {
-    public function getUser(): ?User;
+    public function get(GetUserRequest $data): array;
 
-    public function store(): array;
+    public function store(CreateUserRequest $data): array;
 
-    public function update(): array;
+    public function update(UpdateUserRequest $data): array;
 
-    public function delete(): bool;
+    public function delete(DeleteUserRequest $data): bool;
 }

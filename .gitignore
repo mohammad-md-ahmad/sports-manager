@@ -17,3 +17,5 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
+/web-app/sports-manager/node_modules
+/mobile-app/SportsManager/node_modules
