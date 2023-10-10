@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use App\Contracts\UserServiceInterface;
+use App\Contracts\Services\UserServiceInterface;
 use App\Services\UserService;
 use Illuminate\Support\ServiceProvider;
 
