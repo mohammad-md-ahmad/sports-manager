@@ -14,7 +14,7 @@ import styles from "../../styles/main";
 
 export default function Dashboard({ navigation }) {
     const onLoginPress = () => {
-      navigation.navigate('Login Screen');
+      navigation.navigate('LoginScreen');
       };
   return (
     <View style={styles.containerView}>

@@ -46,9 +46,9 @@ function App(): JSX.Element {
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           backgroundColor={backgroundStyle.backgroundColor}
         />
-      <Stack.Navigator >
-        <Stack.Screen name="Login Screen" component={LoginScreen} />
-        <Stack.Screen name="Dashboard" component={Dashboard} />
+      <Stack.Navigator initialRouteName="LoginScreen">
+        <Stack.Screen name="LoginScreen" options={{ title: 'Login Screen' }} component={LoginScreen} />
+        <Stack.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
       </Stack.Navigator>
     </NavigationContainer>
   );
