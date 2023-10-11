@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+// use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -15,16 +17,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-Route::prefix('users')->group(function () {
+Route::middleware(['auth:sanctum'])->group(function () {
 
-    Route::post('/', [UserController::class, 'storeAdmin'])->name('users.create-admin');
-    Route::get('/{uuid}', [UserController::class, 'get'])->name('users.get');
-    Route::put('/{uuid}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/{uuid}', [UserController::class, 'delete'])->name('users.delete');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+    // Route::prefix('companies')->group(function () {
+
+    //     Route::post('/', [CompanyController::class, 'store'])->name('companies.create');
+    //     Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
+    //     Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
+    //     Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
+    // });
+
+    Route::prefix('users')->group(function () {
+
+        Route::post('/', [UserController::class, 'storeAdmin'])->name('users.create-admin');
+        Route::get('/{uuid}', [UserController::class, 'get'])->name('users.get');
+        Route::put('/{uuid}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/{uuid}', [UserController::class, 'delete'])->name('users.delete');
+    });
 });
 
 Route::get('/test', function () {
