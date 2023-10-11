@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-// use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\UserController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -23,13 +23,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Route::prefix('companies')->group(function () {
+    Route::prefix('companies')->group(function () {
 
-    //     Route::post('/', [CompanyController::class, 'store'])->name('companies.create');
-    //     Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
-    //     Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
-    //     Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
-    // });
+        Route::post('/', [CompanyController::class, 'store'])->name('companies.create');
+        Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
+        Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
+        Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
+    });
 
     Route::prefix('users')->group(function () {
 
