@@ -1,0 +1,8 @@
+const colors = {
+    PrimaryGreen: '#8dc63f',
+    PrimaryBlue: '#22759c',
+    SecondaryRed: '#c54244',
+    SecondaryPurple: '#a9509f',
+};
+
+export default colors;
