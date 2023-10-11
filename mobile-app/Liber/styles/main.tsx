@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
   loginScreenContainer: {
     flex: 1,
   },
+  text: {
+    color: colors.PrimaryGreen
+  },
   logoText: {
     fontSize: 40,
     fontWeight: "800",
@@ -27,15 +30,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     borderRadius: 5,
     borderWidth: 1,
-    borderColor: colors.Primary2,
-    backgroundColor: colors.Primary1,
-    color: colors.Primary2,
+    borderColor: colors.PrimaryBlue,
+    backgroundColor: colors.PrimaryGreen,
+    color: colors.PrimaryBlue,
     paddingLeft: 10,
     marginTop: 5,
     marginBottom: 5
   },
   loginButton: {
-    backgroundColor: colors.Primary1,
+    backgroundColor: colors.PrimaryGreen,
     borderRadius: 5,
     height: 45,
     marginTop: 10,

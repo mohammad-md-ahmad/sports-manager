@@ -11,18 +11,20 @@ import {
   View,
 } from "react-native";
 import styles from "../../styles/main";
+import colors from "../../styles/colors";
 
-export default function Dashboard({ navigation }) {
-    const onLoginPress = () => {
-      navigation.navigate('LoginScreen');
-      };
+export default function Dashboard({ navigation }): React.JSX.Element {
+  const onLoginPress = () => {
+    navigation.navigate('LoginScreen');
+  };
   return (
     <View style={styles.containerView}>
-          <Text>here is the dashboard</Text>
-         <Button
-              onPress={() => onLoginPress()}
-              title="back"
-            />
+      <Text style={styles.text}>here is the dashboard</Text>
+      <Button
+        onPress={() => onLoginPress()}
+        title="back"
+        color={colors.PrimaryBlue}
+      />
     </View>
   );
 }

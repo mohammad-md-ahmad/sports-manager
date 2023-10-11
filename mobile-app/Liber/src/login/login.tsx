@@ -13,7 +13,7 @@ import {
 import styles from "../../styles/main";
 import colors from "../../styles/colors";
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation }): React.JSX.Element {
   const onLoginPress = () => {
     navigation.navigate('Dashboard');
   };
@@ -39,7 +39,7 @@ export default function LoginScreen({ navigation }) {
             <Button
               onPress={() => onLoginPress()}
               title="Login"
-              color={colors.Primary2}
+              color={colors.PrimaryBlue}
             />
           </View>
         </View>
