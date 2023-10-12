@@ -10,7 +10,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import styles from "../../styles/main";
+import styles from "../../styles/styles";
 import colors from "../../styles/colors";
 
 export default function Dashboard({ navigation }): React.JSX.Element {

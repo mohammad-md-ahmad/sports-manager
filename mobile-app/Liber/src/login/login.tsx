@@ -1,16 +1,16 @@
 import React from "react";
 
 import {
-  Button,
   Keyboard,
   KeyboardAvoidingView,
   Text,
+  Button,
   Image,
   TextInput,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
-import styles from "../../styles/main";
+import styles from "../../styles/styles";
 import colors from "../../styles/colors";
 
 export default function LoginScreen({ navigation }): React.JSX.Element {
@@ -29,10 +29,12 @@ export default function LoginScreen({ navigation }): React.JSX.Element {
             />
             <TextInput
               placeholder="Username"
+              placeholderTextColor={colors.White}
               style={styles.loginFormTextInput}
             />
             <TextInput
               placeholder="Password"
+              placeholderTextColor={colors.White}
               style={styles.loginFormTextInput}
               secureTextEntry={true}
             />

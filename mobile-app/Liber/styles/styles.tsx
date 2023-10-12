@@ -1,4 +1,5 @@
 import colors from "./colors";
+import fonts from "./fonts";
 const React = require("react-native");
 
 const { StyleSheet } = React;
@@ -7,13 +8,14 @@ const styles = StyleSheet.create({
   containerView: {
     flex: 1,
     alignItems: "center",
-    backgroundColor: "#ffffff",
+    backgroundColor: colors.White,
   },
   loginScreenContainer: {
     flex: 1,
   },
   text: {
-    color: colors.PrimaryGreen
+    color: colors.PrimaryGreen,
+    fontFamily: fonts.Poppins.bold
   },
   logoText: {
     fontSize: 40,
@@ -48,7 +50,6 @@ const styles = StyleSheet.create({
   logo: {
     marginTop: 100,
     marginBottom: 30,
-    textAlign: "center",
     width: 206,
     height: 120,
     resizeMode: 'cover',
