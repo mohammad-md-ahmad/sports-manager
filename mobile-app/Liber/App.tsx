@@ -10,6 +10,8 @@ import {
   Image,
   StatusBar,
   useColorScheme,
+  View,
+  ScrollView,
 } from 'react-native';
 
 import {
@@ -19,8 +21,9 @@ import LoginScreen from './src/login/login';
 import { NavigationContainer } from '@react-navigation/native';
 //import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Dashboard from './src/dashboard/dashboard';
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
 import styles from './styles/styles';
+import Content from './src/drawer/content';
 
 function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -40,18 +43,20 @@ function App(): JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
-      <Drawer.Navigator initialRouteName="Dashboard">
-        <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
-        <Drawer.Screen name="LoginScreen" options={{ title: 'Login Screen' }} component={LoginScreen} />
-        <Drawer.Screen name="About" options={{ title: 'About' }} component={Dashboard} />
-      </Drawer.Navigator>
 
-      {/* 
-      <Stack.Navigator initialRouteName="LoginScreen">
-        <Stack.Screen name="LoginScreen" options={{ title: 'Login Screen' }} component={LoginScreen} />
-        <Stack.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
-        <Stack.Screen name="About" options={{ title: 'About' }} component={Dashboard} />
-      </Stack.Navigator> */}
+      <Drawer.Navigator
+        drawerContent={(props) => <Content {...props} />}
+        initialRouteName="Dashboard">
+        <Drawer.Group>
+          <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
+          <Drawer.Screen name="LoginScreen" options={{ title: 'Login Screen' }} component={LoginScreen} />
+
+        </Drawer.Group>
+
+        <Drawer.Group>
+          <Drawer.Screen name="About" options={{ title: 'About' }} component={Dashboard} />
+        </Drawer.Group>
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }

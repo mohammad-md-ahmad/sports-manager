@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
   },
   loginFormView: {
     flex: 1,
+    width: 206,
   },
   loginFormTextInput: {
     height: 43,
@@ -34,26 +35,38 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.PrimaryBlue,
     backgroundColor: colors.PrimaryGreen,
-    color: colors.PrimaryBlue,
+    color: colors.White,
     paddingLeft: 10,
     marginTop: 5,
     marginBottom: 5
   },
   loginButton: {
-    backgroundColor: colors.PrimaryGreen,
+    backgroundColor: colors.PrimaryBlue,
     borderRadius: 5,
     height: 45,
     marginTop: 10,
-    width: 350,
     alignItems: "center"
   },
   logo: {
     marginTop: 100,
     marginBottom: 30,
-    width: 206,
+    width: 150,
     height: 120,
-    resizeMode: 'cover',
-  }
+    resizeMode: 'contain',
+  },
+  drawerContainer: {
+    flex: 1,
+    height: '10%'
+  },
+  drawerImageConatiner: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  headerImage: {
+    width: 150,
+    height: 120,
+    resizeMode: 'contain',
+  },
 });
 
 export default styles;

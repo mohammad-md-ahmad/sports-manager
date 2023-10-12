@@ -4,6 +4,7 @@ const colors = {
     SecondaryRed: '#c54244',
     SecondaryPurple: '#a9509f',
     White: '#ffffff',
+    OffWhite: '#f0f0f0',
 };
 
 export default colors;

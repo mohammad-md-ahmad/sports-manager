@@ -4,7 +4,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Text,
-  Button,
   Image,
   TextInput,
   TouchableWithoutFeedback,
@@ -12,6 +11,7 @@ import {
 } from "react-native";
 import styles from "../../styles/styles";
 import colors from "../../styles/colors";
+import { Button } from "react-native-elements";
 
 export default function LoginScreen({ navigation }): React.JSX.Element {
   const onLoginPress = () => {
@@ -23,25 +23,27 @@ export default function LoginScreen({ navigation }): React.JSX.Element {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.loginScreenContainer}>
           <View style={styles.loginFormView}>
-            <Image
-              source={require('./../../assets/images/liber_logo.png')}
-              style={styles.logo}
-            />
+            <View style={styles.drawerImageConatiner} >
+              <Image
+                source={require('./../../assets/images/liber_logo.png')}
+                style={styles.logo}
+              />
+            </View>
             <TextInput
               placeholder="Username"
-              placeholderTextColor={colors.White}
+              placeholderTextColor={colors.OffWhite}
               style={styles.loginFormTextInput}
             />
             <TextInput
               placeholder="Password"
-              placeholderTextColor={colors.White}
+              placeholderTextColor={colors.OffWhite}
               style={styles.loginFormTextInput}
               secureTextEntry={true}
             />
             <Button
               onPress={() => onLoginPress()}
               title="Login"
-              color={colors.PrimaryBlue}
+              buttonStyle={styles.loginButton}
             />
           </View>
         </View>
