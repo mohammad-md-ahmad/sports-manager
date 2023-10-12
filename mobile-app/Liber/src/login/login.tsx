@@ -4,7 +4,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Text,
-  Image,
+  Image,Alert,
   TextInput,
   TouchableWithoutFeedback,
   View,
@@ -12,10 +12,23 @@ import {
 import styles from "../../styles/styles";
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
+import AuthService from "../../api/AuthService";
 
 export default function LoginScreen({ navigation }): React.JSX.Element {
+
+  const authService = new AuthService();
+
   const onLoginPress = () => {
-    navigation.navigate('Dashboard');
+    authService.login('super_admin', 'P@ssw0rd').then((response) => {
+      // Handle a successful API response
+      console.log('User created:', response.data);
+      navigation.navigate('Dashboard');
+    })
+      .catch((error) => {
+        // Handle API request errors here
+        console.error('Error creating user:', error);
+      });;
+
   };
 
   return (
