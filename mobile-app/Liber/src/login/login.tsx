@@ -25,7 +25,6 @@ export default function LoginScreen(): React.JSX.Element {
   const [password, setPassword] = useState('P@ssw0rd');
 
   const { login } = useAuth();
-  const { setGlobalLoading } = useLoading();
   const onLoginPress = () => {
     authService.login(username, password).then((response) => {
       // Handle a successful API response

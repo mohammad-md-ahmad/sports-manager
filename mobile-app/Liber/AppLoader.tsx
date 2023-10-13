@@ -23,6 +23,8 @@ import Content from './src/drawer/content';
 import colors from './styles/colors';
 import About from './src/about/about';
 import { useAuth } from './AuhtContext';
+import Loader from './src/common/loader';
+import { useLoading } from './LoadingContext';
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -34,9 +36,11 @@ function AppLoader(): JSX.Element {
 
     const Drawer = createDrawerNavigator();
     const { isAuthenticated } = useAuth();
+    const { loading } = useLoading();
 
     return (
         <NavigationContainer>
+            <Loader loading={loading} />
             <StatusBar
                 barStyle={isDarkMode ? 'light-content' : 'dark-content'}
                 backgroundColor={backgroundStyle.backgroundColor}
