@@ -1,27 +1,18 @@
 import React from "react";
 
 import {
-    Keyboard,
-    KeyboardAvoidingView,
-    Text,
-    Button,
     Image,
-    TextInput,
-    TouchableWithoutFeedback,
     View,
     ScrollView,
 } from "react-native";
 import styles from "../../styles/styles";
-import { DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
-import Dashboard from "../dashboard/dashboard";
-import LoginScreen from "../login/login";
+import { DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
+import { useAuth } from "../../AuhtContext";
 
-export default function Content(props, { navigation }): React.JSX.Element {
-    const onLoginPress = () => {
-        navigation.navigate('Dashboard');
-    };
-
+export default function Content(props: any): React.JSX.Element {
+    const { logout } = useAuth();
     const Drawer = createDrawerNavigator();
+
     return (
         <View style={styles.drawerContainer} >
             <View style={styles.drawerImageConatiner} >
@@ -32,7 +23,12 @@ export default function Content(props, { navigation }): React.JSX.Element {
             </View>
             <ScrollView>
                 <DrawerItemList {...props} />
+                <DrawerItem
+                    label="Logout"
+                    onPress={() => logout()}
+                />
             </ScrollView>
+
         </View>
     );
 }

@@ -1,10 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 
 import {
   Keyboard,
   KeyboardAvoidingView,
-  Text,
-  Image,Alert,
+  Image,
   TextInput,
   TouchableWithoutFeedback,
   View,
@@ -14,20 +13,29 @@ import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
 import AuthService from "../../api/AuthService";
 
-export default function LoginScreen({ navigation }): React.JSX.Element {
+import { useAuth } from "../../AuhtContext";
+import { useLoading } from "../../LoadingContext";
+
+
+export default function LoginScreen(): React.JSX.Element {
 
   const authService = new AuthService();
 
+  const [username, setUsername] = useState('super_admin');
+  const [password, setPassword] = useState('P@ssw0rd');
+
+  const { login } = useAuth();
+  const { setGlobalLoading } = useLoading();
   const onLoginPress = () => {
-    authService.login('super_admin', 'P@ssw0rd').then((response) => {
+    authService.login(username, password).then((response) => {
       // Handle a successful API response
-      console.log('User created:', response.data);
-      navigation.navigate('Dashboard');
+      console.log('Error creating user:', response.data.data.token);
+      login(response.data.data.token);
     })
       .catch((error) => {
         // Handle API request errors here
         console.error('Error creating user:', error);
-      });;
+      });
 
   };
 
@@ -46,12 +54,16 @@ export default function LoginScreen({ navigation }): React.JSX.Element {
               placeholder="Username"
               placeholderTextColor={colors.OffWhite}
               style={styles.loginFormTextInput}
+              value={username}
+              onChangeText={(text) => setUsername(text)}
             />
             <TextInput
               placeholder="Password"
               placeholderTextColor={colors.OffWhite}
               style={styles.loginFormTextInput}
               secureTextEntry={true}
+              value={password}
+              onChangeText={(text) => setPassword(text)}
             />
             <Button
               onPress={() => onLoginPress()}
