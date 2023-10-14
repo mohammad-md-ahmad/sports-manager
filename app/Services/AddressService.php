@@ -3,68 +3,81 @@
 namespace App\Services;
 
 use App\Contracts\Services\AddressServiceInterface;
+use App\Models\Address;
 use App\Models\Company;
-use App\Services\Data\Company\CreateCompanyRequest;
+use App\Services\Data\Address\CreateAddressRequest;
 use App\Services\Data\Company\DeleteCompanyRequest;
 use App\Services\Data\Company\GetCompanyRequest;
 use App\Services\Data\Company\UpdateCompanyRequest;
 use Exception;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AddressService implements AddressServiceInterface
 {
-    public function get(GetCompanyRequest $data): array
+    // public function get(GetCompanyRequest $data): array
+    // {
+    //     try {
+    //         /** @var Company $company */
+    //         $company = Company::findOrFail($data->id);
+
+    //         return $company->toArray();
+    //     } catch (Exception $exception) {
+    //         Log::error('CompanyService::get: '.$exception->getMessage());
+
+    //         throw $exception;
+    //     }
+    // }
+
+    public function store(CreateAddressRequest $data): Address
     {
         try {
-            /** @var Company $company */
-            $company = Company::findOrFail($data->id);
+            DB::beginTransaction();
 
-            return $company->toArray();
+            /** @var Address $address */
+            $address = new Address();
+
+            $address->fill($data->toArray());
+            $address->geocode_data = json_encode($data->geocode_data);
+
+            $address->save();
+
+            DB::commit();
+
+            return $address;
         } catch (Exception $exception) {
-            Log::error('CompanyService::get: '.$exception->getMessage());
+            DB::rollBack();
+
+            Log::error('AddressService::store: '.$exception->getMessage());
 
             throw $exception;
         }
     }
 
-    public function store(CreateCompanyRequest $data): array
-    {
-        try {
-            /** @var Company $company */
-            $company = Company::create($data->toArray());
+    // public function update(UpdateCompanyRequest $data): array
+    // {
+    //     try {
+    //         /** @var Company $company */
+    //         $company = Company::findOrFail($data->id);
 
-            return $company->toArray();
-        } catch (Exception $exception) {
-            Log::error('CompanyService::store: '.$exception->getMessage());
+    //         $company->update($data->toArray());
 
-            throw $exception;
-        }
-    }
+    //         return $company->toArray();
+    //     } catch (Exception $exception) {
+    //         Log::error('CompanyService::update: '.$exception->getMessage());
 
-    public function update(UpdateCompanyRequest $data): array
-    {
-        try {
-            /** @var Company $company */
-            $company = Company::findOrFail($data->id);
+    //         throw $exception;
+    //     }
+    // }
 
-            $company->update($data->toArray());
+    // public function delete(DeleteCompanyRequest $data): bool
+    // {
+    //     try {
+    //         return Company::findOrFail($data->id)->delete();
+    //     } catch (Exception $exception) {
+    //         Log::error('CompanyService::delete: '.$exception->getMessage());
 
-            return $company->toArray();
-        } catch (Exception $exception) {
-            Log::error('CompanyService::update: '.$exception->getMessage());
-
-            throw $exception;
-        }
-    }
-
-    public function delete(DeleteCompanyRequest $data): bool
-    {
-        try {
-            return Company::findOrFail($data->id)->delete();
-        } catch (Exception $exception) {
-            Log::error('CompanyService::delete: '.$exception->getMessage());
-
-            throw $exception;
-        }
-    }
+    //         throw $exception;
+    //     }
+    // }
 }

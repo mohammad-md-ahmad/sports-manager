@@ -31,7 +31,6 @@ class Address extends Model
         'city',
         'region',
         'postcode',
-        'geocode_data',
         'country_id',
     ];
 

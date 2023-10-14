@@ -15,12 +15,7 @@ return new class extends Migration
             $table->id();
             $table->efficientUuid('uuid')->unique();
             $table->string('name');
-            $table->string('name_ar')->nullable();
             $table->text('description')->nullable();
-            $table->bigInteger('address_id', false, true)->index('companies_address_id');
-            $table->foreign('address_id')->references('id')->on('addresses')->onUpdate('restrict')->onDelete('restrict');
-            $table->unique(['name', 'address_id']);
-            $table->unique(['name_ar', 'address_id']);
             $table->string('logo')->nullable();
             $table->timestamps();
             $table->softDeletes();

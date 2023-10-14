@@ -24,9 +24,7 @@ class Company extends Model
     protected $fillable = [
         'uuid',
         'name',
-        'name_ar',
         'description',
-        'address_id',
         'logo',
     ];
 
