@@ -28,7 +28,7 @@ class UserService implements UserServiceInterface
         }
     }
 
-    public function store(CreateUserRequest $data): array
+    public function store(CreateUserRequest $data): User
     {
         try {
             $data->password = Hash::make($data->password);
@@ -36,7 +36,7 @@ class UserService implements UserServiceInterface
             /** @var User $user */
             $user = User::create($data->toArray());
 
-            return $user->toArray();
+            return $user;
         } catch (Exception $exception) {
             Log::error('UserService::store: '.$exception->getMessage());
 

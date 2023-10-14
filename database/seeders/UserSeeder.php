@@ -6,7 +6,6 @@ use App\Enums\UserType;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserSeeder extends Seeder
 {
@@ -15,12 +14,13 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
+        User::updateOrCreate([
+            'username' => 'super_admin',
+        ], [
             'first_name' => 'Super',
             'last_name' => 'Admin',
-            'username' => 'super_admin',
             'email' => 'super_admin@sports-manager.com',
-            'password' => Hash::make(Str::random(16)),
+            'password' => Hash::make('P@ssw0rd'),
             'type' => UserType::ADMIN->name,
         ]);
     }

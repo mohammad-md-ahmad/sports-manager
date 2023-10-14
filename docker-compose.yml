@@ -37,16 +37,6 @@ services:
       - kool_local
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-  node:
-    image: kooldev/node:18
-    command: ["npm", "run", "dev"]
-    ports:
-      - "${KOOL_NODE_PORT:-3001}:3001"
-    volumes:
-      - .:/app:delegated
-    networks:
-      - kool_local
-      - kool_global
 #
 # Networks definitions
 #
