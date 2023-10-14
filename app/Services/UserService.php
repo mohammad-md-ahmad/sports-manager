@@ -22,7 +22,7 @@ class UserService implements UserServiceInterface
 
             return $user->toArray();
         } catch (Exception $exception) {
-            Log::error('UserService::getUser: '.$exception->getMessage());
+            Log::error('UserService::get: '.$exception->getMessage());
 
             throw $exception;
         }
