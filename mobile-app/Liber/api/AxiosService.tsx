@@ -1,9 +1,12 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from 'axios';
+import Constants from '../helpers/constants';
+import { useLoading } from '../LoadingContext';
 
 abstract class AxiosService {
   private instance: AxiosInstance;
 
-  constructor(baseURL: string) {
+  constructor() {
+    let baseURL = Constants.apiUrl;
     this.instance = axios.create({
       baseURL,
     });
@@ -12,9 +15,11 @@ abstract class AxiosService {
   }
 
   private setupInterceptors() {
+    const { setGlobalLoading } = useLoading();
     this.instance.interceptors.request.use(
       (config) => {
         // You can modify the request config here (e.g., add headers)
+        setGlobalLoading(true);
         return config;
       },
       (error) => {
@@ -25,6 +30,7 @@ abstract class AxiosService {
     this.instance.interceptors.response.use(
       (response) => {
         // You can handle successful responses here
+        setGlobalLoading(false);
         return response;
       },
       (error) => {
