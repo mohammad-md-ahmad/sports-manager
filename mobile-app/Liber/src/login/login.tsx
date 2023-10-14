@@ -7,14 +7,60 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   View,
+  StyleSheet,
 } from "react-native";
-import styles from "../../styles/styles";
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
 import AuthService from "../../api/AuthService";
 
 import { useAuth } from "../../AuhtContext";
-import { useLoading } from "../../LoadingContext";
+import globalStyles from "../../styles/styles";
+
+const styles = StyleSheet.create({
+  containerView: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: colors.White,
+  },
+  loginScreenContainer: {
+    flex: 1,
+  },
+  loginFormView: {
+    flex: 1,
+    width: 206,
+  },
+  loginFormTextInput: {
+    height: 43,
+    fontSize: 14,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.PrimaryBlue,
+    backgroundColor: colors.PrimaryGreen,
+    color: colors.White,
+    paddingLeft: 10,
+    marginTop: 5,
+    marginBottom: 5
+  },
+  loginButton: {
+    ...globalStyles.button,
+    backgroundColor: colors.PrimaryBlue,
+    borderRadius: 5,
+    height: 45,
+    marginTop: 10,
+    alignItems: "center"
+  },
+  imageConatiner: {
+    alignItems: "center",
+    marginTop: 10,
+  },
+  logo: {
+    marginTop: 100,
+    marginBottom: 30,
+    width: 150,
+    height: 120,
+    resizeMode: 'contain',
+  },
+});
 
 
 export default function LoginScreen(): React.JSX.Element {
@@ -43,7 +89,7 @@ export default function LoginScreen(): React.JSX.Element {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.loginScreenContainer}>
           <View style={styles.loginFormView}>
-            <View style={styles.drawerImageConatiner} >
+            <View style={styles.imageConatiner} >
               <Image
                 source={require('./../../assets/images/liber_logo.png')}
                 style={styles.logo}
@@ -75,3 +121,4 @@ export default function LoginScreen(): React.JSX.Element {
     </KeyboardAvoidingView>
   );
 }
+

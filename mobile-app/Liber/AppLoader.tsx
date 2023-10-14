@@ -25,6 +25,9 @@ import About from './src/about/about';
 import { useAuth } from './AuhtContext';
 import Loader from './src/common/loader';
 import { useLoading } from './LoadingContext';
+import Profile from './src/company/profile';
+import ProfileForm from './src/company/profileForm';
+import { createStackNavigator } from '@react-navigation/stack';
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -35,6 +38,7 @@ function AppLoader(): JSX.Element {
     };
 
     const Drawer = createDrawerNavigator();
+    const Stack = createStackNavigator();
     const { isAuthenticated } = useAuth();
     const { loading } = useLoading();
 
@@ -53,6 +57,7 @@ function AppLoader(): JSX.Element {
                         screenOptions={{ headerStyle: { backgroundColor: colors.PrimaryGreen } }}>
 
                         <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
+                        <Drawer.Screen name="Profile" options={{ title: 'Profile' }} component={Profile} />
 
                         <Drawer.Group
                         // screenOptions={({ navigation }) => ({
@@ -63,6 +68,7 @@ function AppLoader(): JSX.Element {
                             <Drawer.Screen name="About" options={{ title: 'About' }} component={About} />
                         </Drawer.Group>
                     </Drawer.Group>
+                    <Drawer.Screen name="ProfileForm"  options={{ title: 'Profile Form' }} component={ProfileForm} />
                 </Drawer.Navigator> :
                 <LoginScreen />}
         </NavigationContainer>

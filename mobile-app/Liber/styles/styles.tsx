@@ -4,7 +4,7 @@ const React = require("react-native");
 
 const { StyleSheet } = React;
 
-const styles = StyleSheet.create({
+const globalStyles = StyleSheet.create({
   containerView: {
     flex: 1,
     alignItems: "center",
@@ -40,8 +40,9 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5
   },
-  loginButton: {
+  button: {
     backgroundColor: colors.PrimaryBlue,
+    width:150,
     borderRadius: 5,
     height: 45,
     marginTop: 10,
@@ -69,4 +70,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default styles;
+export default globalStyles;
