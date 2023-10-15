@@ -35,12 +35,7 @@ class AddressService implements AddressServiceInterface
             DB::beginTransaction();
 
             /** @var Address $address */
-            $address = new Address();
-
-            $address->fill($data->toArray());
-            $address->geocode_data = json_encode($data->geocode_data);
-
-            $address->save();
+            $address = Address::create($data->toArray());
 
             DB::commit();
 
