@@ -2,18 +2,17 @@
 
 namespace App\Contracts\Services;
 
-use App\Services\Data\Company\CreateCompanyRequest;
-use App\Services\Data\Company\DeleteCompanyRequest;
-use App\Services\Data\Company\GetCompanyRequest;
-use App\Services\Data\Company\UpdateCompanyRequest;
+use App\Models\Address;
+use App\Services\Data\Address\CreateAddressRequest;
+use App\Services\Data\Address\UpdateAddressRequest;
 
 interface AddressServiceInterface
 {
-    public function get(GetCompanyRequest $data): array;
+    // public function get( $data): array;
 
-    public function store(CreateCompanyRequest $data): array;
+    public function store(CreateAddressRequest $data): Address;
 
-    public function update(UpdateCompanyRequest $data): array;
+    public function update(UpdateAddressRequest $data): Address;
 
-    public function delete(DeleteCompanyRequest $data): bool;
+    // public function delete(DeleteCompanyRequest $data): bool;
 }

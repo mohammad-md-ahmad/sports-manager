@@ -1,8 +1,8 @@
 -- create databases
-DROP DATABASE IF EXISTS `sports_manager`;
-DROP DATABASE IF EXISTS `sports_manager_test`;
-CREATE DATABASE IF NOT EXISTS `sports_manager`;
-CREATE DATABASE IF NOT EXISTS `sports_manager_test`;
+DROP DATABASE IF EXISTS `liber`;
+DROP DATABASE IF EXISTS `liber_test`;
+CREATE DATABASE IF NOT EXISTS `liber`;
+CREATE DATABASE IF NOT EXISTS `liber_test`;
 
-CREATE USER 'sports_manager'@'%' IDENTIFIED BY '7oPZExu1K2nxct';
-GRANT ALL PRIVILEGES ON `sports_manager%`.* TO 'sports_manager'@'%';
+CREATE USER 'liber'@'%' IDENTIFIED BY '7oPZExu1K2nxct';
+GRANT ALL PRIVILEGES ON `liber%`.* TO 'liber'@'%';

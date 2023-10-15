@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Contracts\Services\CompanyServiceInterface;
-use App\Services\Data\Company\CreateCompanyRequest;
-use App\Services\Data\Company\UpdateCompanyRequest;
+use App\Contracts\Services\CompanyFacilityServiceInterface;
+use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
-class CompanyController extends Controller
+class CompanyFacilityController extends Controller
 {
     public function __construct(
-        protected CompanyServiceInterface $companyService
+        protected CompanyFacilityServiceInterface $companyFacilityService
     ) {
     }
 
@@ -33,37 +34,37 @@ class CompanyController extends Controller
     //     }
     // }
 
-    public function store(CreateCompanyRequest $request): JsonResponse
+    public function store(CreateCompanyFacilityRequest $request): JsonResponse
     {
         try {
-            $data = $this->companyService->store($request);
+            $data = $this->companyFacilityService->store($request);
 
             return response()->json([
-                'message' => __('Company has been created successfully.'),
+                'message' => __('Company Facility has been created successfully.'),
                 'data' => $data->toArray(),
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
-            Log::error('Unable to store Company: '.$exception->getMessage());
+            Log::error('Unable to store Company Facility : '.$exception->getMessage());
 
-            return response()->json(['message' => __('Failed to create Company.')], Response::HTTP_BAD_REQUEST);
+            return response()->json(['message' => __('Failed to create Company Facility .')], Response::HTTP_BAD_REQUEST);
         }
     }
 
-    public function update(UpdateCompanyRequest $request): JsonResponse
-    {
-        try {
-            $data = $this->companyService->update($request);
+    // public function update(UpdateCompanyRequest $request): JsonResponse
+    // {
+    //     try {
+    //         $data = $this->companyService->update($request);
 
-            return response()->json([
-                'message' => __('Company has been updated successfully.'),
-                'data' => $data->toArray(),
-            ], Response::HTTP_OK);
-        } catch (Exception $exception) {
-            Log::error('Unable to update Company: '.$exception->getMessage());
+    //         return response()->json([
+    //             'message' => __('Company has been updated successfully.'),
+    //             'data' => $data->toArray(),
+    //         ], Response::HTTP_OK);
+    //     } catch (Exception $exception) {
+    //         Log::error('Unable to update Company: '.$exception->getMessage());
 
-            return response()->json(['message' => __('Failed to update Company.')], Response::HTTP_BAD_REQUEST);
-        }
-    }
+    //         return response()->json(['message' => __('Failed to update Company.')], Response::HTTP_BAD_REQUEST);
+    //     }
+    // }
 
     // public function delete(DeleteUserRequest $request): JsonResponse
     // {

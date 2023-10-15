@@ -4,7 +4,7 @@ const React = require("react-native");
 
 const { StyleSheet } = React;
 
-const styles = StyleSheet.create({
+const globalStyles = StyleSheet.create({
   containerView: {
     flex: 1,
     alignItems: "center",
@@ -16,6 +16,26 @@ const styles = StyleSheet.create({
   text: {
     color: colors.PrimaryGreen,
     fontFamily: fonts.Poppins.bold
+  },
+  inputText: {
+    height: 43,
+    fontSize: 14,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.PrimaryBlue,
+    backgroundColor: colors.PrimaryGreen,
+    color: colors.White,
+    paddingLeft: 10,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  button: {
+    backgroundColor: colors.PrimaryBlue,
+    width: 150,
+    borderRadius: 5,
+    height: 45,
+    marginTop: 10,
+    alignItems: "center"
   },
   logoText: {
     fontSize: 40,
@@ -40,13 +60,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5
   },
-  loginButton: {
-    backgroundColor: colors.PrimaryBlue,
-    borderRadius: 5,
-    height: 45,
-    marginTop: 10,
-    alignItems: "center"
-  },
+
   logo: {
     marginTop: 100,
     marginBottom: 30,
@@ -69,4 +83,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default styles;
+export default globalStyles;

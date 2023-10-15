@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\JsonCast;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -23,6 +24,7 @@ class CompanyFacility extends Model
      */
     protected $fillable = [
         'uuid',
+        'name',
         'company_id',
         'type',
         'details',
@@ -35,5 +37,6 @@ class CompanyFacility extends Model
      */
     protected $casts = [
         'uuid' => EfficientUuid::class,
+        'details' => JsonCast::class,
     ];
 }

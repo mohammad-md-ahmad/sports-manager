@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\UserServiceInterface;
@@ -23,16 +25,16 @@ class UserController extends Controller
     public function get(GetUserRequest $request): JsonResponse
     {
         try {
-            $user = $this->userService->get($request);
+            $data = $this->userService->get($request);
 
             return response()->json([
                 'message' => __('User has been retrieved successfully.'),
-                'data' => $user,
+                'data' => $data->toArray(),
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error('Unable to retrieve user: '.$exception->getMessage());
 
-            return response()->json(['message' => __('Failed to retrieve user.')], Response::HTTP_BAD_REQUEST);
+            return response()->json(['message' => __('Failed to retrieve User.')], Response::HTTP_BAD_REQUEST);
         }
     }
 
