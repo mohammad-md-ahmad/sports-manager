@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     StatusBar,
     useColorScheme,
@@ -18,12 +18,16 @@ import About from './src/about/about';
 import { useAuth } from './AuhtContext';
 import Loader from './src/common/loader';
 import { useLoading } from './LoadingContext';
-import Profile from './src/company/profile';
-import ProfileForm from './src/company/profileForm';
+
 import { createStackNavigator } from '@react-navigation/stack';
 import Signup from './src/login/signup';
 import Facilities from './src/facilities/facilities';
 import FacilityForm from './src/facilities/facilityForm';
+import CompanyProfile from './src/company/companyProfile';
+import CompanyProfileForm from './src/company/companyProfileForm';
+import { getUserData } from './helpers/userDataManage';
+import UserProfileForm from './src/user/userProfileForm';
+import UserProfile from './src/user/userProfile';
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -41,13 +45,31 @@ function AppLoader(): JSX.Element {
     const ProfileStack = createStackNavigator();
     const FacilitiesStack = createStackNavigator();
 
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+        getUserData().then((data: string | null) => {
+            setUserData(data === null ? null : JSON.parse(data));
+        });
+    });
+
+
     function ProfileNavigation() {
-        return (
-            <ProfileStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
-                <ProfileStack.Screen name="Profile" options={{ title: 'Profile' }} component={Profile} />
-                <ProfileStack.Screen name="ProfileForm" options={{ title: 'Profile Form' }} component={ProfileForm} />
-            </ProfileStack.Navigator>
-        );
+
+        if (userData?.type == 'COMPANY' || true)
+            return (
+                <ProfileStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
+                    <ProfileStack.Screen name="CompanyProfile" options={{ title: 'Profile' }} component={CompanyProfile} />
+                    <ProfileStack.Screen name="CompanyProfileForm" options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
+                </ProfileStack.Navigator>
+            );
+        else
+            return (
+                <ProfileStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
+                    <ProfileStack.Screen name="UserProfile" options={{ title: 'Profile' }} component={UserProfile} />
+                    <ProfileStack.Screen name="UserProfileForm" options={{ title: 'Profile Form' }} component={UserProfileForm} />
+                </ProfileStack.Navigator>
+            );
     }
 
     function FacilitiesNavigation() {

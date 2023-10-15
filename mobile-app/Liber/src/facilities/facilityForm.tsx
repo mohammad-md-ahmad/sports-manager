@@ -4,9 +4,11 @@ import {
     ScrollView,
     StyleSheet,
     TextInput,
+    View,
 } from "react-native";
 import { Button } from "react-native-elements";
 import FacilityService from "../../api/FacilityService";
+import globalStyles from "../../styles/styles";
 
 interface FormData {
     name: string;
@@ -52,15 +54,15 @@ export default function FacilityForm(): React.JSX.Element {
             // Handle nested objects
             const [parentField, nestedField] = field.split('.');
             setFormData({
-              ...formData,
-              [parentField]: {
-                ...formData[parentField],
-                [nestedField]: value,
-              },
+                ...formData,
+                [parentField]: {
+                    ...formData[parentField],
+                    [nestedField]: value,
+                },
             });
-          } else {
+        } else {
             setFormData({ ...formData, [field]: value });
-          }
+        }
     };
 
     const handleSubmit = () => {
@@ -72,74 +74,76 @@ export default function FacilityForm(): React.JSX.Element {
     };
 
     return (
-        <ScrollView style={styles.container}>
-            <TextInput
-                value={formData.name}
-                onChangeText={(text) => handleInputChange('name', text)}
-                placeholder="Name"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.type}
-                onChangeText={(text) => handleInputChange('type', text)}
-                placeholder="Type"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.details.length}
-                onChangeText={(text) => handleInputChange('details.length', text)}
-                placeholder="Length (in Meters)"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.details.width}
-                onChangeText={(text) => handleInputChange('details.width', text)}
-                placeholder="Width (in Meters)"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.createAddressRequest.line_1}
-                onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
-                placeholder="Line 1"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.createAddressRequest.line_2}
-                onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
-                placeholder="Line 2"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.createAddressRequest.line_3}
-                onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
-                placeholder="Line 3"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.createAddressRequest.city}
-                onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
-                placeholder="City"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.createAddressRequest.region}
-                onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
-                placeholder="Region / State"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.createAddressRequest.postcode}
-                onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
-                placeholder="Post Code"
-                style={styles.input}
-            />
-            <TextInput
-                value={formData.createAddressRequest.country_uuid}
-                onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
-                placeholder="Country"
-                style={styles.input}
-            />
-            <Button onPress={handleSubmit} title="Submit" style={styles.button} />
+        <ScrollView >
+            <View style={styles.container}>
+                <TextInput
+                    value={formData.name}
+                    onChangeText={(text) => handleInputChange('name', text)}
+                    placeholder="Name"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.type}
+                    onChangeText={(text) => handleInputChange('type', text)}
+                    placeholder="Type"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.details.length}
+                    onChangeText={(text) => handleInputChange('details.length', text)}
+                    placeholder="Length (in Meters)"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.details.width}
+                    onChangeText={(text) => handleInputChange('details.width', text)}
+                    placeholder="Width (in Meters)"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.createAddressRequest.line_1}
+                    onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
+                    placeholder="Line 1"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.createAddressRequest.line_2}
+                    onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
+                    placeholder="Line 2"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.createAddressRequest.line_3}
+                    onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
+                    placeholder="Line 3"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.createAddressRequest.city}
+                    onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
+                    placeholder="City"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.createAddressRequest.region}
+                    onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
+                    placeholder="Region / State"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.createAddressRequest.postcode}
+                    onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
+                    placeholder="Post Code"
+                    style={styles.input}
+                />
+                <TextInput
+                    value={formData.createAddressRequest.country_uuid}
+                    onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
+                    placeholder="Country"
+                    style={styles.input}
+                />
+                <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.button} />
+            </View>
         </ScrollView>
     );
 }
@@ -149,16 +153,16 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     button: {
-        backgroundColor: 'dodgerblue',
-        borderRadius: 5,
-        marginTop: 20,
+        ...globalStyles.button,
+        width: '100%'
     },
     input: {
-        backgroundColor: 'transparent',
-        borderColor: 'dodgerblue',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginBottom: 10,
-        paddingLeft: 10,
+        ...globalStyles.inputText,
+        // backgroundColor: 'transparent',
+        // borderColor: 'dodgerblue',
+        // borderWidth: 1,
+        // borderRadius: 5,
+        // marginBottom: 10,
+        // paddingLeft: 10,
     },
 });

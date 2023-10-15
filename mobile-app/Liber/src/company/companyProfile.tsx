@@ -4,8 +4,9 @@ import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import colors from '../../styles/colors';
 
-function Profile() {
+export default function CompanyProfile() {
     // Extract user information from the route parameters
 
     const navigator = useNavigation();
@@ -17,7 +18,7 @@ function Profile() {
     }
 
     function onEditPress(): void {
-        navigator.navigate('ProfileForm')
+        navigator.navigate('CompanyProfileForm')
     }
 
     return (
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
         ...globalStyles.text,
         fontSize: 20,
         marginBottom: 5,
-        color: 'gray',
+        color: colors.OffWhite,
     },
     description: {
         ...globalStyles.text,
@@ -82,4 +83,3 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Profile;

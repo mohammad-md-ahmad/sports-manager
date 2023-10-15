@@ -99,119 +99,119 @@ export default function Signup(): React.JSX.Element {
 
     return (
         <ScrollView style={styles.scrollView}>
-            <KeyboardAvoidingView style={styles.containerView}
+            {/* <KeyboardAvoidingView style={styles.containerView}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
-                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View style={styles.formContainer}>
-                        <View style={styles.formView}>
-                            <View style={styles.imageConatiner} >
-                                <Image
-                                    source={require('./../../assets/images/liber_logo.png')}
-                                    style={styles.logo}
-                                />
-                            </View>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
+            <View style={styles.formContainer}>
+                <View style={styles.formView}>
+                    <View style={styles.imageConatiner} >
+                        <Image
+                            source={require('./../../assets/images/liber_logo.png')}
+                            style={styles.logo}
+                        />
+                    </View>
 
-                            <View>
-                                <Text style={styles.label}>First Name</Text>
-                                <TextInput
-                                    placeholder="First Name"
-                                    placeholderTextColor={colors.OffWhite}
-                                    style={styles.formTextInput}
-                                    value={formData.first_name}
-                                    onChangeText={(text) => handleInputChange('first_name', text)}
-                                />
-                            </View>
+                    <View>
+                        <Text style={styles.label}>First Name</Text>
+                        <TextInput
+                            placeholder="First Name"
+                            placeholderTextColor={colors.OffWhite}
+                            style={styles.formTextInput}
+                            value={formData.first_name}
+                            onChangeText={(text) => handleInputChange('first_name', text)}
+                        />
+                    </View>
 
-                            <View>
-                                <Text style={styles.label}>Last Name</Text>
-                                <TextInput
-                                    placeholder="Last Name"
-                                    placeholderTextColor={colors.OffWhite}
-                                    style={styles.formTextInput}
-                                    value={formData.last_name}
-                                    onChangeText={(text) => handleInputChange('last_name', text)}
-                                />
-                            </View>
+                    <View>
+                        <Text style={styles.label}>Last Name</Text>
+                        <TextInput
+                            placeholder="Last Name"
+                            placeholderTextColor={colors.OffWhite}
+                            style={styles.formTextInput}
+                            value={formData.last_name}
+                            onChangeText={(text) => handleInputChange('last_name', text)}
+                        />
+                    </View>
 
-                            <View>
-                                <Text style={styles.label}>Username</Text>
-                                <TextInput
-                                    placeholder="Username"
-                                    placeholderTextColor={colors.OffWhite}
-                                    style={styles.formTextInput}
-                                    value={formData.username}
-                                    onChangeText={(text) => handleInputChange('username', text)}
-                                />
-                            </View>
+                    <View>
+                        <Text style={styles.label}>Username</Text>
+                        <TextInput
+                            placeholder="Username"
+                            placeholderTextColor={colors.OffWhite}
+                            style={styles.formTextInput}
+                            value={formData.username}
+                            onChangeText={(text) => handleInputChange('username', text)}
+                        />
+                    </View>
 
-                            <View>
-                                <Text style={styles.label}>Email</Text>
-                                <TextInput
-                                    placeholder="Email"
-                                    placeholderTextColor={colors.OffWhite}
-                                    style={styles.formTextInput}
-                                    value={formData.email}
-                                    onChangeText={(text) => handleInputChange('email', text)}
-                                />
+                    <View>
+                        <Text style={styles.label}>Email</Text>
+                        <TextInput
+                            placeholder="Email"
+                            placeholderTextColor={colors.OffWhite}
+                            style={styles.formTextInput}
+                            value={formData.email}
+                            onChangeText={(text) => handleInputChange('email', text)}
+                        />
 
-                            </View>
+                    </View>
 
-                            <View>
-                                <Text style={styles.label}>Password</Text>
-                                <TextInput
-                                    placeholder="Password"
-                                    placeholderTextColor={colors.OffWhite}
-                                    style={styles.formTextInput}
-                                    secureTextEntry={true}
-                                    value={formData.password}
-                                    onChangeText={(text) => handleInputChange('password', text)}
-                                />
-                            </View>
+                    <View>
+                        <Text style={styles.label}>Password</Text>
+                        <TextInput
+                            placeholder="Password"
+                            placeholderTextColor={colors.OffWhite}
+                            style={styles.formTextInput}
+                            secureTextEntry={true}
+                            value={formData.password}
+                            onChangeText={(text) => handleInputChange('password', text)}
+                        />
+                    </View>
 
-                            <View>
-                                <Text style={styles.label}>Confirm Password</Text>
-                                <TextInput
-                                    placeholder="Confirm Password"
-                                    placeholderTextColor={colors.OffWhite}
-                                    style={styles.formTextInput}
-                                    secureTextEntry={true}
-                                    value={formData.password_confirmation}
-                                    onChangeText={(text) => handleInputChange('password_confirmation', text)}
-                                />
-                            </View>
+                    <View>
+                        <Text style={styles.label}>Confirm Password</Text>
+                        <TextInput
+                            placeholder="Confirm Password"
+                            placeholderTextColor={colors.OffWhite}
+                            style={styles.formTextInput}
+                            secureTextEntry={true}
+                            value={formData.password_confirmation}
+                            onChangeText={(text) => handleInputChange('password_confirmation', text)}
+                        />
+                    </View>
 
-                            <View style={styles.switchContainer}>
-                                <Text style={styles.label}>Is Company</Text>
-                                <Switch
-                                    value={formData.is_company}
-                                    onValueChange={() => { handleInputChange('is_company', !formData.is_company) }}
-                                    trackColor={{ false: colors.OffWhite, true: colors.PrimaryGreen }}
-                                    thumbColor={formData.is_company ? colors.PrimaryBlue : colors.OffWhite}
-                                />
-                            </View>
+                    <View style={styles.switchContainer}>
+                        <Text style={styles.label}>Is Company</Text>
+                        <Switch
+                            value={formData.is_company}
+                            onValueChange={() => { handleInputChange('is_company', !formData.is_company) }}
+                            trackColor={{ false: colors.OffWhite, true: colors.PrimaryGreen }}
+                            thumbColor={formData.is_company ? colors.PrimaryBlue : colors.OffWhite}
+                        />
+                    </View>
 
-                            {formData.is_company &&
-                                < View >
-                                    <TextInput
-                                        placeholder="Company Name"
-                                        placeholderTextColor={colors.OffWhite}
-                                        style={styles.formTextInput}
-                                        value={formData.name}
-                                        onChangeText={(text) => handleInputChange('name', text)}
-                                    />
-                                </View>
-                            }
-
-                            <Button
-                                onPress={() => onSignupPress()}
-                                title="Signup"
-                                buttonStyle={styles.button}
+                    {formData.is_company &&
+                        < View >
+                            <TextInput
+                                placeholder="Company Name"
+                                placeholderTextColor={colors.OffWhite}
+                                style={styles.formTextInput}
+                                value={formData.name}
+                                onChangeText={(text) => handleInputChange('name', text)}
                             />
                         </View>
-                    </View>
-                </TouchableWithoutFeedback>
-            </KeyboardAvoidingView >
+                    }
+
+                    <Button
+                        onPress={() => onSignupPress()}
+                        title="Signup"
+                        buttonStyle={styles.button}
+                    />
+                </View>
+            </View>
+            {/* </TouchableWithoutFeedback>
+            </KeyboardAvoidingView > */}
         </ScrollView>
     );
 }
@@ -222,10 +222,9 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     containerView: {
-        padding: 16
     },
     formContainer: {
-
+        padding: 16
     },
     formView: {
 

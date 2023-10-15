@@ -1,6 +1,7 @@
 // AuthContext.js
 import { createContext, useContext, useEffect, useState } from 'react';
 import { clearToken, getToken, storeToken } from './helpers/tokenManage';
+import { storeUserData } from './helpers/userDataManage';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -35,8 +36,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const login = async (data: Object) => {
         // Implement your login logic here, and set isAuthenticated to true upon success
-        setIsAuthenticated(true);
-        storeToken(data.token);
+        if (data.token) {
+            setIsAuthenticated(true);
+            storeToken(data.token);
+            //storeUserData(data.token);
+        }
     };
 
     const logout = async () => {

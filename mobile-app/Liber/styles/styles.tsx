@@ -15,7 +15,9 @@ const globalStyles = StyleSheet.create({
   },
   text: {
     color: colors.PrimaryGreen,
-    fontFamily: fonts.Poppins.bold
+    fontFamily: fonts.Poppins.bold,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   inputText: {
     height: 43,
@@ -32,12 +34,11 @@ const globalStyles = StyleSheet.create({
   },
   inputTextLabel: {
     fontSize: 16,
-    color: 'gray',
+    color: colors.Gray,
     fontFamily: fonts.Poppins.regular
   },
   button: {
     backgroundColor: colors.PrimaryBlue,
-    width: 150,
     borderRadius: 5,
     height: 45,
     marginTop: 10,
@@ -68,7 +69,6 @@ const globalStyles = StyleSheet.create({
     marginBottom: 5,
     fontFamily: fonts.Poppins.regular
   },
-
   logo: {
     marginTop: 100,
     marginBottom: 30,

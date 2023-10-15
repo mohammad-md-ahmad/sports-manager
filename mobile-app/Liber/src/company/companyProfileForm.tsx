@@ -18,14 +18,25 @@ import { Button } from "react-native-elements";
 
 interface CompanyFormData {
   name: string;
+  name_ar: string;
+  description: string;
+  createAddressRequest: {
+    line_1: string;
+    line_2: string;
+    line_3: string;
+    city: string;
+    region: string;
+    postcode: string;
+    country_uuid: string;
+  };
 }
 
 
-export default function ProfileForm(): React.JSX.Element {
+export default function CompanyProfileForm(): React.JSX.Element {
 
   let companyService = new CompanyService();
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CompanyFormData>({
     name: '',
     name_ar: '',
     description: '',
@@ -40,23 +51,40 @@ export default function ProfileForm(): React.JSX.Element {
     },
   });
 
-  const handleInputChange = (key: string, value: any) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [key]: value,
-    }));
-  }
+  const handleInputChange = (field: string, value: string) => {
+    if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
+      // Handle nested objects
+      const [parentField, nestedField] = field.split('.');
+      setFormData({
+        ...formData,
+        [parentField]: {
+          ...formData[parentField],
+          [nestedField]: value,
+        },
+      });
+    } else {
+      setFormData({ ...formData, [field]: value });
+    }
+  };
 
   function onSubmitPress(): void {
-    throw new Error("Function not implemented.");
+    console.log(formData);
+    companyService.update(formData).then((response) => {
+      // Handle a successful API response
+      console.log('Success signup:', response.data);
+    })
+      .catch((error) => {
+        // Handle API request errors here
+        console.error('Error signup:', error);
+      });
   }
 
   return (
     <ScrollView style={styles.scrollView}>
-      <KeyboardAvoidingView style={styles.containerView}
+      {/* <KeyboardAvoidingView style={styles.containerView}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
           <View style={styles.formContainer}>
             <View style={styles.formView}>
 
@@ -171,8 +199,8 @@ export default function ProfileForm(): React.JSX.Element {
               />
             </View>
           </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+        {/* </TouchableWithoutFeedback>
+      </KeyboardAvoidingView> */}
     </ScrollView>
   );
 }
@@ -183,14 +211,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   containerView: {
-    flex: 1,
-    padding: 16,
   },
   formContainer: {
-    flex: 1,
+    padding: 16,
   },
   formView: {
-    flex: 1,
   },
   formTextInput: {
     ...globalStyles.inputText
