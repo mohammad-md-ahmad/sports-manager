@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2023-10-14T17:20:42.903Z",
+    "dateExported": "2023-10-15T06:23:55.170Z",
     "version": "1.1",
     "folders": [
         {
@@ -17,6 +17,13 @@
             "containerId": "",
             "created": "2023-10-12T19:54:04.970Z",
             "sortNum": 7500
+        },
+        {
+            "_id": "268636c7-a652-4097-8f1c-ad488027f901",
+            "name": "facilities",
+            "containerId": "",
+            "created": "2023-10-15T05:57:49.752Z",
+            "sortNum": 8750
         },
         {
             "_id": "600cfbc8-f96a-412a-bd34-1666c809aaf8",
@@ -88,17 +95,52 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2023-10-12T19:54:04.970Z",
-            "modified": "2023-10-14T17:18:34.724Z",
-            "headers": [],
+            "modified": "2023-10-15T04:27:51.698Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                }
+            ],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"name\": \"Company Four\",\n  \"description\": \"the company one account\",\n  \"createUserRequest\": {\n    \"first_name\": \"Company Four\",\n    \"last_name\": \"Admin\",\n    \"username\": \"company_four_admin\",\n    \"email\": \"company_one_admin@email.com\",\n    \"password\": \"Hello003?\",\n    \"password_confirmation\": \"Hello003?\"\n  },\n  \"createAddressRequest\": {\n    \"line_1\": \"Azmi St.\",\n    \"city\": \"Tripoli\",\n    \"region\": \"North Lebanon\",\n    \"postcode\": \"1111\",\n    \"geocode_data\": {\n      \"lat\": \"34.555\",\n      \"lng\": \"35.222\"\n    },\n    \"country_uuid\": \"57fba405-6c33-4304-82d3-3238d937d72e\"\n  }\n}",
+                "raw": "{\n  \"name\": \"Company Three\",\n  \"description\": \"the company one account\",\n  \"createUserRequest\": {\n    \"first_name\": \"Company Three\",\n    \"last_name\": \"Admin\",\n    \"username\": \"company_Three_admin\",\n    \"email\": \"company_one_admin@email.com\",\n    \"password\": \"Hello003?\",\n    \"password_confirmation\": \"Hello003?\"\n  },\n  \"createAddressRequest\": {\n    \"line_1\": \"Azmi St.\",\n    \"city\": \"Tripoli\",\n    \"region\": \"North Lebanon\",\n    \"postcode\": \"1111\",\n    \"geocode_data\": {\n      \"lat\": \"34.23\",\n      \"lng\": \"35.3456\"\n    },\n    \"country_uuid\": \"5ea14a9c-8487-43f8-a9e5-c0e9c7d909ff\"\n  }\n}",
                 "form": []
             },
             "auth": {
                 "type": "bearer",
-                "bearer": "4|FtfuYOreapBYrXw3yT2gbg4KpkUn5SJl1q9Ij9Ng16567fba"
+                "bearer": "1|z0H94EQugfrHD5ovhK5eePb7jbDhkCiBV9ZARnYC9bb358c9"
+            },
+            "tests": []
+        },
+        {
+            "_id": "5d657d12-3dac-4a43-a63b-60f99da0a51e",
+            "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
+            "containerId": "268636c7-a652-4097-8f1c-ad488027f901",
+            "name": "create facility",
+            "url": "{{host}}/companies/ae98e4ec-f914-4e93-9b38-d98ca20c491f/facilities/",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-10-15T05:57:49.752Z",
+            "modified": "2023-10-15T06:21:27.219Z",
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Company Facility Four\",\n  \"type\": \"MINI_FOOTBALL_PLAYGROUND\",\n  \"details\": {\n    \"size\": 5\n  },\n  \"createAddressRequest\": {\n    \"line_1\": \"Azmi St.\",\n    \"city\": \"Tripoli\",\n    \"region\": \"North Lebanon\",\n    \"postcode\": \"1111\",\n    \"geocode_data\": {\n      \"lat\": \"34.23\",\n      \"lng\": \"35.3456\"\n    },\n    \"country_uuid\": \"5ea14a9c-8487-43f8-a9e5-c0e9c7d909ff\"\n  }\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "1|z0H94EQugfrHD5ovhK5eePb7jbDhkCiBV9ZARnYC9bb358c9"
             },
             "tests": []
         },
@@ -139,18 +181,91 @@
             "_id": "a272bfc1-0b4a-4ef5-a155-4fe59ffa92c7",
             "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
             "containerId": "b3a8097d-93e3-40ef-9bee-dbc7f8ff0458",
-            "name": "update user",
-            "url": "{{host}}/users/e4c5b55e-793f-4177-ae7a-f810bbd962c9",
+            "name": "update company",
+            "url": "{{host}}/companies/ae98e4ec-f914-4e93-9b38-d98ca20c491f",
             "method": "PUT",
             "sortNum": 20000,
             "created": "2023-10-12T19:54:04.971Z",
-            "modified": "2023-10-12T19:54:04.970Z",
+            "modified": "2023-10-15T05:40:50.908Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Company Three\",\n  \"description\": \"the company one account\",\n  \"updateAddressRequest\": {\n    \"uuid\": \"c08bca9e-5831-40bc-ad09-c321b83d343a\",\n    \"line_2\": \"Tani Mafra2 - edited\"\n  }\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "1|z0H94EQugfrHD5ovhK5eePb7jbDhkCiBV9ZARnYC9bb358c9"
+            },
+            "tests": []
+        },
+        {
+            "_id": "452000dc-3701-45ac-8504-e68152e16f22",
+            "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
+            "containerId": "268636c7-a652-4097-8f1c-ad488027f901",
+            "name": "update company",
+            "url": "{{host}}/companies/ae98e4ec-f914-4e93-9b38-d98ca20c491f",
+            "method": "PUT",
+            "sortNum": 20000,
+            "created": "2023-10-15T05:57:49.753Z",
+            "modified": "2023-10-15T05:57:49.752Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Company Three\",\n  \"description\": \"the company one account\",\n  \"updateAddressRequest\": {\n    \"uuid\": \"c08bca9e-5831-40bc-ad09-c321b83d343a\",\n    \"line_2\": \"Tani Mafra2 - edited\"\n  }\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "1|z0H94EQugfrHD5ovhK5eePb7jbDhkCiBV9ZARnYC9bb358c9"
+            },
+            "tests": []
+        },
+        {
+            "_id": "66ff9a73-991f-4a66-ae93-f962bee07a49",
+            "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
+            "containerId": "b3a8097d-93e3-40ef-9bee-dbc7f8ff0458",
+            "name": "update company Copy",
+            "url": "{{host}}/companies/ae98e4ec-f914-4e93-9b38-d98ca20c491f",
+            "method": "PUT",
+            "sortNum": 25000,
+            "created": "2023-10-15T05:06:32.622Z",
+            "modified": "2023-10-15T05:06:32.622Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
                 "raw": "{\n  \"first_name\": \"Mohammad-e\",\n  \"last_name\": \"Ahmad-e\"\n}",
                 "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "1|z0H94EQugfrHD5ovhK5eePb7jbDhkCiBV9ZARnYC9bb358c9"
+            },
+            "tests": []
+        },
+        {
+            "_id": "255631a6-551e-4a9a-8145-648c54c96a30",
+            "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
+            "containerId": "268636c7-a652-4097-8f1c-ad488027f901",
+            "name": "update company Copy",
+            "url": "{{host}}/companies/ae98e4ec-f914-4e93-9b38-d98ca20c491f",
+            "method": "PUT",
+            "sortNum": 25000,
+            "created": "2023-10-15T05:57:49.754Z",
+            "modified": "2023-10-15T05:57:49.752Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"first_name\": \"Mohammad-e\",\n  \"last_name\": \"Ahmad-e\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "1|z0H94EQugfrHD5ovhK5eePb7jbDhkCiBV9ZARnYC9bb358c9"
             },
             "tests": []
         },
@@ -178,6 +293,20 @@
             "sortNum": 30000,
             "created": "2023-10-12T19:54:04.972Z",
             "modified": "2023-10-12T19:54:04.970Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "42e5d288-8485-4aef-9c66-429bfc3330e0",
+            "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
+            "containerId": "268636c7-a652-4097-8f1c-ad488027f901",
+            "name": "get user",
+            "url": "{{host}}/users/61dda6fb-95d0-4135-b9aa-b39df74b4fd3",
+            "method": "GET",
+            "sortNum": 30000,
+            "created": "2023-10-15T05:57:49.756Z",
+            "modified": "2023-10-15T05:57:49.752Z",
             "headers": [],
             "params": [],
             "tests": []
@@ -211,6 +340,20 @@
             "tests": []
         },
         {
+            "_id": "4ea12789-64b6-424e-980a-350e75cf561b",
+            "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
+            "containerId": "268636c7-a652-4097-8f1c-ad488027f901",
+            "name": "delete user",
+            "url": "{{host}}/users/e4c5b55e-793f-4177-ae7a-f810bbd962c9",
+            "method": "DELETE",
+            "sortNum": 40000,
+            "created": "2023-10-15T05:57:49.757Z",
+            "modified": "2023-10-15T05:57:49.753Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
             "_id": "2029e29d-77bc-43ed-9730-d0c435a43400",
             "colId": "72232291-06c6-47f3-a3d6-b3c2a4319377",
             "containerId": "29feccaf-2991-40b6-a29e-a459620248df",
@@ -219,12 +362,12 @@
             "method": "POST",
             "sortNum": 50000,
             "created": "2023-10-11T20:44:05.818Z",
-            "modified": "2023-10-14T16:24:30.790Z",
+            "modified": "2023-10-15T04:17:38.169Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"username\": \"mohammad.ahmad\",\n  \"password\": \"Hello003?\"\n}",
+                "raw": "{\n  \"username\": \"super_admin\",\n  \"password\": \"P@ssw0rd\"\n}",
                 "form": []
             },
             "tests": []
