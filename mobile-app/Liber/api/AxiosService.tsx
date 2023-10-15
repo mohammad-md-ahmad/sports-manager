@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Constants from '../helpers/constants';
 import { useLoading } from '../LoadingContext';
 import Snackbar from 'react-native-snackbar';
+import { getToken } from '../helpers/tokenManage';
 
 abstract class AxiosService {
     private instance: AxiosInstance;
@@ -20,8 +21,13 @@ abstract class AxiosService {
     private setupInterceptors() {
         const { setGlobalLoading } = useLoading();
         this.instance.interceptors.request.use(
-            (config) => {
+            async (config) => {
                 // You can modify the request config here (e.g., add headers)
+                const token = await getToken();
+                if (token) {
+                    config.headers.Authorization = `Bearer ${token}`;
+                }
+
                 setGlobalLoading(true);
                 return config;
             },

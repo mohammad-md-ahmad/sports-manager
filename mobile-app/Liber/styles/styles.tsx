@@ -28,6 +28,12 @@ const globalStyles = StyleSheet.create({
     paddingLeft: 10,
     marginTop: 5,
     marginBottom: 5,
+    fontFamily: fonts.Poppins.light
+  },
+  inputTextLabel: {
+    fontSize: 16,
+    color: 'gray',
+    fontFamily: fonts.Poppins.regular
   },
   button: {
     backgroundColor: colors.PrimaryBlue,
@@ -35,7 +41,8 @@ const globalStyles = StyleSheet.create({
     borderRadius: 5,
     height: 45,
     marginTop: 10,
-    alignItems: "center"
+    alignItems: "center",
+    fontFamily: fonts.Poppins.regular
   },
   logoText: {
     fontSize: 40,
@@ -58,7 +65,8 @@ const globalStyles = StyleSheet.create({
     color: colors.White,
     paddingLeft: 10,
     marginTop: 5,
-    marginBottom: 5
+    marginBottom: 5,
+    fontFamily: fonts.Poppins.regular
   },
 
   logo: {

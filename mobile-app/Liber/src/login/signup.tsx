@@ -17,37 +17,84 @@ import {
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
 import globalStyles from "../../styles/styles";
+import UserService from "../../api/UserService";
+import CompanyService from "../../api/CompanyService";
 
+interface UserFormData {
+    first_name: string;
+    last_name: string;
+    username: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+}
+
+
+interface CompanyFormData {
+    name: string;
+    createUserRequest: {
+        first_name: string;
+        last_name: string;
+        username: string;
+        email: string;
+        password: string;
+        password_confirmation: string;
+    };
+}
 
 export default function Signup(): React.JSX.Element {
+
+    let companyService = new CompanyService();
+    let userService = new UserService();
 
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: '',
+        username: '',
         email: '',
         password: '',
-        confirm_password: '',
-        company_name: '',
+        password_confirmation: '',
+        name: '',
         is_company: false
     });
 
-    const handelInputChange = (key: string, value: any) => {
+    const handleInputChange = (key: string, value: any) => {
         setFormData((prevData) => ({
             ...prevData,
             [key]: value,
         }));
     }
     const onSignupPress = () => {
-        console.log(formData);
-        // authService.login(username, password).then((response) => {
-        //     // Handle a successful API response
-        //     console.log('Error creating user:', response.data.data.token);
-        //     login(response.data.data.token);
-        // })
-        //     .catch((error) => {
-        //         // Handle API request errors here
-        //         console.error('Error creating user:', error);
-        //     });
+        let service;
+        let data;
+        if (formData.is_company) {
+            service = companyService;
+            const companyFormData: CompanyFormData = {
+                ...formData,
+                createUserRequest: {
+                    ...formData
+                }
+            };
+            data = companyFormData;
+        } else {
+            service = userService;
+            const userFormData: UserFormData = {
+                ...formData,
+            };
+            data = userFormData;
+        }
+
+        console.log(data);
+
+        service.create(data).then((response) => {
+            // Handle a successful API response
+            console.log('Success signup:', response.data);
+        })
+            .catch((error) => {
+                // Handle API request errors here
+                console.error('Error signup:', error);
+            });
+
     };
 
     return (
@@ -56,7 +103,7 @@ export default function Signup(): React.JSX.Element {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                    <View style={styles.loginScreenContainer}>
+                    <View style={styles.formContainer}>
                         <View style={styles.formView}>
                             <View style={styles.imageConatiner} >
                                 <Image
@@ -72,7 +119,7 @@ export default function Signup(): React.JSX.Element {
                                     placeholderTextColor={colors.OffWhite}
                                     style={styles.formTextInput}
                                     value={formData.first_name}
-                                    onChangeText={(text) => handelInputChange('first_name', text)}
+                                    onChangeText={(text) => handleInputChange('first_name', text)}
                                 />
                             </View>
 
@@ -83,7 +130,18 @@ export default function Signup(): React.JSX.Element {
                                     placeholderTextColor={colors.OffWhite}
                                     style={styles.formTextInput}
                                     value={formData.last_name}
-                                    onChangeText={(text) => handelInputChange('last_name', text)}
+                                    onChangeText={(text) => handleInputChange('last_name', text)}
+                                />
+                            </View>
+
+                            <View>
+                                <Text style={styles.label}>Username</Text>
+                                <TextInput
+                                    placeholder="Username"
+                                    placeholderTextColor={colors.OffWhite}
+                                    style={styles.formTextInput}
+                                    value={formData.username}
+                                    onChangeText={(text) => handleInputChange('username', text)}
                                 />
                             </View>
 
@@ -94,7 +152,7 @@ export default function Signup(): React.JSX.Element {
                                     placeholderTextColor={colors.OffWhite}
                                     style={styles.formTextInput}
                                     value={formData.email}
-                                    onChangeText={(text) => handelInputChange('email', text)}
+                                    onChangeText={(text) => handleInputChange('email', text)}
                                 />
 
                             </View>
@@ -107,7 +165,7 @@ export default function Signup(): React.JSX.Element {
                                     style={styles.formTextInput}
                                     secureTextEntry={true}
                                     value={formData.password}
-                                    onChangeText={(text) => handelInputChange('password', text)}
+                                    onChangeText={(text) => handleInputChange('password', text)}
                                 />
                             </View>
 
@@ -118,8 +176,8 @@ export default function Signup(): React.JSX.Element {
                                     placeholderTextColor={colors.OffWhite}
                                     style={styles.formTextInput}
                                     secureTextEntry={true}
-                                    value={formData.confirm_password}
-                                    onChangeText={(text) => handelInputChange('confirm_password', text)}
+                                    value={formData.password_confirmation}
+                                    onChangeText={(text) => handleInputChange('password_confirmation', text)}
                                 />
                             </View>
 
@@ -127,7 +185,7 @@ export default function Signup(): React.JSX.Element {
                                 <Text style={styles.label}>Is Company</Text>
                                 <Switch
                                     value={formData.is_company}
-                                    onValueChange={() => { handelInputChange('is_company', !formData.is_company) }}
+                                    onValueChange={() => { handleInputChange('is_company', !formData.is_company) }}
                                     trackColor={{ false: colors.OffWhite, true: colors.PrimaryGreen }}
                                     thumbColor={formData.is_company ? colors.PrimaryBlue : colors.OffWhite}
                                 />
@@ -139,8 +197,8 @@ export default function Signup(): React.JSX.Element {
                                         placeholder="Company Name"
                                         placeholderTextColor={colors.OffWhite}
                                         style={styles.formTextInput}
-                                        value={formData.company_name}
-                                        onChangeText={(text) => handelInputChange('company_name', text)}
+                                        value={formData.name}
+                                        onChangeText={(text) => handleInputChange('name', text)}
                                     />
                                 </View>
                             }
@@ -164,28 +222,23 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     containerView: {
-        flex: 1,
-        height: Dimensions.get('window').height - 60,
-        alignItems: "center",
-        backgroundColor: colors.White,
+        padding: 16
     },
-    loginScreenContainer: {
-        flex: 1,
+    formContainer: {
+
     },
     formView: {
-        flex: 1,
-        width: 250,
+
     },
     formTextInput: {
         ...globalStyles.inputText
     },
     button: {
         ...globalStyles.button,
-        width: 250,
+        width: '100%'
     },
     imageConatiner: {
         alignItems: "center",
-        marginTop: 10,
     },
     logo: {
         marginBottom: 10,
@@ -194,8 +247,7 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     label: {
-        fontSize: 16,
-        color: 'gray',
+        ...globalStyles.inputTextLabel
     },
     container: {
         flex: 1,

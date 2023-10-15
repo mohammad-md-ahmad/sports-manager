@@ -62,12 +62,12 @@ export default function LoginScreen(): React.JSX.Element {
     const onLoginPress = () => {
         authService.login(username, password).then((response) => {
             // Handle a successful API response
-            console.log('Error creating user:', response.data.data.token);
+            console.log('Success signin:', response.data.data.token);
             login(response.data.data.token);
 
         }).catch((error) => {
             // Handle API request errors here
-            console.error('Error creating user:', error);
+            console.error('Error signin:', error);
         });
     };
 
