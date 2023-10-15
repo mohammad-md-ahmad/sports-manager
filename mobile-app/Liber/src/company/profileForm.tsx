@@ -6,10 +6,10 @@ import {
 } from "react-native";
 import globalStyles from "../../styles/styles";
 
-export default function Dashboard(): React.JSX.Element {
+export default function ProfileForm(): React.JSX.Element {
   return (
     <View style={globalStyles.containerView}>
-      <Text style={globalStyles.text}>here is the dashboard</Text>
+      <Text style={globalStyles.text}>here is the profile form</Text>
 
     </View>
   );

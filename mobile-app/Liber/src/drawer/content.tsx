@@ -5,7 +5,7 @@ import {
     View,
     ScrollView,
 } from "react-native";
-import styles from "../../styles/styles";
+import globalStyles from "../../styles/styles";
 import { DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { useAuth } from "../../AuhtContext";
 
@@ -14,11 +14,11 @@ export default function Content(props: any): React.JSX.Element {
     const Drawer = createDrawerNavigator();
 
     return (
-        <View style={styles.drawerContainer} >
-            <View style={styles.drawerImageConatiner} >
+        <View style={globalStyles.drawerContainer} >
+            <View style={globalStyles.drawerImageConatiner} >
                 <Image
                     source={require('./../../assets/images/liber_logo.png')}
-                    style={styles.headerImage}
+                    style={globalStyles.headerImage}
                 />
             </View>
             <ScrollView>
