@@ -3,49 +3,72 @@ import React, { useState } from "react";
 import {
     ScrollView,
     StyleSheet,
-    Text,
     TextInput,
-    View,
 } from "react-native";
-import globalStyles from "../../styles/styles";
 import { Button } from "react-native-elements";
+import FacilityService from "../../api/FacilityService";
 
 interface FormData {
     name: string;
     type: string;
-    length: string;
-    width: string;
-    line_1: string;
-    line_2: string;
-    line_3: string;
-    city: string;
-    region: string;
-    postcode: string;
-    country: string;
+    details: {
+        length: string;
+        width: string;
+    };
+    createAddressRequest: {
+        line_1: string;
+        line_2: string;
+        line_3: string;
+        city: string;
+        region: string;
+        postcode: string;
+        country_uuid: string;
+    };
 }
 
 export default function FacilityForm(): React.JSX.Element {
+    const facilityService = new FacilityService();
+
     const [formData, setFormData] = useState<FormData>({
         name: '',
         type: '',
-        length: '',
-        width: '',
-        line_1: '',
-        line_2: '',
-        line_3: '',
-        city: '',
-        region: '',
-        postcode: '',
-        country: '',
+        details: {
+            length: '',
+            width: '',
+        },
+        createAddressRequest: {
+            line_1: '',
+            line_2: '',
+            line_3: '',
+            city: '',
+            region: '',
+            postcode: '',
+            country_uuid: '',
+        },
     });
 
     const handleInputChange = (field: keyof FormData, value: string) => {
-        setFormData({ ...formData, [field]: value });
+        if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
+            // Handle nested objects
+            const [parentField, nestedField] = field.split('.');
+            setFormData({
+              ...formData,
+              [parentField]: {
+                ...formData[parentField],
+                [nestedField]: value,
+              },
+            });
+          } else {
+            setFormData({ ...formData, [field]: value });
+          }
     };
 
     const handleSubmit = () => {
-        // You can handle form submission here
-        console.log(formData);
+        facilityService.create(formData).then((response) => {
+            console.log(response);
+        }).catch((error) => {
+            console.log(error);
+        });
     };
 
     return (
@@ -63,56 +86,56 @@ export default function FacilityForm(): React.JSX.Element {
                 style={styles.input}
             />
             <TextInput
-                value={formData.length}
-                onChangeText={(text) => handleInputChange('length', text)}
+                value={formData.details.length}
+                onChangeText={(text) => handleInputChange('details.length', text)}
                 placeholder="Length (in Meters)"
                 style={styles.input}
             />
             <TextInput
-                value={formData.width}
-                onChangeText={(text) => handleInputChange('width', text)}
+                value={formData.details.width}
+                onChangeText={(text) => handleInputChange('details.width', text)}
                 placeholder="Width (in Meters)"
                 style={styles.input}
             />
             <TextInput
-                value={formData.line_1}
-                onChangeText={(text) => handleInputChange('line_1', text)}
+                value={formData.createAddressRequest.line_1}
+                onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
                 placeholder="Line 1"
                 style={styles.input}
             />
             <TextInput
-                value={formData.line_2}
-                onChangeText={(text) => handleInputChange('line_2', text)}
+                value={formData.createAddressRequest.line_2}
+                onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
                 placeholder="Line 2"
                 style={styles.input}
             />
             <TextInput
-                value={formData.line_3}
-                onChangeText={(text) => handleInputChange('line_3', text)}
+                value={formData.createAddressRequest.line_3}
+                onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
                 placeholder="Line 3"
                 style={styles.input}
             />
             <TextInput
-                value={formData.city}
-                onChangeText={(text) => handleInputChange('city', text)}
+                value={formData.createAddressRequest.city}
+                onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
                 placeholder="City"
                 style={styles.input}
             />
             <TextInput
-                value={formData.region}
-                onChangeText={(text) => handleInputChange('region', text)}
+                value={formData.createAddressRequest.region}
+                onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
                 placeholder="Region / State"
                 style={styles.input}
             />
             <TextInput
-                value={formData.postcode}
-                onChangeText={(text) => handleInputChange('postcode', text)}
+                value={formData.createAddressRequest.postcode}
+                onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
                 placeholder="Post Code"
                 style={styles.input}
             />
             <TextInput
-                value={formData.country}
-                onChangeText={(text) => handleInputChange('country', text)}
+                value={formData.createAddressRequest.country_uuid}
+                onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
                 placeholder="Country"
                 style={styles.input}
             />
