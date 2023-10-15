@@ -10,3 +10,5 @@ const colors = {
 };
 
 export default colors;
+
+export const placeHolderTextColor = colors.PrimaryBlueLight;

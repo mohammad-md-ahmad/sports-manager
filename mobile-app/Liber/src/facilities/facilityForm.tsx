@@ -9,7 +9,7 @@ import {
 import { Button } from "react-native-elements";
 import FacilityService from "../../api/FacilityService";
 import globalStyles from "../../styles/styles";
-import colors from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/colors";
 
 interface FormData {
     name: string;
@@ -81,77 +81,77 @@ export default function FacilityForm(): React.JSX.Element {
                     value={formData.name}
                     onChangeText={(text) => handleInputChange('name', text)}
                     placeholder="Name"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.type}
                     onChangeText={(text) => handleInputChange('type', text)}
                     placeholder="Type"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.details.length}
                     onChangeText={(text) => handleInputChange('details.length', text)}
                     placeholder="Length (in Meters)"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.details.width}
                     onChangeText={(text) => handleInputChange('details.width', text)}
                     placeholder="Width (in Meters)"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.createAddressRequest.line_1}
                     onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
                     placeholder="Line 1"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.createAddressRequest.line_2}
                     onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
                     placeholder="Line 2"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.createAddressRequest.line_3}
                     onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
                     placeholder="Line 3"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.createAddressRequest.city}
                     onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
                     placeholder="City"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.createAddressRequest.region}
                     onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
                     placeholder="Region / State"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.createAddressRequest.postcode}
                     onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
                     placeholder="Post Code"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <TextInput
                     value={formData.createAddressRequest.country_uuid}
                     onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
                     placeholder="Country"
-                    placeholderTextColor={colors.PrimaryBlueLight}
+                    placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
                 <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.button} />

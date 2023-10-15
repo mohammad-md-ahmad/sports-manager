@@ -9,7 +9,7 @@ import {
     View,
     StyleSheet,
 } from "react-native";
-import colors from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/colors";
 import { Button } from "react-native-elements";
 import AuthService from "../../api/AuthService";
 import { useAuth } from "../../AuhtContext";
@@ -88,14 +88,14 @@ export default function LoginScreen(): React.JSX.Element {
                         </View>
                         <TextInput
                             placeholder="Username"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.loginFormTextInput}
                             value={username}
                             onChangeText={(text) => setUsername(text)}
                         />
                         <TextInput
                             placeholder="Password"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.loginFormTextInput}
                             secureTextEntry={true}
                             value={password}

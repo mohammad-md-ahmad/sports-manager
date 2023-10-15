@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import globalStyles from "../../styles/styles";
 import CompanyService from "../../api/CompanyService";
-import colors from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/colors";
 import { Button } from "react-native-elements";
 
 interface CompanyFormData {
@@ -92,7 +92,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
             <Text style={styles.label}>Company Name</Text>
             <TextInput
               placeholder="Company Name"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
               value={formData.name}
               onChangeText={(text) => handleInputChange('name', text)}
@@ -103,7 +103,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
             <Text style={styles.label}>Company Name Ar</Text>
             <TextInput
               placeholder="Company Name Ar"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
               value={formData.name_ar}
               onChangeText={(text) => handleInputChange('name_ar', text)}
@@ -114,7 +114,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
             <Text style={styles.label}>Description</Text>
             <TextInput
               placeholder="Description"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
               value={formData.description}
               onChangeText={(text) => handleInputChange('description', text)}
@@ -127,7 +127,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
               value={formData.createAddressRequest.line_1}
               onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
               placeholder="Line 1"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
             />
           </View>
@@ -138,7 +138,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
               value={formData.createAddressRequest.line_2}
               onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
               placeholder="Line 2"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
             />
           </View>
@@ -149,7 +149,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
               value={formData.createAddressRequest.line_3}
               onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
               placeholder="Line 3"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
             />
           </View>
@@ -160,7 +160,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
               value={formData.createAddressRequest.city}
               onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
               placeholder="City"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
             />
           </View>
@@ -171,7 +171,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
               value={formData.createAddressRequest.region}
               onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
               placeholder="Region / State"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
             />
           </View>
@@ -182,7 +182,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
               value={formData.createAddressRequest.postcode}
               onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
               placeholder="Post Code"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
             />
           </View>
@@ -193,7 +193,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
               value={formData.createAddressRequest.country_uuid}
               onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
               placeholder="Country"
-              placeholderTextColor={colors.PrimaryBlueLight}
+              placeholderTextColor={placeHolderTextColor}
               style={styles.formTextInput}
             />
           </View>

@@ -14,7 +14,7 @@ import {
     ScrollView,
     Dimensions,
 } from "react-native";
-import colors from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/colors";
 import { Button } from "react-native-elements";
 import globalStyles from "../../styles/styles";
 import UserService from "../../api/UserService";
@@ -116,7 +116,7 @@ export default function Signup(): React.JSX.Element {
                         <Text style={styles.label}>First Name</Text>
                         <TextInput
                             placeholder="First Name"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
                             value={formData.first_name}
                             onChangeText={(text) => handleInputChange('first_name', text)}
@@ -127,7 +127,7 @@ export default function Signup(): React.JSX.Element {
                         <Text style={styles.label}>Last Name</Text>
                         <TextInput
                             placeholder="Last Name"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
                             value={formData.last_name}
                             onChangeText={(text) => handleInputChange('last_name', text)}
@@ -138,7 +138,7 @@ export default function Signup(): React.JSX.Element {
                         <Text style={styles.label}>Username</Text>
                         <TextInput
                             placeholder="Username"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
                             value={formData.username}
                             onChangeText={(text) => handleInputChange('username', text)}
@@ -149,7 +149,7 @@ export default function Signup(): React.JSX.Element {
                         <Text style={styles.label}>Email</Text>
                         <TextInput
                             placeholder="Email"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
                             value={formData.email}
                             onChangeText={(text) => handleInputChange('email', text)}
@@ -161,7 +161,7 @@ export default function Signup(): React.JSX.Element {
                         <Text style={styles.label}>Password</Text>
                         <TextInput
                             placeholder="Password"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
                             secureTextEntry={true}
                             value={formData.password}
@@ -173,7 +173,7 @@ export default function Signup(): React.JSX.Element {
                         <Text style={styles.label}>Confirm Password</Text>
                         <TextInput
                             placeholder="Confirm Password"
-                            placeholderTextColor={colors.PrimaryBlueLight}
+                            placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
                             secureTextEntry={true}
                             value={formData.password_confirmation}
@@ -195,7 +195,7 @@ export default function Signup(): React.JSX.Element {
                         < View >
                             <TextInput
                                 placeholder="Company Name"
-                                placeholderTextColor={colors.PrimaryBlueLight}
+                                placeholderTextColor={placeHolderTextColor}
                                 style={styles.formTextInput}
                                 value={formData.name}
                                 onChangeText={(text) => handleInputChange('name', text)}
