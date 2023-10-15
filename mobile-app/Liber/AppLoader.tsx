@@ -1,14 +1,7 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
 
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
     StatusBar,
-    Text,
     useColorScheme,
 } from 'react-native';
 
@@ -28,6 +21,7 @@ import { useLoading } from './LoadingContext';
 import Profile from './src/company/profile';
 import ProfileForm from './src/company/profileForm';
 import { createStackNavigator } from '@react-navigation/stack';
+import Signup from './src/login/signup';
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -41,6 +35,17 @@ function AppLoader(): JSX.Element {
     const Stack = createStackNavigator();
     const { isAuthenticated } = useAuth();
     const { loading } = useLoading();
+
+    const ProfileStack = createStackNavigator();
+
+    function ProfileNavigation() {
+        return (
+            <ProfileStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
+                <ProfileStack.Screen name="Profile" options={{ title: 'Profile' }} component={Profile} />
+                <ProfileStack.Screen name="ProfileForm" options={{ title: 'Profile Form' }} component={ProfileForm} />
+            </ProfileStack.Navigator>
+        );
+    }
 
     return (
         <NavigationContainer>
@@ -57,7 +62,7 @@ function AppLoader(): JSX.Element {
                         screenOptions={{ headerStyle: { backgroundColor: colors.PrimaryGreen } }}>
 
                         <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
-                        <Drawer.Screen name="Profile" options={{ title: 'Profile' }} component={Profile} />
+                        <Drawer.Screen name="ProfileNavigation" options={{ title: 'Profile' }} component={ProfileNavigation} />
 
                         <Drawer.Group
                         // screenOptions={({ navigation }) => ({
@@ -68,9 +73,15 @@ function AppLoader(): JSX.Element {
                             <Drawer.Screen name="About" options={{ title: 'About' }} component={About} />
                         </Drawer.Group>
                     </Drawer.Group>
-                    <Drawer.Screen name="ProfileForm"  options={{ title: 'Profile Form' }} component={ProfileForm} />
                 </Drawer.Navigator> :
-                <LoginScreen />}
+
+                <Stack.Navigator
+                    initialRouteName="Login"
+                >
+                    <Stack.Screen name="Login" options={{ title: 'Login' }} component={LoginScreen} />
+                    <Stack.Screen name="Signup" options={{ title: 'Signup' }} component={Signup} />
+                </Stack.Navigator>
+            }
         </NavigationContainer>
     );
 }

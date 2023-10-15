@@ -12,9 +12,9 @@ import {
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
 import AuthService from "../../api/AuthService";
-
 import { useAuth } from "../../AuhtContext";
 import globalStyles from "../../styles/styles";
+import { useNavigation } from "@react-navigation/native";
 
 const styles = StyleSheet.create({
   containerView: {
@@ -27,27 +27,14 @@ const styles = StyleSheet.create({
   },
   loginFormView: {
     flex: 1,
-    width: 206,
+    width: 250,
   },
   loginFormTextInput: {
-    height: 43,
-    fontSize: 14,
-    borderRadius: 5,
-    borderWidth: 1,
-    borderColor: colors.PrimaryBlue,
-    backgroundColor: colors.PrimaryGreen,
-    color: colors.White,
-    paddingLeft: 10,
-    marginTop: 5,
-    marginBottom: 5
+    ...globalStyles.inputText
   },
   loginButton: {
     ...globalStyles.button,
-    backgroundColor: colors.PrimaryBlue,
-    borderRadius: 5,
-    height: 45,
-    marginTop: 10,
-    alignItems: "center"
+    width: 250,
   },
   imageConatiner: {
     alignItems: "center",
@@ -67,6 +54,8 @@ export default function LoginScreen(): React.JSX.Element {
 
   const authService = new AuthService();
 
+  const navigator = useNavigation();
+
   const [username, setUsername] = useState('super_admin');
   const [password, setPassword] = useState('P@ssw0rd');
 
@@ -83,6 +72,10 @@ export default function LoginScreen(): React.JSX.Element {
       });
 
   };
+
+  function onSignupPress(): void {
+    navigator.navigate('Signup');
+  }
 
   return (
     <KeyboardAvoidingView style={styles.containerView} behavior="padding">
@@ -113,6 +106,11 @@ export default function LoginScreen(): React.JSX.Element {
             <Button
               onPress={() => onLoginPress()}
               title="Login"
+              buttonStyle={styles.loginButton}
+            />
+            <Button
+              onPress={() => onSignupPress()}
+              title="Signup"
               buttonStyle={styles.loginButton}
             />
           </View>

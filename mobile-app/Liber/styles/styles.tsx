@@ -17,6 +17,26 @@ const globalStyles = StyleSheet.create({
     color: colors.PrimaryGreen,
     fontFamily: fonts.Poppins.bold
   },
+  inputText: {
+    height: 43,
+    fontSize: 14,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: colors.PrimaryBlue,
+    backgroundColor: colors.PrimaryGreen,
+    color: colors.White,
+    paddingLeft: 10,
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  button: {
+    backgroundColor: colors.PrimaryBlue,
+    width: 150,
+    borderRadius: 5,
+    height: 45,
+    marginTop: 10,
+    alignItems: "center"
+  },
   logoText: {
     fontSize: 40,
     fontWeight: "800",
@@ -40,14 +60,7 @@ const globalStyles = StyleSheet.create({
     marginTop: 5,
     marginBottom: 5
   },
-  button: {
-    backgroundColor: colors.PrimaryBlue,
-    width:150,
-    borderRadius: 5,
-    height: 45,
-    marginTop: 10,
-    alignItems: "center"
-  },
+
   logo: {
     marginTop: 100,
     marginBottom: 30,
