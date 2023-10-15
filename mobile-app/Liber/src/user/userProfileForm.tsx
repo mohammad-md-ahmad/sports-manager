@@ -68,7 +68,7 @@ export default function UserProfileForm(): React.JSX.Element {
                 <Text style={styles.label}>First Name</Text>
                 <TextInput
                   placeholder="First Name"
-                  placeholderTextColor={colors.OffWhite}
+                  placeholderTextColor={colors.PrimaryBlueLight}
                   style={styles.formTextInput}
                   value={formData.first_name}
                   onChangeText={(text) => handleInputChange('first_name', text)}
@@ -79,7 +79,7 @@ export default function UserProfileForm(): React.JSX.Element {
                 <Text style={styles.label}>Last Name</Text>
                 <TextInput
                   placeholder="Last Name"
-                  placeholderTextColor={colors.OffWhite}
+                  placeholderTextColor={colors.PrimaryBlueLight}
                   style={styles.formTextInput}
                   value={formData.last_name}
                   onChangeText={(text) => handleInputChange('last_name', text)}
@@ -90,7 +90,7 @@ export default function UserProfileForm(): React.JSX.Element {
                 <Text style={styles.label}>Username</Text>
                 <TextInput
                   placeholder="Username"
-                  placeholderTextColor={colors.OffWhite}
+                  placeholderTextColor={colors.PrimaryBlueLight}
                   style={styles.formTextInput}
                   value={formData.username}
                   onChangeText={(text) => handleInputChange('username', text)}
@@ -101,7 +101,7 @@ export default function UserProfileForm(): React.JSX.Element {
                 <Text style={styles.label}>Email</Text>
                 <TextInput
                   placeholder="Email"
-                  placeholderTextColor={colors.OffWhite}
+                  placeholderTextColor={colors.PrimaryBlueLight}
                   style={styles.formTextInput}
                   value={formData.email}
                   onChangeText={(text) => handleInputChange('email', text)}

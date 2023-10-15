@@ -88,14 +88,14 @@ export default function LoginScreen(): React.JSX.Element {
                         </View>
                         <TextInput
                             placeholder="Username"
-                            placeholderTextColor={colors.OffWhite}
+                            placeholderTextColor={colors.PrimaryBlueLight}
                             style={styles.loginFormTextInput}
                             value={username}
                             onChangeText={(text) => setUsername(text)}
                         />
                         <TextInput
                             placeholder="Password"
-                            placeholderTextColor={colors.OffWhite}
+                            placeholderTextColor={colors.PrimaryBlueLight}
                             style={styles.loginFormTextInput}
                             secureTextEntry={true}
                             value={password}

@@ -4,6 +4,7 @@ import {
     Image,
     View,
     ScrollView,
+    StyleSheet,
 } from "react-native";
 import globalStyles from "../../styles/styles";
 import { DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
@@ -23,11 +24,13 @@ export default function Content(props: any): React.JSX.Element {
             </View>
             <ScrollView>
                 <DrawerItemList {...props} />
-                <DrawerItem
-                    label="Logout"
-                    onPress={() => logout()}
-                />
+
             </ScrollView>
+            <DrawerItem
+                label="Logout"
+                onPress={() => logout()}
+                style={{ bottom: 0 }}
+            />
         </View>
     );
 }
