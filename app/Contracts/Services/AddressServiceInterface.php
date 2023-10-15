@@ -4,8 +4,7 @@ namespace App\Contracts\Services;
 
 use App\Models\Address;
 use App\Services\Data\Address\CreateAddressRequest;
-use App\Services\Data\Company\DeleteCompanyRequest;
-use App\Services\Data\Company\UpdateCompanyRequest;
+use App\Services\Data\Address\UpdateAddressRequest;
 
 interface AddressServiceInterface
 {
@@ -13,7 +12,7 @@ interface AddressServiceInterface
 
     public function store(CreateAddressRequest $data): Address;
 
-    // public function update(UpdateCompanyRequest $data): array;
+    public function update(UpdateAddressRequest $data): Address;
 
     // public function delete(DeleteCompanyRequest $data): bool;
 }

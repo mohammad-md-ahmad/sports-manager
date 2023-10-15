@@ -13,7 +13,6 @@ class CreateCompanyRequest extends Data
 {
     public function __construct(
         public string $name,
-        public string|Optional $name_ar,
         public string|Optional $description,
         public string|Optional $logo,
         public CreateAddressRequest|Optional $createAddressRequest,
