@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Casts\GeocodeCast;
+use App\Casts\JsonCast;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -43,6 +43,6 @@ class Address extends Model
      */
     protected $casts = [
         'uuid' => EfficientUuid::class,
-        'geocode_data' => GeocodeCast::class,
+        'geocode_data' => JsonCast::class,
     ];
 }

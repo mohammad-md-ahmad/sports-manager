@@ -6,7 +6,7 @@ use Illuminate\Contracts\Database\Eloquent\Castable;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Casts\Json;
 
-class GeocodeCast implements Castable
+class JsonCast implements Castable
 {
     /**
      * Get the caster class to use when casting from / to this cast target.
@@ -33,7 +33,7 @@ class GeocodeCast implements Castable
 
             public function serialize($model, string $key, $value, array $attributes)
             {
-                return $value->getArrayCopy();
+                return is_array($value) ? $value : $value->getArrayCopy();
             }
         };
     }

@@ -2,8 +2,8 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CompanyFacilityController;
 use App\Http\Controllers\UserController;
-use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +29,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
         Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
         Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
+
+        Route::prefix('{company}')->group(function () {
+            Route::prefix('facilities')->group(function () {
+
+                Route::post('/', [CompanyFacilityController::class, 'store'])->name('facilities.create');
+                // Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
+                // Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
+                // Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
+            });
+        });
     });
 
     Route::prefix('users')->group(function () {
@@ -41,5 +51,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
 });
 
 Route::get('/test', function () {
-    return User::first()->uuid;
+    return true;
 });
