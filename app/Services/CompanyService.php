@@ -95,9 +95,7 @@ class CompanyService implements CompanyServiceInterface
                 $data->updateUserRequest->type = UserType::COMPANY_USER->name;
 
                 /** @var User $user */
-                $user = $this->userService->update($data->updateUserRequest);
-
-                $this->companyUserService->store($company->id, $user->id);
+                $this->userService->update($data->updateUserRequest);
             }
 
             if ($data->updateAddressRequest instanceof UpdateAddressRequest) {
