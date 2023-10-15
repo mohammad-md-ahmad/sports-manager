@@ -28,7 +28,6 @@ export default function Content(props: any): React.JSX.Element {
                     onPress={() => logout()}
                 />
             </ScrollView>
-
         </View>
     );
 }

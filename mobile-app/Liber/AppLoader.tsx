@@ -22,6 +22,8 @@ import Profile from './src/company/profile';
 import ProfileForm from './src/company/profileForm';
 import { createStackNavigator } from '@react-navigation/stack';
 import Signup from './src/login/signup';
+import Facilities from './src/facilities/facilities';
+import FacilityForm from './src/facilities/facilityForm';
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -37,6 +39,7 @@ function AppLoader(): JSX.Element {
     const { loading } = useLoading();
 
     const ProfileStack = createStackNavigator();
+    const FacilitiesStack = createStackNavigator();
 
     function ProfileNavigation() {
         return (
@@ -44,6 +47,15 @@ function AppLoader(): JSX.Element {
                 <ProfileStack.Screen name="Profile" options={{ title: 'Profile' }} component={Profile} />
                 <ProfileStack.Screen name="ProfileForm" options={{ title: 'Profile Form' }} component={ProfileForm} />
             </ProfileStack.Navigator>
+        );
+    }
+
+    function FacilitiesNavigation() {
+        return (
+            <FacilitiesStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Facilities">
+                <FacilitiesStack.Screen name="Facilities" options={{ title: 'Facilities' }} component={Facilities} />
+                <FacilitiesStack.Screen name="FacilityForm" options={{ title: 'Facility Form' }} component={FacilityForm} />
+            </FacilitiesStack.Navigator>
         );
     }
 
@@ -63,6 +75,7 @@ function AppLoader(): JSX.Element {
 
                         <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
                         <Drawer.Screen name="ProfileNavigation" options={{ title: 'Profile' }} component={ProfileNavigation} />
+                        <Drawer.Screen name="FacilitiesNavigation" options={{ title: 'Facilities' }} component={FacilitiesNavigation} />
 
                         <Drawer.Group
                         // screenOptions={({ navigation }) => ({
