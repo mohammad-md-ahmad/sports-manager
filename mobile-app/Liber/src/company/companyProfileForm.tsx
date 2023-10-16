@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import {
+  Image,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
@@ -8,13 +9,16 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View,
 } from "react-native";
 import globalStyles from "../../styles/styles";
 import CompanyService from "../../api/CompanyService";
 import colors, { placeHolderTextColor } from "../../styles/colors";
-import { Button } from "react-native-elements";
+import { Button, Icon } from "react-native-elements";
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+
 
 interface CompanyFormData {
   name: string;
@@ -79,6 +83,26 @@ export default function CompanyProfileForm(): React.JSX.Element {
       });
   }
 
+  const [logo, setLogo] = useState(require('./../../assets/images/liber_logo.png'));
+
+  const selectImage = async () => {
+    const options = {
+      title: 'Select Profile Picture',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+    const result = await launchImageLibrary(options);
+    setLogo(result.assets);
+
+  };
+
+  async function onImageBrowsePress(): Promise<void> {
+    await selectImage();
+  }
+
+
   return (
     <ScrollView style={styles.scrollView}>
       {/* <KeyboardAvoidingView style={styles.containerView}
@@ -87,6 +111,19 @@ export default function CompanyProfileForm(): React.JSX.Element {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}> */}
       <View style={styles.formContainer}>
         <View style={styles.formView}>
+          <View style={styles.imageContainer}>
+            <Image source={logo} style={styles.logo} />
+
+            <TouchableOpacity style={styles.iconContainer}>
+              <Icon
+                name="camera" // Replace with your desired icon name
+                type="font-awesome" // Replace with your desired icon library
+                size={40}
+                color={colors.PrimaryGreen}
+                onPress={() => onImageBrowsePress()}
+              />
+            </TouchableOpacity>
+          </View>
 
           <View>
             <Text style={styles.label}>Company Name</Text>
@@ -208,7 +245,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
       </View>
       {/* </TouchableWithoutFeedback>
       </KeyboardAvoidingView> */}
-    </ScrollView>
+    </ScrollView >
   );
 }
 
@@ -235,5 +272,25 @@ const styles = StyleSheet.create({
   label: {
     ...globalStyles.inputTextLabel
   },
+  logo: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    marginBottom: 10,
+    borderWidth: 0,
+    resizeMode: 'contain'
+  },
+  imageContainer: {
+    position: 'relative',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  iconContainer: {
+    backgroundColor: colors.PrimaryBlue,
+    position: 'absolute',
+    top: 100,
+    left: 210
+  },
+
 });
 
