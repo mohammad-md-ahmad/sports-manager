@@ -14,7 +14,7 @@ import {
     ScrollView,
     Dimensions,
 } from "react-native";
-import colors, { placeHolderTextColor } from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button } from "react-native-elements";
 import globalStyles from "../../styles/styles";
 import UserService from "../../api/UserService";

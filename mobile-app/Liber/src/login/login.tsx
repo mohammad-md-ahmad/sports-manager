@@ -9,7 +9,7 @@ import {
     View,
     StyleSheet,
 } from "react-native";
-import colors, { placeHolderTextColor } from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button } from "react-native-elements";
 import AuthService from "../../api/AuthService";
 import { useAuth } from "../../AuhtContext";

@@ -1,5 +1,6 @@
 const colors = {
     PrimaryGreen: '#8dc63f',
+    PrimaryGreenLight: '#8dc63f80',
     PrimaryBlue: '#22759c',
     PrimaryBlueLight: '#22759c80',
     SecondaryRed: '#c54244',
@@ -10,5 +11,3 @@ const colors = {
 };
 
 export default colors;
-
-export const placeHolderTextColor = colors.PrimaryBlueLight;

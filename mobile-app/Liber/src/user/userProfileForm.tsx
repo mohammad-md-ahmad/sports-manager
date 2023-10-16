@@ -14,7 +14,7 @@ import {
   View,
 } from "react-native";
 import globalStyles from "../../styles/styles";
-import colors, { placeHolderTextColor } from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button, Icon } from "react-native-elements";
 import UserService from "../../api/UserService";
 import { launchImageLibrary } from "react-native-image-picker";

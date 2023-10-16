@@ -9,7 +9,7 @@ import {
 import { Button } from "react-native-elements";
 import FacilityService from "../../api/FacilityService";
 import globalStyles from "../../styles/styles";
-import colors, { placeHolderTextColor } from "../../styles/colors";
+import colors, { placeHolderTextColor } from "../../styles/styles";
 
 interface FormData {
     name: string;

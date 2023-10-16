@@ -4,6 +4,8 @@ const React = require("react-native");
 
 const { StyleSheet } = React;
 
+export const placeHolderTextColor = colors.PrimaryBlueLight;
+
 const globalStyles = StyleSheet.create({
   containerView: {
     flex: 1,
