@@ -25,7 +25,6 @@ class Company extends Model
         'uuid',
         'name',
         'description',
-        'logo',
     ];
 
     /**
