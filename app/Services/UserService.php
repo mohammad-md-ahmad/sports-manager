@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
-use Spatie\LaravelData\Optional;
 
 class UserService implements UserServiceInterface
 {
@@ -75,7 +74,7 @@ class UserService implements UserServiceInterface
         try {
             $userId = $data->id ?? $data->id_from_route;
 
-            if (!$userId) {
+            if (! $userId) {
                 throw ValidationException::withMessages(['id' => __('id is required.')]);
             }
 
@@ -101,7 +100,7 @@ class UserService implements UserServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            if (!empty($uploadedImg)) {
+            if (! empty($uploadedImg)) {
                 $this->deleteImage($uploadedImg);
             }
 

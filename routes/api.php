@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
-Route::prefix('register')->group(function() {
+Route::prefix('register')->group(function () {
     Route::post('/company', [RegisterController::class, 'registerCompany'])->name('register.company');
     Route::post('/user', [RegisterController::class, 'registerUser'])->name('register.user');
 });
