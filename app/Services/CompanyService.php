@@ -73,9 +73,13 @@ class CompanyService implements CompanyServiceInterface
                 $this->addressService->store($data->createAddressRequest);
             }
 
+            $uploadedImg = null;
+
             // after company got updated successfully, upload and update the logo
             if ($data->logo) {
-                $company->update(['logo' => $this->uploadLogo($data->logo, $company->id)]);
+                $uploadedImg = $this->uploadLogo($data->logo, $company->id);
+                $company->logo = $uploadedImg;
+                $company->save();
             }
 
             DB::commit();
@@ -83,6 +87,8 @@ class CompanyService implements CompanyServiceInterface
             return $company;
         } catch (Exception $exception) {
             DB::rollBack();
+
+            $this->deleteLogo($uploadedImg);
 
             Log::error('CompanyService::store: '.$exception->getMessage());
 
@@ -114,9 +120,13 @@ class CompanyService implements CompanyServiceInterface
                 $this->addressService->update($data->updateAddressRequest);
             }
 
+            $uploadedImg = null;
+
             // after company got updated successfully, upload and update the logo
             if ($data->logo) {
-                $company->update(['logo' => $this->uploadLogo($data->logo, $company->id)]);
+                $uploadedImg = $this->uploadLogo($data->logo, $company->id);
+                $company->logo = $uploadedImg;
+                $company->save();
             }
 
             DB::commit();
@@ -124,6 +134,8 @@ class CompanyService implements CompanyServiceInterface
             return $company;
         } catch (Exception $exception) {
             DB::rollBack();
+
+            $this->deleteLogo($uploadedImg);
 
             Log::error('CompanyService::update: '.$exception->getMessage());
 
