@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyFacilityController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,11 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+
+Route::prefix('register')->group(function() {
+    Route::post('/company', [RegisterController::class, 'registerCompany'])->name('register.company');
+    Route::post('/user', [RegisterController::class, 'registerUser'])->name('register.user');
+});
 
 Route::middleware(['auth:sanctum'])->group(function () {
 

@@ -8,6 +8,7 @@ use Illuminate\Validation\Rules\Password;
 use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 
 class CreateUserRequest extends Data
 {
@@ -19,7 +20,8 @@ class CreateUserRequest extends Data
         #[Email]
         public string $email,
         public string $password,
-        public ?string $type = null,
+        public string|Optional $profile_picture,
+        public string|Optional $type,
     ) {
     }
 
