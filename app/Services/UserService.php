@@ -30,7 +30,7 @@ class UserService implements UserServiceInterface
 
             return $user;
         } catch (Exception $exception) {
-            Log::error('UserService::get: '.$exception->getMessage());
+            Log::error('UserService::get: ' . $exception->getMessage());
 
             throw $exception;
         }
@@ -49,7 +49,7 @@ class UserService implements UserServiceInterface
             $uploadedImg = null;
 
             // after company got updated successfully, upload and update the logo
-            if ($data->profile_picture) {
+            if ($data->profile_picture && is_string($data->profile_picture)) {
                 $uploadedImg = $this->uploadImage($data->profile_picture, $user->id);
                 $user->profile_picture = $uploadedImg;
                 $user->save();
@@ -63,7 +63,7 @@ class UserService implements UserServiceInterface
 
             $this->deleteImage($uploadedImg);
 
-            Log::error('UserService::store: '.$exception->getMessage());
+            Log::error('UserService::store: ' . $exception->getMessage());
 
             throw $exception;
         }
@@ -74,7 +74,7 @@ class UserService implements UserServiceInterface
         try {
             $userId = $data->id ?? $data->id_from_route;
 
-            if (! $userId) {
+            if (!$userId) {
                 throw ValidationException::withMessages(['id' => __('id is required.')]);
             }
 
@@ -88,7 +88,7 @@ class UserService implements UserServiceInterface
             $uploadedImg = null;
 
             // after company got updated successfully, upload and update the logo
-            if ($data->profile_picture) {
+            if ($data->profile_picture && is_string($data->profile_picture)) {
                 $uploadedImg = $this->uploadImage($data->profile_picture, $user->id);
                 $user->profile_picture = $uploadedImg;
                 $user->save();
@@ -100,11 +100,11 @@ class UserService implements UserServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            if (! empty($uploadedImg)) {
+            if (!empty($uploadedImg)) {
                 $this->deleteImage($uploadedImg);
             }
 
-            Log::error('UserService::update: '.$exception->getMessage());
+            Log::error('UserService::update: ' . $exception->getMessage());
 
             throw $exception;
         }
@@ -115,7 +115,7 @@ class UserService implements UserServiceInterface
         try {
             return User::findOrFail($data->id)->delete();
         } catch (Exception $exception) {
-            Log::error('UserService::delete: '.$exception->getMessage());
+            Log::error('UserService::delete: ' . $exception->getMessage());
 
             throw $exception;
         }
@@ -130,7 +130,7 @@ class UserService implements UserServiceInterface
             do {
                 $imageData = $this->base64Decode($image);
                 $path = $this->base64ToImage($image, 'user-profile-pictures', $imageData);
-            } while (! Storage::disk('public')->put($path, $imageData));
+            } while (!Storage::disk('public')->put($path, $imageData));
 
             // delete the old logo
             if ($id) {
@@ -144,7 +144,7 @@ class UserService implements UserServiceInterface
 
             return $path;
         } catch (Exception $exception) {
-            Log::error('Uploading user profile picture: '.$exception->getMessage());
+            Log::error('Uploading user profile picture: ' . $exception->getMessage());
 
             throw $exception;
         }
@@ -155,7 +155,7 @@ class UserService implements UserServiceInterface
         try {
             return Storage::disk('public')->delete($image);
         } catch (Exception $exception) {
-            Log::error('Delete user profile picture: '.$exception->getMessage());
+            Log::error('Delete user profile picture: ' . $exception->getMessage());
 
             throw $exception;
         }
