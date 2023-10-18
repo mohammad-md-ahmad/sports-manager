@@ -17,8 +17,8 @@ import {
 import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button } from "react-native-elements";
 import globalStyles from "../../styles/styles";
-import UserService from "../../api/UserService";
-import CompanyService from "../../api/CompanyService";
+import RegisterService from "../../api/RegisterService";
+import { useNavigation } from "@react-navigation/native";
 
 interface UserFormData {
     first_name: string;
@@ -44,8 +44,9 @@ interface CompanyFormData {
 
 export default function Signup(): React.JSX.Element {
 
-    let companyService = new CompanyService();
-    let userService = new UserService();
+    let registerService = new RegisterService();
+
+    const navigator = useNavigation();
 
     const [formData, setFormData] = useState({
         first_name: '',
@@ -55,7 +56,7 @@ export default function Signup(): React.JSX.Element {
         password: '',
         password_confirmation: '',
         name: '',
-        is_company: false
+        is_company: false,
     });
 
     const handleInputChange = (key: string, value: any) => {
@@ -65,36 +66,42 @@ export default function Signup(): React.JSX.Element {
         }));
     }
     const onSignupPress = () => {
-        let service;
-        let data;
         if (formData.is_company) {
-            service = companyService;
             const companyFormData: CompanyFormData = {
                 ...formData,
                 createUserRequest: {
                     ...formData
                 }
             };
-            data = companyFormData;
+            
+            registerService.createCompany(companyFormData).then((response) => {
+                // Handle a successful API response
+                //console.log('Success signup:', response.data);
+
+                navigator.navigate('Login');
+            })
+                .catch((error) => {
+                    // Handle API request errors here
+                    //console.error('Error signup:', error);
+                });
         } else {
-            service = userService;
             const userFormData: UserFormData = {
                 ...formData,
             };
-            data = userFormData;
+
+            registerService.createUser(userFormData).then((response) => {
+                // Handle a successful API response
+                //console.log('Success signup:', response.data);
+
+                navigator.navigate('Login');
+
+            })
+                .catch((error) => {
+                    // Handle API request errors here
+                    //console.error('Error signup:', error);
+                });
+
         }
-
-        console.log(data);
-
-        service.create(data).then((response) => {
-            // Handle a successful API response
-            console.log('Success signup:', response.data);
-        })
-            .catch((error) => {
-                // Handle API request errors here
-                console.error('Error signup:', error);
-            });
-
     };
 
     return (

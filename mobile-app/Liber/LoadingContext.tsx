@@ -12,7 +12,6 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(false);
 
     const setGlobalLoading = (status: boolean) => {
-        console.log('loading status');
         setLoading(status);
     };
 

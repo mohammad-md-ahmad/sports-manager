@@ -57,6 +57,11 @@ abstract class AxiosService {
             (response) => {
                 // You can handle successful responses here
                 setGlobalLoading(false);
+
+                console.log(response.data.message)
+
+                displaySnackbar(response.data.message);
+
                 return response;
             },
             (error) => {

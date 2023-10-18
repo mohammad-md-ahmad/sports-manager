@@ -56,7 +56,7 @@ function AppLoader(): JSX.Element {
 
     function ProfileNavigation() {
 
-        if (userData?.type == 'COMPANY' || true)
+        if (userData?.type == 'COMPANY_USER')
             return (
                 <ProfileStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
                     <ProfileStack.Screen name="CompanyProfile" options={{ title: 'Profile' }} component={CompanyProfile} />
