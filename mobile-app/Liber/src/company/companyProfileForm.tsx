@@ -21,10 +21,11 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 
 interface CompanyFormData {
+  uuid: string | null;
   name: string;
   name_ar: string;
   description: string;
-  logo: string|null;
+  logo: string | null;
   createAddressRequest: {
     line_1: string;
     line_2: string;
@@ -42,6 +43,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
   let companyService = new CompanyService();
 
   const [formData, setFormData] = useState<CompanyFormData>({
+    uuid: null,
     name: '',
     name_ar: '',
     description: '',
@@ -132,6 +134,11 @@ export default function CompanyProfileForm(): React.JSX.Element {
               />
             </TouchableOpacity>
           </View>
+
+          <TextInput
+            caretHidden={true}
+            value={formData.uuid}
+          />
 
           <View>
             <Text style={styles.label}>Company Name</Text>

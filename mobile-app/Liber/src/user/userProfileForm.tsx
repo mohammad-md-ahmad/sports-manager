@@ -33,6 +33,7 @@ export default function UserProfileForm(): React.JSX.Element {
   let userService = new UserService();
 
   const [formData, setFormData] = useState({
+    uuid: null,
     first_name: '',
     last_name: '',
     username: '',
@@ -49,7 +50,7 @@ export default function UserProfileForm(): React.JSX.Element {
 
   function onSubmitPress(): void {
     console.log(formData);
-    userService.create(formData).then((response) => {
+    userService.update(formData).then((response) => {
       // Handle a successful API response
       console.log('Success signup:', response.data);
     })
@@ -109,6 +110,11 @@ export default function UserProfileForm(): React.JSX.Element {
                   />
                 </TouchableOpacity>
               </View>
+
+              <TextInput
+                caretHidden={true}
+                value={formData.uuid}
+              />
 
               <View>
                 <Text style={styles.label}>First Name</Text>
