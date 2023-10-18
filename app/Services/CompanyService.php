@@ -76,7 +76,7 @@ class CompanyService implements CompanyServiceInterface
             $uploadedImg = null;
 
             // after company got updated successfully, upload and update the logo
-            if ($data->logo) {
+            if ($data->logo && is_string($data->logo)) {
                 $uploadedImg = $this->uploadLogo($data->logo, $company->id);
                 $company->logo = $uploadedImg;
                 $company->save();
@@ -87,7 +87,7 @@ class CompanyService implements CompanyServiceInterface
             return $company;
         } catch (Exception $exception) {
             DB::rollBack();
-
+            dump( $exception);
             $this->deleteLogo($uploadedImg);
 
             Log::error('CompanyService::store: '.$exception->getMessage());
@@ -123,7 +123,7 @@ class CompanyService implements CompanyServiceInterface
             $uploadedImg = null;
 
             // after company got updated successfully, upload and update the logo
-            if ($data->logo) {
+            if ($data->logo && is_string($data->logo)) {
                 $uploadedImg = $this->uploadLogo($data->logo, $company->id);
                 $company->logo = $uploadedImg;
                 $company->save();
