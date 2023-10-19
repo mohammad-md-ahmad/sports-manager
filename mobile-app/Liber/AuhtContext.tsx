@@ -2,6 +2,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { clearToken, getToken, storeToken } from './helpers/tokenManage';
 import { storeUserData } from './helpers/userDataManage';
+import { storeCompanyData } from './helpers/companyDataManage';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -39,7 +40,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (data.token) {
             setIsAuthenticated(true);
             storeToken(data.token);
-            storeUserData(data);
+            storeUserData(data.user);
+            if (data.company)
+                storeCompanyData(data.company);
         }
     };
 

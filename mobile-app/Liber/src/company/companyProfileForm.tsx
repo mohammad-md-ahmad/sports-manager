@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Image,
@@ -18,6 +18,7 @@ import CompanyService from "../../api/CompanyService";
 import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button, Icon } from "react-native-elements";
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { getCompanyData } from "../../helpers/companyDataManage";
 
 
 interface CompanyFormData {
@@ -58,6 +59,31 @@ export default function CompanyProfileForm(): React.JSX.Element {
       country_uuid: '',
     },
   });
+
+
+  useEffect(() => {
+    getCompanyData().then((data: string | null) => {
+      if (data !== null) {
+        let parsedData = JSON.parse(data);
+        console.log('parsedData-------', parsedData)
+
+        // if (parsedData.logo == null)
+        //   parsedData.logo = require('./../../assets/images/liber_logo.png');
+
+        parsedData.createAddressRequest = {
+          line_1: '',
+          line_2: '',
+          line_3: '',
+          city: '',
+          region: '',
+          postcode: '',
+          country_uuid: '',
+        }
+
+        setFormData({ ...parsedData });
+      }
+    });
+  }, [])
 
   const handleInputChange = (field: string, value: string) => {
     if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
@@ -136,8 +162,9 @@ export default function CompanyProfileForm(): React.JSX.Element {
           </View>
 
           <TextInput
-            caretHidden={true}
+            hidden={true}
             value={formData.uuid}
+
           />
 
           <View>

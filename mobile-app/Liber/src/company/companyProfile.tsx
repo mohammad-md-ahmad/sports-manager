@@ -1,25 +1,40 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
+import { getCompanyData } from '../../helpers/companyDataManage';
 
 export default function CompanyProfile() {
     // Extract user information from the route parameters
 
     const navigator = useNavigation();
 
-    let companyData = {
+    const [companyData, setCompanyData] = useState({
         name: 'Liber Co',
         description: 'Liber Co is a company for booking facilities Liber Co is a company for booking facilities Liber Co is a company for booking facilities',
         logo: require('./../../assets/images/liber_logo.png')
-    }
+    });
 
     function onEditPress(): void {
         navigator.navigate('CompanyProfileForm')
     }
+
+    useEffect(() => {
+        getCompanyData().then((data: string | null) => {
+            if (data !== null) {
+                let parsedData = JSON.parse(data);
+                console.log('parsedData-------', parsedData)
+
+                if (parsedData.logo == null)
+                    parsedData.logo = require('./../../assets/images/liber_logo.png');
+
+                setCompanyData({ ...parsedData });
+            }
+        });
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -56,7 +71,7 @@ const styles = StyleSheet.create({
         ...globalStyles.text,
         fontSize: 20,
         marginBottom: 5,
-        color: colors.OffWhite,
+        color: colors.PrimaryBlue,
     },
     description: {
         ...globalStyles.text,

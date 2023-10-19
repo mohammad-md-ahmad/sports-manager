@@ -31,6 +31,7 @@ import UserProfile from './src/user/userProfile';
 import MiscService from './api/MiscService';
 import { storeFacilityTypes } from './helpers/facilityTypesDataManage';
 import { storeCountries } from './helpers/CountriesDataManage';
+import { Icon } from 'react-native-elements';
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -49,6 +50,7 @@ function AppLoader(): JSX.Element {
 
     const ProfileStack = createStackNavigator();
     const FacilitiesStack = createStackNavigator();
+    const DashboardStack = createStackNavigator();
 
     const [userData, setUserData] = useState({});
 
@@ -86,6 +88,22 @@ function AppLoader(): JSX.Element {
             );
     }
 
+    function DashboardNavigation() {
+
+        if (userData?.type == 'COMPANY_USER')
+            return (
+                <DashboardStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
+                    <DashboardStack.Screen name="CompanyDashboard" options={{ title: 'Company Dashboard' }} component={Dashboard} />
+                </DashboardStack.Navigator>
+            );
+        else
+            return (
+                <DashboardStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
+                    <DashboardStack.Screen name="CustomerDashboard" options={{ title: 'Customer Dashboard' }} component={Dashboard} />
+                </DashboardStack.Navigator>
+            );
+    }
+
     function FacilitiesNavigation() {
         return (
             <FacilitiesStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Facilities">
@@ -109,14 +127,20 @@ function AppLoader(): JSX.Element {
                     <Drawer.Group
                         screenOptions={{ headerStyle: { backgroundColor: colors.PrimaryGreen } }}>
 
-                        <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
+                        <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={DashboardNavigation} />
                         <Drawer.Screen name="ProfileNavigation" options={{ title: 'Profile' }} component={ProfileNavigation} />
                         <Drawer.Screen name="FacilitiesNavigation" options={{ title: 'Facilities' }} component={FacilitiesNavigation} />
 
                         <Drawer.Group
                         // screenOptions={({ navigation }) => ({
-                        //   presentation: 'modal',
-                        //   headerLeft: () => <CancelButton onPress={navigation.goBack} />,
+                        //     presentation: 'modal',
+                        //     headerLeft: () => <Icon
+                        //         name="arrow-left" // Replace with your desired icon name
+                        //         type="font-awesome"
+                        //         size={30}
+                        //         color={colors.PrimaryBlue}
+                        //         onPress={navigation.goBack}
+                        //     />
                         // })}
                         >
                             <Drawer.Screen name="About" options={{ title: 'About' }} component={About} />

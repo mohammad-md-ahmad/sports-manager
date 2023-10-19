@@ -9,10 +9,22 @@ import {
 import globalStyles from "../../styles/styles";
 import { DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { useAuth } from "../../AuhtContext";
+import AuthService from "../../api/AuthService";
 
 export default function Content(props: any): React.JSX.Element {
     const { logout } = useAuth();
-    const Drawer = createDrawerNavigator();
+    const authService = new AuthService();
+
+    const onLoginPress = () => {
+        authService.logout().then((response) => {
+            // Handle a successful API response
+            logout();
+
+        }).catch((error) => {
+            // Handle API request errors here
+            console.error('Error logout:', error);
+        });
+    };
 
     return (
         <View style={globalStyles.drawerContainer} >
@@ -28,7 +40,7 @@ export default function Content(props: any): React.JSX.Element {
             </ScrollView>
             <DrawerItem
                 label="Logout"
-                onPress={() => logout()}
+                onPress={() => onLoginPress()}
                 style={{ bottom: 0 }}
             />
         </View>
