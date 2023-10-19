@@ -87,7 +87,7 @@ class CompanyService implements CompanyServiceInterface
             return $company;
         } catch (Exception $exception) {
             DB::rollBack();
-            dump( $exception);
+
             $this->deleteLogo($uploadedImg);
 
             Log::error('CompanyService::store: '.$exception->getMessage());

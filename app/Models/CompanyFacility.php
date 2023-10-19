@@ -8,6 +8,7 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CompanyFacility extends Model
@@ -39,4 +40,9 @@ class CompanyFacility extends Model
         'uuid' => EfficientUuid::class,
         'details' => JsonCast::class,
     ];
+
+    public function address(): MorphOne
+    {
+        return $this->morphOne(Address::class, 'model');
+    }
 }
