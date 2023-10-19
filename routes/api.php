@@ -41,6 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('facilities')->group(function () {
 
                 Route::post('/', [CompanyFacilityController::class, 'store'])->name('facilities.create');
+                Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('companies.get-all');
                 // Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
                 // Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
                 // Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
