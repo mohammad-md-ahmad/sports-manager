@@ -28,6 +28,9 @@ import CompanyProfileForm from './src/company/companyProfileForm';
 import { getUserData } from './helpers/userDataManage';
 import UserProfileForm from './src/user/userProfileForm';
 import UserProfile from './src/user/userProfile';
+import MiscService from './api/MiscService';
+import { storeFacilityTypes } from './helpers/facilityTypesDataManage';
+import { storeCountries } from './helpers/CountriesDataManage';
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -36,6 +39,8 @@ function AppLoader(): JSX.Element {
         backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
         flex: 1
     };
+
+    const miscService = new MiscService();
 
     const Drawer = createDrawerNavigator();
     const Stack = createStackNavigator();
@@ -53,6 +58,15 @@ function AppLoader(): JSX.Element {
         });
     });
 
+    useEffect(() => {
+        miscService.lists().then((response) => {
+            storeFacilityTypes(response.data?.data?.facility_types);
+            storeCountries(response.data?.data?.countries);
+            console.log(response.data?.data);
+        }).catch((error) => {
+
+        });
+    }, []);
 
     function ProfileNavigation() {
 

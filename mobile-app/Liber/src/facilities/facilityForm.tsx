@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     ScrollView,
@@ -9,7 +9,11 @@ import {
 import { Button } from "react-native-elements";
 import FacilityService from "../../api/FacilityService";
 import globalStyles from "../../styles/styles";
-import colors, { placeHolderTextColor } from "../../styles/styles";
+import { placeHolderTextColor } from "../../styles/styles";
+import DropDownPicker from "react-native-dropdown-picker";
+import colors from "../../styles/colors";
+import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
+import { getCountries } from "../../helpers/CountriesDataManage";
 
 interface FormData {
     name: string;
@@ -50,6 +54,50 @@ export default function FacilityForm(): React.JSX.Element {
         },
     });
 
+    const [openFacilityTypeList, setOpenFacilityTypeList] = useState(false);
+    const [facilityTypes, setFacilityTypes] = useState([]);
+
+    const [openCountryList, setOpenCountryList] = useState(false);
+    const [countries, setCountries] = useState([]);
+
+    useEffect(() => {
+        getFacilityTypes().then((response) => {
+            if (response) {
+                const json = JSON.parse(response);
+
+                let data = [];
+
+                Object.keys(json).forEach(function(key) {
+                    data.push({
+                        label: json[key],
+                        value: key,
+                    });
+                });
+
+                setFacilityTypes(data);
+            }
+        })
+    }, []);
+
+    useEffect(() => {
+        getCountries().then((response) => {
+            if (response) {
+                const json: any[] = JSON.parse(response);
+
+                let data = [];
+
+                json.forEach((item) => {
+                    data.push({
+                        label: item?.name,
+                        value: item?.country_uuid,
+                    });
+                });
+
+                setCountries(data);
+            }
+        })
+    }, []);
+
     const handleInputChange = (field: keyof FormData, value: string) => {
         if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
             // Handle nested objects
@@ -84,12 +132,16 @@ export default function FacilityForm(): React.JSX.Element {
                     placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
-                <TextInput
+                <DropDownPicker
+                    textStyle={{color: colors.PrimaryBlue}}
+                    placeholder="Select Facility Type"
+                    placeholderStyle={{color: colors.PrimaryBlue}}
+                    open={openFacilityTypeList}
                     value={formData.type}
-                    onChangeText={(text) => handleInputChange('type', text)}
-                    placeholder="Type"
-                    placeholderTextColor={placeHolderTextColor}
-                    style={styles.input}
+                    items={facilityTypes}
+                    setOpen={setOpenFacilityTypeList}
+                    setValue={(text: any) => handleInputChange('type', text)}
+                    style={styles.dropDown}
                 />
                 <TextInput
                     value={formData.details.length}
@@ -147,12 +199,16 @@ export default function FacilityForm(): React.JSX.Element {
                     placeholderTextColor={placeHolderTextColor}
                     style={styles.input}
                 />
-                <TextInput
+                <DropDownPicker
+                    textStyle={{color: colors.PrimaryBlue}}
+                    placeholder="Select Country"
+                    placeholderStyle={{color: colors.PrimaryBlue}}
+                    open={openCountryList}
                     value={formData.createAddressRequest.country_uuid}
-                    onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
-                    placeholder="Country"
-                    placeholderTextColor={placeHolderTextColor}
-                    style={styles.input}
+                    items={countries}
+                    setOpen={setOpenCountryList}
+                    setValue={(text: any) => handleInputChange('createAddressRequest.country_uuid', text)}
+                    style={styles.dropDown}
                 />
                 <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.button} />
             </View>
@@ -177,4 +233,8 @@ const styles = StyleSheet.create({
         // marginBottom: 10,
         // paddingLeft: 10,
     },
+    dropDown: {
+        ...globalStyles.inputText,
+        marginBottom: 10,
+    }
 });
