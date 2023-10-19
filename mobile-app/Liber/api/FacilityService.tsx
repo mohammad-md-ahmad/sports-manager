@@ -4,10 +4,14 @@ import AxiosService from './AxiosService';
 class FacilityService extends AxiosService {
     userData = getUserData().then((data: string | null) => {
         return data === null ? null : JSON.parse(data);
+    }).then((data) => {
+        return data;
     });
 
     async create(data: Object) {
-        return this.post(`/companies/${this.userData.uuid}/facilities`, data);
+        const userData = await this.userData;
+
+        return this.post(`/companies/${userData.company.uuid}/facilities`, data);
     }
 }
 

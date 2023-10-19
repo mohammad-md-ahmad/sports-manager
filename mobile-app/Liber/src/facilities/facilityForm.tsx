@@ -14,6 +14,8 @@ import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../../styles/colors";
 import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { getCountries } from "../../helpers/CountriesDataManage";
+import Snackbar from "react-native-snackbar";
+import { useNavigation } from "@react-navigation/native";
 
 interface FormData {
     name: string;
@@ -30,10 +32,16 @@ interface FormData {
         region: string;
         postcode: string;
         country_uuid: string;
+        geocode_data: {
+            lat: string;
+            lng: string;
+        };
     };
 }
 
 export default function FacilityForm(): React.JSX.Element {
+    const navigator = useNavigation();
+
     const facilityService = new FacilityService();
 
     const [formData, setFormData] = useState<FormData>({
@@ -51,6 +59,10 @@ export default function FacilityForm(): React.JSX.Element {
             region: '',
             postcode: '',
             country_uuid: '',
+            geocode_data: {
+                lat: '34',
+                lng: '35',
+            }
         },
     });
 
@@ -60,6 +72,9 @@ export default function FacilityForm(): React.JSX.Element {
     const [openCountryList, setOpenCountryList] = useState(false);
     const [countries, setCountries] = useState([]);
 
+    const [selectedFacilityType, setSelectedFacilityType] = useState<string>('');
+    const [selectedCountry, setSelectedCountry] = useState<string>('');
+
     useEffect(() => {
         getFacilityTypes().then((response) => {
             if (response) {
@@ -67,7 +82,7 @@ export default function FacilityForm(): React.JSX.Element {
 
                 let data = [];
 
-                Object.keys(json).forEach(function(key) {
+                Object.keys(json).forEach(function (key) {
                     data.push({
                         label: json[key],
                         value: key,
@@ -98,6 +113,19 @@ export default function FacilityForm(): React.JSX.Element {
         })
     }, []);
 
+    useEffect(() => {
+        setFormData({ ...formData, 'type': selectedFacilityType });
+    }, [selectedFacilityType]);
+
+    useEffect(() => {
+        setFormData({
+            ...formData, createAddressRequest: {
+                ...formData.createAddressRequest,
+                country_uuid: selectedCountry,
+            }
+        });
+    }, [selectedCountry]);
+
     const handleInputChange = (field: keyof FormData, value: string) => {
         if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
             // Handle nested objects
@@ -109,14 +137,49 @@ export default function FacilityForm(): React.JSX.Element {
                     [nestedField]: value,
                 },
             });
+
+            if (nestedField === 'country_uuid') {
+                setSelectedCountry(value);
+            }
         } else {
             setFormData({ ...formData, [field]: value });
+
+            // Update the selectedFacilityType with the value
+            if (field === 'type') {
+                setSelectedFacilityType(value);
+            }
         }
     };
 
+    const sanitizeFormData = (data) => {
+        const sanitizedData = {};
+
+        for (const key in data) {
+            if (data[key] === null || data[key] === '') {
+                continue; // Skip null or empty properties
+            }
+            if (typeof data[key] === 'object') {
+                sanitizedData[key] = sanitizeFormData(data[key]); // Recursively sanitize nested objects
+            } else {
+                sanitizedData[key] = data[key];
+            }
+        }
+
+        return sanitizedData;
+    };
+
     const handleSubmit = () => {
-        facilityService.create(formData).then((response) => {
-            console.log(response);
+        const sanitizedFormData = sanitizeFormData(formData);
+
+        facilityService.create(sanitizedFormData).then((response) => {
+            Snackbar.show({
+                text: 'Facility has been created successfully!',
+                duration: 3000
+            });
+
+            setTimeout(() => {
+                navigator.navigate('Facilities');
+            }, 2000); // sleep for 2 secs
         }).catch((error) => {
             console.log(error);
         });
@@ -133,11 +196,11 @@ export default function FacilityForm(): React.JSX.Element {
                     style={styles.input}
                 />
                 <DropDownPicker
-                    textStyle={{color: colors.PrimaryBlue}}
+                    textStyle={{ color: colors.PrimaryBlue }}
                     placeholder="Select Facility Type"
-                    placeholderStyle={{color: colors.PrimaryBlue}}
+                    placeholderStyle={{ color: colors.PrimaryBlue }}
                     open={openFacilityTypeList}
-                    value={formData.type}
+                    value={selectedFacilityType}
                     items={facilityTypes}
                     setOpen={setOpenFacilityTypeList}
                     setValue={(text: any) => handleInputChange('type', text)}
@@ -200,11 +263,11 @@ export default function FacilityForm(): React.JSX.Element {
                     style={styles.input}
                 />
                 <DropDownPicker
-                    textStyle={{color: colors.PrimaryBlue}}
+                    textStyle={{ color: colors.PrimaryBlue }}
                     placeholder="Select Country"
-                    placeholderStyle={{color: colors.PrimaryBlue}}
+                    placeholderStyle={{ color: colors.PrimaryBlue }}
                     open={openCountryList}
-                    value={formData.createAddressRequest.country_uuid}
+                    value={selectedCountry}
                     items={countries}
                     setOpen={setOpenCountryList}
                     setValue={(text: any) => handleInputChange('createAddressRequest.country_uuid', text)}

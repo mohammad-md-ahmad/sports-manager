@@ -28,6 +28,8 @@ abstract class AxiosService {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
 
+                console.log('Request Body Data:', config.data);
+
                 setGlobalLoading(true);
                 return config;
             },
@@ -90,7 +92,7 @@ abstract class AxiosService {
             // Display a Snackbar message with the provided message
             Snackbar.show({
                 text: message,
-                duration: Snackbar.LENGTH_SHORT,
+                duration: 2000,
             });
         };
     }

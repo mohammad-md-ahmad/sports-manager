@@ -56,7 +56,7 @@ function AppLoader(): JSX.Element {
         getUserData().then((data: string | null) => {
             setUserData(data === null ? null : JSON.parse(data));
         });
-    });
+    }, []);
 
     useEffect(() => {
         miscService.lists().then((response) => {

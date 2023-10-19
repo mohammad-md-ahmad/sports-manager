@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (data.token) {
             setIsAuthenticated(true);
             storeToken(data.token);
-            //storeUserData(data.token);
+            storeUserData(data);
         }
     };
 
