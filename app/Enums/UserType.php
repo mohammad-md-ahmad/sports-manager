@@ -16,4 +16,13 @@ enum UserType
             self::CUSTOMER_USER => __('Customer User'),
         };
     }
+
+    public static function toArray()
+    {
+        return [
+            self::ADMIN->name => __('Admin'),
+            self::COMPANY_USER->name => __('Company User'),
+            self::CUSTOMER_USER->name => __('Customer User'),
+        ];
+    }
 }

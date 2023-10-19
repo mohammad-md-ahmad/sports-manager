@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyFacilityController;
+use App\Http\Controllers\MiscController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -54,6 +55,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/{uuid}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/{uuid}', [UserController::class, 'delete'])->name('users.delete');
     });
+
+    Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
 });
 
 Route::get('/test', function () {
