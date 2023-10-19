@@ -33,10 +33,12 @@ export default function UserProfileForm(): React.JSX.Element {
   let userService = new UserService();
 
   const [formData, setFormData] = useState({
+    uuid: null,
     first_name: '',
     last_name: '',
     username: '',
     email: '',
+    profile_picture: null,
   });
 
   const handleInputChange = (key: string, value: any) => {
@@ -47,7 +49,8 @@ export default function UserProfileForm(): React.JSX.Element {
   }
 
   function onSubmitPress(): void {
-    userService.create(formData).then((response) => {
+    console.log(formData);
+    userService.update(formData).then((response) => {
       // Handle a successful API response
       console.log('Success signup:', response.data);
     })
@@ -67,10 +70,16 @@ export default function UserProfileForm(): React.JSX.Element {
         skipBackup: true,
         path: 'images',
       },
+      includeBase64: true
     };
     const result = await launchImageLibrary(options);
-    setLogo(result.assets);
-
+    if (result.assets) {
+      setLogo(result.assets);
+      setFormData((prevData) => ({
+        ...prevData,
+        ['profile_picture']: result.assets[0].base64,
+      }));
+    }
   };
 
   async function onImageBrowsePress(): Promise<void> {
@@ -101,6 +110,11 @@ export default function UserProfileForm(): React.JSX.Element {
                   />
                 </TouchableOpacity>
               </View>
+
+              <TextInput
+                caretHidden={true}
+                value={formData.uuid}
+              />
 
               <View>
                 <Text style={styles.label}>First Name</Text>

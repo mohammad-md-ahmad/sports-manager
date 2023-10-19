@@ -21,9 +21,11 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 
 interface CompanyFormData {
+  uuid: string | null;
   name: string;
   name_ar: string;
   description: string;
+  logo: string | null;
   createAddressRequest: {
     line_1: string;
     line_2: string;
@@ -41,9 +43,11 @@ export default function CompanyProfileForm(): React.JSX.Element {
   let companyService = new CompanyService();
 
   const [formData, setFormData] = useState<CompanyFormData>({
+    uuid: null,
     name: '',
     name_ar: '',
     description: '',
+    logo: null,
     createAddressRequest: {
       line_1: '',
       line_2: '',
@@ -92,10 +96,16 @@ export default function CompanyProfileForm(): React.JSX.Element {
         skipBackup: true,
         path: 'images',
       },
+      includeBase64: true
     };
     const result = await launchImageLibrary(options);
-    setLogo(result.assets);
-
+    if (result.assets) {
+      setLogo(result.assets);
+      setFormData((prevData) => ({
+        ...prevData,
+        ['logo']: result.assets[0].base64,
+      }));
+    }
   };
 
   async function onImageBrowsePress(): Promise<void> {
@@ -124,6 +134,11 @@ export default function CompanyProfileForm(): React.JSX.Element {
               />
             </TouchableOpacity>
           </View>
+
+          <TextInput
+            caretHidden={true}
+            value={formData.uuid}
+          />
 
           <View>
             <Text style={styles.label}>Company Name</Text>
