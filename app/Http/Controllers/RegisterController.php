@@ -8,8 +8,6 @@ use App\Contracts\Services\CompanyServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserType;
 use App\Services\Data\Company\CreateCompanyRequest;
-use App\Services\Data\Register\RegisterCompanyRequest;
-use App\Services\Data\Register\RegisterUserRequest;
 use App\Services\Data\User\CreateUserRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
