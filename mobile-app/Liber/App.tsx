@@ -8,16 +8,17 @@
 import React from 'react';
 import AppLoader from './AppLoader';
 import { AuthProvider } from './AuhtContext';
-import { LoadingProvider } from './LoadingContext';
+import { Provider } from 'react-redux';
+import store from './store/store';
 
 
 function App(): JSX.Element {
   return (
-    <LoadingProvider>
+    <Provider store={store}>
       <AuthProvider>
         <AppLoader />
       </AuthProvider>
-    </LoadingProvider>
+    </Provider>
   );
 }
 

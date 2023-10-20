@@ -15,6 +15,7 @@ import AuthService from "../../api/AuthService";
 import { useAuth } from "../../AuhtContext";
 import globalStyles from "../../styles/styles";
 import { useNavigation } from "@react-navigation/native";
+import BaseComponent from "../common/baseComponent";
 
 const styles = StyleSheet.create({
     containerView: {
@@ -76,44 +77,46 @@ export default function LoginScreen(): React.JSX.Element {
     }
 
     return (
-        <KeyboardAvoidingView style={styles.containerView} behavior="padding">
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={styles.loginScreenContainer}>
-                    <View style={styles.loginFormView}>
-                        <View style={styles.imageConatiner} >
-                            <Image
-                                source={require('./../../assets/images/liber_logo.png')}
-                                style={styles.logo}
+        <BaseComponent>
+            <KeyboardAvoidingView style={styles.containerView} behavior="padding">
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.loginScreenContainer}>
+                        <View style={styles.loginFormView}>
+                            <View style={styles.imageConatiner} >
+                                <Image
+                                    source={require('./../../assets/images/liber_logo.png')}
+                                    style={styles.logo}
+                                />
+                            </View>
+                            <TextInput
+                                placeholder="Username"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.loginFormTextInput}
+                                value={username}
+                                onChangeText={(text) => setUsername(text)}
+                            />
+                            <TextInput
+                                placeholder="Password"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.loginFormTextInput}
+                                secureTextEntry={true}
+                                value={password}
+                                onChangeText={(text) => setPassword(text)}
+                            />
+                            <Button
+                                onPress={() => onLoginPress()}
+                                title="Login"
+                                buttonStyle={styles.loginButton}
+                            />
+                            <Button
+                                onPress={() => onSignupPress()}
+                                title="Signup"
+                                buttonStyle={styles.loginButton}
                             />
                         </View>
-                        <TextInput
-                            placeholder="Username"
-                            placeholderTextColor={placeHolderTextColor}
-                            style={styles.loginFormTextInput}
-                            value={username}
-                            onChangeText={(text) => setUsername(text)}
-                        />
-                        <TextInput
-                            placeholder="Password"
-                            placeholderTextColor={placeHolderTextColor}
-                            style={styles.loginFormTextInput}
-                            secureTextEntry={true}
-                            value={password}
-                            onChangeText={(text) => setPassword(text)}
-                        />
-                        <Button
-                            onPress={() => onLoginPress()}
-                            title="Login"
-                            buttonStyle={styles.loginButton}
-                        />
-                        <Button
-                            onPress={() => onSignupPress()}
-                            title="Signup"
-                            buttonStyle={styles.loginButton}
-                        />
                     </View>
-                </View>
-            </TouchableWithoutFeedback>
-        </KeyboardAvoidingView>
+                </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+        </BaseComponent>
     );
 }

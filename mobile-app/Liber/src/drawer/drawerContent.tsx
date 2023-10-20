@@ -10,8 +10,9 @@ import globalStyles from "../../styles/styles";
 import { DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
 import { useAuth } from "../../AuhtContext";
 import AuthService from "../../api/AuthService";
+import BaseComponent from "../common/baseComponent";
 
-export default function Content(props: any): React.JSX.Element {
+export default function DrawerContent(props: any): React.JSX.Element {
     const { logout } = useAuth();
     const authService = new AuthService();
 
@@ -27,22 +28,24 @@ export default function Content(props: any): React.JSX.Element {
     };
 
     return (
-        <View style={globalStyles.drawerContainer} >
-            <View style={globalStyles.drawerImageConatiner} >
-                <Image
-                    source={require('./../../assets/images/liber_logo.png')}
-                    style={globalStyles.headerImage}
+        <BaseComponent>
+            <View style={globalStyles.drawerContainer} >
+                <View style={globalStyles.drawerImageConatiner} >
+                    <Image
+                        source={require('./../../assets/images/liber_logo.png')}
+                        style={globalStyles.headerImage}
+                    />
+                </View>
+                <ScrollView>
+                    <DrawerItemList {...props} />
+
+                </ScrollView>
+                <DrawerItem
+                    label="Logout"
+                    onPress={() => onLoginPress()}
+                    style={{ bottom: 0 }}
                 />
             </View>
-            <ScrollView>
-                <DrawerItemList {...props} />
-
-            </ScrollView>
-            <DrawerItem
-                label="Logout"
-                onPress={() => onLoginPress()}
-                style={{ bottom: 0 }}
-            />
-        </View>
+        </BaseComponent>
     );
 }

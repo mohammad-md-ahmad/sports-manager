@@ -1,8 +1,8 @@
 // AuthContext.js
 import { createContext, useContext, useEffect, useState } from 'react';
 import { clearToken, getToken, storeToken } from './helpers/tokenManage';
-import { storeUserData } from './helpers/userDataManage';
-import { storeCompanyData } from './helpers/companyDataManage';
+import { clearUserData, storeUserData } from './helpers/userDataManage';
+import { clearCompanyData, storeCompanyData } from './helpers/companyDataManage';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -49,6 +49,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const logout = async () => {
         // Implement your logout logic here and set isAuthenticated to false
         clearToken();
+        clearCompanyData();
+        clearUserData();
         setIsAuthenticated(false);
     };
 

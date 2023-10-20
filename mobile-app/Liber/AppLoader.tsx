@@ -8,30 +8,30 @@ import {
 import {
     Colors
 } from 'react-native/Libraries/NewAppScreen';
-import LoginScreen from './src/login/login';
 import { NavigationContainer } from '@react-navigation/native';
-import Dashboard from './src/dashboard/dashboard';
-import { createDrawerNavigator, DrawerItemList } from '@react-navigation/drawer';
-import Content from './src/drawer/content';
-import colors from './styles/colors';
-import About from './src/about/about';
-import { useAuth } from './AuhtContext';
-import Loader from './src/common/loader';
-import { useLoading } from './LoadingContext';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+
 
 import { createStackNavigator } from '@react-navigation/stack';
-import Signup from './src/login/signup';
-import Facilities from './src/facilities/facilities';
-import FacilityForm from './src/facilities/facilityForm';
-import CompanyProfile from './src/company/companyProfile';
-import CompanyProfileForm from './src/company/companyProfileForm';
-import { getUserData } from './helpers/userDataManage';
-import UserProfileForm from './src/user/userProfileForm';
-import UserProfile from './src/user/userProfile';
 import MiscService from './api/MiscService';
+import { useAuth } from './AuhtContext';
+import { getUserData } from './helpers/userDataManage';
 import { storeFacilityTypes } from './helpers/facilityTypesDataManage';
 import { storeCountries } from './helpers/CountriesDataManage';
-import { Icon } from 'react-native-elements';
+import LoginScreen from './src/login/login';
+import Signup from './src/login/signup';
+import About from './src/about/about';
+import DrawerContent from './src/drawer/drawerContent';
+import CompanyProfile from './src/company/companyProfile';
+import CompanyProfileForm from './src/company/companyProfileForm';
+import UserProfile from './src/user/userProfile';
+import UserProfileForm from './src/user/userProfileForm';
+import Dashboard from './src/dashboard/dashboard';
+import Facilities from './src/facilities/facilities';
+import FacilityForm from './src/facilities/facilityForm';
+import colors from './styles/colors';
+
+
 
 function AppLoader(): JSX.Element {
     const isDarkMode = useColorScheme() === 'dark';
@@ -46,7 +46,6 @@ function AppLoader(): JSX.Element {
     const Drawer = createDrawerNavigator();
     const Stack = createStackNavigator();
     const { isAuthenticated } = useAuth();
-    const { loading } = useLoading();
 
     const ProfileStack = createStackNavigator();
     const FacilitiesStack = createStackNavigator();
@@ -115,14 +114,13 @@ function AppLoader(): JSX.Element {
 
     return (
         <NavigationContainer>
-            <Loader loading={loading} />
             <StatusBar
                 barStyle={isDarkMode ? 'light-content' : 'dark-content'}
                 backgroundColor={backgroundStyle.backgroundColor}
             />
             {isAuthenticated ?
                 <Drawer.Navigator
-                    drawerContent={(props) => <Content {...props} />}
+                    drawerContent={(props) => <DrawerContent {...props} />}
                     initialRouteName="Dashboard">
                     <Drawer.Group
                         screenOptions={{ headerStyle: { backgroundColor: colors.PrimaryGreen } }}>
@@ -156,6 +154,7 @@ function AppLoader(): JSX.Element {
                 </Stack.Navigator>
             }
         </NavigationContainer>
+
     );
 }
 

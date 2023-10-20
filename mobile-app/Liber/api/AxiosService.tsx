@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Constants from '../helpers/constants';
 import Snackbar from 'react-native-snackbar';
 import { getToken } from '../helpers/tokenManage';
-// import { initialState, useGlobalState } from '../Context';
+import { useDispatch } from 'react-redux';
 
 abstract class AxiosService {
     private instance: AxiosInstance;
@@ -19,9 +19,10 @@ abstract class AxiosService {
     }
 
     private setupInterceptors() {
-        // const { globalState, setGlobalState } = useGlobalState();
+        const dispatch = useDispatch();
         this.instance.interceptors.request.use(
             async (config) => {
+                dispatch({ type: 'SET_LOADING', payload: true });
                 // You can modify the request config here (e.g., add headers)
                 const token = await getToken();
                 if (token) {
@@ -30,12 +31,10 @@ abstract class AxiosService {
 
                 console.log('Request Body Data:', config.data);
 
-                // setGlobalState({loading: true});
                 return config;
             },
             (error) => {
-                // setGlobalState({loading: false});
-
+                dispatch({ type: 'SET_LOADING', payload: false });
                 if (axios.isCancel(error)) {
                     // Request was canceled
                     return Promise.reject(error);
@@ -46,7 +45,8 @@ abstract class AxiosService {
 
                     return Promise.reject(error);
                 } else {
-                    // Other errors
+                    console.log('Error', error);
+
                     console.error('Request failed', error);
                     displaySnackbar('Request couldn\'t be made.');
 
@@ -58,17 +58,15 @@ abstract class AxiosService {
         this.instance.interceptors.response.use(
             (response) => {
                 // You can handle successful responses here
-                // setGlobalState({loading: false});
+                dispatch({ type: 'SET_LOADING', payload: false });
 
                 console.log(response.data.message)
-
                 displaySnackbar(response.data.message);
 
                 return response;
             },
             (error) => {
-                // setGlobalState({loading: false});
-
+                dispatch({ type: 'SET_LOADING', payload: false });
                 if (axios.isCancel(error)) {
                     // Request was canceled
                     return Promise.reject(error);
@@ -82,7 +80,6 @@ abstract class AxiosService {
                     // Other errors
                     console.error('Request failed', error);
                     displaySnackbar('Request couldn\'t be made.');
-
                     return Promise.reject(error);
                 }
             }
