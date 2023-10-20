@@ -3,20 +3,28 @@ import { getUserData } from '../helpers/userDataManage';
 import AxiosService from './AxiosService';
 
 class FacilityService extends AxiosService {
-    userData = getUserData().then((data: string | null) => {
+    private companyDataPromise: Promise<any>;
+    private userDataPromise: Promise<any>;
+
+    constructor() {
+        super();
+        this.companyDataPromise = this.initializePromise(getCompanyData);
+        this.userDataPromise = this.initializePromise(getUserData);
+    }
+
+    private async initializePromise(dataGetter: () => Promise<string | null>) {
+        const data = await dataGetter();
         return data === null ? null : JSON.parse(data);
-    });  
-    
-    companyData = getCompanyData().then((data: string | null) => {
-        return data === null ? null : JSON.parse(data);
-    });
+    }
 
     async create(data: Object) {
-        return this.post(`/companies/${this.userData.uuid}/facilities`, data);
+        const companyData = await this.companyDataPromise;
+        return this.post(`/companies/${companyData.uuid}/facilities`, data);
     }
 
     async list() {
-        return this.get(`/companies/${this.companyData.uuid}/facilities`);
+        const companyData = await this.companyDataPromise;
+        return this.get(`/companies/${companyData.uuid}/facilities`);
     }
 }
 

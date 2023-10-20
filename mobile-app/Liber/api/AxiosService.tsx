@@ -1,8 +1,8 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Constants from '../helpers/constants';
-import { useLoading } from '../LoadingContext';
 import Snackbar from 'react-native-snackbar';
 import { getToken } from '../helpers/tokenManage';
+// import { initialState, useGlobalState } from '../Context';
 
 abstract class AxiosService {
     private instance: AxiosInstance;
@@ -19,7 +19,7 @@ abstract class AxiosService {
     }
 
     private setupInterceptors() {
-        const { setGlobalLoading } = useLoading();
+        // const { globalState, setGlobalState } = useGlobalState();
         this.instance.interceptors.request.use(
             async (config) => {
                 // You can modify the request config here (e.g., add headers)
@@ -30,11 +30,11 @@ abstract class AxiosService {
 
                 console.log('Request Body Data:', config.data);
 
-                setGlobalLoading(true);
+                // setGlobalState({loading: true});
                 return config;
             },
             (error) => {
-                setGlobalLoading(false);
+                // setGlobalState({loading: false});
 
                 if (axios.isCancel(error)) {
                     // Request was canceled
@@ -58,7 +58,7 @@ abstract class AxiosService {
         this.instance.interceptors.response.use(
             (response) => {
                 // You can handle successful responses here
-                setGlobalLoading(false);
+                // setGlobalState({loading: false});
 
                 console.log(response.data.message)
 
@@ -67,7 +67,7 @@ abstract class AxiosService {
                 return response;
             },
             (error) => {
-                setGlobalLoading(false);
+                // setGlobalState({loading: false});
 
                 if (axios.isCancel(error)) {
                     // Request was canceled
