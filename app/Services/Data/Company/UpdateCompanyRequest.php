@@ -19,11 +19,11 @@ class UpdateCompanyRequest extends Data
         #[FromRouteParameter('uuid')]
         #[WithCast(UuidToEntityCaster::class, Company::class)]
         public string $id,
-        public string|Optional $name,
-        public string|Optional $description,
-        public string|Optional $logo,
-        public UpdateAddressRequest|Optional $updateAddressRequest,
-        public UpdateUserRequest|Optional $updateUserRequest,
+        public string|Optional|null $name,
+        public string|Optional|null $description,
+        public string|Optional|null $logo,
+        public UpdateAddressRequest|Optional|null $updateAddressRequest,
+        public UpdateUserRequest|Optional|null $updateUserRequest,
     ) {
     }
 }

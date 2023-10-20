@@ -24,12 +24,10 @@ class RegisterController extends Controller
     ) {
     }
 
-    public function registerUser(RegisterUserRequest $request): JsonResponse
+    public function registerUser(CreateUserRequest $request): JsonResponse
     {
         try {
-            $createUserRequest = CreateUserRequest::from($request->toArray());
-
-            $data = $this->userService->store($createUserRequest);
+            $data = $this->userService->store($request);
 
             return response()->json([
                 'message' => __('User has been created successfully.'),
@@ -42,14 +40,11 @@ class RegisterController extends Controller
         }
     }
 
-    public function registerCompany(RegisterCompanyRequest $request): JsonResponse
+    public function registerCompany(CreateCompanyRequest $request): JsonResponse
     {
         try {
             $request->createUserRequest->type = UserType::COMPANY_USER->name;
-
-            $createCompanyRequest = CreateCompanyRequest::from($request->toArray());
-
-            $data = $this->companyService->store($createCompanyRequest);
+            $data = $this->companyService->store($request);
 
             return response()->json([
                 'message' => __('Company has been created successfully.'),
