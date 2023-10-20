@@ -35,11 +35,11 @@ class AuthController extends Controller
 
             $data = [
                 'token' => $token,
-                'user' => $user->toArray(),
+                'user' => $user->load('address')->toArray(),
             ];
 
             if ($user->type->name === UserType::COMPANY_USER->name) {
-                $data['company'] = $user->company()->toArray();
+                $data['company'] = $user->company()->load('address')->toArray();
             }
 
             return response()->json([

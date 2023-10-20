@@ -8,6 +8,7 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -70,8 +71,13 @@ class User extends Authenticatable
         return $this->hasOne(CompanyUser::class);
     }
 
-    public function company()
+    public function company(): Company
     {
         return $this->companyUser->company;
+    }
+
+    public function address(): MorphOne
+    {
+        return $this->morphOne(Address::class, 'model');
     }
 }
