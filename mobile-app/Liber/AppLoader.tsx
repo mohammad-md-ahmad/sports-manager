@@ -66,7 +66,7 @@ function AppLoader(): JSX.Element {
         }).catch((error) => {
 
         });
-    }, []);
+    }, [userData]);
 
     function ProfileNavigation() {
 

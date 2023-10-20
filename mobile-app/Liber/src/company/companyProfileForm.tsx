@@ -64,7 +64,9 @@ export default function CompanyProfileForm(): React.JSX.Element {
   useEffect(() => {
 
     companyService.getCompany().then((response) => {
-      console.log('company data', response.data)
+      console.log('company data', response.data);
+      response.data.data.createAddressRequest = { ...response.data.data.address }
+      setFormData(response.data.data);
     }).catch((error) => {
       console.error('company error', error)
     });
@@ -168,11 +170,11 @@ export default function CompanyProfileForm(): React.JSX.Element {
             </TouchableOpacity>
           </View>
 
-          <TextInput
+          {/* <TextInput
             hidden={true}
             value={formData.uuid}
 
-          />
+          /> */}
 
           <View>
             <Text style={styles.label}>Company Name</Text>

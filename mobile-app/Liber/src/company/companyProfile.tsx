@@ -14,8 +14,8 @@ export default function CompanyProfile() {
     const navigator = useNavigation();
 
     const [companyData, setCompanyData] = useState({
-        name: 'Liber Co',
-        description: 'Liber Co is a company for booking facilities Liber Co is a company for booking facilities Liber Co is a company for booking facilities',
+        name: '',
+        description: '',
         logo: require('./../../assets/images/liber_logo.png')
     });
 
@@ -29,6 +29,8 @@ export default function CompanyProfile() {
 
         companyService.getCompany().then((response) => {
             console.log('company data', response.data)
+            response.data.data.profile_picture = require('./../../assets/images/liber_logo.png');
+            //setCompanyData(response.data.data)
         }).catch((error) => {
             console.error('company error', error)
         });

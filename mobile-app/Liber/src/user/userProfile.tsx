@@ -1,34 +1,45 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
+import UserService from '../../api/UserService';
 
 export default function UserProfile() {
     // Extract user information from the route parameters
 
     const navigator = useNavigation();
 
-    let companyData = {
-        name: 'Liber Player',
-        username: 'Liber_player',
-        email: 'liber_player@liber.com',
-        logo: require('./../../assets/images/liber_logo.png')
-    }
+    const [userData, setUserData] = useState({
+        name: '',
+        username: '',
+        email: '',
+        profile_picture: require('./../../assets/images/liber_logo.png')
+    })
 
     function onEditPress(): void {
         navigator.navigate('UserProfileForm')
     }
 
+    const userService = new UserService();
+    useEffect(() => {
+        userService.getUser().then((response) => {
+            response.data.data.profile_picture = require('./../../assets/images/liber_logo.png');
+            setUserData(response.data.data)
+        }).catch((error) => {
+            console.error('user error', error)
+        });
+    }, [])
+
     return (
         <View style={styles.container}>
-            <Image source={companyData.logo} style={styles.logo} />
+            <Image source={userData.profile_picture} style={styles.logo} />
 
-            <Text style={styles.name}>{companyData.name}</Text>
-            <Text style={styles.username}>{companyData.username}</Text>
-            <Text style={styles.email}>{companyData.email}</Text>
+            <Text style={styles.name}>{userData.first_name + ' ' + userData.last_name}</Text>
+            <Text style={styles.username}>{userData.username}</Text>
+            <Text style={styles.email}>{userData.email}</Text>
 
             <Button
                 onPress={() => onEditPress()}

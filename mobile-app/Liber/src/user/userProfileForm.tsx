@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   Image,
@@ -40,6 +40,15 @@ export default function UserProfileForm(): React.JSX.Element {
     email: '',
     profile_picture: null,
   });
+
+
+  useEffect(() => {
+    userService.getUser().then((response) => {
+      setFormData(response.data.data)
+    }).catch((error) => {
+      console.error('user error', error)
+    });
+  }, [])
 
   const handleInputChange = (key: string, value: any) => {
     setFormData((prevData) => ({
@@ -95,7 +104,6 @@ export default function UserProfileForm(): React.JSX.Element {
           <View style={styles.formContainer}>
             <View style={styles.formView}>
 
-
               <View style={styles.imageContainer}>
                 <Image source={logo} style={styles.logo} />
 
@@ -110,10 +118,10 @@ export default function UserProfileForm(): React.JSX.Element {
                 </TouchableOpacity>
               </View>
 
-              <TextInput
+              {/* <TextInput
                 caretHidden={true}
                 value={formData.uuid}
-              />
+              /> */}
 
               <View>
                 <Text style={styles.label}>First Name</Text>
