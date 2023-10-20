@@ -73,32 +73,27 @@ export default function Signup(): React.JSX.Element {
                     ...formData
                 }
             };
-            
-            registerService.createCompany(companyFormData).then((response) => {
-                // Handle a successful API response
-                //console.log('Success signup:', response.data);
 
-                navigator.navigate('Login');
-            })
+            registerService.createCompany(companyFormData)
+                .then((response) => {
+                    // Handle a successful API response
+                    navigator.navigate('Login');
+                })
                 .catch((error) => {
                     // Handle API request errors here
-                    //console.error('Error signup:', error);
                 });
         } else {
             const userFormData: UserFormData = {
                 ...formData,
             };
 
-            registerService.createUser(userFormData).then((response) => {
-                // Handle a successful API response
-                //console.log('Success signup:', response.data);
-
-                navigator.navigate('Login');
-
-            })
+            registerService.createUser(userFormData)
+                .then((response) => {
+                    // Handle a successful API response
+                    navigator.navigate('Login');
+                })
                 .catch((error) => {
                     // Handle API request errors here
-                    //console.error('Error signup:', error);
                 });
 
         }

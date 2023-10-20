@@ -18,6 +18,11 @@ abstract class AxiosService {
         this.setupInterceptors();
     }
 
+    protected async initializePromise(dataGetter: () => Promise<string | null>) {
+        const data = await dataGetter();
+        return data === null ? null : JSON.parse(data);
+    }
+
     private setupInterceptors() {
         const dispatch = useDispatch();
         this.instance.interceptors.request.use(
@@ -29,7 +34,7 @@ abstract class AxiosService {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
 
-                console.log('Request Body Data:', config.data);
+                //console.log('Request Body Data:', config.data);
 
                 return config;
             },
@@ -60,7 +65,7 @@ abstract class AxiosService {
                 // You can handle successful responses here
                 dispatch({ type: 'SET_LOADING', payload: false });
 
-                console.log(response.data.message)
+                //console.log(response.data.message)
                 displaySnackbar(response.data.message);
 
                 return response;

@@ -1,6 +1,18 @@
+import { getCompanyData } from '../helpers/companyDataManage';
 import AxiosService from './AxiosService';
 
 class CompanyService extends AxiosService {
+    private companyDataPromise: Promise<any>;
+    constructor() {
+        super();
+        this.companyDataPromise = this.initializePromise(getCompanyData);
+    }
+
+    async getCompany() {
+        const companyData = await this.companyDataPromise;
+        console.log('companyData.uuid',companyData.uuid)
+        return this.get(`/companies/${companyData.uuid}`);
+    }
 
     async create(data: Object) {
         return this.post('/companies', data);

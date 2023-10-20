@@ -52,7 +52,6 @@ export default function UserProfileForm(): React.JSX.Element {
     console.log(formData);
     userService.update(formData).then((response) => {
       // Handle a successful API response
-      console.log('Success signup:', response.data);
     })
       .catch((error) => {
         // Handle API request errors here

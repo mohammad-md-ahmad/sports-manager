@@ -63,7 +63,6 @@ function AppLoader(): JSX.Element {
         miscService.lists().then((response) => {
             storeFacilityTypes(response.data?.data?.facility_types);
             storeCountries(response.data?.data?.countries);
-            console.log(response.data?.data);
         }).catch((error) => {
 
         });

@@ -6,6 +6,7 @@ import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import { getCompanyData } from '../../helpers/companyDataManage';
+import CompanyService from '../../api/CompanyService';
 
 export default function CompanyProfile() {
     // Extract user information from the route parameters
@@ -22,7 +23,16 @@ export default function CompanyProfile() {
         navigator.navigate('CompanyProfileForm')
     }
 
+
+    const companyService = new CompanyService();
     useEffect(() => {
+
+        companyService.getCompany().then((response) => {
+            console.log('company data', response.data)
+        }).catch((error) => {
+            console.error('company error', error)
+        });
+
         getCompanyData().then((data: string | null) => {
             if (data !== null) {
                 let parsedData = JSON.parse(data);

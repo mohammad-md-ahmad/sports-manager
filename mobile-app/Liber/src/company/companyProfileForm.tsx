@@ -62,6 +62,14 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
 
   useEffect(() => {
+
+    companyService.getCompany().then((response) => {
+      console.log('company data', response.data)
+    }).catch((error) => {
+      console.error('company error', error)
+    });
+
+
     getCompanyData().then((data: string | null) => {
       if (data !== null) {
         let parsedData = JSON.parse(data);
@@ -102,7 +110,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
   };
 
   function onSubmitPress(): void {
-    console.log(formData);
     companyService.update(formData).then((response) => {
       // Handle a successful API response
       console.log('Success signup:', response.data);

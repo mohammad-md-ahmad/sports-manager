@@ -18,10 +18,8 @@ export default function Dashboard(): React.JSX.Element {
     useEffect(() => {
         facilityService.list()
             .then((response) => {
-                console.log('facilityService', response.data);
                 setFacilities(response.data?.data);
             }).catch((error) => {
-                console.log('faciltiyService::list dashboard', error);
             });
     }, []);
 

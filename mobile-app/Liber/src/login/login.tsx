@@ -63,7 +63,6 @@ export default function LoginScreen(): React.JSX.Element {
     const onLoginPress = () => {
         authService.login(username, password).then((response) => {
             // Handle a successful API response
-            console.log('Success signin:', response.data.data);
             login(response.data.data);
 
         }).catch((error) => {

@@ -12,11 +12,6 @@ class FacilityService extends AxiosService {
         this.userDataPromise = this.initializePromise(getUserData);
     }
 
-    private async initializePromise(dataGetter: () => Promise<string | null>) {
-        const data = await dataGetter();
-        return data === null ? null : JSON.parse(data);
-    }
-
     async create(data: Object) {
         const companyData = await this.companyDataPromise;
         return this.post(`/companies/${companyData.uuid}/facilities`, data);
