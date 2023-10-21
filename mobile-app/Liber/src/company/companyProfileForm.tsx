@@ -19,6 +19,7 @@ import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button, Icon } from "react-native-elements";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { getCompanyData } from "../../helpers/companyDataManage";
+import Constants from "../../helpers/constants";
 
 interface CompanyFormData {
     uuid: string | null;
@@ -40,6 +41,8 @@ interface CompanyFormData {
 export default function CompanyProfileForm(): React.JSX.Element {
 
     let companyService = new CompanyService();
+
+    const [logo, setLogo] = useState(require('./../../assets/images/liber_logo.png'));
 
     const [formData, setFormData] = useState<CompanyFormData>({
         uuid: null,
@@ -63,33 +66,34 @@ export default function CompanyProfileForm(): React.JSX.Element {
         companyService.getCompany().then((response) => {
             console.log('company data', response.data);
             response.data.data.createAddressRequest = { ...response.data.data.address }
-            setFormData(response.data.data);
+            setFormData({ ...response.data.data, logo: null });
+            setLogo({uri: Constants.assetsUrl + '/' + response.data?.data?.logo});
         }).catch((error) => {
             console.error('company error', error)
         });
 
 
-        getCompanyData().then((data: string | null) => {
-            if (data !== null) {
-                let parsedData = JSON.parse(data);
-                console.log('parsedData-------', parsedData)
+        // getCompanyData().then((data: string | null) => {
+        //     if (data !== null) {
+        //         let parsedData = JSON.parse(data);
+        //         console.log('parsedData-------', parsedData)
 
-                // if (parsedData.logo == null)
-                //   parsedData.logo = require('./../../assets/images/liber_logo.png');
+        //         // if (parsedData.logo == null)
+        //         //   parsedData.logo = require('./../../assets/images/liber_logo.png');
 
-                parsedData.createAddressRequest = {
-                    line_1: '',
-                    line_2: '',
-                    line_3: '',
-                    city: '',
-                    region: '',
-                    postcode: '',
-                    country_uuid: '',
-                }
+        //         parsedData.createAddressRequest = {
+        //             line_1: '',
+        //             line_2: '',
+        //             line_3: '',
+        //             city: '',
+        //             region: '',
+        //             postcode: '',
+        //             country_uuid: '',
+        //         }
 
-                setFormData({ ...parsedData });
-            }
-        });
+        //         setFormData({ ...parsedData });
+        //     }
+        // });
     }, [])
 
     const handleInputChange = (field: string, value: string) => {
@@ -118,8 +122,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                 console.error('Error signup:', error);
             });
     }
-
-    const [logo, setLogo] = useState(require('./../../assets/images/liber_logo.png'));
 
     const selectImage = async () => {
         const options = {

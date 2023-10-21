@@ -6,6 +6,7 @@ import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import UserService from '../../api/UserService';
+import Constants from '../../helpers/constants';
 
 export default function UserProfile() {
     // Extract user information from the route parameters
@@ -24,10 +25,11 @@ export default function UserProfile() {
     }
 
     const userService = new UserService();
+
     useEffect(() => {
+        console.log('useEff');
         userService.getUser().then((response) => {
-            response.data.data.profile_picture = require('./../../assets/images/liber_logo.png');
-            setUserData(response.data.data)
+            setUserData({...response.data.data, profile_picture: {uri: Constants.assetsUrl +'/'+ response.data?.data?.profile_picture}});
         }).catch((error) => {
             console.error('user error', error)
         });

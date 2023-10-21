@@ -7,6 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import { getCompanyData } from '../../helpers/companyDataManage';
 import CompanyService from '../../api/CompanyService';
+import Constants from '../../helpers/constants';
 
 export default function CompanyProfile() {
     // Extract user information from the route parameters
@@ -29,23 +30,22 @@ export default function CompanyProfile() {
 
         companyService.getCompany().then((response) => {
             console.log('company data', response.data)
-            response.data.data.profile_picture = require('./../../assets/images/liber_logo.png');
-            //setCompanyData(response.data.data)
+            setCompanyData({...response.data.data, logo: {uri: Constants.assetsUrl +'/'+ response.data?.data?.logo}});
         }).catch((error) => {
             console.error('company error', error)
         });
 
-        getCompanyData().then((data: string | null) => {
-            if (data !== null) {
-                let parsedData = JSON.parse(data);
-                console.log('parsedData-------', parsedData)
+        // getCompanyData().then((data: string | null) => {
+        //     if (data !== null) {
+        //         let parsedData = JSON.parse(data);
+        //         console.log('parsedData-------', parsedData)
 
-                if (parsedData.logo == null)
-                    parsedData.logo = require('./../../assets/images/liber_logo.png');
+        //         if (parsedData.logo == null)
+        //             parsedData.logo = require('./../../assets/images/liber_logo.png');
 
-                setCompanyData({ ...parsedData });
-            }
-        });
+        //         setCompanyData({ ...parsedData });
+        //     }
+        // });
     }, [])
 
     return (

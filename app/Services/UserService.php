@@ -71,6 +71,8 @@ class UserService implements UserServiceInterface
 
     public function update(UpdateUserRequest $data): User
     {
+        $uploadedImg = null;
+
         try {
             $userId = $data->id ?? $data->id_from_route;
 
@@ -85,8 +87,6 @@ class UserService implements UserServiceInterface
 
             $user->update($data->toArray());
 
-            $uploadedImg = null;
-
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {
                 $uploadedImg = $this->uploadImage($data->profile_picture, $user->id);
@@ -100,7 +100,7 @@ class UserService implements UserServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            if (! empty($uploadedImg)) {
+            if ($uploadedImg) {
                 $this->deleteImage($uploadedImg);
             }
 
