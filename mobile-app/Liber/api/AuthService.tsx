@@ -6,7 +6,9 @@ class AuthService extends AxiosService {
         return this.post('/login', { username, password });
     }
 
+    async logout() {
+        return this.post('/logout');
+    }
 }
 
 export default AuthService;
-

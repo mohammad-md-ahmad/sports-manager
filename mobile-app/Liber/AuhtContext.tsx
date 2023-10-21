@@ -1,9 +1,12 @@
 // AuthContext.js
 import { createContext, useContext, useEffect, useState } from 'react';
 import { clearToken, getToken, storeToken } from './helpers/tokenManage';
+import { clearUserData, storeUserData } from './helpers/userDataManage';
+import { clearCompanyData, storeCompanyData } from './helpers/companyDataManage';
 
 interface AuthContextType {
     isAuthenticated: boolean;
+    userData: Object;
     login: (token: string) => void;
     logout: () => void;
 }
@@ -11,9 +14,9 @@ interface AuthContextType {
 // Provide an initial value for the context
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [userData, setUserData] = useState({});
 
     useEffect(() => {
         // Check AsyncStorage for a token when the app initializes
@@ -32,20 +35,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             });
     }, []);
 
-    const login = async (token: string) => {
+    const login = async (data: Object) => {
         // Implement your login logic here, and set isAuthenticated to true upon success
-        setIsAuthenticated(true);
-        storeToken(token);
+        if (data.token) {
+            setIsAuthenticated(true);
+            storeToken(data.token);
+            storeUserData(data.user);
+            if (data.company)
+                storeCompanyData(data.company);
+        }
     };
 
     const logout = async () => {
         // Implement your logout logic here and set isAuthenticated to false
         clearToken();
+        clearCompanyData();
+        clearUserData();
         setIsAuthenticated(false);
     };
 
     return (
-        <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+        <AuthContext.Provider value={{ isAuthenticated, userData, login, logout }}>
             {children}
         </AuthContext.Provider>
     );

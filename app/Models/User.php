@@ -7,6 +7,8 @@ use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,6 +20,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $username
  * @property string $email
  * @property UserType $type
+ * @property string $profile_picture
  */
 class User extends Authenticatable
 {
@@ -62,4 +65,19 @@ class User extends Authenticatable
         'password' => 'hashed',
         'type' => UserType::class,
     ];
+
+    public function companyUser(): HasOne
+    {
+        return $this->hasOne(CompanyUser::class);
+    }
+
+    public function company(): Company
+    {
+        return $this->companyUser->company;
+    }
+
+    public function address(): MorphOne
+    {
+        return $this->morphOne(Address::class, 'model');
+    }
 }

@@ -4,6 +4,8 @@ const React = require("react-native");
 
 const { StyleSheet } = React;
 
+export const placeHolderTextColor = colors.PrimaryBlueLight;
+
 const globalStyles = StyleSheet.create({
   containerView: {
     flex: 1,
@@ -15,7 +17,9 @@ const globalStyles = StyleSheet.create({
   },
   text: {
     color: colors.PrimaryGreen,
-    fontFamily: fonts.Poppins.bold
+    fontFamily: fonts.Poppins.bold,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   inputText: {
     height: 43,
@@ -23,19 +27,25 @@ const globalStyles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: colors.PrimaryBlue,
-    backgroundColor: colors.PrimaryGreen,
-    color: colors.White,
+    backgroundColor: colors.White,
+    color: colors.PrimaryBlue,
     paddingLeft: 10,
     marginTop: 5,
     marginBottom: 5,
+    fontFamily: fonts.Poppins.light
+  },
+  inputTextLabel: {
+    fontSize: 16,
+    color: colors.Gray,
+    fontFamily: fonts.Poppins.regular
   },
   button: {
     backgroundColor: colors.PrimaryBlue,
-    width: 150,
     borderRadius: 5,
     height: 45,
     marginTop: 10,
-    alignItems: "center"
+    alignItems: "center",
+    fontFamily: fonts.Poppins.regular
   },
   logoText: {
     fontSize: 40,
@@ -58,9 +68,9 @@ const globalStyles = StyleSheet.create({
     color: colors.White,
     paddingLeft: 10,
     marginTop: 5,
-    marginBottom: 5
+    marginBottom: 5,
+    fontFamily: fonts.Poppins.regular
   },
-
   logo: {
     marginTop: 100,
     marginBottom: 30,

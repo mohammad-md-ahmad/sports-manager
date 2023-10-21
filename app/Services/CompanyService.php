@@ -18,12 +18,16 @@ use App\Services\Data\Company\GetCompanyRequest;
 use App\Services\Data\Company\UpdateCompanyRequest;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
+use App\Traits\ImageUpload;
 use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class CompanyService implements CompanyServiceInterface
 {
+    use ImageUpload;
+
     public function __construct(
         protected UserServiceInterface $userService,
         protected CompanyUserServiceInterface $companyUserService,
@@ -69,11 +73,22 @@ class CompanyService implements CompanyServiceInterface
                 $this->addressService->store($data->createAddressRequest);
             }
 
+            $uploadedImg = null;
+
+            // after company got updated successfully, upload and update the logo
+            if ($data->logo && is_string($data->logo)) {
+                $uploadedImg = $this->uploadLogo($data->logo, $company->id);
+                $company->logo = $uploadedImg;
+                $company->save();
+            }
+
             DB::commit();
 
             return $company;
         } catch (Exception $exception) {
             DB::rollBack();
+
+            $this->deleteLogo($uploadedImg);
 
             Log::error('CompanyService::store: '.$exception->getMessage());
 
@@ -105,11 +120,22 @@ class CompanyService implements CompanyServiceInterface
                 $this->addressService->update($data->updateAddressRequest);
             }
 
+            $uploadedImg = null;
+
+            // after company got updated successfully, upload and update the logo
+            if ($data->logo && is_string($data->logo)) {
+                $uploadedImg = $this->uploadLogo($data->logo, $company->id);
+                $company->logo = $uploadedImg;
+                $company->save();
+            }
+
             DB::commit();
 
             return $company;
         } catch (Exception $exception) {
             DB::rollBack();
+
+            $this->deleteLogo($uploadedImg);
 
             Log::error('CompanyService::update: '.$exception->getMessage());
 
@@ -120,9 +146,53 @@ class CompanyService implements CompanyServiceInterface
     public function delete(DeleteCompanyRequest $data): bool
     {
         try {
-            return Company::findOrFail($data->id)->delete();
+            $company = Company::findOrFail($data->id);
+
+            $this->deleteLogo($company->logo);
+
+            return $company->delete();
         } catch (Exception $exception) {
             Log::error('CompanyService::delete: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function uploadLogo(string $logo, int|string $id = null): string
+    {
+        try {
+            do {
+                $logoData = $this->base64Decode($logo);
+                $path = $this->base64ToImage($logo, 'company-logos', $logoData);
+            } while (! Storage::disk('public')->put($path, $logoData));
+
+            // delete the old logo
+            if ($id) {
+                /** @var Company $company */
+                $company = Company::findOrFail($id);
+
+                if ($company->logo) {
+                    $this->deleteLogo($company->logo);
+                }
+            }
+
+            return $path;
+        } catch (Exception $exception) {
+            Log::error('Uploading company logo: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    private function deleteLogo(string $logo): bool
+    {
+        try {
+            return Storage::disk('public')->delete($logo);
+        } catch (Exception $exception) {
+            Log::error('Delete company logo: '.$exception->getMessage());
 
             throw $exception;
         }

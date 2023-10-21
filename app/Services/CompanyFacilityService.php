@@ -9,7 +9,9 @@ use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Models\CompanyFacility;
 use App\Services\Data\Address\CreateAddressRequest;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
+use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use Exception;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -33,6 +35,17 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     //         throw $exception;
     //     }
     // }
+
+    public function getAll(GetCompanyFacilitiesRequest $data): Collection
+    {
+        try {
+            return $data->company->facilities()->with('address')->get();
+        } catch (Exception $exception) {
+            Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
 
     public function store(CreateCompanyFacilityRequest $data): CompanyFacility
     {

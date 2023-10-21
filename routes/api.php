@@ -3,6 +3,8 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyFacilityController;
+use App\Http\Controllers\MiscController;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +21,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 
+Route::prefix('register')->group(function () {
+    Route::post('/company', [RegisterController::class, 'registerCompany'])->name('register.company');
+    Route::post('/user', [RegisterController::class, 'registerUser'])->name('register.user');
+});
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -34,6 +41,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('facilities')->group(function () {
 
                 Route::post('/', [CompanyFacilityController::class, 'store'])->name('facilities.create');
+                Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('companies.get-all');
                 // Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
                 // Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
                 // Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
@@ -48,6 +56,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/{uuid}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/{uuid}', [UserController::class, 'delete'])->name('users.delete');
     });
+
+    Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
 });
 
 Route::get('/test', function () {

@@ -1,24 +1,52 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import colors from '../../styles/colors';
+import { getCompanyData } from '../../helpers/companyDataManage';
+import CompanyService from '../../api/CompanyService';
 
-function Profile() {
+export default function CompanyProfile() {
     // Extract user information from the route parameters
 
     const navigator = useNavigation();
 
-    let companyData = {
-        name: 'Liber Co',
-        description: 'Liber Co is a company for booking facilities Liber Co is a company for booking facilities Liber Co is a company for booking facilities',
+    const [companyData, setCompanyData] = useState({
+        name: '',
+        description: '',
         logo: require('./../../assets/images/liber_logo.png')
-    }
+    });
 
     function onEditPress(): void {
-        navigator.navigate('ProfileForm')
+        navigator.navigate('CompanyProfileForm')
     }
+
+
+    const companyService = new CompanyService();
+    useEffect(() => {
+
+        companyService.getCompany().then((response) => {
+            console.log('company data', response.data)
+            response.data.data.profile_picture = require('./../../assets/images/liber_logo.png');
+            //setCompanyData(response.data.data)
+        }).catch((error) => {
+            console.error('company error', error)
+        });
+
+        getCompanyData().then((data: string | null) => {
+            if (data !== null) {
+                let parsedData = JSON.parse(data);
+                console.log('parsedData-------', parsedData)
+
+                if (parsedData.logo == null)
+                    parsedData.logo = require('./../../assets/images/liber_logo.png');
+
+                setCompanyData({ ...parsedData });
+            }
+        });
+    }, [])
 
     return (
         <View style={styles.container}>
@@ -55,7 +83,7 @@ const styles = StyleSheet.create({
         ...globalStyles.text,
         fontSize: 20,
         marginBottom: 5,
-        color: 'gray',
+        color: colors.PrimaryBlue,
     },
     description: {
         ...globalStyles.text,
@@ -82,4 +110,3 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Profile;

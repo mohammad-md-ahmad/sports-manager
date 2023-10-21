@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserType;
 use App\Services\Data\Auth\LoginRequest;
 use Exception;
 use Illuminate\Auth\AuthenticationException;
@@ -32,10 +33,17 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken(env('COMPOSE_PROJECT_NAME'))->plainTextToken;
 
+            $data = [
+                'token' => $token,
+                'user' => $user->load('address')->toArray(),
+            ];
+
+            if ($user->type->name === UserType::COMPANY_USER->name) {
+                $data['company'] = $user->company()->load('address')->toArray();
+            }
+
             return response()->json([
-                'data' => [
-                    'token' => $token,
-                ],
+                'data' => $data,
                 'message' => 'User login successfully.',
             ], Response::HTTP_OK);
         } catch (AuthenticationException $exception) {
