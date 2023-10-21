@@ -30,6 +30,7 @@ import Dashboard from './src/dashboard/dashboard';
 import Facilities from './src/facilities/facilities';
 import FacilityForm from './src/facilities/facilityForm';
 import colors from './styles/colors';
+import AgendaScreen from './src/calendar/calendar';
 
 
 function AppLoader(): JSX.Element {
@@ -121,26 +122,25 @@ function AppLoader(): JSX.Element {
                     drawerContent={(props) => <DrawerContent {...props} />}
                     initialRouteName="Dashboard">
                     <Drawer.Group
-                        screenOptions={{ headerStyle: { backgroundColor: colors.PrimaryGreen } }}>
+                        screenOptions={{
+                            headerStyle: { backgroundColor: colors.PrimaryGreen },
+                            //     presentation: 'modal',
+                            //     headerLeft: () => <Icon
+                            //         name="arrow-left" // Replace with your desired icon name
+                            //         type="font-awesome"
+                            //         size={30}
+                            //         color={colors.PrimaryBlue}
+                            //         onPress={navigation.goBack}
+                            //     />
+
+                        }}>
 
                         <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={DashboardNavigation} />
                         <Drawer.Screen name="ProfileNavigation" options={{ title: 'Profile' }} component={ProfileNavigation} />
                         <Drawer.Screen name="FacilitiesNavigation" options={{ title: 'Facilities' }} component={FacilitiesNavigation} />
+                        <Drawer.Screen name="Calendar" options={{ title: 'Calendar' }} component={AgendaScreen} />
+                        <Drawer.Screen name="About" options={{ title: 'About' }} component={About} />
 
-                        <Drawer.Group
-                        // screenOptions={({ navigation }) => ({
-                        //     presentation: 'modal',
-                        //     headerLeft: () => <Icon
-                        //         name="arrow-left" // Replace with your desired icon name
-                        //         type="font-awesome"
-                        //         size={30}
-                        //         color={colors.PrimaryBlue}
-                        //         onPress={navigation.goBack}
-                        //     />
-                        // })}
-                        >
-                            <Drawer.Screen name="About" options={{ title: 'About' }} component={About} />
-                        </Drawer.Group>
                     </Drawer.Group>
                 </Drawer.Navigator> :
 
