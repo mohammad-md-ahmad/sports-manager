@@ -15,6 +15,7 @@ import colors from "../../styles/colors";
 import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { getCountries } from "../../helpers/countriesDataManage";
 import { useNavigation } from "@react-navigation/native";
+import ImagePicker from "../common/imagePicker";
 
 interface FormData {
     name: string;
@@ -36,6 +37,7 @@ interface FormData {
             lng: string;
         };
     };
+    companyFacilityPhotos: Array<string>;
 }
 
 export default function FacilityForm(): React.JSX.Element {
@@ -63,6 +65,7 @@ export default function FacilityForm(): React.JSX.Element {
                 lng: '35',
             }
         },
+        companyFacilityPhotos: [],
     });
 
     const [openFacilityTypeList, setOpenFacilityTypeList] = useState(false);
@@ -73,6 +76,8 @@ export default function FacilityForm(): React.JSX.Element {
 
     const [selectedFacilityType, setSelectedFacilityType] = useState<string>('');
     const [selectedCountry, setSelectedCountry] = useState<string>('');
+
+    const [selectedFacilityPhotos, setSelectedFacilityPhotos] = useState<Array<string>>([]);
 
     useEffect(() => {
         getFacilityTypes().then((response) => {
@@ -149,6 +154,16 @@ export default function FacilityForm(): React.JSX.Element {
             }
         }
     };
+
+    const setFacilityPhotosBase64 = (newPhotos) => {
+        console.log('newPhotos base64', newPhotos);
+        setFormData((prevData) => ({
+            ...prevData,
+            companyFacilityPhotos: newPhotos,
+        }));
+
+        console.log('companyFacilityPhotos base64', formData.companyFacilityPhotos);
+    }
 
     const sanitizeFormData = (data) => {
         const sanitizedData = {};
@@ -266,6 +281,12 @@ export default function FacilityForm(): React.JSX.Element {
                     setOpen={setOpenCountryList}
                     setValue={(text: any) => handleInputChange('createAddressRequest.country_uuid', text)}
                     style={styles.dropDown}
+                />
+                <ImagePicker
+                    selectedImages={selectedFacilityPhotos}
+                    setSelectedImages={setSelectedFacilityPhotos}
+                    selectedImagesBase64={formData.companyFacilityPhotos}
+                    setSelectedImagesBase64={setFacilityPhotosBase64}
                 />
                 <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.button} />
             </View>

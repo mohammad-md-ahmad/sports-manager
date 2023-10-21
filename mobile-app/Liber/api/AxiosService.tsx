@@ -37,7 +37,7 @@ abstract class AxiosService {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
 
-                //console.log('Request Body Data:', config.data);
+                console.log('Request Body Data:', config.data);
 
                 return config;
             },
