@@ -20,6 +20,7 @@ class CreateCompanyFacilityRequest extends Data
         public string $type,
         public array $details,
         public CreateAddressRequest $createAddressRequest,
+        public ?array $companyFacilityPhotos = null,
     ) {
     }
 

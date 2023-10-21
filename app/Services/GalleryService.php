@@ -22,13 +22,13 @@ class GalleryService implements GalleryServiceInterface
 
     public function store(CreateGalleryRequest $data): Gallery
     {
+        $uploadedImg = null;
+
         try {
             DB::beginTransaction();
 
             /** @var Gallery $gallery */
             $gallery = Gallery::create($data->toArray());
-
-            $uploadedImg = null;
 
             if ($data->image) {
                 $uploadedImg = $this->uploadImage($data->image, $gallery->id);
@@ -42,7 +42,9 @@ class GalleryService implements GalleryServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            $this->deleteImage($uploadedImg);
+            if ($uploadedImg) {
+                $this->deleteImage($uploadedImg);
+            }
 
             Log::error('GalleryService::store: '.$exception->getMessage());
 
