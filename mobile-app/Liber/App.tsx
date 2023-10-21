@@ -10,13 +10,16 @@ import AppLoader from './AppLoader';
 import { AuthProvider } from './AuhtContext';
 import { Provider } from 'react-redux';
 import store from './store/store';
+import { ToastProvider } from 'react-native-toast-notifications';
 
 
 function App(): JSX.Element {
   return (
     <Provider store={store}>
       <AuthProvider>
-        <AppLoader />
+        <ToastProvider>
+          <AppLoader />
+        </ToastProvider>
       </AuthProvider>
     </Provider>
   );

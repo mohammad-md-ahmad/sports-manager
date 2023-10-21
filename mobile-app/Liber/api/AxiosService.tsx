@@ -1,8 +1,9 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import Constants from '../helpers/constants';
-import Snackbar from 'react-native-snackbar';
 import { getToken } from '../helpers/tokenManage';
 import { useDispatch } from 'react-redux';
+import ToastHelper from '../helpers/toast';
+
 
 abstract class AxiosService {
     private instance: AxiosInstance;
@@ -25,6 +26,8 @@ abstract class AxiosService {
 
     private setupInterceptors() {
         const dispatch = useDispatch();
+        ToastHelper.initialize();
+
         this.instance.interceptors.request.use(
             async (config) => {
                 dispatch({ type: 'SET_LOADING', payload: true });
@@ -46,14 +49,14 @@ abstract class AxiosService {
                 } else if (error.code === 'ECONNABORTED') {
                     // Request timeout
                     console.error('Request timeout', error.message);
-                    displaySnackbar('A connection to server couldn\'t be made. Please make you have internet access.');
+                    ToastHelper.errorToast('A connection to server couldn\'t be made. Please make you have internet access.');
 
                     return Promise.reject(error);
                 } else {
                     console.log('Error', error);
 
                     console.error('Request failed', error);
-                    displaySnackbar('Request couldn\'t be made.');
+                    ToastHelper.errorToast('Request couldn\'t be made.');
 
                     return Promise.reject(error);
                 }
@@ -66,7 +69,7 @@ abstract class AxiosService {
                 dispatch({ type: 'SET_LOADING', payload: false });
 
                 //console.log(response.data.message)
-                displaySnackbar(response.data.message);
+                ToastHelper.successToast(response.data.message);
 
                 return response;
             },
@@ -78,27 +81,19 @@ abstract class AxiosService {
                 } else if (error.code === 'ECONNABORTED') {
                     // Request timeout
                     console.error('Request timeout', error.message);
-                    displaySnackbar('A connection to server couldn\'t be made. Please make you have internet access.');
+                    ToastHelper.errorToast('A connection to server couldn\'t be made. Please make you have internet access.');
 
                     return Promise.reject(error);
                 } else {
                     // Other errors
                     console.error('Request failed', error);
-                    displaySnackbar('Request couldn\'t be made.');
+                    ToastHelper.errorToast('Request couldn\'t be made.');
                     return Promise.reject(error);
                 }
             }
         );
 
-        const displaySnackbar = (message: string) => {
-            // Display a Snackbar message with the provided message
-            Snackbar.show({
-                text: message,
-                duration: 2000,
-            });
-        };
     }
-
 
     public async get<T = any, R = AxiosResponse<T>>(
         url: string,

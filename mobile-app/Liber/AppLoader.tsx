@@ -17,7 +17,7 @@ import MiscService from './api/MiscService';
 import { useAuth } from './AuhtContext';
 import { getUserData } from './helpers/userDataManage';
 import { storeFacilityTypes } from './helpers/facilityTypesDataManage';
-import { storeCountries } from './helpers/CountriesDataManage';
+import { storeCountries } from './helpers/countriesDataManage';
 import LoginScreen from './src/login/login';
 import Signup from './src/login/signup';
 import About from './src/about/about';
@@ -30,7 +30,6 @@ import Dashboard from './src/dashboard/dashboard';
 import Facilities from './src/facilities/facilities';
 import FacilityForm from './src/facilities/facilityForm';
 import colors from './styles/colors';
-
 
 
 function AppLoader(): JSX.Element {
@@ -153,7 +152,6 @@ function AppLoader(): JSX.Element {
                 </Stack.Navigator>
             }
         </NavigationContainer>
-
     );
 }
 

@@ -13,8 +13,7 @@ import { placeHolderTextColor } from "../../styles/styles";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../../styles/colors";
 import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
-import { getCountries } from "../../helpers/CountriesDataManage";
-import Snackbar from "react-native-snackbar";
+import { getCountries } from "../../helpers/countriesDataManage";
 import { useNavigation } from "@react-navigation/native";
 
 interface FormData {
@@ -172,11 +171,6 @@ export default function FacilityForm(): React.JSX.Element {
         const sanitizedFormData = sanitizeFormData(formData);
 
         facilityService.create(sanitizedFormData).then((response) => {
-            Snackbar.show({
-                text: 'Facility has been created successfully!',
-                duration: 3000
-            });
-
             setTimeout(() => {
                 navigator.navigate('Facilities');
             }, 2000); // sleep for 2 secs
