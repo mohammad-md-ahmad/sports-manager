@@ -19,6 +19,7 @@ import { Button, Icon } from "react-native-elements";
 import UserService from "../../api/UserService";
 import { launchImageLibrary } from "react-native-image-picker";
 import Constants from "../../helpers/constants";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface UserFormData {
     first_name: string;
@@ -43,14 +44,20 @@ export default function UserProfileForm(): React.JSX.Element {
         profile_picture: null,
     });
 
-    useEffect(() => {
-        userService.getUser().then((response) => {
-            setFormData({...response.data.data, profile_picture: null});
-            setLogo({uri: Constants.assetsUrl +'/'+ response.data?.data?.profile_picture});
-        }).catch((error) => {
-            console.error('user error', error)
-        });
-    }, [])
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
+
+            userService.getUser().then((response) => {
+                setFormData({ ...response.data.data, profile_picture: null });
+                setLogo({ uri: Constants.assetsUrl + '/' + response.data?.data?.profile_picture });
+            }).catch((error) => {
+                console.error('user error', error)
+            });
+        }, [])
+    );
+
 
     const handleInputChange = (key: string, value: any) => {
         setFormData((prevData) => ({

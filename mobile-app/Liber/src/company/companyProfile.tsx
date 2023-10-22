@@ -3,7 +3,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import { getCompanyData } from '../../helpers/companyDataManage';
 import CompanyService from '../../api/CompanyService';
@@ -24,29 +24,34 @@ export default function CompanyProfile() {
         navigator.navigate('CompanyProfileForm')
     }
 
-
     const companyService = new CompanyService();
-    useEffect(() => {
 
-        companyService.getCompany().then((response) => {
-            console.log('company data', response.data)
-            setCompanyData({...response.data.data, logo: {uri: Constants.assetsUrl +'/'+ response.data?.data?.logo}});
-        }).catch((error) => {
-            console.error('company error', error)
-        });
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
 
-        // getCompanyData().then((data: string | null) => {
-        //     if (data !== null) {
-        //         let parsedData = JSON.parse(data);
-        //         console.log('parsedData-------', parsedData)
 
-        //         if (parsedData.logo == null)
-        //             parsedData.logo = require('./../../assets/images/liber_logo.png');
+            companyService.getCompany().then((response) => {
+                console.log('company data', response.data)
+                setCompanyData({ ...response.data.data, logo: { uri: Constants.assetsUrl + '/' + response.data?.data?.logo } });
+            }).catch((error) => {
+                console.error('company error', error)
+            });
 
-        //         setCompanyData({ ...parsedData });
-        //     }
-        // });
-    }, [])
+            // getCompanyData().then((data: string | null) => {
+            //     if (data !== null) {
+            //         let parsedData = JSON.parse(data);
+            //         console.log('parsedData-------', parsedData)
+
+            //         if (parsedData.logo == null)
+            //             parsedData.logo = require('./../../assets/images/liber_logo.png');
+
+            //         setCompanyData({ ...parsedData });
+            //     }
+            // });
+        }, [])
+    );
 
     return (
         <View style={styles.container}>

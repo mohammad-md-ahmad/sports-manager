@@ -24,6 +24,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
         }).catch((error) => {
             // Handle API request errors here
             console.error('Error logout:', error);
+        }).finally(() => {
+            logout();
         });
     };
 

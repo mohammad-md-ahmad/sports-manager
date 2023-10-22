@@ -20,6 +20,7 @@ import { Button, Icon } from "react-native-elements";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { getCompanyData } from "../../helpers/companyDataManage";
 import Constants from "../../helpers/constants";
+import { useFocusEffect } from "@react-navigation/native";
 
 interface CompanyFormData {
     uuid: string | null;
@@ -61,40 +62,45 @@ export default function CompanyProfileForm(): React.JSX.Element {
         },
     });
 
-    useEffect(() => {
-
-        companyService.getCompany().then((response) => {
-            console.log('company data', response.data);
-            response.data.data.createAddressRequest = { ...response.data.data.address }
-            setFormData({ ...response.data.data, logo: null });
-            setLogo({uri: Constants.assetsUrl + '/' + response.data?.data?.logo});
-        }).catch((error) => {
-            console.error('company error', error)
-        });
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
 
 
-        // getCompanyData().then((data: string | null) => {
-        //     if (data !== null) {
-        //         let parsedData = JSON.parse(data);
-        //         console.log('parsedData-------', parsedData)
+            companyService.getCompany().then((response) => {
+                console.log('company data', response.data);
+                response.data.data.createAddressRequest = { ...response.data.data.address }
+                setFormData({ ...response.data.data, logo: null });
+                setLogo({ uri: Constants.assetsUrl + '/' + response.data?.data?.logo });
+            }).catch((error) => {
+                console.error('company error', error)
+            });
 
-        //         // if (parsedData.logo == null)
-        //         //   parsedData.logo = require('./../../assets/images/liber_logo.png');
 
-        //         parsedData.createAddressRequest = {
-        //             line_1: '',
-        //             line_2: '',
-        //             line_3: '',
-        //             city: '',
-        //             region: '',
-        //             postcode: '',
-        //             country_uuid: '',
-        //         }
+            // getCompanyData().then((data: string | null) => {
+            //     if (data !== null) {
+            //         let parsedData = JSON.parse(data);
+            //         console.log('parsedData-------', parsedData)
 
-        //         setFormData({ ...parsedData });
-        //     }
-        // });
-    }, [])
+            //         // if (parsedData.logo == null)
+            //         //   parsedData.logo = require('./../../assets/images/liber_logo.png');
+
+            //         parsedData.createAddressRequest = {
+            //             line_1: '',
+            //             line_2: '',
+            //             line_3: '',
+            //             city: '',
+            //             region: '',
+            //             postcode: '',
+            //             country_uuid: '',
+            //         }
+
+            //         setFormData({ ...parsedData });
+            //     }
+            // });
+        }, [])
+    );
 
     const handleInputChange = (field: string, value: string) => {
         if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
