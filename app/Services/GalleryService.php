@@ -106,7 +106,7 @@ class GalleryService implements GalleryServiceInterface
             // delete the old logo
             if ($id) {
                 /** @var Gallery $gallery */
-                $gallery = User::findOrFail($id);
+                $gallery = Gallery::findOrFail($id);
 
                 if ($gallery->image) {
                     $this->deleteImage($gallery->image);
