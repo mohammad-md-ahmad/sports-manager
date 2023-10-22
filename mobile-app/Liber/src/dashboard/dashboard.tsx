@@ -9,10 +9,13 @@ import colors from "../../styles/colors";
 import FacilityCard from "../common/facilityCard";
 import FacilityService from "../../api/FacilityService";
 import { useFocusEffect } from "@react-navigation/native";
-
+import MiscService from "../../api/MiscService";
+import { storeCountries } from "../../helpers/countriesDataManage";
+import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
 
 export default function Dashboard(): React.JSX.Element {
     const facilityService = new FacilityService();
+    const miscService = new MiscService();
 
     const [facilities, setFacilities] = useState([]);
 
@@ -25,6 +28,13 @@ export default function Dashboard(): React.JSX.Element {
                 .then((response) => {
                     setFacilities(response.data?.data);
                 }).catch((error) => {
+                });
+
+                miscService.lists().then((response) => {
+                    storeFacilityTypes(response.data?.data?.facility_types);
+                    storeCountries(response.data?.data?.countries);
+                }).catch((error) => {
+                    console.log(error);
                 });
         }, [])
     );

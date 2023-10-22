@@ -32,8 +32,6 @@ function AppLoader(): JSX.Element {
         flex: 1
     };
 
-    const miscService = new MiscService();
-
     const Drawer = createDrawerNavigator();
     const Stack = createStackNavigator();
 
@@ -46,16 +44,6 @@ function AppLoader(): JSX.Element {
             setUserData(data === null ? null : JSON.parse(data));
         });
     }, []);
-
-    useEffect(() => {
-        if (userData?.uuid)
-            miscService.lists().then((response) => {
-                storeFacilityTypes(response.data?.data?.facility_types);
-                storeCountries(response.data?.data?.countries);
-            }).catch((error) => {
-
-            });
-    }, [userData]);
 
     return (
         <NavigationContainer>
