@@ -45,14 +45,10 @@ class Gallery extends Model
         'uuid' => EfficientUuid::class,
     ];
 
-    protected $appends = [
-        'url',
-    ];
-
-    public function url(): Attribute
+    public function image(): Attribute
     {
         return Attribute::make(
-            get: fn () => config('filesystems.images_url').'?path='.$this->image
+            get: fn ($value) => $value ? config('filesystems.images_url').'?path='.$value : null
         );
     }
 

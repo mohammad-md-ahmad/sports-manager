@@ -34,7 +34,7 @@ export default function CompanyProfile() {
 
             companyService.getCompany().then((response) => {
                 console.log('company data', response.data)
-                setCompanyData({ ...response.data.data, logo: { uri: Constants.assetsUrl + '/' + response.data?.data?.logo } });
+                setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
             }).catch((error) => {
                 console.error('company error', error)
             });

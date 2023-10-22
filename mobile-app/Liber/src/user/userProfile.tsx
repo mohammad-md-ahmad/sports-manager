@@ -33,7 +33,7 @@ export default function UserProfile() {
             // You can put the logic here that you want to run when the component should reload.
 
             userService.getUser().then((response) => {
-                setUserData({ ...response.data.data, profile_picture: { uri: Constants.assetsUrl + '/' + response.data?.data?.profile_picture } });
+                setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
             }).catch((error) => {
                 console.error('user error', error)
             });

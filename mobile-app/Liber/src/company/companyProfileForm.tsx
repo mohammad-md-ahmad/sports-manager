@@ -72,7 +72,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
                 console.log('company data', response.data);
                 response.data.data.createAddressRequest = { ...response.data.data.address }
                 setFormData({ ...response.data.data, logo: null });
-                setLogo({ uri: Constants.assetsUrl + '/' + response.data?.data?.logo });
+                setLogo({ uri: response.data?.data?.logo });
             }).catch((error) => {
                 console.error('company error', error)
             });

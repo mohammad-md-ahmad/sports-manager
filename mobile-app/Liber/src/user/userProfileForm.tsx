@@ -51,7 +51,7 @@ export default function UserProfileForm(): React.JSX.Element {
 
             userService.getUser().then((response) => {
                 setFormData({ ...response.data.data, profile_picture: null });
-                setLogo({ uri: Constants.assetsUrl + '/' + response.data?.data?.profile_picture });
+                setLogo({ uri: response.data?.data?.profile_picture });
             }).catch((error) => {
                 console.error('user error', error)
             });

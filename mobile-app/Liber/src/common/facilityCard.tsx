@@ -18,12 +18,11 @@ interface FacilityCardProps {
 }
 
 const FacilityCard: React.FC<FacilityCardProps> = ({ facility }) => {
-    console.log({uri: facility.gallery[0].url });
     return (
         <Card style={styles.cardView}>
             <View style={styles.container}>
                 <Image
-                    source={facility.gallery?.[0]?.url ? {uri: facility.gallery[0].url } : require('./../../assets/images/liber_logo.png')}
+                    source={facility.gallery?.[0]?.image ? {uri: facility.gallery[0].image } : require('./../../assets/images/liber_logo.png')}
                     style={styles.image}
                 />
                 <View style={styles.userInfo}>
