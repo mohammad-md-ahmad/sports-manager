@@ -60,12 +60,13 @@ function AppLoader(): JSX.Element {
     }, []);
 
     useEffect(() => {
-        miscService.lists().then((response) => {
-            storeFacilityTypes(response.data?.data?.facility_types);
-            storeCountries(response.data?.data?.countries);
-        }).catch((error) => {
+        if (userData.uuid)
+            miscService.lists().then((response) => {
+                storeFacilityTypes(response.data?.data?.facility_types);
+                storeCountries(response.data?.data?.countries);
+            }).catch((error) => {
 
-        });
+            });
     }, [userData]);
 
     function ProfileNavigation() {

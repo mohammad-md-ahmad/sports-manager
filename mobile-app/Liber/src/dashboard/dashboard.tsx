@@ -8,6 +8,7 @@ import {
 import colors from "../../styles/colors";
 import FacilityCard from "../common/facilityCard";
 import FacilityService from "../../api/FacilityService";
+import { useFocusEffect } from "@react-navigation/native";
 
 
 export default function Dashboard(): React.JSX.Element {
@@ -15,13 +16,18 @@ export default function Dashboard(): React.JSX.Element {
 
     const [facilities, setFacilities] = useState([]);
 
-    useEffect(() => {
-        facilityService.list()
-            .then((response) => {
-                setFacilities(response.data?.data);
-            }).catch((error) => {
-            });
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
+
+            facilityService.list()
+                .then((response) => {
+                    setFacilities(response.data?.data);
+                }).catch((error) => {
+                });
+        }, [])
+    );
 
 
     const getItem = (_data: unknown, index: number) => facilities[index];
