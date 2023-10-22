@@ -5,6 +5,7 @@ namespace App\Models;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -27,6 +28,14 @@ class Gallery extends Model
         'is_primary',
     ];
 
+    protected $hidden = [
+        'id',
+        'model_type',
+        'model_id',
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * The attributes that should be cast.
      *
@@ -35,6 +44,17 @@ class Gallery extends Model
     protected $casts = [
         'uuid' => EfficientUuid::class,
     ];
+
+    protected $appends = [
+        'url',
+    ];
+
+    public function url(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => config('filesystems.images_url').'?path='.$this->image
+        );
+    }
 
     public function model(): MorphTo
     {

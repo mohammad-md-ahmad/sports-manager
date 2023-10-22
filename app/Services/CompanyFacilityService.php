@@ -43,7 +43,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     public function getAll(GetCompanyFacilitiesRequest $data): Collection
     {
         try {
-            return $data->company->facilities()->with('address')->get();
+            return $data->company->facilities()->with(['address', 'gallery'])->get();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
 
