@@ -60,7 +60,7 @@ function AppLoader(): JSX.Element {
     }, []);
 
     useEffect(() => {
-        if (userData.uuid)
+        if (userData?.uuid)
             miscService.lists().then((response) => {
                 storeFacilityTypes(response.data?.data?.facility_types);
                 storeCountries(response.data?.data?.countries);
