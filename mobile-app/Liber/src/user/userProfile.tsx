@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         height: 150,
         borderRadius: 75,
         marginBottom: 10,
+        marginTop: 10,
         borderWidth: 0,
         resizeMode: 'contain',
     },

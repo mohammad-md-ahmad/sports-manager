@@ -13,6 +13,8 @@ import AuthService from "../../api/AuthService";
 import BaseComponent from "../common/baseComponent";
 import { useNavigation } from "@react-navigation/native";
 import { getUserData } from "../../helpers/userDataManage";
+import { Icon } from "react-native-elements";
+import colors from "../../styles/colors";
 
 export default function DrawerContent(props: any): React.JSX.Element {
     const { logout } = useAuth();
@@ -57,34 +59,77 @@ export default function DrawerContent(props: any): React.JSX.Element {
                     {/* <DrawerItemList {...props} /> */}
                     <DrawerItem
                         label="Dashboard"
+                        icon={({ focused, color, size }) => (
+                            <Icon
+                                name="dashboard" // Replace with your desired icon name
+                                type="material"
+                                size={25}
+                            />
+                        )}
                         onPress={() => navigateTo('Dashboard')}
-                        style={{ bottom: 0 }}
+                        style={styles.drawerItem}
                     />
+
                     <DrawerItem
                         label="Facilities"
+                        icon={({ focused, color, size }) => (
+                            <Icon
+                                name="scoreboard" // Replace with your desired icon name
+                                type="material"
+                                size={25}
+                            />
+                        )}
                         onPress={() => navigateTo('Facilities')}
-                        style={{ bottom: 0 }}
+                        style={styles.drawerItem}
                     />
 
                     <DrawerItem
                         label="Profile"
+                        icon={({ focused, color, size }) => (
+                            <Icon
+                                name="person-outline" // Replace with your desired icon name
+                                type="material"
+                                size={25}
+                            />
+                        )}
                         onPress={() => navigateTo(userData?.type == 'COMPANY_USER' ? 'CompanyProfile' : 'UserProfile')}
-                        style={{ bottom: 0 }}
+                        style={styles.drawerItem}
                     />
 
                     <DrawerItem
                         label="Calendar"
+                        icon={({ focused, color, size }) => (
+                            <Icon
+                                name="calendar-month" // Replace with your desired icon name
+                                type="material"
+                                size={25}
+                            />
+                        )}
                         onPress={() => navigateTo('Calendar')}
-                        style={{ bottom: 0 }}
+                        style={styles.drawerItem}
                     />
                     <DrawerItem
                         label="About"
+                        icon={({ focused, color, size }) => (
+                            <Icon
+                                name="info" // Replace with your desired icon name
+                                type="material"
+                                size={25}
+                            />
+                        )}
                         onPress={() => navigateTo('About')}
-                        style={{ bottom: 0 }}
+                        style={styles.drawerItem}
                     />
                 </ScrollView>
                 <DrawerItem
                     label="Logout"
+                    icon={({ focused, color, size }) => (
+                        <Icon
+                            name="logout" // Replace with your desired icon name
+                            type="material"
+                            size={25}
+                        />
+                    )}
                     onPress={() => onLogoutPress()}
                     style={{ bottom: 0 }}
                 />
@@ -92,3 +137,9 @@ export default function DrawerContent(props: any): React.JSX.Element {
         </BaseComponent>
     );
 }
+
+const styles = StyleSheet.create({
+    drawerItem: {
+
+    }
+})

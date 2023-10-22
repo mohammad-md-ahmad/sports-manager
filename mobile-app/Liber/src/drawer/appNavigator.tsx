@@ -37,6 +37,10 @@ const AppNavigator = () => {
         navigator.goBack();
     }
 
+    const toggleSearch = () => {
+
+    }
+
     return (
         <Stack.Navigator>
             <Stack.Group
@@ -65,6 +69,19 @@ const AppNavigator = () => {
                             }
                         </>
                     ,
+                    headerRight: () =>
+                        <>
+
+                            <View style={{ margin: 15 }}>
+                                <Icon
+                                    name="search" // Replace with your desired icon name
+                                    type="material"
+                                    size={25}
+                                    onPress={() => toggleSearch()}
+                                />
+                            </View>
+
+                        </>
                 }}
             >
 
