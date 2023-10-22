@@ -55,8 +55,8 @@ export default function LoginScreen(): React.JSX.Element {
 
     const navigator = useNavigation();
 
-    const [username, setUsername] = useState('super_admin');
-    const [password, setPassword] = useState('P@ssw0rd');
+    const [username, setUsername] = useState(''); //super_admin
+    const [password, setPassword] = useState(''); //P@ssw0rd
 
     const { login } = useAuth();
 
