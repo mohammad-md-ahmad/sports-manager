@@ -23,7 +23,6 @@ export default function Dashboard(): React.JSX.Element {
             });
     }, []);
 
-
     const getItem = (_data: unknown, index: number) => facilities[index];
     const getItemCount = (_data: unknown) => facilities.length;
 
