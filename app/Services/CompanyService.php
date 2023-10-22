@@ -20,6 +20,8 @@ use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use App\Traits\ImageUpload;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -42,6 +44,19 @@ class CompanyService implements CompanyServiceInterface
             $company = Company::findOrFail($data->id);
 
             return $company;
+        } catch (Exception $exception) {
+            Log::error('CompanyService::get: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function getAll(Request $request): Collection
+    {
+        try {
+            $companies = Company::all();
+
+            return $companies;
         } catch (Exception $exception) {
             Log::error('CompanyService::get: '.$exception->getMessage());
 

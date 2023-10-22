@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Contracts\Services\GalleryServiceInterface;
 use App\Models\Gallery;
-use App\Models\User;
 use App\Services\Data\Gallery\CreateGalleryRequest;
 use App\Services\Data\Gallery\UpdateGalleryRequest;
 use App\Traits\ImageUpload;

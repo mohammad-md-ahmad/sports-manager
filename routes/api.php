@@ -33,6 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('companies')->group(function () {
 
         Route::post('/', [CompanyController::class, 'store'])->name('companies.create');
+        Route::get('/', [CompanyController::class, 'getAll'])->middleware('prevent_if_production')->name('companies.get-all');
         Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
         Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
         Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
@@ -41,8 +42,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('facilities')->group(function () {
 
                 Route::post('/', [CompanyFacilityController::class, 'store'])->name('facilities.create');
-                Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('companies.get-all');
-                // Route::get('/{uuid}', [CompanyController::class, 'get'])->name('companies.get');
+                Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('facilities.get-all');
+                Route::get('/{uuid}', [CompanyFacilityController::class, 'get'])->name('facilities.get');
                 // Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
                 // Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
             });

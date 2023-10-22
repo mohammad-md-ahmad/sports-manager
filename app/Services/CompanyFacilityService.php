@@ -11,6 +11,7 @@ use App\Models\CompanyFacility;
 use App\Services\Data\Address\CreateAddressRequest;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
+use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use App\Services\Data\Gallery\CreateGalleryRequest;
 use Exception;
 use Illuminate\Support\Collection;
@@ -25,19 +26,19 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     ) {
     }
 
-    // public function get(GetCompanyRequest $data): array
-    // {
-    //     try {
-    //         /** @var Company $company */
-    //         $company = Company::findOrFail($data->id);
+    public function get(GetCompanyFacilityRequest $data): CompanyFacility
+    {
+        try {
+            /** @var CompanyFacility $companyFacility */
+            $companyFacility = CompanyFacility::findOrFail($data->id);
 
-    //         return $company->toArray();
-    //     } catch (Exception $exception) {
-    //         Log::error('CompanyService::get: '.$exception->getMessage());
+            return $companyFacility;
+        } catch (Exception $exception) {
+            Log::error('CompanyFacilityService::get: '.$exception->getMessage());
 
-    //         throw $exception;
-    //     }
-    // }
+            throw $exception;
+        }
+    }
 
     public function getAll(GetCompanyFacilitiesRequest $data): Collection
     {

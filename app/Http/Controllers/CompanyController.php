@@ -8,6 +8,7 @@ use App\Services\Data\Company\GetCompanyRequest;
 use App\Services\Data\Company\UpdateCompanyRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -16,6 +17,22 @@ class CompanyController extends Controller
     public function __construct(
         protected CompanyServiceInterface $companyService
     ) {
+    }
+
+    public function getAll(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->companyService->getAll($request);
+
+            return response()->json([
+                'message' => __('Companies have been retrieved successfully.'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to retrieve Companies: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to retrieve Companies.')], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     public function get(GetCompanyRequest $request): JsonResponse
