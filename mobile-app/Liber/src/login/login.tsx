@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     logo: {
-        marginTop: 100,
+        marginTop: 80,
         marginBottom: 30,
         width: 150,
         height: 120,
