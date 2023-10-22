@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     Image,
@@ -11,12 +11,15 @@ import { DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-naviga
 import { useAuth } from "../../AuhtContext";
 import AuthService from "../../api/AuthService";
 import BaseComponent from "../common/baseComponent";
+import { useNavigation } from "@react-navigation/native";
+import { getUserData } from "../../helpers/userDataManage";
 
 export default function DrawerContent(props: any): React.JSX.Element {
     const { logout } = useAuth();
     const authService = new AuthService();
+    const navigator = useNavigation();
 
-    const onLoginPress = () => {
+    const onLogoutPress = () => {
         authService.logout().then((response) => {
             // Handle a successful API response
             logout();
@@ -29,6 +32,18 @@ export default function DrawerContent(props: any): React.JSX.Element {
         });
     };
 
+    const navigateTo = (screen: string) => {
+        navigator.navigate(screen);
+    }
+
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+        getUserData().then((data: string | null) => {
+            setUserData(data === null ? null : JSON.parse(data));
+        });
+    }, []);
+
     return (
         <BaseComponent>
             <View style={globalStyles.drawerContainer} >
@@ -39,12 +54,38 @@ export default function DrawerContent(props: any): React.JSX.Element {
                     />
                 </View>
                 <ScrollView>
-                    <DrawerItemList {...props} />
+                    {/* <DrawerItemList {...props} /> */}
+                    <DrawerItem
+                        label="Dashboard"
+                        onPress={() => navigateTo('Dashboard')}
+                        style={{ bottom: 0 }}
+                    />
+                    <DrawerItem
+                        label="Facilities"
+                        onPress={() => navigateTo('Facilities')}
+                        style={{ bottom: 0 }}
+                    />
 
+                    <DrawerItem
+                        label="Profile"
+                        onPress={() => navigateTo(userData?.type == 'COMPANY_USER' ? 'CompanyProfile' : 'UserProfile')}
+                        style={{ bottom: 0 }}
+                    />
+
+                    <DrawerItem
+                        label="Calendar"
+                        onPress={() => navigateTo('Calendar')}
+                        style={{ bottom: 0 }}
+                    />
+                    <DrawerItem
+                        label="About"
+                        onPress={() => navigateTo('About')}
+                        style={{ bottom: 0 }}
+                    />
                 </ScrollView>
                 <DrawerItem
                     label="Logout"
-                    onPress={() => onLoginPress()}
+                    onPress={() => onLogoutPress()}
                     style={{ bottom: 0 }}
                 />
             </View>

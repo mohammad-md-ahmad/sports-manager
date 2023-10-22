@@ -20,7 +20,7 @@ import { Button, Icon } from "react-native-elements";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { getCompanyData } from "../../helpers/companyDataManage";
 import Constants from "../../helpers/constants";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 interface CompanyFormData {
     uuid: string | null;
@@ -42,6 +42,7 @@ interface CompanyFormData {
 export default function CompanyProfileForm(): React.JSX.Element {
 
     let companyService = new CompanyService();
+    const navigator = useNavigation();
 
     const [logo, setLogo] = useState(require('./../../assets/images/liber_logo.png'));
 
@@ -122,6 +123,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
         companyService.update(formData).then((response) => {
             // Handle a successful API response
             console.log('Success signup:', response.data);
+            navigator.navigate('CompanyProfile');
         })
             .catch((error) => {
                 // Handle API request errors here

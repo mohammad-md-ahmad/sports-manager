@@ -19,7 +19,7 @@ import { Button, Icon } from "react-native-elements";
 import UserService from "../../api/UserService";
 import { launchImageLibrary } from "react-native-image-picker";
 import Constants from "../../helpers/constants";
-import { useFocusEffect } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 interface UserFormData {
     first_name: string;
@@ -33,6 +33,7 @@ interface UserFormData {
 export default function UserProfileForm(): React.JSX.Element {
 
     let userService = new UserService();
+    const navigator = useNavigation();
 
     const [logo, setLogo] = useState(require('./../../assets/images/liber_logo.png'));
     const [formData, setFormData] = useState({
@@ -70,6 +71,7 @@ export default function UserProfileForm(): React.JSX.Element {
         console.log(formData);
         userService.update(formData).then((response) => {
             // Handle a successful API response
+            navigator.navigate('UserProfile');
         })
             .catch((error) => {
                 // Handle API request errors here

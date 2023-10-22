@@ -11,8 +11,8 @@ import {
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-
 import { createStackNavigator } from '@react-navigation/stack';
+
 import MiscService from './api/MiscService';
 import { useAuth } from './AuhtContext';
 import { getUserData } from './helpers/userDataManage';
@@ -20,17 +20,8 @@ import { storeFacilityTypes } from './helpers/facilityTypesDataManage';
 import { storeCountries } from './helpers/countriesDataManage';
 import LoginScreen from './src/login/login';
 import Signup from './src/login/signup';
-import About from './src/about/about';
 import DrawerContent from './src/drawer/drawerContent';
-import CompanyProfile from './src/company/companyProfile';
-import CompanyProfileForm from './src/company/companyProfileForm';
-import UserProfile from './src/user/userProfile';
-import UserProfileForm from './src/user/userProfileForm';
-import Dashboard from './src/dashboard/dashboard';
-import Facilities from './src/facilities/facilities';
-import FacilityForm from './src/facilities/facilityForm';
-import colors from './styles/colors';
-import AgendaScreen from './src/calendar/calendar';
+import AppNavigator from './src/drawer/appNavigator';
 
 
 function AppLoader(): JSX.Element {
@@ -45,11 +36,8 @@ function AppLoader(): JSX.Element {
 
     const Drawer = createDrawerNavigator();
     const Stack = createStackNavigator();
-    const { isAuthenticated } = useAuth();
 
-    const ProfileStack = createStackNavigator();
-    const FacilitiesStack = createStackNavigator();
-    const DashboardStack = createStackNavigator();
+    const { isAuthenticated } = useAuth();
 
     const [userData, setUserData] = useState({});
 
@@ -69,49 +57,6 @@ function AppLoader(): JSX.Element {
             });
     }, [userData]);
 
-    function ProfileNavigation() {
-
-        if (userData?.type == 'COMPANY_USER')
-            return (
-                <ProfileStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
-                    <ProfileStack.Screen name="CompanyProfile" options={{ title: 'Profile' }} component={CompanyProfile} />
-                    <ProfileStack.Screen name="CompanyProfileForm" options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
-                </ProfileStack.Navigator>
-            );
-        else
-            return (
-                <ProfileStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
-                    <ProfileStack.Screen name="UserProfile" options={{ title: 'Profile' }} component={UserProfile} />
-                    <ProfileStack.Screen name="UserProfileForm" options={{ title: 'Profile Form' }} component={UserProfileForm} />
-                </ProfileStack.Navigator>
-            );
-    }
-
-    function DashboardNavigation() {
-
-        if (userData?.type == 'COMPANY_USER')
-            return (
-                <DashboardStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
-                    <DashboardStack.Screen name="CompanyDashboard" options={{ title: 'Company Dashboard' }} component={Dashboard} />
-                </DashboardStack.Navigator>
-            );
-        else
-            return (
-                <DashboardStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Profile">
-                    <DashboardStack.Screen name="CustomerDashboard" options={{ title: 'Customer Dashboard' }} component={Dashboard} />
-                </DashboardStack.Navigator>
-            );
-    }
-
-    function FacilitiesNavigation() {
-        return (
-            <FacilitiesStack.Navigator screenOptions={{ headerShown: false }} initialRouteName="Facilities">
-                <FacilitiesStack.Screen name="Facilities" options={{ title: 'Facilities' }} component={Facilities} />
-                <FacilitiesStack.Screen name="FacilityForm" options={{ title: 'Facility Form' }} component={FacilityForm} />
-            </FacilitiesStack.Navigator>
-        );
-    }
-
     return (
         <NavigationContainer>
             <StatusBar
@@ -121,26 +66,14 @@ function AppLoader(): JSX.Element {
             {isAuthenticated ?
                 <Drawer.Navigator
                     drawerContent={(props) => <DrawerContent {...props} />}
-                    initialRouteName="Dashboard">
+                    initialRouteName="AppNavigator"
+                >
                     <Drawer.Group
                         screenOptions={{
-                            headerStyle: { backgroundColor: colors.PrimaryGreen },
-                            //     presentation: 'modal',
-                            //     headerLeft: () => <Icon
-                            //         name="arrow-left" // Replace with your desired icon name
-                            //         type="font-awesome"
-                            //         size={30}
-                            //         color={colors.PrimaryBlue}
-                            //         onPress={navigation.goBack}
-                            //     />
-
+                            headerShown: false
                         }}>
 
-                        <Drawer.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={DashboardNavigation} />
-                        <Drawer.Screen name="ProfileNavigation" options={{ title: 'Profile' }} component={ProfileNavigation} />
-                        <Drawer.Screen name="FacilitiesNavigation" options={{ title: 'Facilities' }} component={FacilitiesNavigation} />
-                        <Drawer.Screen name="Calendar" options={{ title: 'Calendar' }} component={AgendaScreen} />
-                        <Drawer.Screen name="About" options={{ title: 'About' }} component={About} />
+                        <Drawer.Screen name="AppNavigator" component={AppNavigator} />
 
                     </Drawer.Group>
                 </Drawer.Navigator> :
