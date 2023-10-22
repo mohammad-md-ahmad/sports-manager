@@ -25,6 +25,7 @@ interface UserFormData {
     last_name: string;
     username: string;
     email: string;
+    type: string;
     password: string;
     password_confirmation: string;
 }
@@ -37,6 +38,7 @@ interface CompanyFormData {
         last_name: string;
         username: string;
         email: string;
+        type: string;
         password: string;
         password_confirmation: string;
     };
@@ -56,6 +58,7 @@ export default function Signup(): React.JSX.Element {
         password: '',
         password_confirmation: '',
         name: '',
+        type: '',
         is_company: false,
     });
 
@@ -70,7 +73,8 @@ export default function Signup(): React.JSX.Element {
             const companyFormData: CompanyFormData = {
                 ...formData,
                 createUserRequest: {
-                    ...formData
+                    ...formData,
+                    type: 'COMPANY_USER',
                 }
             };
 
@@ -85,6 +89,7 @@ export default function Signup(): React.JSX.Element {
         } else {
             const userFormData: UserFormData = {
                 ...formData,
+                type: 'CUSTOMER_USER',
             };
 
             registerService.createUser(userFormData)
