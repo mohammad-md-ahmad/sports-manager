@@ -3,9 +3,10 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import UserService from '../../api/UserService';
+import Constants from '../../helpers/constants';
 
 export default function UserProfile() {
     // Extract user information from the route parameters
@@ -24,14 +25,21 @@ export default function UserProfile() {
     }
 
     const userService = new UserService();
-    useEffect(() => {
-        userService.getUser().then((response) => {
-            response.data.data.profile_picture = require('./../../assets/images/liber_logo.png');
-            setUserData(response.data.data)
-        }).catch((error) => {
-            console.error('user error', error)
-        });
-    }, [])
+
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
+
+            userService.getUser().then((response) => {
+                setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
+            }).catch((error) => {
+                console.error('user error', error)
+            });
+        }, [])
+    );
+
 
     return (
         <View style={styles.container}>
@@ -62,6 +70,7 @@ const styles = StyleSheet.create({
         height: 150,
         borderRadius: 75,
         marginBottom: 10,
+        marginTop: 10,
         borderWidth: 0,
         resizeMode: 'contain',
     },

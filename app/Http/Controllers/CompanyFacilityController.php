@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
+use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -19,21 +20,21 @@ class CompanyFacilityController extends Controller
     ) {
     }
 
-    // public function get(GetUserRequest $request): JsonResponse
-    // {
-    //     try {
-    //         $user = $this->companyService->get($request);
+    public function get(GetCompanyFacilityRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->companyFacilityService->get($request);
 
-    //         return response()->json([
-    //             'message' => __('User has been retrieved successfully.'),
-    //             'data' => $user,
-    //         ], Response::HTTP_OK);
-    //     } catch (Exception $exception) {
-    //         Log::error('Unable to retrieve user: '.$exception->getMessage());
+            return response()->json([
+                'message' => __('Facility has been retrieved successfully.'),
+                'data' => $data->toArray(),
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to retrieve Facility: '.$exception->getMessage());
 
-    //         return response()->json(['message' => __('Failed to retrieve user.')], Response::HTTP_BAD_REQUEST);
-    //     }
-    // }
+            return response()->json(['message' => __('Failed to retrieve Facility.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
 
     public function getAll(GetCompanyFacilitiesRequest $request): JsonResponse
     {

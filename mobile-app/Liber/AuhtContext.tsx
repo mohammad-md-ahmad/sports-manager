@@ -38,19 +38,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = async (data: Object) => {
         // Implement your login logic here, and set isAuthenticated to true upon success
         if (data.token) {
-            setIsAuthenticated(true);
-            storeToken(data.token);
-            storeUserData(data.user);
+            await storeUserData(data.user);
             if (data.company)
-                storeCompanyData(data.company);
+                await storeCompanyData(data.company);
+
+            await storeToken(data.token);
+            setIsAuthenticated(true);
         }
     };
 
     const logout = async () => {
         // Implement your logout logic here and set isAuthenticated to false
-        clearToken();
-        clearCompanyData();
-        clearUserData();
+        await clearToken();
+        await clearCompanyData();
+        await clearUserData();
         setIsAuthenticated(false);
     };
 

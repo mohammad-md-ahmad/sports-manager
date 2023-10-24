@@ -6,7 +6,6 @@ namespace App\Services;
 
 use App\Contracts\Services\GalleryServiceInterface;
 use App\Models\Gallery;
-use App\Models\User;
 use App\Services\Data\Gallery\CreateGalleryRequest;
 use App\Services\Data\Gallery\UpdateGalleryRequest;
 use App\Traits\ImageUpload;
@@ -22,13 +21,13 @@ class GalleryService implements GalleryServiceInterface
 
     public function store(CreateGalleryRequest $data): Gallery
     {
+        $uploadedImg = null;
+
         try {
             DB::beginTransaction();
 
             /** @var Gallery $gallery */
             $gallery = Gallery::create($data->toArray());
-
-            $uploadedImg = null;
 
             if ($data->image) {
                 $uploadedImg = $this->uploadImage($data->image, $gallery->id);
@@ -42,7 +41,9 @@ class GalleryService implements GalleryServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            $this->deleteImage($uploadedImg);
+            if ($uploadedImg) {
+                $this->deleteImage($uploadedImg);
+            }
 
             Log::error('GalleryService::store: '.$exception->getMessage());
 
@@ -104,7 +105,7 @@ class GalleryService implements GalleryServiceInterface
             // delete the old logo
             if ($id) {
                 /** @var Gallery $gallery */
-                $gallery = User::findOrFail($id);
+                $gallery = Gallery::findOrFail($id);
 
                 if ($gallery->image) {
                     $this->deleteImage($gallery->image);

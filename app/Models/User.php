@@ -6,6 +6,7 @@ use App\Enums\UserType;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -50,8 +51,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
+        'id',
         'password',
         'remember_token',
+        'created_at',
+        'updated_at',
     ];
 
     /**
@@ -65,6 +69,13 @@ class User extends Authenticatable
         'password' => 'hashed',
         'type' => UserType::class,
     ];
+
+    public function profilePicture(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? config('filesystems.images_url').'?path='.$value : null
+        );
+    }
 
     public function companyUser(): HasOne
     {

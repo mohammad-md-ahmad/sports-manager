@@ -20,6 +20,8 @@ use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use App\Traits\ImageUpload;
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -49,8 +51,23 @@ class CompanyService implements CompanyServiceInterface
         }
     }
 
+    public function getAll(Request $request): Collection
+    {
+        try {
+            $companies = Company::all();
+
+            return $companies;
+        } catch (Exception $exception) {
+            Log::error('CompanyService::get: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
     public function store(CreateCompanyRequest $data): Company
     {
+        $uploadedImg = null;
+
         try {
             DB::beginTransaction();
 
@@ -73,10 +90,9 @@ class CompanyService implements CompanyServiceInterface
                 $this->addressService->store($data->createAddressRequest);
             }
 
-            $uploadedImg = null;
-
             // after company got updated successfully, upload and update the logo
             if ($data->logo && is_string($data->logo)) {
+
                 $uploadedImg = $this->uploadLogo($data->logo, $company->id);
                 $company->logo = $uploadedImg;
                 $company->save();
@@ -88,7 +104,9 @@ class CompanyService implements CompanyServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            $this->deleteLogo($uploadedImg);
+            if ($uploadedImg) {
+                $this->deleteLogo($uploadedImg);
+            }
 
             Log::error('CompanyService::store: '.$exception->getMessage());
 
@@ -98,6 +116,8 @@ class CompanyService implements CompanyServiceInterface
 
     public function update(UpdateCompanyRequest $data): Company
     {
+        $uploadedImg = null;
+
         try {
             /** @var Company $company */
             $company = Company::findOrFail($data->id);
@@ -120,8 +140,6 @@ class CompanyService implements CompanyServiceInterface
                 $this->addressService->update($data->updateAddressRequest);
             }
 
-            $uploadedImg = null;
-
             // after company got updated successfully, upload and update the logo
             if ($data->logo && is_string($data->logo)) {
                 $uploadedImg = $this->uploadLogo($data->logo, $company->id);
@@ -135,7 +153,9 @@ class CompanyService implements CompanyServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            $this->deleteLogo($uploadedImg);
+            if ($uploadedImg = null) {
+                $this->deleteLogo($uploadedImg);
+            }
 
             Log::error('CompanyService::update: '.$exception->getMessage());
 

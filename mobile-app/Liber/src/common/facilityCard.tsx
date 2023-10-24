@@ -9,7 +9,8 @@ interface Facility {
     details: {
         length: string;
         width: string;
-    };
+    },
+    gallery: [];
 }
 
 interface FacilityCardProps {
@@ -21,7 +22,7 @@ const FacilityCard: React.FC<FacilityCardProps> = ({ facility }) => {
         <Card style={styles.cardView}>
             <View style={styles.container}>
                 <Image
-                    source={require('./../../assets/images/liber_logo.png')}
+                    source={facility.gallery?.[0]?.image ? {uri: facility.gallery[0].image } : require('./../../assets/images/liber_logo.png')}
                     style={styles.image}
                 />
                 <View style={styles.userInfo}>
@@ -38,7 +39,7 @@ const FacilityCard: React.FC<FacilityCardProps> = ({ facility }) => {
 
 const styles = StyleSheet.create({
     cardView: {
-        borderRadius: 30, 
+        borderRadius: 30,
         borderBlockColor: colors.PrimaryBlue,
         borderWidth: 2
     },

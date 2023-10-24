@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     logo: {
-        marginTop: 100,
+        marginTop: 80,
         marginBottom: 30,
         width: 150,
         height: 120,
@@ -55,8 +55,8 @@ export default function LoginScreen(): React.JSX.Element {
 
     const navigator = useNavigation();
 
-    const [username, setUsername] = useState('super_admin');
-    const [password, setPassword] = useState('P@ssw0rd');
+    const [username, setUsername] = useState(''); //super_admin
+    const [password, setPassword] = useState(''); //P@ssw0rd
 
     const { login } = useAuth();
 

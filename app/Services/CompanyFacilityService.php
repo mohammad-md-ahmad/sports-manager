@@ -6,10 +6,13 @@ namespace App\Services;
 
 use App\Contracts\Services\AddressServiceInterface;
 use App\Contracts\Services\CompanyFacilityServiceInterface;
+use App\Contracts\Services\GalleryServiceInterface;
 use App\Models\CompanyFacility;
 use App\Services\Data\Address\CreateAddressRequest;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
+use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
+use App\Services\Data\Gallery\CreateGalleryRequest;
 use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -19,27 +22,28 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
 {
     public function __construct(
         protected AddressServiceInterface $addressService,
+        protected GalleryServiceInterface $galleryService,
     ) {
     }
 
-    // public function get(GetCompanyRequest $data): array
-    // {
-    //     try {
-    //         /** @var Company $company */
-    //         $company = Company::findOrFail($data->id);
+    public function get(GetCompanyFacilityRequest $data): CompanyFacility
+    {
+        try {
+            /** @var CompanyFacility $companyFacility */
+            $companyFacility = CompanyFacility::findOrFail($data->id);
 
-    //         return $company->toArray();
-    //     } catch (Exception $exception) {
-    //         Log::error('CompanyService::get: '.$exception->getMessage());
+            return $companyFacility;
+        } catch (Exception $exception) {
+            Log::error('CompanyFacilityService::get: '.$exception->getMessage());
 
-    //         throw $exception;
-    //     }
-    // }
+            throw $exception;
+        }
+    }
 
     public function getAll(GetCompanyFacilitiesRequest $data): Collection
     {
         try {
-            return $data->company->facilities()->with('address')->get();
+            return $data->company->facilities()->with(['address', 'gallery'])->get();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
 
@@ -60,6 +64,18 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
                 $data->createAddressRequest->model_id = (string) $companyFacility->id;
 
                 $this->addressService->store($data->createAddressRequest);
+            }
+
+            if (count($data->companyFacilityPhotos) > 0) {
+                foreach ($data->companyFacilityPhotos as $photo) {
+                    $createGalleryRequest = new CreateGalleryRequest(
+                        model_type: CompanyFacility::class,
+                        model_id: (string) $companyFacility->id,
+                        image: $photo,
+                    );
+
+                    $this->galleryService->store($createGalleryRequest);
+                }
             }
 
             DB::commit();

@@ -19,3 +19,4 @@ yarn-error.log
 /.vscode
 /web-app/sports-manager/node_modules
 /mobile-app/Liber/node_modules
+/mobile-app/Liber/.vscode

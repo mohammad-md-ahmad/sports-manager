@@ -5,11 +5,12 @@ namespace App\Contracts\Services;
 use App\Models\CompanyFacility;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
+use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use Illuminate\Support\Collection;
 
 interface CompanyFacilityServiceInterface
 {
-    // public function get( $data): array;
+    public function get(GetCompanyFacilityRequest $data): CompanyFacility;
 
     public function getAll(GetCompanyFacilitiesRequest $data): Collection;
 
