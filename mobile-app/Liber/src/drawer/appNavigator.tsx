@@ -31,9 +31,12 @@ const AppNavigator = () => {
     useEffect(() => {
         const index = navigator.getState().routes[0].state?.index;
         setDrawerIndex(index ?? 0);
+
+        console.log(navigator.getState());
     }, [navigator.getState().routes[0].state?.index])
 
     const toggleBack = () => {
+        console.log(navigator.getState());
         navigator.goBack();
     }
 
@@ -45,10 +48,11 @@ const AppNavigator = () => {
         <Stack.Navigator>
             <Stack.Group
                 screenOptions={{
+                    //headerShown:false,
                     headerStyle: { backgroundColor: colors.PrimaryGreen },
                     headerLeft: () =>
                         <>
-                            {drawerIndex == 0 ?
+                            {drawerIndex == 1 ?
                                 <View style={{ margin: 15 }}>
                                     <Icon
                                         name="menu" // Replace with your desired icon name

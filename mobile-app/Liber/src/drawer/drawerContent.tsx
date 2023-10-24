@@ -36,6 +36,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
 
     const navigateTo = (screen: string) => {
         navigator.navigate(screen);
+
+        console.log(navigator.getState());
     }
 
     const [userData, setUserData] = useState({});
@@ -57,6 +59,20 @@ export default function DrawerContent(props: any): React.JSX.Element {
                 </View>
                 <ScrollView>
                     {/* <DrawerItemList {...props} /> */}
+
+                    <DrawerItem
+                        label="Tabs"
+                        icon={({ focused, color, size }) => (
+                            <Icon
+                                name="home" // Replace with your desired icon name
+                                type="material"
+                                size={25}
+                            />
+                        )}
+                        onPress={() => navigateTo('TabNavigator')}
+                        style={styles.drawerItem}
+                    />
+
                     <DrawerItem
                         label="Dashboard"
                         icon={({ focused, color, size }) => (
