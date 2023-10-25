@@ -1,6 +1,6 @@
 const Constants = {
     //apiUrl: 'http://192.168.0.105:81/api',
-     apiUrl: 'https://liber.quad-bh.com/api',
+    apiUrl: 'https://liber.quad-bh.com/api',
     //assetsUrl: 'http://192.168.0.105:81/storage',
     assetsUrl: 'https://liber.quad-bh.com/storage',
     imagesUrl: 'https://liber.quad-bh.com/files/images',
@@ -12,3 +12,21 @@ const Constants = {
 };
 
 export default Constants;
+
+
+export enum UserType {
+    CompanyUser = "COMPANY_USER",
+    CustomerUser = "CUSTOMER_USER",
+}
+
+export enum Screens {
+    Dashboard = "Dashboard",
+    Facilities = "Facilities",
+    FacilityForm = "FacilityForm",
+    CompanyProfile = "CompanyProfile",
+    CompanyProfileForm = "CompanyProfileForm",
+    UserProfile = "UserProfile",
+    UserProfileForm = "UserProfileForm",
+    Calendar = "Calendar",
+    About = "About",
+}

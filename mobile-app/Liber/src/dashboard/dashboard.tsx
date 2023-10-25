@@ -58,7 +58,7 @@ export default function Dashboard(): React.JSX.Element {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 5,
+        marginVertical: 5,
 
     },
     item: {

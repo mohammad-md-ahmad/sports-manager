@@ -1,24 +1,20 @@
 import React, { useState } from "react";
 
 import {
-    Keyboard,
-    KeyboardAvoidingView,
     Image,
     TextInput,
-    TouchableWithoutFeedback,
     View,
     StyleSheet,
     Text,
     Switch,
-    Platform,
     ScrollView,
-    Dimensions,
 } from "react-native";
 import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button } from "react-native-elements";
 import globalStyles from "../../styles/styles";
 import RegisterService from "../../api/RegisterService";
 import { useNavigation } from "@react-navigation/native";
+import { UserType } from "../../helpers/constants";
 
 interface UserFormData {
     first_name: string;
@@ -74,7 +70,7 @@ export default function Signup(): React.JSX.Element {
                 ...formData,
                 createUserRequest: {
                     ...formData,
-                    type: 'COMPANY_USER',
+                    type: UserType.CompanyUser,
                 }
             };
 
@@ -89,7 +85,7 @@ export default function Signup(): React.JSX.Element {
         } else {
             const userFormData: UserFormData = {
                 ...formData,
-                type: 'CUSTOMER_USER',
+                type: UserType.CustomerUser,
             };
 
             registerService.createUser(userFormData)

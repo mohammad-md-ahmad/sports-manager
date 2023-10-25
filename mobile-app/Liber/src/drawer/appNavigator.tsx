@@ -11,18 +11,18 @@ import UserProfileForm from '../user/userProfileForm';
 import Facilities from '../facilities/facilities';
 import FacilityForm from '../facilities/facilityForm';
 import colors from '../../styles/colors';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
+import { Screens } from '../../helpers/constants';
+import { useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
 
     const navigator = useNavigation();
-    const route = useRoute();
-
-    const [drawerIndex, setDrawerIndex] = useState(0);
+    const currentScreen = useSelector(state => state.currentScreen);
 
     const toggleDrawer = () => {
         navigator.toggleDrawer();
@@ -30,7 +30,6 @@ const AppNavigator = () => {
 
     useEffect(() => {
         const index = navigator.getState().routes[0].state?.index;
-        setDrawerIndex(index ?? 0);
 
         console.log(navigator.getState());
     }, [navigator.getState().routes[0].state?.index])
@@ -52,7 +51,7 @@ const AppNavigator = () => {
                     headerStyle: { backgroundColor: colors.PrimaryGreen },
                     headerLeft: () =>
                         <>
-                            {drawerIndex == 1 ?
+                            {currentScreen == Screens.Dashboard ?
                                 <View style={{ margin: 15 }}>
                                     <Icon
                                         name="menu" // Replace with your desired icon name
@@ -89,19 +88,19 @@ const AppNavigator = () => {
                 }}
             >
 
-                <Stack.Screen name="Dashboard" options={{ title: 'Dashboard' }} component={Dashboard} />
+                <Stack.Screen name={Screens.Dashboard} options={{ title: 'Dashboard' }} component={Dashboard} />
 
-                <Stack.Screen name="Facilities" options={{ title: 'Facilities' }} component={Facilities} />
-                <Stack.Screen name="FacilityForm" options={{ title: 'Facility Form' }} component={FacilityForm} />
+                <Stack.Screen name={Screens.Facilities} options={{ title: 'Facilities' }} component={Facilities} />
+                <Stack.Screen name={Screens.FacilityForm} options={{ title: 'Facility Form' }} component={FacilityForm} />
 
-                <Stack.Screen name="CompanyProfile" options={{ title: 'Profile' }} component={CompanyProfile} />
-                <Stack.Screen name="CompanyProfileForm" options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
+                <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
+                <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
 
-                <Stack.Screen name="UserProfile" options={{ title: 'Profile' }} component={UserProfile} />
-                <Stack.Screen name="UserProfileForm" options={{ title: 'Profile Form' }} component={UserProfileForm} />
+                <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
+                <Stack.Screen name={Screens.UserProfileForm} options={{ title: 'Profile Form' }} component={UserProfileForm} />
 
-                <Stack.Screen name="Calendar" options={{ title: 'Calendar' }} component={AgendaScreen} />
-                <Stack.Screen name="About" options={{ title: 'About' }} component={About} />
+                <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
+                <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
 
             </Stack.Group>
         </Stack.Navigator>

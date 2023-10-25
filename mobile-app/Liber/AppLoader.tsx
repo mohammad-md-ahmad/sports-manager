@@ -14,18 +14,16 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { useAuth } from './AuhtContext';
-import { getUserData } from './helpers/userDataManage';
 
 import LoginScreen from './src/login/login';
 import Signup from './src/login/signup';
-import DrawerContent from './src/drawer/drawerContent';
-import AppNavigator from './src/drawer/appNavigator';
-import TabNavigator from './src/drawer/tabNavigator';
-import colors from './styles/colors';
 import DrawerNavigator from './src/drawer/drawerNavigator';
+import FooterBar from './src/drawer/footerBar';
 
 
 function AppLoader(): JSX.Element {
+    const { isAuthenticated } = useAuth();
+
     const isDarkMode = useColorScheme() === 'dark';
 
     const backgroundStyle = {
@@ -33,11 +31,7 @@ function AppLoader(): JSX.Element {
         flex: 1
     };
 
-    const Drawer = createDrawerNavigator();
     const Stack = createStackNavigator();
-
-    const { isAuthenticated } = useAuth();
-
 
     return (
         <NavigationContainer>
@@ -46,7 +40,11 @@ function AppLoader(): JSX.Element {
                 backgroundColor={backgroundStyle.backgroundColor}
             />
             {isAuthenticated ?
-                <DrawerNavigator /> :
+                <>
+                    <DrawerNavigator />
+                    <FooterBar />
+                </>
+                :
 
                 <Stack.Navigator
                     initialRouteName="Login"
