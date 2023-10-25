@@ -13,18 +13,17 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import { createStackNavigator } from '@react-navigation/stack';
 
-import MiscService from './api/MiscService';
 import { useAuth } from './AuhtContext';
-import { getUserData } from './helpers/userDataManage';
-import { storeFacilityTypes } from './helpers/facilityTypesDataManage';
-import { storeCountries } from './helpers/countriesDataManage';
+
 import LoginScreen from './src/login/login';
 import Signup from './src/login/signup';
-import DrawerContent from './src/drawer/drawerContent';
-import AppNavigator from './src/drawer/appNavigator';
+import DrawerNavigator from './src/drawer/drawerNavigator';
+import FooterBar from './src/drawer/footerBar';
 
 
 function AppLoader(): JSX.Element {
+    const { isAuthenticated } = useAuth();
+
     const isDarkMode = useColorScheme() === 'dark';
 
     const backgroundStyle = {
@@ -32,18 +31,7 @@ function AppLoader(): JSX.Element {
         flex: 1
     };
 
-    const Drawer = createDrawerNavigator();
     const Stack = createStackNavigator();
-
-    const { isAuthenticated } = useAuth();
-
-    const [userData, setUserData] = useState({});
-
-    useEffect(() => {
-        getUserData().then((data: string | null) => {
-            setUserData(data === null ? null : JSON.parse(data));
-        });
-    }, []);
 
     return (
         <NavigationContainer>
@@ -52,19 +40,11 @@ function AppLoader(): JSX.Element {
                 backgroundColor={backgroundStyle.backgroundColor}
             />
             {isAuthenticated ?
-                <Drawer.Navigator
-                    drawerContent={(props) => <DrawerContent {...props} />}
-                    initialRouteName="AppNavigator"
-                >
-                    <Drawer.Group
-                        screenOptions={{
-                            headerShown: false
-                        }}>
-
-                        <Drawer.Screen name="AppNavigator" component={AppNavigator} />
-
-                    </Drawer.Group>
-                </Drawer.Navigator> :
+                <>
+                    <DrawerNavigator />
+                    <FooterBar />
+                </>
+                :
 
                 <Stack.Navigator
                     initialRouteName="Login"

@@ -12,6 +12,7 @@ import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { getCountries } from "../../helpers/countriesDataManage";
 import ImagePicker from "../common/imagePicker";
 import { Button } from "react-native-elements";
+import { Screens } from "../../helpers/constants";
 
 interface FormData {
     name: string;
@@ -206,7 +207,7 @@ export default function FacilityForm(): React.JSX.Element {
         const sanitizedFormData = sanitizeFormData(data);
 
         facilityService.create(sanitizedFormData).then((response) => {
-            navigator.navigate('Facilities');
+            navigator.navigate(Screens.facilities);
         }).catch((error) => {
             console.log(error);
         });

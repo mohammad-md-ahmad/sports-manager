@@ -6,7 +6,7 @@ import { Button } from 'react-native-elements';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import UserService from '../../api/UserService';
-import Constants from '../../helpers/constants';
+import Constants, { Screens } from '../../helpers/constants';
 
 export default function UserProfile() {
     // Extract user information from the route parameters
@@ -21,7 +21,7 @@ export default function UserProfile() {
     })
 
     function onEditPress(): void {
-        navigator.navigate('UserProfileForm')
+        navigator.navigate(Screens.UserProfileForm)
     }
 
     const userService = new UserService();

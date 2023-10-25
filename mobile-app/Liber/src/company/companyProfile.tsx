@@ -7,7 +7,7 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import { getCompanyData } from '../../helpers/companyDataManage';
 import CompanyService from '../../api/CompanyService';
-import Constants from '../../helpers/constants';
+import Constants, { Screens } from '../../helpers/constants';
 
 export default function CompanyProfile() {
     // Extract user information from the route parameters
@@ -21,7 +21,7 @@ export default function CompanyProfile() {
     });
 
     function onEditPress(): void {
-        navigator.navigate('CompanyProfileForm')
+        navigator.navigate(Screens.CompanyProfileForm)
     }
 
     const companyService = new CompanyService();
