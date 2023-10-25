@@ -12,15 +12,11 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
 
-    const navigator = useNavigation();
+    // const navigator = useNavigation();
 
-    useEffect(() => {
-        const index = 0;//navigator.getState().routes[0].state?.index;
-    }, [])
-
-    const toggleBack = () => {
-        navigator.goBack();
-    }
+    // const toggleBack = () => {
+    //     navigator.goBack();
+    // }
 
     const toggleSearch = () => {
 
@@ -35,20 +31,20 @@ const DrawerNavigator = () => {
             <Drawer.Group
                 screenOptions={{
                     headerShown: false,
-                    headerStyle: { backgroundColor: colors.PrimaryGreen },
-                    headerRight: () =>
-                        <>
+                    // headerStyle: { backgroundColor: colors.PrimaryGreen },
+                    // headerRight: () =>
+                    //     <>
 
-                            <View style={{ margin: 15 }}>
-                                <Icon
-                                    name="arrow-back" // Replace with your desired icon name
-                                    type="material"
-                                    size={25}
-                                    onPress={() => toggleBack()}
-                                />
-                            </View>
+                    //         <View style={{ margin: 15 }}>
+                    //             <Icon
+                    //                 name="arrow-back" // Replace with your desired icon name
+                    //                 type="material"
+                    //                 size={25}
+                    //                 onPress={() => toggleBack()}
+                    //             />
+                    //         </View>
 
-                        </>
+                    //     </>
                 }}
             >
                 <Drawer.Screen name="AppNavigator" component={AppNavigator} />

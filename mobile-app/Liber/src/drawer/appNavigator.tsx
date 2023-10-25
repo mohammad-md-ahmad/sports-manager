@@ -15,13 +15,14 @@ import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
 import { Screens } from '../../helpers/constants';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Stack = createStackNavigator();
 
 const AppNavigator = () => {
 
     const navigator = useNavigation();
+    const dispatch = useDispatch();
     const currentScreen = useSelector(state => state.currentScreen);
 
     const toggleDrawer = () => {
@@ -29,12 +30,19 @@ const AppNavigator = () => {
     }
 
     const toggleBack = () => {
+
         navigator.goBack();
     }
 
     const toggleSearch = () => {
 
     }
+
+    useEffect(() => {
+        let routesStack = navigator.getState().routes[0].state?.routes ?? [{ name: Screens.Dashboard }];
+        let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
+        dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
+    }, [navigator.getState().routes[0].state?.index])
 
     return (
         <Stack.Navigator>
