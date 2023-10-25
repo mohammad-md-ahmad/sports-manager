@@ -78,9 +78,9 @@ const styles = StyleSheet.create({
     button: {
         flex: 1,
         alignItems: 'center',
-        padding: 5,
+        padding: 7,
         borderRadius: 20,
-        margin:3
+        marginHorizontal:5
     },
     activeButton: {
         backgroundColor: colors.PrimaryBlueLight,
