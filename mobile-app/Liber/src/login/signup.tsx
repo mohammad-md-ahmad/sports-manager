@@ -14,7 +14,7 @@ import { Button } from "react-native-elements";
 import globalStyles from "../../styles/styles";
 import RegisterService from "../../api/RegisterService";
 import { useNavigation } from "@react-navigation/native";
-import { UserType } from "../../helpers/constants";
+import { Screens, UserType } from "../../helpers/constants";
 
 interface UserFormData {
     first_name: string;
@@ -77,7 +77,7 @@ export default function Signup(): React.JSX.Element {
             registerService.createCompany(companyFormData)
                 .then((response) => {
                     // Handle a successful API response
-                    navigator.navigate('Login');
+                    navigator.navigate(Screens.Login);
                 })
                 .catch((error) => {
                     // Handle API request errors here
@@ -91,7 +91,7 @@ export default function Signup(): React.JSX.Element {
             registerService.createUser(userFormData)
                 .then((response) => {
                     // Handle a successful API response
-                    navigator.navigate('Login');
+                    navigator.navigate(Screens.Login);
                 })
                 .catch((error) => {
                     // Handle API request errors here

@@ -17,6 +17,7 @@ import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { getCountries } from "../../helpers/countriesDataManage";
 import { useNavigation } from "@react-navigation/native";
 import ImagePicker from "../common/imagePicker";
+import { Screens } from "../../helpers/constants";
 
 interface FormData {
     name: string;
@@ -188,7 +189,7 @@ export default function FacilityForm(): React.JSX.Element {
 
         facilityService.create(sanitizedFormData).then((response) => {
             setTimeout(() => {
-                navigator.navigate('Facilities');
+                navigator.navigate(Screens.facilities);
             }, 2000); // sleep for 2 secs
         }).catch((error) => {
             console.log(error);

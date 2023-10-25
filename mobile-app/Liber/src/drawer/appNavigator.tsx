@@ -28,14 +28,7 @@ const AppNavigator = () => {
         navigator.toggleDrawer();
     }
 
-    useEffect(() => {
-        const index = navigator.getState().routes[0].state?.index;
-
-        console.log(navigator.getState());
-    }, [navigator.getState().routes[0].state?.index])
-
     const toggleBack = () => {
-        console.log(navigator.getState());
         navigator.goBack();
     }
 

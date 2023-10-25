@@ -29,4 +29,6 @@ export enum Screens {
     UserProfileForm = "UserProfileForm",
     Calendar = "Calendar",
     About = "About",
+    Signup = "Signup",
+    Login = "Login",
 }
