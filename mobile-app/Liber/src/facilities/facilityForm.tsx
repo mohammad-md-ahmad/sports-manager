@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useNavigation } from "@react-navigation/native";
-import { Formik } from "formik";
+import { Formik, useFormik } from "formik";
 import { ScrollView, TextInput, StyleSheet, View, Text, TouchableOpacity } from "react-native";
 import { string, array, object as yupObject } from "yup";
 import FacilityService from "../../api/FacilityService";
@@ -121,9 +121,17 @@ export default function FacilityForm(): React.JSX.Element {
     const [selectedCountry, setSelectedCountry] = useState<string>('');
 
     const [selectedFacilityPhotos, setSelectedFacilityPhotos] = useState<Array<string>>([]);
+    const [selectedFacilityPhotosBase64, setSelectedFacilityPhotosBase64] = useState<Array<string>>([]);
 
     const [isFacilityDetailsOpen, setIsFacilityDetailsOpen] = useState(true);
     const [isAddressOpen, setIsAddressOpen] = useState(false);
+
+    const formik = useFormik({
+        validationSchema: formDataValidateSchema,
+        initialValues: initialFormDataValues,
+        initialTouched: initialTouched,
+        onSubmit: (values) => handleSubmit(values)
+    });
 
     const toggleFacilityDetails = () => {
         setIsFacilityDetailsOpen(!isFacilityDetailsOpen);
@@ -171,16 +179,20 @@ export default function FacilityForm(): React.JSX.Element {
         })
     }, []);
 
-    const handleDropdownChange = (field: keyof FormData, value: string, callback) => {
-        // Update the selectedFacilityType with the value
+    const handleDropdownChange = (field: keyof FormData, value: string) => {
         if (field === 'type') {
             setSelectedFacilityType(value);
+            formik.setFieldValue('type', value());
         } else if (field === 'createAddressRequest.country_uuid') {
             setSelectedCountry(value);
+            formik.setFieldValue('createAddressRequest.country_uuid', value());
         }
-
-        callback()
     };
+
+    const handleImagesChange = (newPhotos) => {
+        setSelectedFacilityPhotosBase64(newPhotos);
+        formik.handleChange('companyFacilityPhotos', newPhotos)
+    }
 
     const handleCancel = () => {
         navigator.navigate('Facilities');
@@ -204,235 +216,211 @@ export default function FacilityForm(): React.JSX.Element {
     };
 
     const handleSubmit = (data) => {
-        const sanitizedFormData = sanitizeFormData(data);
+        let sanitizedFormData = data;
+console.log(selectedFacilityPhotosBase64);
+sanitizedFormData.companyFacilityPhotos = selectedFacilityPhotosBase64;
 
         facilityService.create(sanitizedFormData).then((response) => {
-            navigator.navigate(Screens.facilities);
+            navigator.navigate(Screens.Facilities);
         }).catch((error) => {
-            console.log(error);
+            console.log('the error', error.response.data);
         });
     };
 
     return (
         <ScrollView >
             <View style={styles.container}>
-                <Formik
-                    validationSchema={formDataValidateSchema}
-                    initialValues={initialFormDataValues}
-                    initialTouched={initialTouched}
-                    onSubmit={values => handleSubmit(values)}
-                >
-                    {({
-                        handleChange,
-                        handleBlur,
-                        handleSubmit,
-                        values,
-                        errors,
-                        touched,
-                        isValid,
-                        setFieldValue
-                    }) => (
-                        <>
-                            {/* Facility Details Section */}
-                            <TouchableOpacity style={styles.section} onPress={toggleFacilityDetails}>
-                                <Text style={styles.sectionTitle}>
-                                    {isFacilityDetailsOpen ? '▼' : '▶'} Facility Details
-                                </Text>
-                            </TouchableOpacity>
-                            {isFacilityDetailsOpen && (
-                                <>
-                                    <View>
-                                        <Text style={styles.label}>Name</Text>
-                                        <TextInput
-                                            value={values.name}
-                                            onChangeText={handleChange('name')}
-                                            placeholder="Name"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    {touched.name && errors.name &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.name}</Text>
-                                    }
-
-                                    <View>
-                                        <Text style={styles.label}>Facility Type</Text>
-                                        <DropDownPicker
-                                            textStyle={{ color: colors.PrimaryBlue }}
-                                            placeholder="Select Facility Type"
-                                            placeholderStyle={{ color: colors.PrimaryBlue }}
-                                            open={openFacilityTypeList}
-                                            value={selectedFacilityType}
-                                            items={facilityTypes}
-                                            setOpen={setOpenFacilityTypeList}
-                                            setValue={(text: any) => {
-                                                handleDropdownChange('type', text, () => {
-                                                    setFieldValue('type', text)
-                                                })
-                                            }}
-                                            style={styles.dropDown}
-                                        />
-                                    </View>
-                                    {touched.type && errors.type &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.type}</Text>
-                                    }
-
-                                    <View>
-                                        <Text style={styles.label}>Length (in Meters)</Text>
-                                        <TextInput
-                                            value={values.details.length}
-                                            onChangeText={handleChange('details.length')}
-                                            placeholder="Length (in Meters)"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    {touched.details?.length && errors.details?.length &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.details.length}</Text>
-                                    }
-
-                                    <View>
-                                        <Text style={styles.label}>Width (in Meters)</Text>
-                                        <TextInput
-                                            value={values.details.width}
-                                            onChangeText={handleChange('details.width')}
-                                            placeholder="Width (in Meters)"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    {touched.details?.width && errors.details?.width &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.details.width}</Text>
-                                    }
-                                </>)}
-                            {/* Address Section */}
-                            <TouchableOpacity style={styles.section} onPress={toggleAddress}>
-                                <Text style={styles.sectionTitle}>
-                                    {isAddressOpen ? '▼' : '▶'} Address
-                                </Text>
-                            </TouchableOpacity>
-                            {isAddressOpen && (
-                                <>
-                                    <View>
-                                        <Text style={styles.label}>Line 1</Text>
-                                        <TextInput
-                                            value={values.createAddressRequest.line_1}
-                                            onChangeText={handleChange('createAddressRequest.line_1')}
-                                            placeholder="Line 1"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    {touched.createAddressRequest?.line_1 && errors.createAddressRequest?.line_1 &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.line_1}</Text>
-                                    }
-
-                                    <View>
-                                        <Text style={styles.label}>Line 2</Text>
-                                        <TextInput
-                                            value={values.createAddressRequest.line_2}
-                                            onChangeText={handleChange('createAddressRequest.line_2')}
-                                            placeholder="Line 2"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-
-                                    <View>
-                                        <Text style={styles.label}>Line 3</Text>
-                                        <TextInput
-                                            value={values.createAddressRequest.line_3}
-                                            onChangeText={handleChange('createAddressRequest.line_3')}
-                                            placeholder="Line 3"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-
-                                    <View>
-                                        <Text style={styles.label}>City</Text>
-                                        <TextInput
-                                            value={values.createAddressRequest.city}
-                                            onChangeText={handleChange('createAddressRequest.city')}
-                                            placeholder="City"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    {touched.createAddressRequest?.city && errors.createAddressRequest?.city &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.city}</Text>
-                                    }
-
-                                    <View>
-                                        <Text style={styles.label}>Region / State</Text>
-                                        <TextInput
-                                            value={values.createAddressRequest.region}
-                                            onChangeText={handleChange('createAddressRequest.region')}
-                                            placeholder="Region / State"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    {touched.createAddressRequest?.region && errors.createAddressRequest?.region &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.region}</Text>
-                                    }
-
-                                    <View>
-                                        <Text style={styles.label}>Post Code</Text>
-                                        <TextInput
-                                            value={values.createAddressRequest.postcode}
-                                            onChangeText={handleChange('createAddressRequest.postcode')}
-                                            placeholder="Post Code"
-                                            placeholderTextColor={placeHolderTextColor}
-                                            style={styles.input}
-                                        />
-                                    </View>
-                                    {touched.createAddressRequest?.postcode && errors.createAddressRequest?.postcode &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.postcode}</Text>
-                                    }
-
-                                    <View>
-                                        <Text style={styles.label}>Country</Text>
-                                        <DropDownPicker
-                                            textStyle={{ color: colors.PrimaryBlue }}
-                                            placeholder="Select Country"
-                                            placeholderStyle={{ color: colors.PrimaryBlue }}
-                                            open={openCountryList}
-                                            value={selectedCountry}
-                                            items={countries}
-                                            setOpen={setOpenCountryList}
-                                            setValue={(text: any) => {
-                                                handleDropdownChange('createAddressRequest.country_uuid', text, () => {
-                                                    setFieldValue('type', text)
-                                                })
-                                            }}
-                                            style={styles.dropDown}
-                                        />
-                                    </View>
-                                    {touched.createAddressRequest?.country_uuid && errors.createAddressRequest?.country_uuid &&
-                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.country_uuid}</Text>
-                                    }
-                                </>)}
-                            <ImagePicker
-                                selectedImages={selectedFacilityPhotos}
-                                setSelectedImages={setSelectedFacilityPhotos}
-                                selectedImagesBase64={values.companyFacilityPhotos}
-                                setSelectedImagesBase64={(newPhotos) => {
-                                    setFieldValue('companyFacilityPhotos', newPhotos)
-                                }}
+                {/* Facility Details Section */}
+                <TouchableOpacity style={styles.section} onPress={toggleFacilityDetails}>
+                    <Text style={styles.sectionTitle}>
+                        {isFacilityDetailsOpen ? '▼' : '▶'} Facility Details
+                    </Text>
+                </TouchableOpacity>
+                {isFacilityDetailsOpen && (
+                    <>
+                        <View>
+                            <Text style={styles.label}>Name</Text>
+                            <TextInput
+                                value={formik.values.name}
+                                onChangeText={formik.handleChange('name')}
+                                placeholder="Name"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
                             />
+                        </View>
+                        {formik.touched.name && formik.errors.name &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.name}</Text>
+                        }
 
-                            <View style={styles.buttonContainer}>
-                                <View style={styles.buttonWrapper}>
-                                    <Button onPress={handleCancel} title="Cancel" titleStyle={{color: 'red'}} buttonStyle={styles.cancelButton}/>
-                                </View>
-                                <View style={styles.buttonWrapper}>
-                                    <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.submitButton} />
-                                </View>
-                            </View>
-                        </>
-                    )}
-                </Formik>
+                        <View>
+                            <Text style={styles.label}>Facility Type</Text>
+                            <DropDownPicker
+                                textStyle={{ color: colors.PrimaryBlue }}
+                                placeholder="Select Facility Type"
+                                placeholderStyle={{ color: colors.PrimaryBlue }}
+                                open={openFacilityTypeList}
+                                value={selectedFacilityType}
+                                items={facilityTypes}
+                                setOpen={setOpenFacilityTypeList}
+                                setValue={(text: any) => {
+                                    handleDropdownChange('type', text)
+                                }}
+                                style={styles.dropDown}
+                            />
+                        </View>
+                        {formik.touched.type && formik.errors.type &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.type}</Text>
+                        }
+
+                        <View>
+                            <Text style={styles.label}>Length (in Meters)</Text>
+                            <TextInput
+                                value={formik.values.details.length}
+                                onChangeText={formik.handleChange('details.length')}
+                                placeholder="Length (in Meters)"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+                        {formik.touched.details?.length && formik.errors.details?.length &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.details.length}</Text>
+                        }
+
+                        <View>
+                            <Text style={styles.label}>Width (in Meters)</Text>
+                            <TextInput
+                                value={formik.values.details.width}
+                                onChangeText={formik.handleChange('details.width')}
+                                placeholder="Width (in Meters)"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+                        {formik.touched.details?.width && formik.errors.details?.width &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.details.width}</Text>
+                        }
+                    </>)}
+                {/* Address Section */}
+                <TouchableOpacity style={styles.section} onPress={toggleAddress}>
+                    <Text style={styles.sectionTitle}>
+                        {isAddressOpen ? '▼' : '▶'} Address
+                    </Text>
+                </TouchableOpacity>
+                {isAddressOpen && (
+                    <>
+                        <View>
+                            <Text style={styles.label}>Line 1</Text>
+                            <TextInput
+                                value={formik.values.createAddressRequest.line_1}
+                                onChangeText={formik.handleChange('createAddressRequest.line_1')}
+                                placeholder="Line 1"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+                        {formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1 &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.line_1}</Text>
+                        }
+
+                        <View>
+                            <Text style={styles.label}>Line 2</Text>
+                            <TextInput
+                                value={formik.values.createAddressRequest.line_2}
+                                onChangeText={formik.handleChange('createAddressRequest.line_2')}
+                                placeholder="Line 2"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+
+                        <View>
+                            <Text style={styles.label}>Line 3</Text>
+                            <TextInput
+                                value={formik.values.createAddressRequest.line_3}
+                                onChangeText={formik.handleChange('createAddressRequest.line_3')}
+                                placeholder="Line 3"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+
+                        <View>
+                            <Text style={styles.label}>City</Text>
+                            <TextInput
+                                value={formik.values.createAddressRequest.city}
+                                onChangeText={formik.handleChange('createAddressRequest.city')}
+                                placeholder="City"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+                        {formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.city}</Text>
+                        }
+
+                        <View>
+                            <Text style={styles.label}>Region / State</Text>
+                            <TextInput
+                                value={formik.values.createAddressRequest.region}
+                                onChangeText={formik.handleChange('createAddressRequest.region')}
+                                placeholder="Region / State"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+                        {formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.region}</Text>
+                        }
+
+                        <View>
+                            <Text style={styles.label}>Post Code</Text>
+                            <TextInput
+                                value={formik.values.createAddressRequest.postcode}
+                                onChangeText={formik.handleChange('createAddressRequest.postcode')}
+                                placeholder="Post Code"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+                        {formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.postcode}</Text>
+                        }
+
+                        <View>
+                            <Text style={styles.label}>Country</Text>
+                            <DropDownPicker
+                                textStyle={{ color: colors.PrimaryBlue }}
+                                placeholder="Select Country"
+                                placeholderStyle={{ color: colors.PrimaryBlue }}
+                                open={openCountryList}
+                                value={selectedCountry}
+                                items={countries}
+                                setOpen={setOpenCountryList}
+                                setValue={(text: any) => {
+                                    handleDropdownChange('createAddressRequest.country_uuid', text)
+                                }}
+                                style={styles.dropDown}
+                            />
+                        </View>
+                        {formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.country_uuid}</Text>
+                        }
+                    </>)}
+                <ImagePicker
+                    selectedImages={selectedFacilityPhotos}
+                    setSelectedImages={setSelectedFacilityPhotos}
+                    selectedImagesBase64={formik.values.companyFacilityPhotos}
+                    setSelectedImagesBase64={(newPhotos) => handleImagesChange(newPhotos)}
+                />
+
+                <View style={styles.buttonContainer}>
+                    <View style={styles.buttonWrapper}>
+                        <Button onPress={handleCancel} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
+                    </View>
+                    <View style={styles.buttonWrapper}>
+                        <Button onPress={formik.handleSubmit} title="Submit" buttonStyle={styles.submitButton} />
+                    </View>
+                </View>
             </View>
         </ScrollView>
     );
