@@ -9,12 +9,13 @@ import globalStyles from "../../styles/styles";
 import { useNavigation } from "@react-navigation/native";
 import { Button } from "react-native-elements";
 import fonts from "../../styles/fonts";
+import { Screens } from "../../helpers/constants";
 
 function Facilities(): React.JSX.Element {
     const navigator = useNavigation();
 
     function onAddFacilityPress(): void {
-        navigator.navigate('FacilityForm');
+        navigator.navigate(Screens.FacilityForm);
     }
 
     return (

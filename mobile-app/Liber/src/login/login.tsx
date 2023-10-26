@@ -16,6 +16,7 @@ import { useAuth } from "../../AuhtContext";
 import globalStyles from "../../styles/styles";
 import { useNavigation } from "@react-navigation/native";
 import BaseComponent from "../common/baseComponent";
+import { Screens } from "../../helpers/constants";
 
 const styles = StyleSheet.create({
     containerView: {
@@ -72,7 +73,7 @@ export default function LoginScreen(): React.JSX.Element {
     };
 
     function onSignupPress(): void {
-        navigator.navigate('Signup');
+        navigator.navigate(Screens.Signup);
     }
 
     return (

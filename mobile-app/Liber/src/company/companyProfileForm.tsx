@@ -19,7 +19,7 @@ import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button, Icon } from "react-native-elements";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { getCompanyData } from "../../helpers/companyDataManage";
-import Constants from "../../helpers/constants";
+import Constants, { Screens } from "../../helpers/constants";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
 interface CompanyFormData {
@@ -123,7 +123,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
         companyService.update(formData).then((response) => {
             // Handle a successful API response
             console.log('Success signup:', response.data);
-            navigator.navigate('CompanyProfile');
+            navigator.navigate(Screens.CompanyProfile);
         })
             .catch((error) => {
                 // Handle API request errors here

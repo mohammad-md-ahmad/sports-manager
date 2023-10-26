@@ -69,8 +69,12 @@ abstract class AxiosService {
                 dispatch({ type: 'SET_LOADING', payload: false });
 
                 //console.log(response.data.message)
-                ToastHelper.successToast(response.data.message);
 
+                const originalRequest = response.config;
+                if (originalRequest.method !== 'get') {
+                    ToastHelper.successToast(response.data.message);
+                }
+                
                 return response;
             },
             (error) => {

@@ -7,19 +7,23 @@ import {
     StyleSheet,
 } from "react-native";
 import globalStyles from "../../styles/styles";
-import { DrawerItem, DrawerItemList, createDrawerNavigator } from "@react-navigation/drawer";
+import { DrawerItem } from "@react-navigation/drawer";
 import { useAuth } from "../../AuhtContext";
 import AuthService from "../../api/AuthService";
 import BaseComponent from "../common/baseComponent";
 import { useNavigation } from "@react-navigation/native";
 import { getUserData } from "../../helpers/userDataManage";
 import { Icon } from "react-native-elements";
+import { Screens, UserType } from "../../helpers/constants";
 import colors from "../../styles/colors";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function DrawerContent(props: any): React.JSX.Element {
     const { logout } = useAuth();
     const authService = new AuthService();
     const navigator = useNavigation();
+    const dispatch = useDispatch();
+    const currentScreen = useSelector(state => state.currentScreen);
 
     const onLogoutPress = () => {
         authService.logout().then((response) => {
@@ -36,6 +40,7 @@ export default function DrawerContent(props: any): React.JSX.Element {
 
     const navigateTo = (screen: string) => {
         navigator.navigate(screen);
+        dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
     }
 
     const [userData, setUserData] = useState({});
@@ -57,6 +62,7 @@ export default function DrawerContent(props: any): React.JSX.Element {
                 </View>
                 <ScrollView>
                     {/* <DrawerItemList {...props} /> */}
+
                     <DrawerItem
                         label="Dashboard"
                         icon={({ focused, color, size }) => (
@@ -66,8 +72,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
                                 size={25}
                             />
                         )}
-                        onPress={() => navigateTo('Dashboard')}
-                        style={styles.drawerItem}
+                        onPress={() => navigateTo(Screens.Dashboard)}
+                        style={currentScreen === Screens.Dashboard && styles.activeDrawerItem}
                     />
 
                     <DrawerItem
@@ -79,8 +85,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
                                 size={25}
                             />
                         )}
-                        onPress={() => navigateTo('Facilities')}
-                        style={styles.drawerItem}
+                        onPress={() => navigateTo(Screens.Facilities)}
+                        style={currentScreen === Screens.Facilities && styles.activeDrawerItem}
                     />
 
                     <DrawerItem
@@ -92,8 +98,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
                                 size={25}
                             />
                         )}
-                        onPress={() => navigateTo(userData?.type == 'COMPANY_USER' ? 'CompanyProfile' : 'UserProfile')}
-                        style={styles.drawerItem}
+                        onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile)}
+                        style={currentScreen === (userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile) && styles.activeDrawerItem}
                     />
 
                     <DrawerItem
@@ -105,8 +111,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
                                 size={25}
                             />
                         )}
-                        onPress={() => navigateTo('Calendar')}
-                        style={styles.drawerItem}
+                        onPress={() => navigateTo(Screens.Calendar)}
+                        style={currentScreen === Screens.Calendar && styles.activeDrawerItem}
                     />
                     <DrawerItem
                         label="About"
@@ -117,8 +123,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
                                 size={25}
                             />
                         )}
-                        onPress={() => navigateTo('About')}
-                        style={styles.drawerItem}
+                        onPress={() => navigateTo(Screens.About)}
+                        style={currentScreen === Screens.About && styles.activeDrawerItem}
                     />
                 </ScrollView>
                 <DrawerItem
@@ -139,7 +145,7 @@ export default function DrawerContent(props: any): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
-    drawerItem: {
-
+    activeDrawerItem: {
+        backgroundColor: colors.PrimaryBlueLight
     }
 })

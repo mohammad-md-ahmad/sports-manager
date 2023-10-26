@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
-import { Button } from "react-native-elements";
+import { useNavigation } from "@react-navigation/native";
+import { Formik } from "formik";
+import { ScrollView, TextInput, StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { string, array, object as yupObject } from "yup";
 import FacilityService from "../../api/FacilityService";
-import globalStyles from "../../styles/styles";
-import { placeHolderTextColor } from "../../styles/styles";
+import globalStyles, { placeHolderTextColor } from "../../styles/styles";
 import DropDownPicker from "react-native-dropdown-picker";
 import colors from "../../styles/colors";
 import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { getCountries } from "../../helpers/countriesDataManage";
-import { useNavigation } from "@react-navigation/native";
 import ImagePicker from "../common/imagePicker";
+import { Button } from "react-native-elements";
+import { Screens } from "../../helpers/constants";
 
 interface FormData {
     name: string;
@@ -46,7 +42,30 @@ export default function FacilityForm(): React.JSX.Element {
 
     const facilityService = new FacilityService();
 
-    const [formData, setFormData] = useState<FormData>({
+    const formDataValidateSchema = yupObject().shape({
+        name: string().required('Name is required'),
+        type: string().required('Type is required'),
+        details: yupObject().shape({
+            length: string().required('Length is required'),
+            width: string().required('Width is required'),
+        }),
+        createAddressRequest: yupObject().shape({
+            line_1: string().required('Line 1 is required'),
+            line_2: string(),
+            line_3: string(),
+            city: string().required('City is required'),
+            region: string().required('Region is required'),
+            postcode: string().required('Postcode is required'),
+            country_uuid: string().required('Country UUID is required'),
+            geocode_data: yupObject().shape({
+                lat: string().required('Latitude is required'),
+                lng: string().required('Longitude is required'),
+            }),
+        }),
+        companyFacilityPhotos: array(),
+    });
+
+    const initialFormDataValues = {
         name: '',
         type: '',
         details: {
@@ -67,7 +86,30 @@ export default function FacilityForm(): React.JSX.Element {
             }
         },
         companyFacilityPhotos: [],
-    });
+    };
+
+    const initialTouched = {
+        name: false,
+        type: false,
+        details: {
+            length: false,
+            width: false,
+        },
+        createAddressRequest: {
+            line_1: false,
+            line_2: false,
+            line_3: false,
+            city: false,
+            region: false,
+            postcode: false,
+            country_uuid: false,
+            geocode_data: {
+                lat: false,
+                lng: false,
+            },
+        },
+        companyFacilityPhotos: false,
+    };
 
     const [openFacilityTypeList, setOpenFacilityTypeList] = useState(false);
     const [facilityTypes, setFacilityTypes] = useState([]);
@@ -79,6 +121,17 @@ export default function FacilityForm(): React.JSX.Element {
     const [selectedCountry, setSelectedCountry] = useState<string>('');
 
     const [selectedFacilityPhotos, setSelectedFacilityPhotos] = useState<Array<string>>([]);
+
+    const [isFacilityDetailsOpen, setIsFacilityDetailsOpen] = useState(true);
+    const [isAddressOpen, setIsAddressOpen] = useState(false);
+
+    const toggleFacilityDetails = () => {
+        setIsFacilityDetailsOpen(!isFacilityDetailsOpen);
+    };
+
+    const toggleAddress = () => {
+        setIsAddressOpen(!isAddressOpen);
+    };
 
     useEffect(() => {
         getFacilityTypes().then((response) => {
@@ -118,53 +171,20 @@ export default function FacilityForm(): React.JSX.Element {
         })
     }, []);
 
-    useEffect(() => {
-        setFormData({ ...formData, 'type': selectedFacilityType });
-    }, [selectedFacilityType]);
-
-    useEffect(() => {
-        setFormData({
-            ...formData, createAddressRequest: {
-                ...formData.createAddressRequest,
-                country_uuid: selectedCountry,
-            }
-        });
-    }, [selectedCountry]);
-
-    const handleInputChange = (field: keyof FormData, value: string) => {
-        if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
-            // Handle nested objects
-            const [parentField, nestedField] = field.split('.');
-            setFormData({
-                ...formData,
-                [parentField]: {
-                    ...formData[parentField],
-                    [nestedField]: value,
-                },
-            });
-
-            if (nestedField === 'country_uuid') {
-                setSelectedCountry(value);
-            }
-        } else {
-            setFormData({ ...formData, [field]: value });
-
-            // Update the selectedFacilityType with the value
-            if (field === 'type') {
-                setSelectedFacilityType(value);
-            }
+    const handleDropdownChange = (field: keyof FormData, value: string, callback) => {
+        // Update the selectedFacilityType with the value
+        if (field === 'type') {
+            setSelectedFacilityType(value);
+        } else if (field === 'createAddressRequest.country_uuid') {
+            setSelectedCountry(value);
         }
+
+        callback()
     };
 
-    const setFacilityPhotosBase64 = (newPhotos) => {
-        console.log('newPhotos base64', newPhotos);
-        setFormData((prevData) => ({
-            ...prevData,
-            companyFacilityPhotos: newPhotos,
-        }));
-
-        console.log('companyFacilityPhotos base64', formData.companyFacilityPhotos);
-    }
+    const handleCancel = () => {
+        navigator.navigate('Facilities');
+    };
 
     const sanitizeFormData = (data) => {
         const sanitizedData = {};
@@ -183,13 +203,11 @@ export default function FacilityForm(): React.JSX.Element {
         return sanitizedData;
     };
 
-    const handleSubmit = () => {
-        const sanitizedFormData = sanitizeFormData(formData);
+    const handleSubmit = (data) => {
+        const sanitizedFormData = sanitizeFormData(data);
 
         facilityService.create(sanitizedFormData).then((response) => {
-            setTimeout(() => {
-                navigator.navigate('Facilities');
-            }, 2000); // sleep for 2 secs
+            navigator.navigate(Screens.facilities);
         }).catch((error) => {
             console.log(error);
         });
@@ -198,142 +216,223 @@ export default function FacilityForm(): React.JSX.Element {
     return (
         <ScrollView >
             <View style={styles.container}>
-                <View>
-                    <Text style={styles.label}>Name</Text>
-                    <TextInput
-                        value={formData.name}
-                        onChangeText={(text) => handleInputChange('name', text)}
-                        placeholder="Name"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                <Formik
+                    validationSchema={formDataValidateSchema}
+                    initialValues={initialFormDataValues}
+                    initialTouched={initialTouched}
+                    onSubmit={values => handleSubmit(values)}
+                >
+                    {({
+                        handleChange,
+                        handleBlur,
+                        handleSubmit,
+                        values,
+                        errors,
+                        touched,
+                        isValid,
+                        setFieldValue
+                    }) => (
+                        <>
+                            {/* Facility Details Section */}
+                            <TouchableOpacity style={styles.section} onPress={toggleFacilityDetails}>
+                                <Text style={styles.sectionTitle}>
+                                    {isFacilityDetailsOpen ? '▼' : '▶'} Facility Details
+                                </Text>
+                            </TouchableOpacity>
+                            {isFacilityDetailsOpen && (
+                                <>
+                                    <View>
+                                        <Text style={styles.label}>Name</Text>
+                                        <TextInput
+                                            value={values.name}
+                                            onChangeText={handleChange('name')}
+                                            placeholder="Name"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                    {touched.name && errors.name &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.name}</Text>
+                                    }
 
-                <View>
-                    <Text style={styles.label}>Facility Type</Text>
-                    <DropDownPicker
-                        textStyle={{ color: colors.PrimaryBlue }}
-                        placeholder="Select Facility Type"
-                        placeholderStyle={{ color: colors.PrimaryBlue }}
-                        open={openFacilityTypeList}
-                        value={selectedFacilityType}
-                        items={facilityTypes}
-                        setOpen={setOpenFacilityTypeList}
-                        setValue={(text: any) => handleInputChange('type', text)}
-                        style={styles.dropDown}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Facility Type</Text>
+                                        <DropDownPicker
+                                            textStyle={{ color: colors.PrimaryBlue }}
+                                            placeholder="Select Facility Type"
+                                            placeholderStyle={{ color: colors.PrimaryBlue }}
+                                            open={openFacilityTypeList}
+                                            value={selectedFacilityType}
+                                            items={facilityTypes}
+                                            setOpen={setOpenFacilityTypeList}
+                                            setValue={(text: any) => {
+                                                handleDropdownChange('type', text, () => {
+                                                    setFieldValue('type', text)
+                                                })
+                                            }}
+                                            style={styles.dropDown}
+                                        />
+                                    </View>
+                                    {touched.type && errors.type &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.type}</Text>
+                                    }
 
-                <View>
-                    <Text style={styles.label}>Length (in Meters)</Text>
-                    <TextInput
-                        value={formData.details.length}
-                        onChangeText={(text) => handleInputChange('details.length', text)}
-                        placeholder="Length (in Meters)"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Length (in Meters)</Text>
+                                        <TextInput
+                                            value={values.details.length}
+                                            onChangeText={handleChange('details.length')}
+                                            placeholder="Length (in Meters)"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                    {touched.details?.length && errors.details?.length &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.details.length}</Text>
+                                    }
 
-                <View>
-                    <Text style={styles.label}>Width (in Meters)</Text>
-                    <TextInput
-                        value={formData.details.width}
-                        onChangeText={(text) => handleInputChange('details.width', text)}
-                        placeholder="Width (in Meters)"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Width (in Meters)</Text>
+                                        <TextInput
+                                            value={values.details.width}
+                                            onChangeText={handleChange('details.width')}
+                                            placeholder="Width (in Meters)"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                    {touched.details?.width && errors.details?.width &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.details.width}</Text>
+                                    }
+                                </>)}
+                            {/* Address Section */}
+                            <TouchableOpacity style={styles.section} onPress={toggleAddress}>
+                                <Text style={styles.sectionTitle}>
+                                    {isAddressOpen ? '▼' : '▶'} Address
+                                </Text>
+                            </TouchableOpacity>
+                            {isAddressOpen && (
+                                <>
+                                    <View>
+                                        <Text style={styles.label}>Line 1</Text>
+                                        <TextInput
+                                            value={values.createAddressRequest.line_1}
+                                            onChangeText={handleChange('createAddressRequest.line_1')}
+                                            placeholder="Line 1"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                    {touched.createAddressRequest?.line_1 && errors.createAddressRequest?.line_1 &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.line_1}</Text>
+                                    }
 
-                <View>
-                    <Text style={styles.label}>Line 1</Text>
-                    <TextInput
-                        value={formData.createAddressRequest.line_1}
-                        onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
-                        placeholder="Line 1"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Line 2</Text>
+                                        <TextInput
+                                            value={values.createAddressRequest.line_2}
+                                            onChangeText={handleChange('createAddressRequest.line_2')}
+                                            placeholder="Line 2"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
 
-                <View>
-                    <Text style={styles.label}>Line 2</Text>
-                    <TextInput
-                        value={formData.createAddressRequest.line_2}
-                        onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
-                        placeholder="Line 2"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Line 3</Text>
+                                        <TextInput
+                                            value={values.createAddressRequest.line_3}
+                                            onChangeText={handleChange('createAddressRequest.line_3')}
+                                            placeholder="Line 3"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
 
-                <View>
-                    <Text style={styles.label}>Line 3</Text>
-                    <TextInput
-                        value={formData.createAddressRequest.line_3}
-                        onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
-                        placeholder="Line 3"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>City</Text>
+                                        <TextInput
+                                            value={values.createAddressRequest.city}
+                                            onChangeText={handleChange('createAddressRequest.city')}
+                                            placeholder="City"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                    {touched.createAddressRequest?.city && errors.createAddressRequest?.city &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.city}</Text>
+                                    }
 
-                <View>
-                    <Text style={styles.label}>City</Text>
-                    <TextInput
-                        value={formData.createAddressRequest.city}
-                        onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
-                        placeholder="City"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Region / State</Text>
+                                        <TextInput
+                                            value={values.createAddressRequest.region}
+                                            onChangeText={handleChange('createAddressRequest.region')}
+                                            placeholder="Region / State"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                    {touched.createAddressRequest?.region && errors.createAddressRequest?.region &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.region}</Text>
+                                    }
 
-                <View>
-                    <Text style={styles.label}>Region / State</Text>
-                    <TextInput
-                        value={formData.createAddressRequest.region}
-                        onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
-                        placeholder="Region / State"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Post Code</Text>
+                                        <TextInput
+                                            value={values.createAddressRequest.postcode}
+                                            onChangeText={handleChange('createAddressRequest.postcode')}
+                                            placeholder="Post Code"
+                                            placeholderTextColor={placeHolderTextColor}
+                                            style={styles.input}
+                                        />
+                                    </View>
+                                    {touched.createAddressRequest?.postcode && errors.createAddressRequest?.postcode &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.postcode}</Text>
+                                    }
 
-                <View>
-                    <Text style={styles.label}>Post Code</Text>
-                    <TextInput
-                        value={formData.createAddressRequest.postcode}
-                        onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
-                        placeholder="Post Code"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
+                                    <View>
+                                        <Text style={styles.label}>Country</Text>
+                                        <DropDownPicker
+                                            textStyle={{ color: colors.PrimaryBlue }}
+                                            placeholder="Select Country"
+                                            placeholderStyle={{ color: colors.PrimaryBlue }}
+                                            open={openCountryList}
+                                            value={selectedCountry}
+                                            items={countries}
+                                            setOpen={setOpenCountryList}
+                                            setValue={(text: any) => {
+                                                handleDropdownChange('createAddressRequest.country_uuid', text, () => {
+                                                    setFieldValue('type', text)
+                                                })
+                                            }}
+                                            style={styles.dropDown}
+                                        />
+                                    </View>
+                                    {touched.createAddressRequest?.country_uuid && errors.createAddressRequest?.country_uuid &&
+                                        <Text style={{ fontSize: 14, color: 'red' }}>{errors.createAddressRequest.country_uuid}</Text>
+                                    }
+                                </>)}
+                            <ImagePicker
+                                selectedImages={selectedFacilityPhotos}
+                                setSelectedImages={setSelectedFacilityPhotos}
+                                selectedImagesBase64={values.companyFacilityPhotos}
+                                setSelectedImagesBase64={(newPhotos) => {
+                                    setFieldValue('companyFacilityPhotos', newPhotos)
+                                }}
+                            />
 
-                <View>
-                    <Text style={styles.label}>Country</Text>
-                    <DropDownPicker
-                        textStyle={{ color: colors.PrimaryBlue }}
-                        placeholder="Select Country"
-                        placeholderStyle={{ color: colors.PrimaryBlue }}
-                        open={openCountryList}
-                        value={selectedCountry}
-                        items={countries}
-                        setOpen={setOpenCountryList}
-                        setValue={(text: any) => handleInputChange('createAddressRequest.country_uuid', text)}
-                        style={styles.dropDown}
-                    />
-                </View>
-
-                <ImagePicker
-                    selectedImages={selectedFacilityPhotos}
-                    setSelectedImages={setSelectedFacilityPhotos}
-                    selectedImagesBase64={formData.companyFacilityPhotos}
-                    setSelectedImagesBase64={setFacilityPhotosBase64}
-                />
-                <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.button} />
+                            <View style={styles.buttonContainer}>
+                                <View style={styles.buttonWrapper}>
+                                    <Button onPress={handleCancel} title="Cancel" titleStyle={{color: 'red'}} buttonStyle={styles.cancelButton}/>
+                                </View>
+                                <View style={styles.buttonWrapper}>
+                                    <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.submitButton} />
+                                </View>
+                            </View>
+                        </>
+                    )}
+                </Formik>
             </View>
         </ScrollView>
     );
@@ -345,7 +444,9 @@ const styles = StyleSheet.create({
     },
     button: {
         ...globalStyles.button,
-        width: '100%'
+        flex: 1,
+        width: '100%',
+        padding: 0
     },
     input: {
         ...globalStyles.inputText,
@@ -362,5 +463,37 @@ const styles = StyleSheet.create({
     },
     label: {
         ...globalStyles.inputTextLabel
+    },
+    cancelButton: {
+        color: 'red',
+        backgroundColor: 'transparent',
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
+        width: '100%',
+    },
+    submitButton: {
+        ...globalStyles.button,
+        padding: 10,
+        borderRadius: 5,
+        marginTop: 10,
+        width: '100%',
+    },
+    section: {
+        borderBottomWidth: 1,
+        borderColor: 'lightgray',
+        marginBottom: 10,
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 10,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    buttonWrapper: {
+        width: '48%',
     },
 });
