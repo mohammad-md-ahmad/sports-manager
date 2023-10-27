@@ -1,7 +1,9 @@
 import React from 'react';
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, ListItem } from 'react-native-elements';
 import colors from '../../styles/colors';
+import { useNavigation } from '@react-navigation/native';
+import { Screens } from '../../helpers/constants';
 
 interface Facility {
     name: string;
@@ -18,30 +20,37 @@ interface FacilityCardProps {
 }
 
 const FacilityCard: React.FC<FacilityCardProps> = ({ facility }) => {
-    return (
-        <Card style={styles.cardView}>
-            <View style={styles.container}>
-                <Image
-                    source={facility.gallery?.[0]?.image ? {uri: facility.gallery[0].image } : require('./../../assets/images/liber_logo.png')}
-                    style={styles.image}
-                />
-                <View style={styles.userInfo}>
-                    <Text style={styles.name}>Name: {facility.name}</Text>
-                    <Text style={styles.subName}>Type: {facility.type}</Text>
-                    <Text style={styles.subName}>Length: {facility.details.length}</Text>
-                    <Text style={styles.subName}>Width: {facility.details.width}</Text>
-                </View>
+    const navigation = useNavigation();
+    const handleFacilityClick = () => {
+        navigation.navigate(Screens.FacilityView, { 'facility': facility });
+    }
 
-            </View>
-        </Card>
+    return (
+        <TouchableOpacity onPress={handleFacilityClick}>
+            <Card containerStyle={styles.cardView}>
+                <View style={styles.container}>
+                    <Image
+                        source={facility.gallery?.[0]?.image ? { uri: facility.gallery[0].image } : require('./../../assets/images/liber_logo.png')}
+                        style={styles.image}
+                    />
+                    <View style={styles.userInfo}>
+                        <Text style={styles.name}>Name: {facility.name}</Text>
+                        <Text style={styles.subName}>Type: {facility.type}</Text>
+                        <Text style={styles.subName}>Length: {facility.details.length}</Text>
+                        <Text style={styles.subName}>Width: {facility.details.width}</Text>
+                    </View>
+
+                </View>
+            </Card>
+        </TouchableOpacity>
     );
 };
 
 const styles = StyleSheet.create({
     cardView: {
-        borderRadius: 30,
-        borderBlockColor: colors.PrimaryBlue,
-        borderWidth: 2
+        borderRadius: 10,
+        borderColor: colors.PrimaryGreenLight,
+        borderWidth: 0.5
     },
     container: {
         flexDirection: 'row',

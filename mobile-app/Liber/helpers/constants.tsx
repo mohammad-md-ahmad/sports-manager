@@ -1,12 +1,12 @@
 const Constants = {
     //apiUrl: 'http://192.168.0.105:81/api',
-    apiUrl: 'http://192.168.1.107:81/api', // Mohammad A. local server
-    // apiUrl: 'https://liber.quad-bh.com/api',
+    //apiUrl: 'http://192.168.1.107:81/api', // Mohammad A. local server
+     apiUrl: 'https://liber.quad-bh.com/api',
     //assetsUrl: 'http://192.168.0.105:81/storage',
-    // assetsUrl: 'https://liber.quad-bh.com/storage',
-    // imagesUrl: 'https://liber.quad-bh.com/files/images',
-    assetsUrl: 'http://192.168.1.107:81/storage', // Mohammad A. local server
-    imagesUrl: 'http://192.168.1.107:81/files/images', // Mohammad A. local server
+     assetsUrl: 'https://liber.quad-bh.com/storage',
+     imagesUrl: 'https://liber.quad-bh.com/files/images',
+    //assetsUrl: 'http://192.168.1.107:81/storage', // Mohammad A. local server
+    //imagesUrl: 'http://192.168.1.107:81/files/images', // Mohammad A. local server
     tokenKey: 'auth_token',
     userDataKey: 'user_data',
     companyDataKey: 'company_data',
@@ -26,6 +26,7 @@ export enum Screens {
     Dashboard = "Dashboard",
     Facilities = "Facilities",
     FacilityForm = "FacilityForm",
+    FacilityView = "FacilityView",
     CompanyProfile = "CompanyProfile",
     CompanyProfileForm = "CompanyProfileForm",
     UserProfile = "UserProfile",

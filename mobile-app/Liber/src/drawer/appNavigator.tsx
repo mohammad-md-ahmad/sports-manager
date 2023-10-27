@@ -16,6 +16,7 @@ import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
 import { Screens } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
+import FacilityView from '../facilities/facilityView';
 
 const Stack = createStackNavigator();
 
@@ -93,6 +94,7 @@ const AppNavigator = () => {
 
                 <Stack.Screen name={Screens.Facilities} options={{ title: 'Facilities' }} component={Facilities} />
                 <Stack.Screen name={Screens.FacilityForm} options={{ title: 'Facility Form' }} component={FacilityForm} />
+                <Stack.Screen name={Screens.FacilityView} options={{ title: 'Facility View' }} component={FacilityView} />
 
                 <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
                 <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
