@@ -21,6 +21,7 @@ import { launchImageLibrary } from 'react-native-image-picker';
 import { getCompanyData } from "../../helpers/companyDataManage";
 import Constants, { Screens } from "../../helpers/constants";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import ErrorView from "../common/errorView";
 
 interface CompanyFormData {
     uuid: string | null;
@@ -118,16 +119,16 @@ export default function CompanyProfileForm(): React.JSX.Element {
             setFormData({ ...formData, [field]: value });
         }
     };
+    const [errors, setErrors] = useState(null);
 
     function onSubmitPress(): void {
         companyService.update(formData).then((response) => {
             // Handle a successful API response
-            console.log('Success signup:', response.data);
             navigator.navigate(Screens.CompanyProfile);
         })
             .catch((error) => {
                 // Handle API request errors here
-                console.error('Error signup:', error);
+                setErrors(error.response.data.errors)
             });
     }
 
@@ -176,11 +177,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
                         </TouchableOpacity>
                     </View>
 
-                    {/* <TextInput
-            hidden={true}
-            value={formData.uuid}
-
-          /> */}
+                    {errors != null ? <ErrorView errorData={errors} /> : <></>}
 
                     <View>
                         <Text style={styles.label}>Company Name</Text>

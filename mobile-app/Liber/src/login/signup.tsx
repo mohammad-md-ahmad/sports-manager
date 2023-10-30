@@ -15,6 +15,7 @@ import globalStyles from "../../styles/styles";
 import RegisterService from "../../api/RegisterService";
 import { useNavigation } from "@react-navigation/native";
 import { Screens, UserType } from "../../helpers/constants";
+import ErrorView from "../common/errorView";
 
 interface UserFormData {
     first_name: string;
@@ -58,6 +59,8 @@ export default function Signup(): React.JSX.Element {
         is_company: false,
     });
 
+    const [errors, setErrors] = useState(null);
+
     const handleInputChange = (key: string, value: any) => {
         setFormData((prevData) => ({
             ...prevData,
@@ -80,6 +83,7 @@ export default function Signup(): React.JSX.Element {
                     navigator.navigate(Screens.Login);
                 })
                 .catch((error) => {
+                    setErrors(error.response.data.errors)
                     // Handle API request errors here
                 });
         } else {
@@ -94,6 +98,8 @@ export default function Signup(): React.JSX.Element {
                     navigator.navigate(Screens.Login);
                 })
                 .catch((error) => {
+                    console.log('error ****************************** ', error)
+                    setErrors(error.response.data.errors)
                     // Handle API request errors here
                 });
 
@@ -114,6 +120,8 @@ export default function Signup(): React.JSX.Element {
                             style={styles.logo}
                         />
                     </View>
+
+                    {errors != null ? <ErrorView errorData={errors} /> : <></>}
 
                     <View>
                         <Text style={styles.label}>First Name</Text>

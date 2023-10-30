@@ -4,6 +4,7 @@ import { Card, ListItem } from 'react-native-elements';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../helpers/constants';
+import fonts from '../../styles/fonts';
 
 interface Facility {
     name: string;
@@ -26,7 +27,7 @@ const FacilityCard: React.FC<FacilityCardProps> = ({ facility }) => {
     }
 
     return (
-        <TouchableOpacity onPress={handleFacilityClick}>
+        <TouchableOpacity onPress={handleFacilityClick} activeOpacity={0.8}>
             <Card containerStyle={styles.cardView}>
                 <View style={styles.container}>
                     <Image
@@ -69,11 +70,13 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: colors.PrimaryBlue
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.bold,
     }, subName: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: colors.PrimaryBlue
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.bold,
     },
 });
 

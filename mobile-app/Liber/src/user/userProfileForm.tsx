@@ -67,6 +67,8 @@ export default function UserProfileForm(): React.JSX.Element {
         }));
     }
 
+    const [errors, setErrors] = useState(null);
+
     function onSubmitPress(): void {
         console.log(formData);
         userService.update(formData).then((response) => {
@@ -75,7 +77,7 @@ export default function UserProfileForm(): React.JSX.Element {
         })
             .catch((error) => {
                 // Handle API request errors here
-                console.error('Error signup:', error);
+                setErrors(error.response.data.errors)
             });
 
     }
@@ -127,10 +129,7 @@ export default function UserProfileForm(): React.JSX.Element {
                                 </TouchableOpacity>
                             </View>
 
-                            {/* <TextInput
-                caretHidden={true}
-                value={formData.uuid}
-              /> */}
+                            {errors != null ? <ErrorView errorData={errors} /> : <></>}
 
                             <View>
                                 <Text style={styles.label}>First Name</Text>
