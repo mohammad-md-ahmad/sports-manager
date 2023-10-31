@@ -14,9 +14,10 @@ import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { View } from 'react-native';
-import { Screens } from '../../helpers/constants';
+import { Screens, UserType } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
+import { getUserData } from '../../helpers/userDataManage';
 
 const Stack = createStackNavigator();
 
@@ -39,11 +40,48 @@ const AppNavigator = () => {
 
     }
 
+    function onAddFacilityPress(): void {
+        navigator.navigate(Screens.FacilityForm);
+    }
+
     useEffect(() => {
         let routesStack = navigator.getState().routes[0].state?.routes ?? [{ name: Screens.Dashboard }];
         let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
         dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
     }, [navigator.getState().routes[0].state?.index])
+
+    let content;
+    switch (currentScreen) {
+        case Screens.Facilities:
+            content =
+                <View style={{ margin: 15 }}>
+                    <Icon
+                        name="add" // Replace with your desired icon name
+                        type="material"
+                        size={25}
+                        onPress={() => onAddFacilityPress()}
+                    />
+                </View>;
+            break;
+        default:
+            content =
+                <View style={{ margin: 15 }}>
+                    <Icon
+                        name="search" // Replace with your desired icon name
+                        type="material"
+                        size={25}
+                        onPress={() => toggleSearch()}
+                    />
+                </View>
+    }
+
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+        getUserData().then((data: string | null) => {
+            setUserData(data === null ? null : JSON.parse(data));
+        });
+    }, []);
 
     return (
         <Stack.Navigator>
@@ -76,16 +114,7 @@ const AppNavigator = () => {
                     ,
                     headerRight: () =>
                         <>
-
-                            <View style={{ margin: 15 }}>
-                                <Icon
-                                    name="search" // Replace with your desired icon name
-                                    type="material"
-                                    size={25}
-                                    onPress={() => toggleSearch()}
-                                />
-                            </View>
-
+                            {content}
                         </>
                 }}
             >

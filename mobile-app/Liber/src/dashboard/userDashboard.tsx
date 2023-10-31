@@ -1,25 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     SafeAreaView,
     StyleSheet,
     VirtualizedList,
 } from "react-native";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Screens } from "../../helpers/constants";
+import colors from "../../styles/colors";
 import FacilityCard from "../common/facilityCard";
 import FacilityService from "../../api/FacilityService";
-import colors from "../../styles/colors";
+import { useFocusEffect } from "@react-navigation/native";
+import MiscService from "../../api/MiscService";
+import { storeCountries } from "../../helpers/countriesDataManage";
+import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
 
-function Facilities(): React.JSX.Element {
-    const navigator = useNavigation();
+export default function UserDashboard(): React.JSX.Element {
     const facilityService = new FacilityService();
-
-    function onAddFacilityPress(): void {
-        navigator.navigate(Screens.FacilityForm);
-    }
+    const miscService = new MiscService();
 
     const [facilities, setFacilities] = useState([]);
+
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
@@ -29,6 +28,13 @@ function Facilities(): React.JSX.Element {
                 .then((response) => {
                     setFacilities(response.data?.data);
                 }).catch((error) => {
+                });
+
+                miscService.lists().then((response) => {
+                    storeFacilityTypes(response.data?.data?.facility_types);
+                    storeCountries(response.data?.data?.countries);
+                }).catch((error) => {
+                    console.log(error);
                 });
         }, [])
     );
@@ -66,5 +72,3 @@ const styles = StyleSheet.create({
         fontSize: 32,
     },
 });
-
-export default Facilities;

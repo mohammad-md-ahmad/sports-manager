@@ -76,18 +76,20 @@ export default function DrawerContent(props: any): React.JSX.Element {
                         style={currentScreen === Screens.Dashboard && styles.activeDrawerItem}
                     />
 
-                    <DrawerItem
-                        label="Facilities"
-                        icon={({ focused, color, size }) => (
-                            <Icon
-                                name="scoreboard" // Replace with your desired icon name
-                                type="material"
-                                size={25}
-                            />
-                        )}
-                        onPress={() => navigateTo(Screens.Facilities)}
-                        style={currentScreen === Screens.Facilities && styles.activeDrawerItem}
-                    />
+                    {userData?.type == UserType.CompanyUser ?
+                        <DrawerItem
+                            label="Facilities"
+                            icon={({ focused, color, size }) => (
+                                <Icon
+                                    name="scoreboard" // Replace with your desired icon name
+                                    type="material"
+                                    size={25}
+                                />
+                            )}
+                            onPress={() => navigateTo(Screens.Facilities)}
+                            style={currentScreen === Screens.Facilities && styles.activeDrawerItem}
+                        /> : <></>
+                    }
 
                     <DrawerItem
                         label="Profile"

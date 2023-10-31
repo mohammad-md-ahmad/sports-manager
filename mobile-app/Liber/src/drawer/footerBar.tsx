@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Screens } from '../../helpers/constants';
+import { Screens, UserType } from '../../helpers/constants';
+import { getUserData } from '../../helpers/userDataManage';
 
 
 const FooterBar: React.FC = () => {
@@ -17,6 +18,15 @@ const FooterBar: React.FC = () => {
         navigator.navigate(screen);
         dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
     }
+
+    const [userData, setUserData] = useState({});
+
+    useEffect(() => {
+        getUserData().then((data: string | null) => {
+            setUserData(data === null ? null : JSON.parse(data));
+        });
+    }, []);
+
 
     return (
         <View style={styles.container}>
@@ -33,7 +43,7 @@ const FooterBar: React.FC = () => {
 
             <TouchableOpacity
                 style={[styles.button, currentScreen === Screens.CompanyProfile && styles.activeButton]}
-                onPress={() => navigateTo(Screens.CompanyProfile)}
+                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile)}
             >
                 <Icon
                     name="person-outline" // Replace with your desired icon name
@@ -80,7 +90,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 7,
         borderRadius: 20,
-        marginHorizontal:5
+        marginHorizontal: 5
     },
     activeButton: {
         backgroundColor: colors.PrimaryBlueLight,
