@@ -13,7 +13,7 @@ import FacilityForm from '../facilities/facilityForm';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { Screens, UserType } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
@@ -54,25 +54,30 @@ const AppNavigator = () => {
     switch (currentScreen) {
         case Screens.Facilities:
             content =
-                <View style={{ margin: 15 }}>
-                    <Icon
-                        name="add" // Replace with your desired icon name
-                        type="material"
-                        size={25}
-                        onPress={() => onAddFacilityPress()}
-                    />
-                </View>;
+                <TouchableOpacity
+                    onPress={() => onAddFacilityPress()}>
+                    <View style={{ margin: 15 }}>
+                        <Icon
+                            name="add" // Replace with your desired icon name
+                            type="material"
+                            size={25}
+
+                        />
+                    </View>
+                </TouchableOpacity>
             break;
         default:
             content =
-                <View style={{ margin: 15 }}>
-                    <Icon
-                        name="search" // Replace with your desired icon name
-                        type="material"
-                        size={25}
-                        onPress={() => toggleSearch()}
-                    />
-                </View>
+                <TouchableOpacity
+                    onPress={() => toggleSearch()}>
+                    <View style={{ margin: 15 }}>
+                        <Icon
+                            name="search" // Replace with your desired icon name
+                            type="material"
+                            size={25}
+                        />
+                    </View>
+                </TouchableOpacity>
     }
 
     const [userData, setUserData] = useState({});
@@ -92,23 +97,27 @@ const AppNavigator = () => {
                     headerLeft: () =>
                         <>
                             {currentScreen == Screens.Dashboard ?
-                                <View style={{ margin: 15 }}>
-                                    <Icon
-                                        name="menu" // Replace with your desired icon name
-                                        type="material"
-                                        size={25}
-                                        onPress={() => toggleDrawer()}
-                                    />
-                                </View>
+                                <TouchableOpacity
+                                    onPress={() => toggleDrawer()}>
+                                    <View style={{ margin: 15 }}>
+                                        <Icon
+                                            name="menu" // Replace with your desired icon name
+                                            type="material"
+                                            size={25}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
                                 :
-                                <View style={{ margin: 15 }}>
-                                    <Icon
-                                        name="arrow-back" // Replace with your desired icon name
-                                        type="material"
-                                        size={25}
-                                        onPress={() => toggleBack()}
-                                    />
-                                </View>
+                                <TouchableOpacity
+                                    onPress={() => toggleBack()}>
+                                    <View style={{ margin: 15 }}>
+                                        <Icon
+                                            name="arrow-back" // Replace with your desired icon name
+                                            type="material"
+                                            size={25}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
                             }
                         </>
                     ,
