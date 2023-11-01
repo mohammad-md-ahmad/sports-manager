@@ -19,6 +19,10 @@ class FacilityService extends AxiosService {
     }
 
     async list() {
+        return this.get(`/facilities`);
+    }
+
+    async listByCompany() {
         const companyData = await this.companyDataPromise;
         return this.get(`/companies/${companyData.uuid}/facilities`);
     }

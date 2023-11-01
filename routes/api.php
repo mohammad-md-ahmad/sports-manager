@@ -42,12 +42,16 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('facilities')->group(function () {
 
                 Route::post('/', [CompanyFacilityController::class, 'store'])->name('facilities.create');
-                Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('facilities.get-all');
+                Route::get('/', [CompanyFacilityController::class, 'getAllByCompany'])->name('facilities.get-all-by-company');
                 Route::get('/{uuid}', [CompanyFacilityController::class, 'get'])->name('facilities.get');
                 // Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
                 // Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
             });
         });
+    });
+
+    Route::prefix('facilities')->group(function () {
+        Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('facilities.get-all');
     });
 
     Route::prefix('users')->group(function () {

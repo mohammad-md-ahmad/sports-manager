@@ -10,6 +10,7 @@ use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -36,10 +37,26 @@ class CompanyFacilityController extends Controller
         }
     }
 
-    public function getAll(GetCompanyFacilitiesRequest $request): JsonResponse
+    public function getAll(Request $request): JsonResponse
     {
         try {
-            $data = $this->companyFacilityService->getAll($request);
+            $data = $this->companyFacilityService->getAll();
+
+            return response()->json([
+                'message' => __('Facilities has been retrieved successfully.'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to retrieve Facilities: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to retrieve Facilities.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function getAllByCompany(GetCompanyFacilitiesRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->companyFacilityService->getAllByCompany($request);
 
             return response()->json([
                 'message' => __('Facilities has been retrieved successfully.'),

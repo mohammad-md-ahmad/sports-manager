@@ -14,6 +14,7 @@ use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use App\Services\Data\Gallery\CreateGalleryRequest;
 use Exception;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -40,12 +41,28 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
         }
     }
 
-    public function getAll(GetCompanyFacilitiesRequest $data): Collection
+    /**
+     * @throws Exception
+     */
+    public function getAll(): LengthAwarePaginator
+    {
+        try {
+            $facilities = CompanyFacility::with(['address', 'gallery'])->jsonPaginate();
+
+            return $facilities;
+        } catch (Exception $exception) {
+            Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function getAllByCompany(GetCompanyFacilitiesRequest $data): Collection
     {
         try {
             return $data->company->facilities()->with(['address', 'gallery'])->get();
         } catch (Exception $exception) {
-            Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
+            Log::error('CompanyFacilityService::getAllByCompany: '.$exception->getMessage());
 
             throw $exception;
         }
@@ -66,7 +83,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
                 $this->addressService->store($data->createAddressRequest);
             }
 
-            if (count($data->companyFacilityPhotos) > 0) {
+            if ($data->companyFacilityPhotos && count($data->companyFacilityPhotos) > 0) {
                 foreach ($data->companyFacilityPhotos as $photo) {
                     $createGalleryRequest = new CreateGalleryRequest(
                         model_type: CompanyFacility::class,

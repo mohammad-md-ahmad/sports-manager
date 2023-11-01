@@ -25,7 +25,7 @@ function Facilities(): React.JSX.Element {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            facilityService.list()
+            facilityService.listByCompany()
                 .then((response) => {
                     setFacilities(response.data?.data);
                 }).catch((error) => {
