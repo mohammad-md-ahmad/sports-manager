@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $id
+ * @property string $uuid
+ * @property string $name
+ */
 class ScheduleDetails extends Model
 {
     use BindsOnUuid;
@@ -24,6 +29,7 @@ class ScheduleDetails extends Model
     protected $fillable = [
         'uuid',
         'schedule_id',
+        'name',
         'date_time_from',
         'date_time_to',
     ];

@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Contracts\Services\AddressServiceInterface;
+use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
 use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Contracts\Services\CompanyServiceInterface;
 use App\Contracts\Services\CompanyUserServiceInterface;
 use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Services\AddressService;
+use App\Services\CompanyFacilityScheduleService;
 use App\Services\CompanyFacilityService;
 use App\Services\CompanyService;
 use App\Services\CompanyUserService;
@@ -30,6 +32,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CompanyUserServiceInterface::class, CompanyUserService::class);
         $this->app->bind(CompanyFacilityServiceInterface::class, CompanyFacilityService::class);
         $this->app->bind(GalleryServiceInterface::class, GalleryService::class);
+        $this->app->bind(CompanyFacilityScheduleServiceInterface::class, CompanyFacilityScheduleService::class);
     }
 
     /**

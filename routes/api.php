@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyFacilityController;
+use App\Http\Controllers\CompanyFacilityScheduleController;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
@@ -52,6 +53,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('facilities')->group(function () {
         Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('facilities.get-all');
+
+        Route::prefix('{facility}')->group(function () {
+            Route::prefix('schedules')->group(function () {
+
+                Route::post('/', [CompanyFacilityScheduleController::class, 'store'])->name('schedules.create');
+            });
+        });
     });
 
     Route::prefix('users')->group(function () {
