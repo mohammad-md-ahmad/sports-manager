@@ -18,6 +18,7 @@ import { Screens, UserType } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
 import { getUserData } from '../../helpers/userDataManage';
+import ScheduleForm from '../schedule/scheduleForm';
 
 const Stack = createStackNavigator();
 
@@ -44,6 +45,13 @@ const AppNavigator = () => {
         navigator.navigate(Screens.FacilityForm);
     }
 
+    function onScheduleFormPress(): void {
+        let routes = navigator.getState().routes[0].state.routes;
+        let { facility } = routes[routes.length - 1].params;
+
+        navigator.navigate(Screens.ScheduleForm, { "facility": facility });
+    }
+
     useEffect(() => {
         let routesStack = navigator.getState().routes[0].state?.routes ?? [{ name: Screens.Dashboard }];
         let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
@@ -59,6 +67,20 @@ const AppNavigator = () => {
                     <View style={{ margin: 15 }}>
                         <Icon
                             name="add" // Replace with your desired icon name
+                            type="material"
+                            size={25}
+
+                        />
+                    </View>
+                </TouchableOpacity>
+            break;
+        case Screens.FacilityView:
+            content =
+                <TouchableOpacity
+                    onPress={() => onScheduleFormPress()}>
+                    <View style={{ margin: 15 }}>
+                        <Icon
+                            name="edit" // Replace with your desired icon name
                             type="material"
                             size={25}
 
@@ -133,6 +155,8 @@ const AppNavigator = () => {
                 <Stack.Screen name={Screens.Facilities} options={{ title: 'Facilities' }} component={Facilities} />
                 <Stack.Screen name={Screens.FacilityForm} options={{ title: 'Facility Form' }} component={FacilityForm} />
                 <Stack.Screen name={Screens.FacilityView} options={{ title: 'Facility View' }} component={FacilityView} />
+
+                <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedile Form' }} component={ScheduleForm} />
 
                 <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
                 <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
