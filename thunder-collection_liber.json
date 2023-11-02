@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2023-11-02T00:49:44.085Z",
+    "dateExported": "2023-11-02T23:27:39.254Z",
     "version": "1.1",
     "folders": [
         {
@@ -427,17 +427,40 @@
             "_id": "6234b8df-318c-4803-923a-776e0bc4c494",
             "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
             "containerId": "ba551953-2cf5-4fe5-8ecf-e8cdd1d0cd78",
-            "name": "create schedule",
-            "url": "{{host}}/facilities/5a4649fc-8c8a-434d-9845-9bda50e7de9d/schedules",
+            "name": "create schedule batch",
+            "url": "{{host}}/facilities/5a4649fc-8c8a-434d-9845-9bda50e7de9d/schedules/batch",
             "method": "POST",
             "sortNum": 70000,
             "created": "2023-11-01T23:28:16.989Z",
-            "modified": "2023-11-02T00:18:24.261Z",
+            "modified": "2023-11-02T23:16:48.413Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"name\": \"schedule 1\",\n  \"date_time_from\": \"2023-11-02 12:00:00\",\n  \"date_time_to\": \"2023-11-02 13:00:00\"\n}",
+                "raw": "{\n  \"date_from\": \"2023-11-03\",\n  \"date_to\": \"2023-11-05\",\n  \"time_from\": \"12:00:00\",\n  \"time_to\": \"15:00:00\",\n  \"slot\": 60\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "d05223c4-32fb-420c-9c50-ec145ab6be01",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ba551953-2cf5-4fe5-8ecf-e8cdd1d0cd78",
+            "name": "create schedule",
+            "url": "{{host}}/facilities/5a4649fc-8c8a-434d-9845-9bda50e7de9d/schedules",
+            "method": "POST",
+            "sortNum": 80000,
+            "created": "2023-11-02T23:15:47.313Z",
+            "modified": "2023-11-02T23:27:31.690Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"date_time_from\": \"2023-11-02 12:00:00\",\n  \"date_time_to\": \"2023-11-02 13:00:00\"\n}",
                 "form": []
             },
             "auth": {
