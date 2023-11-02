@@ -58,6 +58,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('schedules')->group(function () {
 
                 Route::post('/', [CompanyFacilityScheduleController::class, 'store'])->name('schedules.create');
+                Route::post('/batch', [CompanyFacilityScheduleController::class, 'storeBatch'])->name('schedules.create-batch');
             });
         });
     });

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
+use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatchRequest;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -26,6 +27,21 @@ class CompanyFacilityScheduleController extends Controller
             return response()->json([
                 'message' => __('Company Facility Schedule has been created successfully.'),
                 'data' => $data->toArray(),
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to store Company Facility Schedule : '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to create Company Facility Schedule.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function storeBatch(CreateCompanyFacilityScheduleBatchRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->companyFacilityScheduleService->storeBatch($request);
+
+            return response()->json([
+                'message' => __('Company Facility Schedule has been created successfully.'),
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error('Unable to store Company Facility Schedule : '.$exception->getMessage());
