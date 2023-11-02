@@ -17,10 +17,10 @@ import { useNavigation } from "@react-navigation/native";
 import ErrorView from "../common/errorView";
 
 interface ScheduleFormData {
-    start_time: string;
-    end_time: string;
-    start_date: string;
-    end_date: string;
+    time_from: string;
+    time_to: string;
+    date_from: string;
+    date_to: string;
     slot: string;
 }
 
@@ -28,17 +28,17 @@ function ScheduleForm({ route }): React.JSX.Element {
     const { facility } = route.params;
 
     let scheduleService = new ScheduleService();
-    const navigator = useNavigation();
 
+    const navigator = useNavigation();
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
     const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
     const [formData, setFormData] = useState<ScheduleFormData>({
-        start_time: '',
-        end_time: '',
-        start_date: '',
-        end_date: '',
+        time_from: '',
+        time_to: '',
+        date_from: '',
+        date_to: '',
         slot: ''
     });
 
@@ -81,6 +81,7 @@ function ScheduleForm({ route }): React.JSX.Element {
     };
 
     const [errors, setErrors] = useState(null);
+
     const onSubmitPress = () => {
         // Handle the form submission with the selected date (formDate)
 
@@ -88,7 +89,7 @@ function ScheduleForm({ route }): React.JSX.Element {
 
         console.log(formData);
 
-        scheduleService.create(formData).then((response) => {
+        scheduleService.createBatch(formData).then((response) => {
             // Handle a successful API response
             navigator.navigate(Screens.facilityView);
         })
@@ -97,8 +98,6 @@ function ScheduleForm({ route }): React.JSX.Element {
                 setErrors(error.response.data.errors)
             });
     };
-
-
 
     const handleInputChange = (key: string, value: any) => {
         setFormData((prevData) => ({
@@ -121,9 +120,9 @@ function ScheduleForm({ route }): React.JSX.Element {
                             placeholder="Start Date"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
-                            value={formData.start_date}
-                            //onChangeText={(text) => handleInputChange('start_date', text)}
-                            onPressIn={() => showDatePicker('start_date')}
+                            value={formData.date_from}
+                            //onChangeText={(text) => handleInputChange('date_from', text)}
+                            onPressIn={() => showDatePicker('date_from')}
                         />
                     </View>
 
@@ -133,9 +132,9 @@ function ScheduleForm({ route }): React.JSX.Element {
                             placeholder="Start Time"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
-                            value={formData.start_time}
-                            //onChangeText={(text) => handleInputChange('start_time', text)}
-                            onPressIn={() => showTimePicker('start_time')}
+                            value={formData.time_from}
+                            //onChangeText={(text) => handleInputChange('time_from', text)}
+                            onPressIn={() => showTimePicker('time_from')}
                         />
                     </View>
 
@@ -146,9 +145,9 @@ function ScheduleForm({ route }): React.JSX.Element {
                             placeholder="End Date"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
-                            value={formData.end_date}
-                            //onChangeText={(text) => handleInputChange('end_date', text)}
-                            onPressIn={() => showDatePicker('end_date')}
+                            value={formData.date_to}
+                            //onChangeText={(text) => handleInputChange('date_to', text)}
+                            onPressIn={() => showDatePicker('date_to')}
                         />
                     </View>
 
@@ -158,9 +157,9 @@ function ScheduleForm({ route }): React.JSX.Element {
                             placeholder="End Time"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
-                            value={formData.end_time}
-                            //onChangeText={(text) => handleInputChange('end_time', text)}
-                            onPressIn={() => showTimePicker('end_time')}
+                            value={formData.time_to}
+                            //onChangeText={(text) => handleInputChange('time_to', text)}
+                            onPressIn={() => showTimePicker('time_to')}
                         />
                     </View>
 
