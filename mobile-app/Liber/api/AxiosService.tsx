@@ -24,6 +24,18 @@ abstract class AxiosService {
         return data === null ? null : JSON.parse(data);
     }
 
+    protected objectToQueryParams(obj) {
+        const queryParams = [];
+        
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
+          }
+        }
+        
+        return queryParams.join('&');
+      }
+
     private setupInterceptors() {
         const dispatch = useDispatch();
         ToastHelper.initialize();

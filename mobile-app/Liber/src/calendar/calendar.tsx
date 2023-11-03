@@ -1,32 +1,106 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { Agenda, DateData, AgendaEntry, AgendaSchedule } from 'react-native-calendars';
 import testIDs from './testIDs';
+import { useFocusEffect } from '@react-navigation/native';
+import ScheduleService from '../../api/ScheduleService';
 
-interface State {
-    items?: AgendaSchedule;
-}
 
-export default class AgendaScreen extends Component<State> {
-    state: State = {
-        items: undefined
+
+export default function AgendaScreen(): React.JSX.Element {
+
+    const scheduleService = new ScheduleService();
+    const [items, setItems] = useState(undefined);
+
+    const currentDate = new Date();
+
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-based, so we add 1
+    const day = currentDate.getDate().toString().padStart(2, '0');
+
+    const formattedDate = `${year}-${month}-${day}`;
+
+
+
+    const reservationsKeyExtractor = (item, index) => {
+        return `${item?.reservation?.day}${index}`;
     };
 
-    reservationsKeyExtractor = (item, index) => {
-      return `${item?.reservation?.day}${index}`;
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
+
+            scheduleService.getCompanySchedule({})
+                .then((response) => {
+                    const result = {};
+
+                    for (const key in response.data?.data) {
+                        result[key] = [{}];
+                    }
+                    setItems(result);
+                }).catch((error) => {
+                });
+        }, [])
+    );
+
+
+    const loadItems = (day: DateData) => {
+        scheduleService.getCompanySchedule({ date: day.dateString })
+            .then((response) => {
+                let data = { ...items };
+                data[day.dateString] = response.data?.data
+                setItems(data);
+            }).catch((error) => {
+            });
     };
 
-    render() {
+
+    const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
+        const fontSize = isFirst ? 16 : 14;
+        const color = isFirst ? 'black' : '#43515c';
+
         return (
-            <Agenda
-                testID={testIDs.agenda.CONTAINER}
-                items={this.state.items}
-                loadItemsForMonth={this.loadItems}
-                selected={'2023-10-21'}
-                renderItem={this.renderItem}
-                renderEmptyDate={this.renderEmptyDate}
-                rowHasChanged={this.rowHasChanged}
-                showClosingKnob={true}
+            <TouchableOpacity
+                testID={testIDs.agenda.ITEM}
+                style={[styles.item, { height: reservation.height }]}
+                onPress={() => Alert.alert(reservation.date_time_from)}
+            >
+                <Text style={{ fontSize, color }}>{reservation.date_time_from}</Text>
+                <Text style={{ fontSize, color }}>{reservation.date_time_to}</Text>
+            </TouchableOpacity>
+        );
+    };
+
+    const renderEmptyDate = () => {
+        return (
+            <View style={styles.emptyDate}>
+                <Text>This is empty date!</Text>
+            </View>
+        );
+    };
+
+    const rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
+        return r1.name !== r2.name;
+    };
+
+    const timeToString = (time: number) => {
+        const date = new Date(time);
+        return date.toISOString().split('T')[0];
+    }
+
+
+    return (
+        <Agenda
+            testID={testIDs.agenda.CONTAINER}
+            items={items}
+            loadItemsForMonth={loadItems}
+            selected={formattedDate}
+            renderItem={renderItem}
+            renderEmptyDate={renderEmptyDate}
+            rowHasChanged={rowHasChanged}
+            showClosingKnob={true}
             //markingType={'period'}
             // markedDates={{
             //     '2023-10-08': { textColor: '#43515c' },
@@ -43,81 +117,10 @@ export default class AgendaScreen extends Component<State> {
             //renderDay={this.renderDay}
             //hideExtraDays={false}
             //showOnlySelectedDayItems
-            reservationsKeyExtractor={this.reservationsKeyExtractor}
-            />
-        );
-    }
+            reservationsKeyExtractor={reservationsKeyExtractor}
+        />
+    );
 
-    loadItems = (day: DateData) => {
-        const items = this.state.items || {};
-
-        setTimeout(() => {
-            for (let i = -15; i < 85; i++) {
-                const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-                const strTime = this.timeToString(time);
-
-                if (!items[strTime]) {
-                    items[strTime] = [];
-
-                    const numItems = Math.floor(Math.random() * 3 + 1);
-                    for (let j = 0; j < numItems; j++) {
-                        items[strTime].push({
-                            name: 'Item for ' + strTime + ' #' + j,
-                            height: Math.max(50, Math.floor(Math.random() * 150)),
-                            day: strTime
-                        });
-                    }
-                }
-            }
-
-            const newItems: AgendaSchedule = {};
-            Object.keys(items).forEach(key => {
-                newItems[key] = items[key];
-            });
-            this.setState({
-                items: newItems
-            });
-        }, 1000);
-    };
-
-    renderDay = (day) => {
-        if (day) {
-            return <Text style={styles.customDay}>{day.getDay()}</Text>;
-        }
-        return <View style={styles.dayItem} />;
-    };
-
-    renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
-        const fontSize = isFirst ? 16 : 14;
-        const color = isFirst ? 'black' : '#43515c';
-
-        return (
-            <TouchableOpacity
-                testID={testIDs.agenda.ITEM}
-                style={[styles.item, { height: reservation.height }]}
-                onPress={() => Alert.alert(reservation.name)}
-            >
-                <Text style={{ fontSize, color }}>{reservation.name}</Text>
-            </TouchableOpacity>
-        );
-    };
-
-    renderEmptyDate = () => {
-        return (
-            <View style={styles.emptyDate}>
-                <Text>This is empty date!</Text>
-            </View>
-        );
-    };
-
-    rowHasChanged = (r1: AgendaEntry, r2: AgendaEntry) => {
-        return r1.name !== r2.name;
-    };
-
-    timeToString(time: number) {
-        const date = new Date(time);
-        return date.toISOString().split('T')[0];
-    }
 }
 
 const styles = StyleSheet.create({
