@@ -9,13 +9,63 @@ use App\Models\Schedule;
 use App\Models\ScheduleDetails;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatchRequest;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceInterface
 {
+    /**
+     * @throws Exception
+     */
+    public function getCompanySchedule(GetCompanyScheduleRequest $data): Collection
+    {
+        try {
+            $scheduleQuery = Schedule::query();
+
+            $scheduleQuery->whereHas('company', function (Builder $query) use ($data) {
+                $query->where('id', $data->company->id);
+            })->when($data->date, function (Builder $query) use ($data) {
+                $query->where('date_time_from', '>=', $data->date)
+                    ->where('date_time_to', '<=', $data->date);
+            });
+
+            return $scheduleQuery->get();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getFacilitySchedule(GetCompanyFacilityScheduleRequest $data): Collection
+    {
+        try {
+            $scheduleQuery = Schedule::query();
+
+            $scheduleQuery->whereHas('facility', function (Builder $query) use ($data) {
+                $query->where('id', $data->facility->id);
+            })->when($data->date, function (Builder $query) use ($data) {
+                $query->where('date_time_from', '>=', $data->date)
+                    ->where('date_time_to', '<=', $data->date);
+            });
+
+            return $scheduleQuery->get();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
     /**
      * @throws Exception
      */

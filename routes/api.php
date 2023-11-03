@@ -63,6 +63,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 
+    Route::prefix('schedules')->group(function () {
+
+        Route::get('/company-schedule', [CompanyFacilityScheduleController::class, 'getCompanySchedule'])->name('schedules.company-schedule');
+        Route::get('/facility-schedule', [CompanyFacilityScheduleController::class, 'getFacilitySchedule'])->name('schedules.facility-schedule');
+    });
+
     Route::prefix('users')->group(function () {
 
         Route::post('/', [UserController::class, 'storeAdmin'])->name('users.create-admin');
