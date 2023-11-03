@@ -28,7 +28,7 @@ class CompanyFacilityScheduleController extends Controller
 
             return response()->json([
                 'message' => __('Company Schedule has been retrieved successfully'),
-                'data' => $data->toArray(),
+                'data' => $request->date ? $data->toArray() : $data,
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error('Unable to retrieve Company Schedule : '.$exception->getMessage());
@@ -44,7 +44,7 @@ class CompanyFacilityScheduleController extends Controller
 
             return response()->json([
                 'message' => __('Facility Schedule has been retrieved successfully'),
-                'data' => $data->toArray(),
+                'data' => $request->date ? $data->toArray() : $data,
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error('Unable to retrieve Facility Schedule : '.$exception->getMessage());

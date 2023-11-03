@@ -8,12 +8,13 @@ use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleReque
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use Illuminate\Support\Collection;
+use stdClass;
 
 interface CompanyFacilityScheduleServiceInterface
 {
-    public function getCompanySchedule(GetCompanyScheduleRequest $data): Collection;
+    public function getCompanySchedule(GetCompanyScheduleRequest $data): stdClass|Collection;
 
-    public function getFacilitySchedule(GetCompanyFacilityScheduleRequest $data): Collection;
+    public function getFacilitySchedule(GetCompanyFacilityScheduleRequest $data): stdClass|Collection;
 
     public function store(CreateCompanyFacilityScheduleRequest $data): ScheduleDetails;
 
