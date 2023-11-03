@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
+use App\Models\Company;
+use App\Models\CompanyFacility;
 use App\Models\Schedule;
 use App\Models\ScheduleDetails;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatchRequest;
@@ -14,7 +16,7 @@ use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -26,14 +28,21 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
     public function getCompanySchedule(GetCompanyScheduleRequest $data): Collection
     {
         try {
-            $scheduleQuery = Schedule::query();
+            /** @var Company $company */
+            $company = Company::findOrFail($data->company_id);
 
-            $scheduleQuery->whereHas('company', function (Builder $query) use ($data) {
-                $query->where('id', $data->company->id);
+            $scheduleQuery = ScheduleDetails::query();
+
+            $scheduleQuery->whereHas('schedule', function (Builder $query) use ($company) {
+                $query->whereHas('facility', function (Builder $query) use ($company) {
+                    $query->whereHas('company', function (Builder $query) use ($company) {
+                        $query->where('id', $company->id);
+                    });
+                });
             })->when($data->date, function (Builder $query) use ($data) {
                 $query->where('date_time_from', '>=', $data->date)
                     ->where('date_time_to', '<=', $data->date);
-            });
+            })->select(['date_time_from', 'date_time_to']);
 
             return $scheduleQuery->get();
         } catch (Exception $exception) {
@@ -49,14 +58,19 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
     public function getFacilitySchedule(GetCompanyFacilityScheduleRequest $data): Collection
     {
         try {
-            $scheduleQuery = Schedule::query();
+            /** @var CompanyFacility $facility */
+            $facility = CompanyFacility::findOrFail($data->facility_id);
 
-            $scheduleQuery->whereHas('facility', function (Builder $query) use ($data) {
-                $query->where('id', $data->facility->id);
+            $scheduleQuery = ScheduleDetails::query();
+
+            $scheduleQuery->whereHas('schedule', function (Builder $query) use ($facility) {
+                $query->whereHas('facility', function (Builder $query) use ($facility) {
+                    $query->where('id', $facility->id);
+                });
             })->when($data->date, function (Builder $query) use ($data) {
                 $query->where('date_time_from', '>=', $data->date)
                     ->where('date_time_to', '<=', $data->date);
-            });
+            })->select(['date_time_from', 'date_time_to']);
 
             return $scheduleQuery->get();
         } catch (Exception $exception) {

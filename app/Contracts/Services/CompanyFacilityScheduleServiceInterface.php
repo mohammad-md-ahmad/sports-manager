@@ -7,7 +7,7 @@ use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatch
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 interface CompanyFacilityScheduleServiceInterface
 {

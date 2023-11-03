@@ -43,7 +43,7 @@ class Schedule extends Model
 
     public function facility(): BelongsTo
     {
-        return $this->belongsTo(CompanyFacility::class);
+        return $this->belongsTo(CompanyFacility::class, 'company_facility_id');
     }
 
     public function company(): BelongsTo
