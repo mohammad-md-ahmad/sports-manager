@@ -5,17 +5,116 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
+use App\Models\Company;
+use App\Models\CompanyFacility;
 use App\Models\Schedule;
 use App\Models\ScheduleDetails;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatchRequest;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceInterface
 {
+    /**
+     * @throws Exception
+     */
+    public function getCompanySchedule(GetCompanyScheduleRequest $data): stdClass|Collection
+    {
+        try {
+            /** @var Company $company */
+            $company = Company::findOrFail($data->company_id);
+
+            $scheduleQuery = ScheduleDetails::query();
+
+            $scheduleQuery->whereHas('schedule', function (Builder $query) use ($company) {
+                $query->whereHas('facility', function (Builder $query) use ($company) {
+                    $query->whereHas('company', function (Builder $query) use ($company) {
+                        $query->where('id', $company->id);
+                    });
+                });
+            })->when($data->date, function (Builder $query) use ($data) {
+                $query->whereDate('date_time_from', '>=', $data->date)
+                    ->whereDate('date_time_to', '<=', $data->date)
+                    ->select(['date_time_from', 'date_time_to']);
+            }, function (Builder $query) {
+                $query->selectRaw('DISTINCT DATE_FORMAT(date_time_from, "%Y-%m-%d") as custom_date')
+                    ->orderBy('custom_date');
+            });
+
+            if (! $data->date) {
+                $results = $scheduleQuery->distinct()
+                    ->pluck('custom_date')
+                    ->toArray();
+
+                $formattedResponse = new stdClass();
+                foreach ($results as $date) {
+                    $formattedResponse->{$date} = new stdClass();
+                }
+
+                return $formattedResponse;
+            }
+
+            return $scheduleQuery->get();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getFacilitySchedule(GetCompanyFacilityScheduleRequest $data): stdClass|\Illuminate\Database\Eloquent\Collection
+    {
+        try {
+            /** @var CompanyFacility $facility */
+            $facility = CompanyFacility::findOrFail($data->facility_id);
+
+            $scheduleQuery = ScheduleDetails::query();
+
+            $scheduleQuery->whereHas('schedule', function (Builder $query) use ($facility) {
+                $query->whereHas('facility', function (Builder $query) use ($facility) {
+                    $query->where('id', $facility->id);
+                });
+            })->when($data->date, function (Builder $query) use ($data) {
+                $query->whereDate('date_time_from', '<=', $data->date)
+                    ->whereDate('date_time_to', '>=', $data->date)
+                    ->select(['date_time_from', 'date_time_to']);
+            }, function (Builder $query) {
+                $query->selectRaw('DISTINCT DATE_FORMAT(date_time_from, "%Y-%m-%d") as custom_date')
+                    ->orderBy('custom_date');
+            });
+
+            if (! $data->date) {
+                $results = $scheduleQuery->distinct()
+                    ->pluck('custom_date')
+                    ->toArray();
+
+                $formattedResponse = new stdClass();
+                foreach ($results as $date) {
+                    $formattedResponse->{$date} = new stdClass();
+                }
+
+                return $formattedResponse;
+            }
+
+            return $scheduleQuery->get();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
     /**
      * @throws Exception
      */
