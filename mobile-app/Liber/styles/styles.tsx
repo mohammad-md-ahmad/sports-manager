@@ -22,7 +22,6 @@ const globalStyles = StyleSheet.create({
     paddingRight: 10
   },
   inputText: {
-    height: 43,
     fontSize: 14,
     borderRadius: 5,
     borderWidth: 1,
