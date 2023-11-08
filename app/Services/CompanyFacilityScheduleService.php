@@ -26,7 +26,87 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
     /**
      * @throws Exception
      */
-    public function getCompanySchedule(GetCompanyScheduleRequest $data): stdClass|Collection
+    public function getCompanySchedule(GetCompanyScheduleRequest $data): Collection|array|stdClass
+    {
+        try {
+            /** @var Company $company */
+            $company = Company::findOrFail($data->company_id);
+
+            $scheduleQuery = ScheduleDetails::query();
+
+            $scheduleQuery->whereHas('schedule', function (Builder $query) use ($company) {
+                $query->whereHas('facility', function (Builder $query) use ($company) {
+                    $query->whereHas('company', function (Builder $query) use ($company) {
+                        $query->where('id', $company->id);
+                    });
+                });
+            })->when($data->date, function (Builder $query) use ($data) {
+                $query->whereDate('date_time_from', '>=', $data->date)
+                    ->whereDate('date_time_to', '<=', $data->date)
+                    ->select(['date_time_from', 'date_time_to']);
+            }, function (Builder $query) {
+                $query->selectRaw('DISTINCT DATE_FORMAT(date_time_from, "%Y-%m-%d") as custom_date')
+                    ->orderBy('custom_date');
+            });
+
+            if (! $data->date) {
+                $results = $scheduleQuery->distinct()
+                    ->pluck('custom_date')
+                    ->toArray();
+
+                $formattedResponse = new stdClass();
+                foreach ($results as $date) {
+                    $class = new stdClass();
+
+                    $data->date = $date;
+
+                    $datesData = $this->getCompanyData($data);
+
+                    foreach ($datesData as $dateData) {
+                        $class->date_time_from = $dateData->date_time_from;
+                        $class->date_time_to = $dateData->date_time_to;
+                    }
+
+                    $formattedResponse->{$date} = $class;
+                }
+
+                return $formattedResponse;
+            }
+
+            return $scheduleQuery->get();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    private function getCompanyData(GetCompanyScheduleRequest $data)
+    {
+        /** @var Company $company */
+        $company = Company::findOrFail($data->company_id);
+
+        $scheduleQuery = ScheduleDetails::query();
+
+        $scheduleQuery->whereHas('schedule', function (Builder $query) use ($company) {
+            $query->whereHas('facility', function (Builder $query) use ($company) {
+                $query->whereHas('company', function (Builder $query) use ($company) {
+                    $query->where('id', $company->id);
+                });
+            });
+        })->when($data->date, function (Builder $query) use ($data) {
+            $query->whereDate('date_time_from', '>=', $data->date)
+                ->whereDate('date_time_to', '<=', $data->date)
+                ->select(['date_time_from', 'date_time_to']);
+        });
+
+        return $scheduleQuery->get();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getCompanySchedule2(GetCompanyScheduleRequest $data): stdClass|Collection
     {
         try {
             /** @var Company $company */
@@ -101,7 +181,18 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
 
                 $formattedResponse = new stdClass();
                 foreach ($results as $date) {
-                    $formattedResponse->{$date} = new stdClass();
+                    $class = new stdClass();
+
+                    $data->date = $date;
+
+                    $datesData = $this->getFacilityData($data);
+
+                    foreach ($datesData as $dateData) {
+                        $class->date_time_from = $dateData->date_time_from;
+                        $class->date_time_to = $dateData->date_time_to;
+                    }
+
+                    $formattedResponse->{$date} = $class;
                 }
 
                 return $formattedResponse;
@@ -113,6 +204,26 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
 
             throw $exception;
         }
+    }
+
+    public function getFacilityData(GetCompanyFacilityScheduleRequest $data)
+    {
+        /** @var CompanyFacility $facility */
+        $facility = CompanyFacility::findOrFail($data->facility_id);
+
+        $scheduleQuery = ScheduleDetails::query();
+
+        $scheduleQuery->whereHas('schedule', function (Builder $query) use ($facility) {
+            $query->whereHas('facility', function (Builder $query) use ($facility) {
+                $query->where('id', $facility->id);
+            });
+        })->when($data->date, function (Builder $query) use ($data) {
+            $query->whereDate('date_time_from', '<=', $data->date)
+                ->whereDate('date_time_to', '>=', $data->date)
+                ->select(['date_time_from', 'date_time_to']);
+        });
+
+        return $scheduleQuery->get();
     }
 
     /**

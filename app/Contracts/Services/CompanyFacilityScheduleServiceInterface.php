@@ -12,9 +12,9 @@ use stdClass;
 
 interface CompanyFacilityScheduleServiceInterface
 {
-    public function getCompanySchedule(GetCompanyScheduleRequest $data): stdClass|Collection;
+    public function getCompanySchedule(GetCompanyScheduleRequest $data): stdClass|Collection|array;
 
-    public function getFacilitySchedule(GetCompanyFacilityScheduleRequest $data): stdClass|Collection;
+    public function getFacilitySchedule(GetCompanyFacilityScheduleRequest $data): stdClass|Collection|array;
 
     public function store(CreateCompanyFacilityScheduleRequest $data): ScheduleDetails;
 
