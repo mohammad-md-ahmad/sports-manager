@@ -39,3 +39,9 @@ export enum Screens {
     Signup = "Signup",
     Login = "Login",
 }
+
+export enum BookingStatus {
+    Reserverd = "Reserverd",
+    Available = "Available",
+    Pending = "Pending",
+}

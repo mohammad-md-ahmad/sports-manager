@@ -7,7 +7,8 @@ const colors = {
     SecondaryPurple: '#a9509f',
     White: '#ffffff',
     OffWhite: '#f0f0f0',
-    Gray: 'gray'
+    Gray: 'gray',
+    Orange: 'orange',
 };
 
 export default colors;
