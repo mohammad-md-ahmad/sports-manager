@@ -34,12 +34,14 @@ export default function AgendaScreen(): React.JSX.Element {
 
             scheduleService.getCompanySchedule({})
                 .then((response) => {
-                    const result = {};
-
-                    for (const key in response.data?.data) {
-                        result[key] = [{}];
-                    }
-                    setItems(result);
+                    // const result = {};
+                    // console.log(response.data?.data)
+                    // for (const key in response.data?.data) {
+                    //     result[key] = [response.data?.data[key],response.data?.data[key],response.data?.data[key],response.data?.data[key]];
+                    // }
+                    // console.log(result)
+                    // setItems(result);
+                    setItems(response.data?.data);
                 }).catch((error) => {
                 });
         }, [])
@@ -47,19 +49,21 @@ export default function AgendaScreen(): React.JSX.Element {
 
 
     const loadItems = (day: DateData) => {
-        scheduleService.getCompanySchedule({ date: day.dateString })
-            .then((response) => {
-                let data = { ...items };
-                data[day.dateString] = response.data?.data
-                setItems(data);
-            }).catch((error) => {
-            });
+        // console.log(day);
+        // scheduleService.getCompanySchedule({ date: day.dateString })
+        //     .then((response) => {
+        //         console.log(response);
+        //         //let data = { ...items };
+        //        // data[day.dateString] = response.data?.data
+        //         setItems(response.data?.data);
+        //     }).catch((error) => {
+        //     });
     };
 
 
     const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
-        const fontSize = isFirst ? 16 : 14;
-        const color = isFirst ? 'black' : '#43515c';
+        const fontSize = isFirst && false ? 16 : 14;
+        const color = isFirst && false ? 'black' : '#43515c';
 
         return (
             <TouchableOpacity
@@ -101,16 +105,17 @@ export default function AgendaScreen(): React.JSX.Element {
             renderEmptyDate={renderEmptyDate}
             rowHasChanged={rowHasChanged}
             showClosingKnob={true}
-            //markingType={'period'}
+            //onDayChange={loadItems}
+            markingType={'dot'}
             // markedDates={{
-            //     '2023-10-08': { textColor: '#43515c' },
-            //     '2023-10-09': { textColor: '#43515c' },
-            //     '2023-10-14': { startingDay: true, endingDay: true, color: 'blue' },
-            //     '2023-10-21': { startingDay: true, color: 'blue' },
-            //     '2023-10-22': { endingDay: true, color: 'gray' },
-            //     '2023-10-24': { startingDay: true, color: 'gray' },
-            //     '2023-10-25': { color: 'gray' },
-            //     '2023-10-26': { endingDay: true, color: 'gray' }
+            //     '2023-11-08': { color: 'red' },
+            //     '2023-11-09': { color: 'red' },
+            //     // '2023-10-14': { startingDay: true, endingDay: true, color: 'blue' },
+            //     // '2023-10-21': { startingDay: true, color: 'blue' },
+            //     // '2023-10-22': { endingDay: true, color: 'gray' },
+            //     // '2023-10-24': { startingDay: true, color: 'gray' },
+            //     // '2023-10-25': { color: 'gray' },
+            //     // '2023-10-26': { endingDay: true, color: 'gray' }
             // }}
             //monthFormat={'yyyy'}
             //theme={{calendarBackground: 'red', agendaKnobColor: 'green'}}
