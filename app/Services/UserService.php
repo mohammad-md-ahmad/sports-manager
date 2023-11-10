@@ -39,14 +39,14 @@ class UserService implements UserServiceInterface
     public function store(CreateUserRequest $data): User
     {
         try {
+            $uploadedImg = null;
+
             $data->password = Hash::make($data->password);
 
             DB::beginTransaction();
 
             /** @var User $user */
             $user = User::create($data->toArray());
-
-            $uploadedImg = null;
 
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {
@@ -61,7 +61,9 @@ class UserService implements UserServiceInterface
         } catch (Exception $exception) {
             DB::rollBack();
 
-            $this->deleteImage($uploadedImg);
+            if ($uploadedImg) {
+                $this->deleteImage($uploadedImg);
+            }
 
             Log::error('UserService::store: '.$exception->getMessage());
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ScheduleDetailsStatus;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $id
  * @property string $uuid
  * @property string $name
+ * @property ScheduleDetailsStatus $status
  */
 class ScheduleDetails extends Model
 {
@@ -33,6 +35,7 @@ class ScheduleDetails extends Model
         'name',
         'date_time_from',
         'date_time_to',
+        'status',
     ];
 
     /**
@@ -42,6 +45,7 @@ class ScheduleDetails extends Model
      */
     protected $casts = [
         'uuid' => EfficientUuid::class,
+        'status' => ScheduleDetailsStatus::class,
     ];
 
     public function schedule(): BelongsTo

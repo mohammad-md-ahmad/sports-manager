@@ -25,6 +25,7 @@ class RegisterController extends Controller
     public function registerUser(CreateUserRequest $request): JsonResponse
     {
         try {
+            $request->type = UserType::CUSTOMER_USER->name;
             $data = $this->userService->store($request);
 
             return response()->json([

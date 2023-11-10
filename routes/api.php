@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyFacilityController;
 use App\Http\Controllers\CompanyFacilityScheduleController;
@@ -67,6 +68,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::get('/company-schedule', [CompanyFacilityScheduleController::class, 'getCompanySchedule'])->name('schedules.company-schedule');
         Route::get('/facility-schedule', [CompanyFacilityScheduleController::class, 'getFacilitySchedule'])->name('schedules.facility-schedule');
+    });
+
+    Route::prefix('bookings')->group(function () {
+
+        Route::post('/', [BookingController::class, 'store'])->name('bookings.store');
     });
 
     Route::prefix('users')->group(function () {
