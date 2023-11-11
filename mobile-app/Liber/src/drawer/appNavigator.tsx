@@ -91,16 +91,17 @@ const AppNavigator = () => {
             break;
         default:
             content =
-                <TouchableOpacity
-                    onPress={() => toggleSearch()}>
-                    <View style={{ margin: 15 }}>
-                        <Icon
-                            name="search" // Replace with your desired icon name
-                            type="material"
-                            size={25}
-                        />
-                    </View>
-                </TouchableOpacity>
+                <></>
+        // <TouchableOpacity
+        //     onPress={() => toggleSearch()}>
+        //     <View style={{ margin: 15 }}>
+        //         <Icon
+        //             name="search" // Replace with your desired icon name
+        //             type="material"
+        //             size={25}
+        //         />
+        //     </View>
+        // </TouchableOpacity>
     }
 
     const [userData, setUserData] = useState({});
@@ -167,7 +168,7 @@ const AppNavigator = () => {
 
                 <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
                 <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />
-                
+
                 <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
 
             </Stack.Group>

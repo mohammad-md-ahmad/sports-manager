@@ -141,6 +141,7 @@ export default function AgendaScreen(): React.JSX.Element {
 
         bookingService.bookRequest({ schedule_details_uuid: reservation.uuid })
             .then((response) => {
+                console.log('booking', response)
                 loadData();
             }).catch((error) => {
                 console.log(error);
@@ -161,11 +162,23 @@ export default function AgendaScreen(): React.JSX.Element {
     }
 
     const onApprovePress = (reservation: AgendaEntry): void => {
-        throw new Error('Function not implemented.');
+        console.log(reservation);
+        bookingService.bookApprove({ schedule_details_uuid: reservation.uuid })
+            .then((response) => {
+                loadData();
+            }).catch((error) => {
+                console.log(error);
+            });
     }
 
-    const onRejectPress = (reservation: AgendaEntry): void => {
-        throw new Error('Function not implemented.');
+    const onDeclinePress = (reservation: AgendaEntry): void => {
+        bookingService.bookDecline({ schedule_details_uuid: reservation.uuid })
+            .then((response) => {
+                console.log('onDeclinePress', response)
+                loadData();
+            }).catch((error) => {
+                console.log(error);
+            });
     }
 
     const onViewPress = (reservation: AgendaEntry): void => {
@@ -213,7 +226,7 @@ export default function AgendaScreen(): React.JSX.Element {
                                             buttonStyle={styles.approveButton}
                                         />
                                         <Button
-                                            onPress={() => onRejectPress(reservation)}
+                                            onPress={() => onDeclinePress(reservation)}
                                             title="Reject"
                                             buttonStyle={styles.rejectButton}
                                         />
@@ -315,7 +328,7 @@ export default function AgendaScreen(): React.JSX.Element {
                                 buttonStyle={styles.approveButton}
                             />
                             <Button
-                                onPress={() => onRejectPress(currentReservation)}
+                                onPress={() => onDeclinePress(currentReservation)}
                                 title="Reject"
                                 buttonStyle={styles.rejectButton}
                             />
