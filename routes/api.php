@@ -73,6 +73,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('bookings')->group(function () {
 
         Route::post('/', [BookingController::class, 'store'])->name('bookings.store');
+        Route::post('/{uuid}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
+        Route::post('/{uuid}/decline', [BookingController::class, 'decline'])->name('bookings.decline');
     });
 
     Route::prefix('users')->group(function () {

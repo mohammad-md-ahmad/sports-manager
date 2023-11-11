@@ -2,17 +2,20 @@
 
 namespace App\Models;
 
+use App\Enums\BookingStatus;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property string $user_id
  * @property string $schedule_details_id
- * @property bool $is_approved
+ * @property BookingStatus $status
+ * @property ScheduleDetails $scheduleDetails
  */
 class Booking extends Model
 {
@@ -34,7 +37,7 @@ class Booking extends Model
         'uuid',
         'customer_user_id',
         'schedule_details_id',
-        'is_approved',
+        'status',
     ];
 
     /**
@@ -44,5 +47,11 @@ class Booking extends Model
      */
     protected $casts = [
         'uuid' => EfficientUuid::class,
+        'status' => BookingStatus::class,
     ];
+
+    public function scheduleDetails(): BelongsTo
+    {
+        return $this->belongsTo(ScheduleDetails::class);
+    }
 }

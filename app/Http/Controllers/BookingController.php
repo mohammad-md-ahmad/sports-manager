@@ -5,10 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\BookingServiceInterface;
+use App\Services\Data\Booking\ApproveBookingRequest;
 use App\Services\Data\Booking\CreateBookingRequest;
-use App\Services\Data\User\DeleteUserRequest;
-use App\Services\Data\User\GetUserRequest;
-use App\Services\Data\User\UpdateUserRequest;
+use App\Services\Data\Booking\DeclineBookingRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -22,25 +21,6 @@ class BookingController extends Controller
     ) {
     }
 
-    //    public function get(GetUserRequest $request): JsonResponse
-    //    {
-    //        try {
-    //            $data = $this->bookingService->get($request);
-    //
-    //            return response()->json([
-    //                'message' => __('User has been retrieved successfully.'),
-    //                'data' => $data->toArray(),
-    //            ], Response::HTTP_OK);
-    //        } catch (Exception $exception) {
-    //            Log::error('Unable to retrieve user: '.$exception->getMessage());
-    //
-    //            return response()->json(['message' => __('Failed to retrieve User.')], Response::HTTP_BAD_REQUEST);
-    //        }
-    //    }
-
-    /**
-     * @throws Exception
-     */
     public function store(CreateBookingRequest $request): JsonResponse
     {
         try {
@@ -62,34 +42,41 @@ class BookingController extends Controller
         }
     }
 
-    //    public function update(UpdateUserRequest $request): JsonResponse
-    //    {
-    //        try {
-    //            $user = $this->userService->update($request);
-    //
-    //            return response()->json([
-    //                'message' => __('User has been updated successfully.'),
-    //                'data' => $user,
-    //            ], Response::HTTP_OK);
-    //        } catch (Exception $exception) {
-    //            Log::error('Unable to update user: '.$exception->getMessage());
-    //
-    //            return response()->json(['message' => __('Failed to update user.')], Response::HTTP_BAD_REQUEST);
-    //        }
-    //    }
-    //
-    //    public function delete(DeleteUserRequest $request): JsonResponse
-    //    {
-    //        try {
-    //            $this->userService->delete($request);
-    //
-    //            return response()->json([
-    //                'message' => __('User has been deleted successfully.'),
-    //            ], Response::HTTP_OK);
-    //        } catch (Exception $exception) {
-    //            Log::error('Unable to delete user: '.$exception->getMessage());
-    //
-    //            return response()->json(['message' => __('Failed to delete user.')], Response::HTTP_BAD_REQUEST);
-    //        }
-    //    }
+    public function approve(ApproveBookingRequest $request): JsonResponse
+    {
+        try {
+            $this->bookingService->approve($request);
+
+            return response()->json([
+                'message' => __('Booking request has been approved successfully.'),
+            ], Response::HTTP_OK);
+        } catch (LogicException $exception) {
+            Log::error('Unable to approve booking request: '.$exception->getMessage());
+
+            return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        } catch (Exception $exception) {
+            Log::error('Unable to approve booking request: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to approve booking request.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function decline(DeclineBookingRequest $request): JsonResponse
+    {
+        try {
+            $this->bookingService->decline($request);
+
+            return response()->json([
+                'message' => __('Booking request has been declined successfully.'),
+            ], Response::HTTP_OK);
+        } catch (LogicException $exception) {
+            Log::error('Unable to approve booking request: '.$exception->getMessage());
+
+            return response()->json(['message' => $exception->getMessage()], Response::HTTP_BAD_REQUEST);
+        } catch (Exception $exception) {
+            Log::error('Unable to decline booking request: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to decline booking request.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }

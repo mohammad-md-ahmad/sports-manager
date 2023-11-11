@@ -25,4 +25,41 @@ enum ScheduleDetailsStatus
             self::Booked->name => __('Booked'),
         ];
     }
+
+    public function isBookable(): bool
+    {
+        return in_array($this, self::bookable());
+    }
+
+    public static function bookable(): array
+    {
+        return [
+            self::Available,
+            self::Pending,
+        ];
+    }
+
+    public function isBooked(): bool
+    {
+        return in_array($this, self::booked());
+    }
+
+    public static function booked(): array
+    {
+        return [
+            self::Booked,
+        ];
+    }
+
+    public static function declinable(): array
+    {
+        return [
+            self::Pending,
+        ];
+    }
+
+    public function isDeclinable(): bool
+    {
+        return in_array($this, self::declinable());
+    }
 }
