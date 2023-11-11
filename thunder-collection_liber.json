@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2023-11-10T21:36:13.384Z",
+    "dateExported": "2023-11-11T22:38:34.849Z",
     "version": "1.1",
     "folders": [
         {
@@ -197,12 +197,12 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2023-11-10T20:44:03.016Z",
-            "modified": "2023-11-10T21:01:37.195Z",
+            "modified": "2023-11-11T21:07:50.309Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"user_uuid\": \"447de02b-47a4-4c3e-ab58-3f1bc6f68edd\",\n  \"schedule_details_uuid\": \"5ff40649-0476-4c17-9509-eb78273ca3ab\"\n}",
+                "raw": "{\n  \"user_uuid\": \"447de02b-47a4-4c3e-ab58-3f1bc6f68edd\",\n  \"schedule_details_uuid\": \"2a949ddd-1f70-4cd7-adaa-e60722a5183d\"\n}",
                 "form": []
             },
             "auth": {
@@ -291,6 +291,24 @@
             "tests": []
         },
         {
+            "_id": "75880451-04c9-4e14-82e0-615ffa5c580a",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "1b02faa9-5578-4a14-a59f-a9be4cb06f92",
+            "name": "approve booking",
+            "url": "{{host}}/bookings/8492e50d-f354-4163-b0cd-f5250a7042b4/approve",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-11-11T20:49:15.353Z",
+            "modified": "2023-11-11T22:36:23.510Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
             "_id": "689fd0ed-53b1-467a-a777-5a55d5253956",
             "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
             "containerId": "02872e9d-79b8-4ce3-bade-cc583b7706d2",
@@ -354,6 +372,24 @@
             "sortNum": 30000,
             "created": "2023-11-01T21:55:59.482Z",
             "modified": "2023-11-01T23:07:25.489Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "17125f52-fad2-4908-a9f0-d081c69f68d1",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "1b02faa9-5578-4a14-a59f-a9be4cb06f92",
+            "name": "decline booking",
+            "url": "{{host}}/bookings/39d00584-8e48-49dc-b0ab-494a4e0a40d5/decline",
+            "method": "POST",
+            "sortNum": 30000,
+            "created": "2023-11-11T21:08:01.262Z",
+            "modified": "2023-11-11T21:08:23.797Z",
             "headers": [],
             "params": [],
             "auth": {
