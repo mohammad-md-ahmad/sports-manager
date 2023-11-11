@@ -16,10 +16,6 @@ class ScheduleService extends AxiosService {
         return this.post(`/facilities/${data.facility_uuid}/schedules/batch`, data);
     }
 
-    async bookRequest(data: Object) {
-        return this.post(`/schedules/${data.uuid}/request-book`, data);
-    }
-
     async getCompanySchedule(data: Object) {
         const companyData = await this.companyDataPromise;
         data['company_uuid'] = companyData.uuid;

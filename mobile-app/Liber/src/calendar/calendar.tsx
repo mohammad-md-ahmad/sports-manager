@@ -1,6 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { Agenda, DateData, AgendaEntry, AgendaSchedule } from 'react-native-calendars';
+import { Alert, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
+import { Agenda, DateData, AgendaEntry } from 'react-native-calendars';
 import testIDs from './testIDs';
 import { useFocusEffect } from '@react-navigation/native';
 import ScheduleService from '../../api/ScheduleService';
@@ -9,12 +9,14 @@ import { Button } from 'react-native-elements';
 import globalStyles from '../../styles/styles';
 import { BookingStatus, UserType } from '../../helpers/constants';
 import { getUserData } from '../../helpers/userDataManage';
+import BookingService from '../../api/BookingService';
 
 
 
 export default function AgendaScreen(): React.JSX.Element {
 
     const scheduleService = new ScheduleService();
+    const bookingService = new BookingService();
     const [items, setItems] = useState(undefined);
     const [itemsOptions, setItemsOptions] = useState({});
 
@@ -55,18 +57,18 @@ export default function AgendaScreen(): React.JSX.Element {
 
             let currentItem = items[key];
             let dayIsFullyBooked = true;
-            let hasReservedSlot = false;
+            let hasBookedSlot = false;
             let hasAvailableSlot = false;
             let hasPendeingSlot = false;
 
             currentItem.forEach(slot => {
-                dayIsFullyBooked = dayIsFullyBooked && slot.status == BookingStatus.Reserverd;
-                hasReservedSlot = hasReservedSlot || slot.status == BookingStatus.Reserverd || true;
-                hasAvailableSlot = hasAvailableSlot || slot.status == BookingStatus.Available || true;
-                hasPendeingSlot = hasPendeingSlot || slot.status == BookingStatus.Pending || true;
+                dayIsFullyBooked = dayIsFullyBooked && slot.status == BookingStatus.Booked;
+                hasBookedSlot = hasBookedSlot || slot.status == BookingStatus.Booked;
+                hasAvailableSlot = hasAvailableSlot || slot.status == BookingStatus.Available;
+                hasPendeingSlot = hasPendeingSlot || slot.status == BookingStatus.Pending;
             });
 
-            if (dayIsFullyBooked || key == '2023-11-10' || key == '2023-11-06' || key == '2023-11-07') {
+            if (dayIsFullyBooked) {
                 options[key] = {
                     disabled: userData?.type == UserType.CompanyUser ? false : true,
                     dots: [{ color: colors.SecondaryRed }]
@@ -82,7 +84,7 @@ export default function AgendaScreen(): React.JSX.Element {
                         options[key].dots.push({ color: colors.Orange })
                     }
 
-                    if (hasReservedSlot) {
+                    if (hasBookedSlot) {
                         options[key].dots.push({ color: colors.SecondaryRed })
                     }
                 }
@@ -107,20 +109,7 @@ export default function AgendaScreen(): React.JSX.Element {
 
     useEffect(() => {
         if (userData.type)
-            scheduleService.getCompanySchedule({})
-                .then((response) => {
-                    const result = {};
-                    for (const key in response.data?.data) {
-                        //response.data?.data[key].marked = true;
-                        result[key] = [response.data?.data[key], response.data?.data[key], response.data?.data[key], response.data?.data[key]];
-                    }
-                    buildItemsOptions(result);
-                    setItems(result);
-
-                    // setItems(response.data?.data);
-
-                }).catch((error) => {
-                });
+            loadData();
     }, [userData]);
 
 
@@ -130,6 +119,58 @@ export default function AgendaScreen(): React.JSX.Element {
         }
     };
 
+    const loadData = () => {
+        setItems({});
+        scheduleService.getCompanySchedule({})
+            .then((response) => {
+                let result = {};
+                for (const key in response.data?.data) {
+                    result[key] = [response.data?.data[key], response.data?.data[key], response.data?.data[key]];
+                }
+                buildItemsOptions(result);
+                setItems(result);
+
+                // buildItemsOptions(response.data?.data);
+                // setItems(response.data?.data);
+
+            }).catch((error) => {
+            });
+    }
+
+    const onBookPress = (reservation): void => {
+
+        bookingService.bookRequest({ schedule_details_uuid: reservation.uuid })
+            .then((response) => {
+                loadData();
+            }).catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const getStatusColor = (status: any): any => {
+        switch (status) {
+            case BookingStatus.Available:
+                return colors.White
+            case BookingStatus.Pending:
+                return colors.Orange
+            case BookingStatus.Booked:
+                return colors.SecondaryRed
+            default:
+                return colors.White
+        };
+    }
+
+    const onApprovePress = (reservation: AgendaEntry): void => {
+        throw new Error('Function not implemented.');
+    }
+
+    const onRejectPress = (reservation: AgendaEntry): void => {
+        throw new Error('Function not implemented.');
+    }
+
+    const onViewPress = (reservation: AgendaEntry): void => {
+        toggleModal(reservation);
+    }
 
     const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
         const fontSize = isFirst && false ? 16 : 14;
@@ -138,28 +179,6 @@ export default function AgendaScreen(): React.JSX.Element {
         const StatusCircle = ({ color }) => (
             <View style={[styles.circle, { backgroundColor: color }]}></View>
         );
-
-
-        function onBookPress(reservation): void {
-            scheduleService.bookRequest({ uuid: reservation.uuid })
-                .then((response) => {
-
-                }).catch((error) => {
-                });
-        }
-
-        function getStatusColor(status: any): any {
-            switch (status) {
-                case BookingStatus.Available:
-                    return colors.White
-                case BookingStatus.Pending:
-                    return colors.Orange
-                case BookingStatus.Reserverd:
-                    return colors.SecondaryRed
-                default:
-                    return colors.White
-            };
-        }
 
         if (userData?.type == UserType.CustomerUser && reservation.status != BookingStatus.Available) {
             return <></>
@@ -185,7 +204,26 @@ export default function AgendaScreen(): React.JSX.Element {
                                 onPress={() => onBookPress(reservation)}
                                 title="Book"
                                 buttonStyle={styles.button}
-                            /> : <></>
+                            /> :
+                                reservation.status == BookingStatus.Pending ?
+                                    <View style={styles.buttonRow}>
+                                        <Button
+                                            onPress={() => onApprovePress(reservation)}
+                                            title="Approve"
+                                            buttonStyle={styles.approveButton}
+                                        />
+                                        <Button
+                                            onPress={() => onRejectPress(reservation)}
+                                            title="Reject"
+                                            buttonStyle={styles.rejectButton}
+                                        />
+                                        <Button
+                                            onPress={() => onViewPress(reservation)}
+                                            title="View"
+                                            buttonStyle={styles.viewButton}
+                                        />
+                                    </View>
+                                    : <></>
                         }
                     </View>
                 </View>
@@ -211,47 +249,81 @@ export default function AgendaScreen(): React.JSX.Element {
         return date.toISOString().split('T')[0];
     }
 
+    const [isModalVisible, setModalVisible] = useState(false);
+    const [currentReservation, setCurrentReservation] = useState({});
+
+
+    const toggleModal = (reservation = {}) => {
+        setCurrentReservation(reservation);
+        setModalVisible(!isModalVisible);
+    };
+
+    const closeModal = () => {
+        setModalVisible(false);
+    };
 
     return (
-        <Agenda
-            testID={testIDs.agenda.CONTAINER}
-            items={items}
-            loadItemsForMonth={loadItems}
-            selected={formattedDate}
-            renderItem={renderItem}
-            renderEmptyDate={renderEmptyDate}
-            rowHasChanged={rowHasChanged}
-            showClosingKnob={true}
-            //onDayChange={loadItems}
-            markingType={'multi-dot'}
-            markedDates={
-                itemsOptions
-                //     {
-                //     //     '2023-11-08': { color: 'green' },
-                //     '2023-11-10': { dots: [{ color: colors.SecondaryRed }, { color: colors.PrimaryGreen, selectedDotColor: colors.White }] },
-                //     '2023-11-11': { disabled: true, dots: [{ color: colors.PrimaryGreen, selectedDotColor: colors.White }, { color: colors.SecondaryRed }] },
-                //     '2023-11-12': { dots: [{ color: colors.Orange }] },
-                //     //     '2012-11-10': { disabled: true },
-                //     //     //     '2023-11-08': { color: 'red' },
-                //     //     //     '2023-11-09': { color: 'red' },
-                //     //     //     // '2023-10-14': { startingDay: true, endingDay: true, color: 'blue' },
-                //     //     //     // '2023-10-21': { startingDay: true, color: 'blue' },
-                //     //     //     // '2023-10-22': { endingDay: true, color: 'gray' },
-                //     //     //     // '2023-10-24': { startingDay: true, color: 'gray' },
-                //     //     //     // '2023-10-25': { color: 'gray' },
-                //     //     //     // '2023-10-26': { endingDay: true, color: 'gray' }
-                // }
-            }
-            //monthFormat={'yyyy'}
-            theme={{ agendaKnobColor: colors.PrimaryGreen, selectedDayBackgroundColor: colors.PrimaryGreen, todayTextColor: colors.PrimaryGreen }}
-            //renderDay={this.renderDay}
-            //hideExtraDays={false}
-            //showOnlySelectedDayItems
-            disableAllTouchEventsForDisabledDays
-            minDate={formattedThirtyDaysAgo}
-            maxDate={formattedThirtyDaysFromNow}
-            reservationsKeyExtractor={reservationsKeyExtractor}
-        />
+        <>
+            <Agenda
+                testID={testIDs.agenda.CONTAINER}
+                items={items}
+                loadItemsForMonth={loadItems}
+                selected={formattedDate}
+                renderItem={renderItem}
+                renderEmptyDate={renderEmptyDate}
+                rowHasChanged={rowHasChanged}
+                showClosingKnob={true}
+                //onDayChange={loadItems}
+                markingType={'multi-dot'}
+                markedDates={
+                    itemsOptions
+                }
+                //monthFormat={'yyyy'}
+                theme={{
+                    agendaKnobColor: colors.PrimaryGreen,
+                    selectedDayBackgroundColor: colors.PrimaryGreen,
+                    todayTextColor: colors.PrimaryGreen
+                }}
+                //renderDay={this.renderDay}
+                //hideExtraDays={false}
+                //showOnlySelectedDayItems
+                disableAllTouchEventsForDisabledDays
+                minDate={formattedThirtyDaysAgo}
+                maxDate={formattedThirtyDaysFromNow}
+                reservationsKeyExtractor={reservationsKeyExtractor}
+            />
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isModalVisible}
+                onRequestClose={toggleModal}
+            >
+                <TouchableOpacity
+                    style={styles.modalContainer}
+                    activeOpacity={1}
+                    onPressOut={closeModal}
+                >
+                    <View style={styles.modalContent}>
+                        <View>
+                            <Text>{currentReservation?.date_time_from?.split(' ')[0]}</Text>
+                            <Text>{currentReservation?.date_time_from?.split(' ')[1] + " - " + currentReservation?.date_time_to?.split(' ')[1]}</Text>
+                        </View>
+                        <View style={styles.buttonRow}>
+                            <Button
+                                onPress={() => onApprovePress(currentReservation)}
+                                title="Approve"
+                                buttonStyle={styles.approveButton}
+                            />
+                            <Button
+                                onPress={() => onRejectPress(currentReservation)}
+                                title="Reject"
+                                buttonStyle={styles.rejectButton}
+                            />
+                        </View>
+                    </View>
+                </TouchableOpacity>
+            </Modal>
+        </>
     );
 
 }
@@ -294,5 +366,52 @@ const styles = StyleSheet.create({
     button: {
         ...globalStyles.button,
         width: 100,
+        marginHorizontal: 5,
     },
+    approveButton: {
+        ...globalStyles.button,
+        width: 80,
+        marginHorizontal: 5,
+    },
+    rejectButton: {
+        ...globalStyles.button,
+        width: 80,
+        marginHorizontal: 5,
+        backgroundColor: colors.SecondaryRed,
+    },
+    viewButton: {
+        ...globalStyles.button,
+        width: 80,
+        marginHorizontal: 5,
+        backgroundColor: colors.Orange,
+    },
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'center', // Adjust this to control the spacing between buttons
+        alignItems: 'center',
+        marginTop: 20,
+    },
+
+
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    },
+    modalContent: {
+        width: '80%',
+        height: '50%',
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+        alignItems: 'center',
+    },
+
 });
+
