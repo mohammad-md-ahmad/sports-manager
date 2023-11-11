@@ -41,7 +41,7 @@ export enum Screens {
 }
 
 export enum BookingStatus {
-    Reserverd = "Reserverd",
+    Booked = "Booked",
     Available = "Available",
     Pending = "Pending",
 }

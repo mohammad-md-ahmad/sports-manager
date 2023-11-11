@@ -41,7 +41,7 @@ const globalStyles = StyleSheet.create({
   button: {
     backgroundColor: colors.PrimaryBlue,
     borderRadius: 5,
-    height: 45,
+    height: 40,
     marginTop: 10,
     alignItems: "center",
     fontFamily: fonts.Poppins.regular
