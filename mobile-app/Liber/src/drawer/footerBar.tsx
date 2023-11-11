@@ -64,8 +64,8 @@ const FooterBar: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={[styles.button, currentScreen === Screens.About && styles.activeButton]}
-                onPress={() => navigateTo(Screens.About)}
+                style={[styles.button, currentScreen === Screens.Search && styles.activeButton]}
+                onPress={() => navigateTo(Screens.Search)}
             >
                 <Icon
                     name="search" // Replace with your desired icon name

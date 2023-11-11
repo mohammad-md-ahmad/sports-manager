@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
 import { getUserData } from '../../helpers/userDataManage';
 import ScheduleForm from '../schedule/scheduleForm';
+import Search from '../search/search';
 
 const Stack = createStackNavigator();
 
@@ -38,7 +39,7 @@ const AppNavigator = () => {
     }
 
     const toggleSearch = () => {
-
+        navigator.navigate(Screens.Search);
     }
 
     function onAddFacilityPress(): void {
@@ -165,6 +166,8 @@ const AppNavigator = () => {
                 <Stack.Screen name={Screens.UserProfileForm} options={{ title: 'Profile Form' }} component={UserProfileForm} />
 
                 <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
+                <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />
+                
                 <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
 
             </Stack.Group>

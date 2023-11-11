@@ -38,6 +38,7 @@ export enum Screens {
     ScheduleForm = "ScheduleForm",
     Signup = "Signup",
     Login = "Login",
+    Search = "Search",
 }
 
 export enum BookingStatus {
