@@ -70,7 +70,12 @@ class BookingService implements BookingServiceInterface
                 'status' => BookingStatus::Approved->name,
             ]);
 
-            // todo: other booking requests should be declined
+            // other booking requests should be declined
+            $booking->scheduleDetails->bookings->except($booking->id)->each(function (Booking $booking) {
+                $booking->update([
+                    'status' => BookingStatus::Declined->name,
+                ]);
+            });
 
             $booking->scheduleDetails->update([
                 'status' => ScheduleDetailsStatus::Booked->name,
@@ -107,9 +112,9 @@ class BookingService implements BookingServiceInterface
                 'status' => BookingStatus::Declined->name,
             ]);
 
-            // todo: if there are no other booking requests, the status should be Available, otherwise => Pending
+            // if there are no other booking requests, the status should be Available, otherwise => Pending
             $booking->scheduleDetails->update([
-                'status' => ScheduleDetailsStatus::Available->name,
+                'status' => $booking->scheduleDetails->bookings->count() > 0 ? ScheduleDetailsStatus::Pending->name : ScheduleDetailsStatus::Available->name,
             ]);
 
             DB::commit();

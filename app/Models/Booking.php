@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
+ * @property string $id
+ * @property string $uuid
  * @property string $user_id
  * @property string $schedule_details_id
  * @property BookingStatus $status

@@ -9,13 +9,16 @@ use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
  * @property string $id
  * @property string $uuid
  * @property string $name
  * @property ScheduleDetailsStatus $status
+ * @property Collection $bookings
  */
 class ScheduleDetails extends Model
 {
@@ -51,5 +54,10 @@ class ScheduleDetails extends Model
     public function schedule(): BelongsTo
     {
         return $this->belongsTo(Schedule::class, 'schedule_id');
+    }
+
+    public function bookings(): HasMany
+    {
+        return $this->hasMany(Booking::class);
     }
 }
