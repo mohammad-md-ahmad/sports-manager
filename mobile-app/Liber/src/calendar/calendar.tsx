@@ -125,12 +125,12 @@ export default function AgendaScreen(): React.JSX.Element {
             .then((response) => {
                 let result = {};
                 for (const key in response.data?.data) {
-                    //response.data?.data[key].marked = true;
                     result[key] = [response.data?.data[key], response.data?.data[key], response.data?.data[key]];
                 }
                 buildItemsOptions(result);
                 setItems(result);
 
+                // buildItemsOptions(response.data?.data);
                 // setItems(response.data?.data);
 
             }).catch((error) => {
