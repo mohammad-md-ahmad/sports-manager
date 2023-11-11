@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2023-11-02T23:27:39.254Z",
+    "dateExported": "2023-11-10T21:36:13.384Z",
     "version": "1.1",
     "folders": [
         {
@@ -34,10 +34,17 @@
         },
         {
             "_id": "ba551953-2cf5-4fe5-8ecf-e8cdd1d0cd78",
-            "name": "facility schedule",
+            "name": "schedule",
             "containerId": "",
             "created": "2023-11-01T23:28:04.216Z",
             "sortNum": 9375
+        },
+        {
+            "_id": "1b02faa9-5578-4a14-a59f-a9be4cb06f92",
+            "name": "booking",
+            "containerId": "",
+            "created": "2023-11-10T20:43:46.500Z",
+            "sortNum": 9687.5
         },
         {
             "_id": "02872e9d-79b8-4ce3-bade-cc583b7706d2",
@@ -182,6 +189,29 @@
             "tests": []
         },
         {
+            "_id": "117696e5-f7ef-4e02-b9ee-0980fa2dac7a",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "1b02faa9-5578-4a14-a59f-a9be4cb06f92",
+            "name": "create booking",
+            "url": "{{host}}/bookings",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-11-10T20:44:03.016Z",
+            "modified": "2023-11-10T21:01:37.195Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"user_uuid\": \"447de02b-47a4-4c3e-ab58-3f1bc6f68edd\",\n  \"schedule_details_uuid\": \"5ff40649-0476-4c17-9509-eb78273ca3ab\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
             "_id": "e116f048-4860-4fbb-b8ba-436e2d5f06f2",
             "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
             "containerId": "5d53dd50-2252-4e29-9613-8f8f78191648",
@@ -238,6 +268,25 @@
             "auth": {
                 "type": "bearer",
                 "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "985788d3-42bf-4766-aeaa-fbd43eec3123",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "05e3e174-ecb0-4954-9fa9-dc28da28f49a",
+            "name": "register customer user",
+            "url": "{{host}}/register/user",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-11-10T20:54:06.783Z",
+            "modified": "2023-11-10T20:55:07.377Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"first_name\": \"Mohammad\",\n  \"last_name\": \"Ahmad\",\n  \"username\": \"mohammad.ahmad\",\n  \"email\": \"mohammad@email.com\",\n  \"password\": \"Hello003?\",\n  \"password_confirmation\": \"Hello003?\"\n}",
+                "form": []
             },
             "tests": []
         },
@@ -461,6 +510,52 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"date_time_from\": \"2023-11-02 12:00:00\",\n  \"date_time_to\": \"2023-11-02 13:00:00\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "51c7f9e7-5328-4c8a-8754-edf2e726d8cd",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ba551953-2cf5-4fe5-8ecf-e8cdd1d0cd78",
+            "name": "get company schedule",
+            "url": "{{host}}/schedules/company-schedule",
+            "method": "GET",
+            "sortNum": 90000,
+            "created": "2023-11-03T21:35:42.496Z",
+            "modified": "2023-11-08T22:33:25.140Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"company_uuid\": \"e99cf682-a1b8-44aa-9362-12bcb2edb6bd\",\n  \"dates\": \"2023-11-05\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "e922dc46-1d01-43c2-bca4-444e57d7d00e",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ba551953-2cf5-4fe5-8ecf-e8cdd1d0cd78",
+            "name": "get facility schedule",
+            "url": "{{host}}/schedules/facility-schedule",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2023-11-03T21:59:24.250Z",
+            "modified": "2023-11-08T22:56:29.335Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"facility_uuid\": \"5a4649fc-8c8a-434d-9845-9bda50e7de9d\",\n  \"dates\": \"2023-11-04 00:00:00\"\n}",
                 "form": []
             },
             "auth": {

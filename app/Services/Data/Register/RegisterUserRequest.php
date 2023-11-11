@@ -21,7 +21,8 @@ class RegisterUserRequest extends Data
         public string $email,
         public string $password,
         public string|Optional $profile_picture,
-        public string|Optional $type = UserType::CUSTOMER_USER->name,
+        public string|Optional|null $type = null,
     ) {
+        $this->type = UserType::CUSTOMER_USER->name;
     }
 }

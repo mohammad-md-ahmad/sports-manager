@@ -43,7 +43,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
             })->when($data->date, function (Builder $query) use ($data) {
                 $query->whereDate('date_time_from', '>=', $data->date)
                     ->whereDate('date_time_to', '<=', $data->date)
-                    ->select(['date_time_from', 'date_time_to']);
+                    ->select(['date_time_from', 'date_time_to', 'uuid', 'status']);
             }, function (Builder $query) {
                 $query->selectRaw('DISTINCT DATE_FORMAT(date_time_from, "%Y-%m-%d") as custom_date')
                     ->orderBy('custom_date');
@@ -65,6 +65,8 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                     foreach ($datesData as $dateData) {
                         $class->date_time_from = $dateData->date_time_from;
                         $class->date_time_to = $dateData->date_time_to;
+                        $class->uuid = $dateData->uuid;
+                        $class->status = $dateData->status->name;
                     }
 
                     $formattedResponse->{$date} = $class;
@@ -97,57 +99,10 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
         })->when($data->date, function (Builder $query) use ($data) {
             $query->whereDate('date_time_from', '>=', $data->date)
                 ->whereDate('date_time_to', '<=', $data->date)
-                ->select(['date_time_from', 'date_time_to']);
+                ->select(['date_time_from', 'date_time_to', 'uuid', 'status']);
         });
 
         return $scheduleQuery->get();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function getCompanySchedule2(GetCompanyScheduleRequest $data): stdClass|Collection
-    {
-        try {
-            /** @var Company $company */
-            $company = Company::findOrFail($data->company_id);
-
-            $scheduleQuery = ScheduleDetails::query();
-
-            $scheduleQuery->whereHas('schedule', function (Builder $query) use ($company) {
-                $query->whereHas('facility', function (Builder $query) use ($company) {
-                    $query->whereHas('company', function (Builder $query) use ($company) {
-                        $query->where('id', $company->id);
-                    });
-                });
-            })->when($data->date, function (Builder $query) use ($data) {
-                $query->whereDate('date_time_from', '>=', $data->date)
-                    ->whereDate('date_time_to', '<=', $data->date)
-                    ->select(['date_time_from', 'date_time_to']);
-            }, function (Builder $query) {
-                $query->selectRaw('DISTINCT DATE_FORMAT(date_time_from, "%Y-%m-%d") as custom_date')
-                    ->orderBy('custom_date');
-            });
-
-            if (! $data->date) {
-                $results = $scheduleQuery->distinct()
-                    ->pluck('custom_date')
-                    ->toArray();
-
-                $formattedResponse = new stdClass();
-                foreach ($results as $date) {
-                    $formattedResponse->{$date} = new stdClass();
-                }
-
-                return $formattedResponse;
-            }
-
-            return $scheduleQuery->get();
-        } catch (Exception $exception) {
-            Log::error($exception->getMessage());
-
-            throw $exception;
-        }
     }
 
     /**
@@ -168,7 +123,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
             })->when($data->date, function (Builder $query) use ($data) {
                 $query->whereDate('date_time_from', '<=', $data->date)
                     ->whereDate('date_time_to', '>=', $data->date)
-                    ->select(['date_time_from', 'date_time_to']);
+                    ->select(['date_time_from', 'date_time_to', 'uuid', 'status']);
             }, function (Builder $query) {
                 $query->selectRaw('DISTINCT DATE_FORMAT(date_time_from, "%Y-%m-%d") as custom_date')
                     ->orderBy('custom_date');
@@ -190,6 +145,8 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                     foreach ($datesData as $dateData) {
                         $class->date_time_from = $dateData->date_time_from;
                         $class->date_time_to = $dateData->date_time_to;
+                        $class->uuid = $dateData->uuid;
+                        $class->status = $dateData->status->name;
                     }
 
                     $formattedResponse->{$date} = $class;
@@ -220,7 +177,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
         })->when($data->date, function (Builder $query) use ($data) {
             $query->whereDate('date_time_from', '<=', $data->date)
                 ->whereDate('date_time_to', '>=', $data->date)
-                ->select(['date_time_from', 'date_time_to']);
+                ->select(['date_time_from', 'date_time_to', 'uuid', 'status']);
         });
 
         return $scheduleQuery->get();
