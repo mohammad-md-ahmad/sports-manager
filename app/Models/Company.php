@@ -46,7 +46,12 @@ class Company extends Model
         'id',
         'created_at',
         'updated_at',
+        'deleted_at',
     ];
+
+    //    protected $appends = [
+    //        'hasBookedSlot',
+    //    ];
 
     public function logo(): Attribute
     {

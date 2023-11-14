@@ -41,6 +41,13 @@ class Schedule extends Model
         'uuid' => EfficientUuid::class,
     ];
 
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     public function facility(): BelongsTo
     {
         return $this->belongsTo(CompanyFacility::class, 'company_facility_id');

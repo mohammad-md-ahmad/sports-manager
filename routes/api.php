@@ -66,6 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('schedules')->group(function () {
 
+        Route::get('/schedule', [CompanyFacilityScheduleController::class, 'getSchedule'])->name('schedules.schedule');
         Route::get('/company-schedule', [CompanyFacilityScheduleController::class, 'getCompanySchedule'])->name('schedules.company-schedule');
         Route::get('/facility-schedule', [CompanyFacilityScheduleController::class, 'getFacilitySchedule'])->name('schedules.facility-schedule');
     });

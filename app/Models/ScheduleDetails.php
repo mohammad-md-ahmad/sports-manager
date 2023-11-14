@@ -17,8 +17,11 @@ use Illuminate\Support\Collection;
  * @property string $id
  * @property string $uuid
  * @property string $name
+ * @property string $date_time_from
+ * @property string $date_time_to
  * @property ScheduleDetailsStatus $status
  * @property Collection $bookings
+ * @property Schedule $schedule
  */
 class ScheduleDetails extends Model
 {
@@ -51,6 +54,13 @@ class ScheduleDetails extends Model
         'status' => ScheduleDetailsStatus::class,
     ];
 
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     public function schedule(): BelongsTo
     {
         return $this->belongsTo(Schedule::class, 'schedule_id');
@@ -59,5 +69,10 @@ class ScheduleDetails extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function facility(): BelongsTo
+    {
+        return $this->schedule->facility();
     }
 }

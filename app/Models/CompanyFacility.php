@@ -47,6 +47,13 @@ class CompanyFacility extends Model
         'details' => JsonCast::class,
     ];
 
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');

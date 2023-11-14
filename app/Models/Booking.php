@@ -52,6 +52,13 @@ class Booking extends Model
         'status' => BookingStatus::class,
     ];
 
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at',
+        'deleted_at',
+    ];
+
     public function scheduleDetails(): BelongsTo
     {
         return $this->belongsTo(ScheduleDetails::class);

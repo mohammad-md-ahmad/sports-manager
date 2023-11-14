@@ -9,6 +9,7 @@ use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatch
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -50,6 +51,22 @@ class CompanyFacilityScheduleController extends Controller
             Log::error('Unable to retrieve Facility Schedule : '.$exception->getMessage());
 
             return response()->json(['message' => __('Failed to retrieve Facility Schedule.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function getSchedule(GetScheduleRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->companyFacilityScheduleService->getSchedule($request);
+
+            return response()->json([
+                'message' => __('Schedule has been retrieved successfully'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to retrieve Schedule : '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to retrieve Schedule.')], Response::HTTP_BAD_REQUEST);
         }
     }
 

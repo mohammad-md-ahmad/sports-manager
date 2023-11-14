@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2023-11-11T22:38:34.849Z",
+    "dateExported": "2023-11-14T17:26:09.440Z",
     "version": "1.1",
     "folders": [
         {
@@ -569,6 +569,29 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"company_uuid\": \"e99cf682-a1b8-44aa-9362-12bcb2edb6bd\",\n  \"dates\": \"2023-11-05\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "cf3cf4ee-4a86-4ef0-9e83-b4b06f3aa4c4",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ba551953-2cf5-4fe5-8ecf-e8cdd1d0cd78",
+            "name": "get schedule",
+            "url": "{{host}}/schedules/schedule",
+            "method": "GET",
+            "sortNum": 95000,
+            "created": "2023-11-12T11:18:41.519Z",
+            "modified": "2023-11-12T23:21:17.989Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"company_uuid\": \"e99cf682-a1b8-44aa-9362-12bcb2edb6bd\",\n  \"year_month\": \"2023-11\"\n}",
                 "form": []
             },
             "auth": {

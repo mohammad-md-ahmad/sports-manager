@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
+use App\Enums\ScheduleDetailsStatus;
 use App\Models\Company;
 use App\Models\CompanyFacility;
 use App\Models\Schedule;
@@ -13,6 +14,7 @@ use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatch
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -186,6 +188,100 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
     /**
      * @throws Exception
      */
+    public function getSchedule(GetScheduleRequest $data): Collection
+    {
+        try {
+            $basicScheduleByMonthDaysQuery = $this->scheduleByMonthDaysQuery($data);
+
+            $monthDaysQuery = clone $basicScheduleByMonthDaysQuery;
+            $monthDaysQuery = $monthDaysQuery->select([
+                DB::raw('DISTINCT DATE_FORMAT(date_time_from, "%Y-%m-%d") AS month_day'),
+            ]);
+
+            $daySlotsCountQuery = clone $basicScheduleByMonthDaysQuery;
+            $daySlotsCountQuery = $daySlotsCountQuery->select(
+                DB::raw('count(id) as count, DATE_FORMAT(date_time_from, "%Y-%m-%d") AS month_day')
+            )->groupByRaw('month_day')->get();
+            $daySlotsCountArr = [];
+
+            foreach ($daySlotsCountQuery as $daySlot) {
+                /** @var ScheduleDetails $daySlot */
+                $daySlotsCountArr[$daySlot->month_day] = ! empty($daySlotsCountArr[$daySlot->month_day]) ? $daySlotsCountArr[$daySlot->month_day] + $daySlot->count : $daySlot->count;
+            }
+
+            $daySlotsStatusesCountQuery = clone $basicScheduleByMonthDaysQuery;
+            $daySlotsStatusesCountQuery = $daySlotsStatusesCountQuery->select(
+                DB::raw('count(id) as count, DATE_FORMAT(date_time_from, "%Y-%m-%d") AS month_day, status')
+            )->groupBy(['month_day', 'status'])->get();
+
+            $monthDays = $monthDaysQuery->get();
+
+            $result = $monthDays->mapWithKeys(function ($monthDay) use ($data, $daySlotsStatusesCountQuery, $daySlotsCountArr) {
+                $daySchedules = ScheduleDetails::with(['bookings', 'schedule.facility.company'])
+                    ->where(DB::raw('DATE_FORMAT(date_time_from, "%Y-%m-%d")'), $monthDay->month_day)
+                    ->when($data->company_id, function (Builder $query) use ($data) {
+                        $query->whereHas('schedule', function (Builder $query) use ($data) {
+                            $query->whereHas('facility', function (Builder $query) use ($data) {
+                                $query->where('company_id', $data->company_id);
+                            });
+                        });
+                    })
+                    ->get();
+
+                $pendingCount = 0;
+                $availableCount = 0;
+                $bookedCount = 0;
+
+                foreach ($daySlotsStatusesCountQuery as $dayStatus) {
+                    /** @var ScheduleDetails $dayStatus */
+                    if ($dayStatus->month_day == $monthDay->month_day) {
+                        if ($dayStatus->status == ScheduleDetailsStatus::Pending) {
+                            $pendingCount = $dayStatus->count;
+                        } elseif ($dayStatus->status == ScheduleDetailsStatus::Booked) {
+                            $bookedCount = $dayStatus->count;
+                        } elseif ($dayStatus->status == ScheduleDetailsStatus::Available) {
+                            $availableCount = $dayStatus->count;
+                        }
+                    }
+                }
+
+                $hasAvailableSlot = $availableCount > 0;
+                $hasPendingSlot = $pendingCount > 0;
+                $hasBookedSlot = $bookedCount > 0;
+                $dayIsFullyBooked = $bookedCount == $daySlotsCountArr[$monthDay->month_day];
+
+                $dayScheduleData = $daySchedules->map(function ($daySchedule) {
+                    /** @var ScheduleDetails $daySchedule */
+
+                    return [
+                        'slot_uuid' => $daySchedule->uuid,
+                        'date_time_from' => $daySchedule->date_time_from,
+                        'date_time_to' => $daySchedule->date_time_to,
+                        'bookings' => $daySchedule->bookings,
+                        'facility' => $daySchedule->schedule->facility->withoutRelations('company'),
+                        'company' => $daySchedule->schedule->facility->company,
+                    ];
+                });
+
+                return [$monthDay->month_day => array_merge($dayScheduleData->toArray(), [
+                    'hasAvailableSlot' => $hasAvailableSlot,
+                    'hasPendingSlot' => $hasPendingSlot,
+                    'hasBookedSlot' => $hasBookedSlot,
+                    'dayIsFullyBooked' => $dayIsFullyBooked,
+                ])];
+            });
+
+            return $result;
+        } catch (Exception $exception) {
+            Log::error('CompanyFacilityScheduleService::getSchedule: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public function store(CreateCompanyFacilityScheduleRequest $data): ScheduleDetails
     {
         try {
@@ -264,5 +360,32 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
 
             throw $exception;
         }
+    }
+
+    protected function scheduleByMonthDaysQuery(GetScheduleRequest $data): Builder
+    {
+        $monthDaysQuery = ScheduleDetails::query();
+
+        $monthDaysQuery->when($data->year_month, function (Builder $query) use ($data) {
+            $query->where(DB::raw('DATE_FORMAT(date_time_from, "%Y-%m")'), '=', $data->year_month);
+        });
+
+        $monthDaysQuery->when($data->company_id, function (Builder $query) use ($data) {
+            $query->whereHas('schedule', function (Builder $query) use ($data) {
+                $query->whereHas('facility', function (Builder $query) use ($data) {
+                    $query->where('company_id', $data->company_id);
+                });
+            });
+        });
+
+        $monthDaysQuery->when($data->facility_id, function (Builder $query) use ($data) {
+            $query->whereHas('schedule', function (Builder $query) use ($data) {
+                $query->whereHas('facility', function (Builder $query) use ($data) {
+                    $query->where('id', $data->facility_id);
+                });
+            });
+        });
+
+        return $monthDaysQuery;
     }
 }
