@@ -39,6 +39,7 @@ export enum Screens {
     Signup = "Signup",
     Login = "Login",
     Search = "Search",
+    UserBooking = "UserBooking",
 }
 
 export enum BookingStatus {

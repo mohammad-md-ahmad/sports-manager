@@ -23,7 +23,7 @@ class ScheduleService extends AxiosService {
     }
 
     async getFacilitySchedule(data: Object) {
-        return this.get(`/schedules/facility-schedule`);
+        return this.get(`/schedules/facility-schedule?${this.objectToQueryParams(data)}`);
     }
 
 }

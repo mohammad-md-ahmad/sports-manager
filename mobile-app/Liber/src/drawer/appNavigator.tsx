@@ -20,6 +20,7 @@ import FacilityView from '../facilities/facilityView';
 import { getUserData } from '../../helpers/userDataManage';
 import ScheduleForm from '../schedule/scheduleForm';
 import Search from '../search/search';
+import UserBooking from '../booking/userBooking';
 
 const Stack = createStackNavigator();
 
@@ -168,6 +169,8 @@ const AppNavigator = () => {
 
                 <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
                 <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />
+
+                <Stack.Screen name={Screens.UserBooking} options={{ title: 'UserBooking' }} component={UserBooking} />
 
                 <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
 

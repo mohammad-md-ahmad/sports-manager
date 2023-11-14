@@ -116,6 +116,22 @@ export default function DrawerContent(props: any): React.JSX.Element {
                         onPress={() => navigateTo(Screens.Calendar)}
                         style={currentScreen === Screens.Calendar && styles.activeDrawerItem}
                     />
+
+                    {userData?.type == UserType.CustomerUser ?
+                        <DrawerItem
+                            label="Booking"
+                            icon={({ focused, color, size }) => (
+                                <Icon
+                                    name="scoreboard" // Replace with your desired icon name
+                                    type="material"
+                                    size={25}
+                                />
+                            )}
+                            onPress={() => navigateTo(Screens.UserBooking)}
+                            style={currentScreen === Screens.UserBooking && styles.activeDrawerItem}
+                        /> : <></>
+                    }
+
                     <DrawerItem
                         label="About"
                         icon={({ focused, color, size }) => (

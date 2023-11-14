@@ -26,7 +26,7 @@ export default function UserDashboard(): React.JSX.Element {
 
             facilityService.list()
                 .then((response) => {
-                    setFacilities(response.data?.data);
+                    setFacilities(response.data?.data.data);
                 }).catch((error) => {
                 });
 

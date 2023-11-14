@@ -1,7 +1,6 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
-import { Agenda, DateData, AgendaEntry } from 'react-native-calendars';
-import calendarIDs from './calendarIDs';
+import { Agenda, DateData, AgendaEntry, Calendar } from 'react-native-calendars';
 import { useFocusEffect } from '@react-navigation/native';
 import ScheduleService from '../../api/ScheduleService';
 import colors from '../../styles/colors';
@@ -13,7 +12,7 @@ import BookingService from '../../api/BookingService';
 
 
 
-export default function AgendaScreen(): React.JSX.Element {
+export default function UserBooking(): React.JSX.Element {
 
     const scheduleService = new ScheduleService();
     const bookingService = new BookingService();
@@ -121,7 +120,7 @@ export default function AgendaScreen(): React.JSX.Element {
 
     const loadData = () => {
         setItems({});
-        scheduleService.getCompanySchedule({})
+        scheduleService.getFacilitySchedule({ "facility_uuid": "dacfea99-f3d6-4c12-bc98-eaa1ddb024c1" })
             .then((response) => {
                 let result = {};
                 for (const key in response.data?.data) {
@@ -276,7 +275,7 @@ export default function AgendaScreen(): React.JSX.Element {
 
     return (
         <>
-            <Agenda
+            <Calendar
                 items={items}
                 loadItemsForMonth={loadItems}
                 selected={formattedDate}
