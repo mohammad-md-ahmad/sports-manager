@@ -7,11 +7,10 @@ import ScheduleService from '../../api/ScheduleService';
 import colors from '../../styles/colors';
 import { Button } from 'react-native-elements';
 import globalStyles from '../../styles/styles';
-import { BookingStatus, UserType } from '../../helpers/constants';
+import { BookingStatus, SlotStatus, UserType } from '../../helpers/constants';
 import { getUserData } from '../../helpers/userDataManage';
 import BookingService from '../../api/BookingService';
-
-
+import { date } from 'yup';
 
 export default function AgendaScreen(): React.JSX.Element {
 
@@ -19,8 +18,6 @@ export default function AgendaScreen(): React.JSX.Element {
     const bookingService = new BookingService();
     const [items, setItems] = useState(undefined);
     const [itemsOptions, setItemsOptions] = useState({});
-
-
 
     const formatDate = (date) => {
         var yyyy = date.getFullYear();
@@ -30,6 +27,7 @@ export default function AgendaScreen(): React.JSX.Element {
     }
 
     const currentDate = new Date();
+    let currentMonth = getMonth(currentDate);
     const formattedDate = formatDate(currentDate);
 
     // Calculate the date 30 days ago
@@ -50,50 +48,46 @@ export default function AgendaScreen(): React.JSX.Element {
 
     const [userData, setUserData] = useState({});
 
-    const buildItemsOptions = (items) => {
-        let options = {}
-        for (const key in items) {
-            options[key] = { dots: [] }
+    const buildItemsOptions = (data) => {
+        let days = {};
+        let options = {};
 
-            let currentItem = items[key];
-            let dayIsFullyBooked = true;
-            let hasBookedSlot = false;
-            let hasAvailableSlot = false;
-            let hasPendeingSlot = false;
+        for (const day in data) {
+            let daySlots = data[day]?.data;
+            let flags = data[day]?.flags;
 
-            currentItem.forEach(slot => {
-                dayIsFullyBooked = dayIsFullyBooked && slot.status == BookingStatus.Booked;
-                hasBookedSlot = hasBookedSlot || slot.status == BookingStatus.Booked;
-                hasAvailableSlot = hasAvailableSlot || slot.status == BookingStatus.Available;
-                hasPendeingSlot = hasPendeingSlot || slot.status == BookingStatus.Pending;
-            });
+            days[day] = daySlots;
+            options[day] = { dots: [] }
+
+            let dayIsFullyBooked = flags?.dayIsFullyBooked;
+            let hasBookedSlot = flags?.hasBookedSlot;
+            let hasAvailableSlot = flags?.hasAvailableSlot;
+            let hasPendingSlot = flags?.hasPendingSlot;
 
             if (dayIsFullyBooked) {
-                options[key] = {
-                    disabled: userData?.type == UserType.CompanyUser ? false : true,
+                options[day] = {
+                    disabled: userData?.type == UserType.CustomerUser,
                     dots: [{ color: colors.SecondaryRed }]
                 }
             }
             else {
                 if (hasAvailableSlot) {
-                    options[key].dots.push({ color: colors.PrimaryGreen, selectedDotColor: colors.White })
+                    options[day].dots.push({ color: colors.PrimaryGreen, selectedDotColor: colors.White })
                 }
 
-                if (userData?.type == UserType.CompanyUser) {
-                    if (hasPendeingSlot) {
-                        options[key].dots.push({ color: colors.Orange })
-                    }
+                if (hasPendingSlot) {
+                    options[day].dots.push({ color: colors.Orange })
+                }
 
-                    if (hasBookedSlot) {
-                        options[key].dots.push({ color: colors.SecondaryRed })
-                    }
+                if (hasBookedSlot) {
+                    options[day].dots.push({ color: colors.SecondaryRed })
                 }
             }
         }
 
+        setItems(days);
         setItemsOptions(options);
-    }
-
+    };
 
     useFocusEffect(
         React.useCallback(() => {
@@ -108,38 +102,61 @@ export default function AgendaScreen(): React.JSX.Element {
     );
 
     useEffect(() => {
-        if (userData.type)
+        if (userData.type) {
             loadData();
+        }
     }, [userData]);
 
-
     const loadItems = (day: DateData) => {
+        let month;
+
         if (items && !items[day.dateString]) {
             items[day.dateString] = [];
+
+            if (!month) {
+                month = day.dateString;
+            }
         }
+
+        currentMonth = day.year + '-' + String(day.month).padStart(2, '0');
+
+        // loadData(currentMonth);
     };
 
-    const loadData = () => {
-        setItems({});
-        scheduleService.getCompanySchedule({})
-            .then((response) => {
-                let result = {};
-                for (const key in response.data?.data) {
-                    result[key] = [response.data?.data[key], response.data?.data[key], response.data?.data[key]];
-                }
-                buildItemsOptions(result);
-                setItems(result);
+    function getMonth(date) {
+        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+    }
 
-                // buildItemsOptions(response.data?.data);
+    const loadData = (month) => {
+        month = month || currentMonth;
+
+        setItems({});
+        setItemsOptions({});
+
+        scheduleService.getSchedule({
+            'year_month': month
+        })
+            .then((response) => {
+                // let result = {};
+
+                // for (const key in response.data?.data) {
+                //     result[key] = response.data?.data[key];
+                // }
+
+                // buildItemsOptions(result);
+                // setItems(result);
+
+                buildItemsOptions(response.data?.data);
                 // setItems(response.data?.data);
 
             }).catch((error) => {
+                console.log('error', error);
             });
     }
 
     const onBookPress = (reservation): void => {
 
-        bookingService.bookRequest({ schedule_details_uuid: reservation.uuid })
+        bookingService.bookRequest({ schedule_details_uuid: reservation.slot_uuid })
             .then((response) => {
                 console.log('booking', response)
                 loadData();
@@ -150,11 +167,11 @@ export default function AgendaScreen(): React.JSX.Element {
 
     const getStatusColor = (status: any): any => {
         switch (status) {
-            case BookingStatus.Available:
+            case SlotStatus.Available:
                 return colors.White
-            case BookingStatus.Pending:
+            case SlotStatus.Pending:
                 return colors.Orange
-            case BookingStatus.Booked:
+            case SlotStatus.Booked:
                 return colors.SecondaryRed
             default:
                 return colors.White
@@ -163,26 +180,66 @@ export default function AgendaScreen(): React.JSX.Element {
 
     const onApprovePress = (reservation: AgendaEntry): void => {
         console.log(reservation);
-        bookingService.bookApprove({ schedule_details_uuid: reservation.uuid })
+        bookingService.bookApprove({ uuid: reservation.uuid })
             .then((response) => {
                 loadData();
             }).catch((error) => {
                 console.log(error);
-            });
+            }).finally(() => {
+                closeModal();
+            })
     }
 
     const onDeclinePress = (reservation: AgendaEntry): void => {
-        bookingService.bookDecline({ schedule_details_uuid: reservation.uuid })
+        bookingService.bookDecline({ uuid: reservation.uuid })
             .then((response) => {
                 console.log('onDeclinePress', response)
                 loadData();
             }).catch((error) => {
                 console.log(error);
-            });
+            }).finally(() => {
+                closeModal();
+            })
     }
 
-    const onViewPress = (reservation: AgendaEntry): void => {
-        toggleModal(reservation);
+    const onViewPress = (slot, reservation: AgendaEntry): void => {
+        toggleModal(slot, reservation);
+    }
+
+    const buildBookingBtns = (slot) => {
+        let btns = slot?.bookings.map(booking => {
+            if (booking?.status === BookingStatus.Pending) {
+                return <View style={styles.buttonRow}>
+                    <Button
+                        onPress={() => onApprovePress(booking)}
+                        title="Approve"
+                        buttonStyle={styles.approveButton}
+                    />
+                    <Button
+                        onPress={() => onDeclinePress(booking)}
+                        title="Reject"
+                        buttonStyle={styles.rejectButton}
+                    />
+                    <Button
+                        onPress={() => onViewPress(slot, booking)}
+                        title="View"
+                        buttonStyle={styles.viewButton}
+                    />
+                </View>
+            } else if (booking?.status === BookingStatus.Pending) {
+                return <View style={styles.buttonRow}>
+                    <Button
+                        onPress={() => onViewPress(slot, booking)}
+                        title="View"
+                        buttonStyle={styles.viewButton}
+                    />
+                </View>
+            }
+
+            return null;
+        });
+
+        return btns;
     }
 
     const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
@@ -193,9 +250,9 @@ export default function AgendaScreen(): React.JSX.Element {
             <View style={[styles.circle, { backgroundColor: color }]}></View>
         );
 
-        if (userData?.type == UserType.CustomerUser && reservation.status != BookingStatus.Available) {
-            return <></>
-        }
+        // if (userData?.type == UserType.CustomerUser && reservation.status != SlotStatus.Available) {
+        //     return <></>
+        // }
 
         return (
             <TouchableOpacity
@@ -212,35 +269,18 @@ export default function AgendaScreen(): React.JSX.Element {
                 <View style={styles.row}>
                     <View style={styles.rightContent}>
                         {
-                            userData?.type == UserType.CustomerUser ? <Button
+                            userData?.type == UserType.CustomerUser ? reservation?.status != SlotStatus.Booked ? <Button
                                 onPress={() => onBookPress(reservation)}
                                 title="Book"
                                 buttonStyle={styles.button}
-                            /> :
-                                reservation.status == BookingStatus.Pending ?
-                                    <View style={styles.buttonRow}>
-                                        <Button
-                                            onPress={() => onApprovePress(reservation)}
-                                            title="Approve"
-                                            buttonStyle={styles.approveButton}
-                                        />
-                                        <Button
-                                            onPress={() => onDeclinePress(reservation)}
-                                            title="Reject"
-                                            buttonStyle={styles.rejectButton}
-                                        />
-                                        <Button
-                                            onPress={() => onViewPress(reservation)}
-                                            title="View"
-                                            buttonStyle={styles.viewButton}
-                                        />
-                                    </View>
-                                    : <></>
+                            /> : <></> :
+                                reservation?.bookings?.length > 0 ?
+                                    buildBookingBtns(reservation) : <></>
                         }
                     </View>
                 </View>
 
-            </TouchableOpacity>
+            </TouchableOpacity >
         );
     };
 
@@ -262,11 +302,12 @@ export default function AgendaScreen(): React.JSX.Element {
     }
 
     const [isModalVisible, setModalVisible] = useState(false);
-    const [currentReservation, setCurrentReservation] = useState({});
+    const [currentSlot, setCurrentSlot] = useState({});
+    const [currentBooking, setCurrentBooking] = useState({});
 
-
-    const toggleModal = (reservation = {}) => {
-        setCurrentReservation(reservation);
+    const toggleModal = (slot = {}, booking = {}) => {
+        setCurrentSlot(slot);
+        setCurrentBooking(booking);
         setModalVisible(!isModalVisible);
     };
 
@@ -316,27 +357,30 @@ export default function AgendaScreen(): React.JSX.Element {
                 >
                     <View style={styles.modalContent}>
                         <View>
-                            <Text>{currentReservation?.date_time_from?.split(' ')[0]}</Text>
-                            <Text>{currentReservation?.date_time_from?.split(' ')[1] + " - " + currentReservation?.date_time_to?.split(' ')[1]}</Text>
+                            <Text>{currentSlot?.date_time_from?.split(' ')[0]}</Text>
+                            <Text>{currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
                         </View>
-                        <View style={styles.buttonRow}>
-                            <Button
-                                onPress={() => onApprovePress(currentReservation)}
-                                title="Approve"
-                                buttonStyle={styles.approveButton}
-                            />
-                            <Button
-                                onPress={() => onDeclinePress(currentReservation)}
-                                title="Reject"
-                                buttonStyle={styles.rejectButton}
-                            />
-                        </View>
+                        {
+                            currentBooking?.status == BookingStatus.Pending ?
+                                <View style={styles.buttonRow}>
+                                    <Button
+                                        onPress={() => onApprovePress(currentBooking)}
+                                        title="Approve"
+                                        buttonStyle={styles.approveButton}
+                                    />
+                                    <Button
+                                        onPress={() => onDeclinePress(currentBooking)}
+                                        title="Reject"
+                                        buttonStyle={styles.rejectButton}
+                                    />
+                                </View> : <></>
+                        }
+
                     </View>
                 </TouchableOpacity>
             </Modal>
         </>
     );
-
 }
 
 const styles = StyleSheet.create({
@@ -403,7 +447,6 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
 
-
     container: {
         flex: 1,
         justifyContent: 'center',
@@ -423,6 +466,4 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'center',
     },
-
 });
-

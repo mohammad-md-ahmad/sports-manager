@@ -15,13 +15,13 @@ class BookingService extends AxiosService {
     }
 
     async bookApprove(data: Object) {
-        return this.post(`/bookings/106e6969-12c1-4539-a07f-6588eb106cf0/approve`, {});
-        //return this.post(`/bookings/${data.schedule_details_uuid}/approve`, {});
+        // return this.post(`/bookings/106e6969-12c1-4539-a07f-6588eb106cf0/approve`, {});
+        return this.post(`/bookings/${data.uuid}/approve`, {});
     }
 
     async bookDecline(data: Object) {
-        return this.post(`/bookings/7d0792db-b87e-4518-a6b0-a3de98534d1e/decline`, {});
-        //return this.post(`/bookings/${data.schedule_details_uuid}/decline`, {});
+        // return this.post(`/bookings/7d0792db-b87e-4518-a6b0-a3de98534d1e/decline`, {});
+        return this.post(`/bookings/${data.uuid}/decline`, {});
     }
 
 }

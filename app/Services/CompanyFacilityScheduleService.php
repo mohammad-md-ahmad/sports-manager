@@ -225,8 +225,17 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                                 $query->where('company_id', $data->company_id);
                             });
                         });
-                    })
-                    ->get();
+                    })->when($data->facility_id, function (Builder $query) use ($data) {
+                        $query->whereHas('schedule', function (Builder $query) use ($data) {
+                            $query->whereHas('facility', function (Builder $query) use ($data) {
+                                $query->where('id', $data->facility_id);
+                            });
+                        });
+                    })->when($data->customer_user_id, function (Builder $query) use ($data) {
+                        $query->whereHas('bookings', function (Builder $query) use ($data) {
+                            $query->where('customer_user_id', $data->customer_user_id);
+                        });
+                    })->get();
 
                 $pendingCount = 0;
                 $availableCount = 0;
@@ -248,7 +257,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                 $hasAvailableSlot = $availableCount > 0;
                 $hasPendingSlot = $pendingCount > 0;
                 $hasBookedSlot = $bookedCount > 0;
-                $dayIsFullyBooked = $bookedCount == $daySlotsCountArr[$monthDay->month_day];
+                $dayIsFullyBooked = $bookedCount == ($daySlotsCountArr[$monthDay->month_day] ?? 0);
 
                 $dayScheduleData = $daySchedules->map(function ($daySchedule) {
                     /** @var ScheduleDetails $daySchedule */
@@ -257,18 +266,24 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                         'slot_uuid' => $daySchedule->uuid,
                         'date_time_from' => $daySchedule->date_time_from,
                         'date_time_to' => $daySchedule->date_time_to,
+                        'status' => $daySchedule->status->name,
                         'bookings' => $daySchedule->bookings,
                         'facility' => $daySchedule->schedule->facility->withoutRelations('company'),
                         'company' => $daySchedule->schedule->facility->company,
                     ];
                 });
 
-                return [$monthDay->month_day => array_merge($dayScheduleData->toArray(), [
-                    'hasAvailableSlot' => $hasAvailableSlot,
-                    'hasPendingSlot' => $hasPendingSlot,
-                    'hasBookedSlot' => $hasBookedSlot,
-                    'dayIsFullyBooked' => $dayIsFullyBooked,
-                ])];
+                $result = [
+                    'data' => $dayScheduleData->toArray(),
+                    'flags' => [
+                        'hasAvailableSlot' => $hasAvailableSlot,
+                        'hasPendingSlot' => $hasPendingSlot,
+                        'hasBookedSlot' => $hasBookedSlot,
+                        'dayIsFullyBooked' => $dayIsFullyBooked,
+                    ],
+                ];
+
+                return [$monthDay->month_day => $result];
             });
 
             return $result;
@@ -383,6 +398,12 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                 $query->whereHas('facility', function (Builder $query) use ($data) {
                     $query->where('id', $data->facility_id);
                 });
+            });
+        });
+
+        $monthDaysQuery->when($data->customer_user_id, function (Builder $query) use ($data) {
+            $query->whereHas('bookings', function (Builder $query) use ($data) {
+                $query->where('customer_user_id', $data->customer_user_id);
             });
         });
 

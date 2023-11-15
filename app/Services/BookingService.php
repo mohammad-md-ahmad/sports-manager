@@ -114,7 +114,7 @@ class BookingService implements BookingServiceInterface
 
             // if there are no other booking requests, the status should be Available, otherwise => Pending
             $booking->scheduleDetails->update([
-                'status' => $booking->scheduleDetails->bookings->count() > 0 ? ScheduleDetailsStatus::Pending->name : ScheduleDetailsStatus::Available->name,
+                'status' => $booking->scheduleDetails->bookings->where('status', BookingStatus::Pending->name)->count() > 0 ? ScheduleDetailsStatus::Pending->name : ScheduleDetailsStatus::Available->name,
             ]);
 
             DB::commit();
