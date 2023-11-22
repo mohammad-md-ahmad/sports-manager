@@ -42,8 +42,8 @@ export default function UserBooking(): React.JSX.Element {
     var formattedThirtyDaysFromNow = formatDate(thirtyDaysFromNow);
 
 
-    const reservationsKeyExtractor = (item, index) => {
-        return `${item?.reservation?.day}${index}`;
+    const slotsKeyExtractor = (item, index) => {
+        return `${item?.slot?.day}${index}`;
     };
 
     const [userData, setUserData] = useState({});
@@ -162,9 +162,9 @@ export default function UserBooking(): React.JSX.Element {
             });
     }
 
-    const onBookPress = (reservation): void => {
+    const onBookPress = (slot): void => {
 
-        bookingService.bookRequest({ schedule_details_uuid: reservation.slot_uuid })
+        bookingService.bookRequest({ schedule_details_uuid: slot.slot_uuid })
             .then((response) => {
                 console.log('booking', response)
                 loadData();
@@ -186,9 +186,9 @@ export default function UserBooking(): React.JSX.Element {
         };
     }
 
-    const onApprovePress = (reservation: AgendaEntry): void => {
-        console.log(reservation);
-        bookingService.bookApprove({ uuid: reservation.uuid })
+    const onApprovePress = (slot: AgendaEntry): void => {
+        console.log(slot);
+        bookingService.bookApprove({ uuid: slot.uuid })
             .then((response) => {
                 loadData();
             }).catch((error) => {
@@ -198,8 +198,8 @@ export default function UserBooking(): React.JSX.Element {
             })
     }
 
-    const onDeclinePress = (reservation: AgendaEntry): void => {
-        bookingService.bookDecline({ uuid: reservation.uuid })
+    const onDeclinePress = (slot: AgendaEntry): void => {
+        bookingService.bookDecline({ uuid: slot.uuid })
             .then((response) => {
                 console.log('onDeclinePress', response)
                 loadData();
@@ -210,8 +210,8 @@ export default function UserBooking(): React.JSX.Element {
             })
     }
 
-    const onViewPress = (slot, reservation: AgendaEntry): void => {
-        toggleModal(slot, reservation);
+    const onViewPress = (slot, booking: AgendaEntry): void => {
+        toggleModal(slot, booking);
     }
 
     const buildBookingBtns = (slot) => {
@@ -250,7 +250,7 @@ export default function UserBooking(): React.JSX.Element {
         return btns;
     }
 
-    const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
+    const renderItem = (slot: AgendaEntry, isFirst: boolean) => {
         const fontSize = isFirst && false ? 16 : 14;
         const color = isFirst && false ? 'black' : '#43515c';
 
@@ -258,35 +258,43 @@ export default function UserBooking(): React.JSX.Element {
             <View style={[styles.circle, { backgroundColor: color }]}></View>
         );
 
-        // if (userData?.type == UserType.CustomerUser && reservation.status != SlotStatus.Available) {
+        // if (userData?.type == UserType.CustomerUser && slot.status != SlotStatus.Available) {
         //     return <></>
         // }
 
         return (
             <TouchableOpacity
-                style={[styles.item, { height: reservation.height }]}
-                onPress={() => Alert.alert(reservation.date_time_from)}
+                style={[styles.item, { height: slot.height }]}
+                onPress={() => toggleModal(slot, slot?.bookings)}
             >
+
                 <View style={styles.row}>
-                    <Text style={{ fontSize, color }}>{reservation.date_time_from.split(' ')[1] + " - " + reservation.date_time_to.split(' ')[1]}</Text>
+                    <Text style={{ fontSize, color }}>{slot?.company?.name}</Text>
                     <View style={styles.rightContent}>
-                        <StatusCircle color={getStatusColor(reservation.status)} />
+                        <StatusCircle color={getStatusColor(slot.status)} />
                     </View>
                 </View>
 
-                {/* <View style={styles.row}>
+
+                <View style={styles.row}>
+                    <Text style={{ fontSize, color }}>{slot?.facility?.name}</Text>
+                    <Text style={{ fontSize, color }}>{slot.date_time_from.split(' ')[1] + " - " + slot.date_time_to.split(' ')[1]}</Text>
+
+                </View>
+
+                <View style={styles.row}>
                     <View style={styles.rightContent}>
                         {
-                            userData?.type == UserType.CustomerUser ? reservation?.status != SlotStatus.Booked ? <Button
-                                onPress={() => onBookPress(reservation)}
-                                title="Book"
-                                buttonStyle={styles.button}
-                            /> : <></> :
-                                reservation?.bookings?.length > 0 ?
-                                    buildBookingBtns(reservation) : <></>
+                            userData?.type == UserType.CustomerUser ?
+                                <Button
+                                    onPress={() => onViewPress(slot, slot.booking)}
+                                    title="View"
+                                    buttonStyle={styles.viewButton}
+                                />
+                                : <></>
                         }
                     </View>
-                </View> */}
+                </View>
 
             </TouchableOpacity >
         );
@@ -350,7 +358,7 @@ export default function UserBooking(): React.JSX.Element {
                 disableAllTouchEventsForDisabledDays
                 minDate={formattedThirtyDaysAgo}
                 maxDate={formattedThirtyDaysFromNow}
-                reservationsKeyExtractor={reservationsKeyExtractor}
+                slotsKeyExtractor={slotsKeyExtractor}
             />
             <Modal
                 animationType="slide"
@@ -365,24 +373,25 @@ export default function UserBooking(): React.JSX.Element {
                 >
                     <View style={styles.modalContent}>
                         <View>
-                            <Text>{currentSlot?.date_time_from?.split(' ')[0]}</Text>
-                            <Text>{currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
+                            <View style={styles.row}>
+                                <Text>{currentSlot?.company?.name}</Text>
+                            </View>
+
+                            <View style={styles.row}>
+                                <Text >{currentSlot?.facility?.name}</Text>
+                                <Text >{currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
+
+                            </View>
+
                         </View>
-                        {
-                            currentBooking?.status == BookingStatus.Pending ?
-                                <View style={styles.buttonRow}>
-                                    <Button
-                                        onPress={() => onApprovePress(currentBooking)}
-                                        title="Approve"
-                                        buttonStyle={styles.approveButton}
-                                    />
-                                    <Button
-                                        onPress={() => onDeclinePress(currentBooking)}
-                                        title="Reject"
-                                        buttonStyle={styles.rejectButton}
-                                    />
-                                </View> : <></>
-                        }
+
+                        <View>
+                            <Button
+                                onPress={() => onViewPress(currentSlot, currentSlot?.booking)}
+                                title="View"
+                                buttonStyle={styles.viewButton}
+                            />
+                        </View>
 
                     </View>
                 </TouchableOpacity>

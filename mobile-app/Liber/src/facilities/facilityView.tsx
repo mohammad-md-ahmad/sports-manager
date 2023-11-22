@@ -15,30 +15,32 @@ import colors from "../../styles/colors";
 import Swiper from "react-native-swiper";
 
 function FacilityView({ route }): React.JSX.Element {
-    const { facility } = route.params;
+    const { facility } = route?.params ?? {};
 
     return (
         <View style={styles.containerView}>
             <View style={styles.container}>
-                <View style={styles.swiperContainer}>
-                    <Swiper style={styles.wrapper} showsButtons={true}>
-                        {facility.gallery?.map((galleryItem, index) => (
-                            <View style={styles.slide}>
-                                <Image
-                                    source={galleryItem.image ? { uri: galleryItem.image } : require('./../../assets/images/liber_logo.png')}
-                                    style={styles.image}
-                                />
-                            </View>
-                        ))}
-
-
-                    </Swiper>
-                </View>
+                {facility?.gallery ?
+                    <View style={styles.swiperContainer}>
+                        <Swiper style={styles.wrapper} showsButtons={true}>
+                            {
+                                facility?.gallery?.map((galleryItem, index) => (
+                                    <View style={styles.slide}>
+                                        <Image
+                                            source={galleryItem.image ? { uri: galleryItem.image } : require('./../../assets/images/liber_logo.png')}
+                                            style={styles.image}
+                                        />
+                                    </View>
+                                ))
+                            }
+                        </Swiper>
+                    </View> : <></>
+                }
                 <View style={styles.userInfo}>
-                    <Text style={styles.name}>Name: {facility.name}</Text>
-                    <Text style={styles.subName}>Type: {facility.type}</Text>
-                    <Text style={styles.subName}>Length: {facility.details.length}</Text>
-                    <Text style={styles.subName}>Width: {facility.details.width}</Text>
+                    <Text style={styles.name}>Name: {facility?.name}</Text>
+                    <Text style={styles.subName}>Type: {facility?.type}</Text>
+                    <Text style={styles.subName}>Length: {facility?.details.length}</Text>
+                    <Text style={styles.subName}>Width: {facility?.details.width}</Text>
                 </View>
 
             </View>

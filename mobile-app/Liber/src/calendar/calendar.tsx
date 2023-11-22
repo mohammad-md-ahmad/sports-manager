@@ -2,18 +2,18 @@ import React, { Component, useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import { Agenda, DateData, AgendaEntry } from 'react-native-calendars';
 import calendarIDs from './calendarIDs';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import ScheduleService from '../../api/ScheduleService';
 import colors from '../../styles/colors';
 import { Button } from 'react-native-elements';
 import globalStyles from '../../styles/styles';
-import { BookingStatus, SlotStatus, UserType } from '../../helpers/constants';
+import { BookingStatus, Screens, SlotStatus, UserType } from '../../helpers/constants';
 import { getUserData } from '../../helpers/userDataManage';
 import BookingService from '../../api/BookingService';
 import { date } from 'yup';
 
 export default function AgendaScreen(): React.JSX.Element {
-
+    const navigation = useNavigation();
     const scheduleService = new ScheduleService();
     const bookingService = new BookingService();
     const [items, setItems] = useState(undefined);
@@ -246,6 +246,8 @@ export default function AgendaScreen(): React.JSX.Element {
         const fontSize = isFirst && false ? 16 : 14;
         const color = isFirst && false ? 'black' : '#43515c';
 
+        //console.log(reservation);
+
         const StatusCircle = ({ color }) => (
             <View style={[styles.circle, { backgroundColor: color }]}></View>
         );
@@ -257,13 +259,21 @@ export default function AgendaScreen(): React.JSX.Element {
         return (
             <TouchableOpacity
                 style={[styles.item, { height: reservation.height }]}
-                onPress={() => Alert.alert(reservation.date_time_from)}
+                onPress={() => {
+                    console.log('reservation?.facility', reservation?.facility)
+                    navigation.navigate(Screens.FacilityView, { 'facility': reservation?.facility })
+                }}
             >
                 <View style={styles.row}>
-                    <Text style={{ fontSize, color }}>{reservation.date_time_from.split(' ')[1] + " - " + reservation.date_time_to.split(' ')[1]}</Text>
+                    <Text style={{ fontSize, color }}>{reservation?.company?.name}</Text>
                     <View style={styles.rightContent}>
                         <StatusCircle color={getStatusColor(reservation.status)} />
                     </View>
+                </View>
+
+                <View style={styles.row}>
+                    <Text style={{ fontSize, color }}>{reservation?.facility?.name}</Text>
+                    <Text style={{ fontSize, color }}>{reservation.date_time_from.split(' ')[1] + " - " + reservation.date_time_to.split(' ')[1]}</Text>
                 </View>
 
                 <View style={styles.row}>

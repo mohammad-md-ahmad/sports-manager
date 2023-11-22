@@ -1,7 +1,7 @@
 const Constants = {
     //apiUrl: 'http://192.168.0.105:81/api',
-    apiUrl: 'http://192.168.1.33:81/api', // Mohammad A. local server
-    // apiUrl: 'https://liber.quad-bh.com/api',
+    //apiUrl: 'http://192.168.1.33:81/api', // Mohammad A. local server
+     apiUrl: 'https://liber.quad-bh.com/api',
     //assetsUrl: 'http://192.168.0.105:81/storage',
     assetsUrl: 'https://liber.quad-bh.com/storage',
     imagesUrl: 'https://liber.quad-bh.com/files/images',

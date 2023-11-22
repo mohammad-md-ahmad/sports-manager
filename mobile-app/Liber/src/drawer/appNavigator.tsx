@@ -60,50 +60,6 @@ const AppNavigator = () => {
         dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
     }, [navigator.getState().routes[0].state?.index])
 
-    let content;
-    switch (currentScreen) {
-        case Screens.Facilities:
-            content =
-                <TouchableOpacity
-                    onPress={() => onAddFacilityPress()}>
-                    <View style={{ margin: 15 }}>
-                        <Icon
-                            name="add" // Replace with your desired icon name
-                            type="material"
-                            size={25}
-
-                        />
-                    </View>
-                </TouchableOpacity>
-            break;
-        case Screens.FacilityView:
-            content =
-                <TouchableOpacity
-                    onPress={() => onScheduleFormPress()}>
-                    <View style={{ margin: 15 }}>
-                        <Icon
-                            name="edit" // Replace with your desired icon name
-                            type="material"
-                            size={25}
-
-                        />
-                    </View>
-                </TouchableOpacity>
-            break;
-        default:
-            content =
-                <></>
-        // <TouchableOpacity
-        //     onPress={() => toggleSearch()}>
-        //     <View style={{ margin: 15 }}>
-        //         <Icon
-        //             name="search" // Replace with your desired icon name
-        //             type="material"
-        //             size={25}
-        //         />
-        //     </View>
-        // </TouchableOpacity>
-    }
 
     const [userData, setUserData] = useState({});
 
@@ -112,6 +68,54 @@ const AppNavigator = () => {
             setUserData(data === null ? null : JSON.parse(data));
         });
     }, []);
+
+    let content;
+    useEffect(() => {
+        if (userData.type && userData.type == UserType.CompanyUser)
+            switch (currentScreen) {
+                case Screens.Facilities:
+                    content =
+                        <TouchableOpacity
+                            onPress={() => onAddFacilityPress()}>
+                            <View style={{ margin: 15 }}>
+                                <Icon
+                                    name="add" // Replace with your desired icon name
+                                    type="material"
+                                    size={25}
+
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    break;
+                case Screens.FacilityView:
+                    content =
+                        <TouchableOpacity
+                            onPress={() => onScheduleFormPress()}>
+                            <View style={{ margin: 15 }}>
+                                <Icon
+                                    name="edit" // Replace with your desired icon name
+                                    type="material"
+                                    size={25}
+
+                                />
+                            </View>
+                        </TouchableOpacity>
+                    break;
+                default:
+                    content =
+                        <></>
+                // <TouchableOpacity
+                //     onPress={() => toggleSearch()}>
+                //     <View style={{ margin: 15 }}>
+                //         <Icon
+                //             name="search" // Replace with your desired icon name
+                //             type="material"
+                //             size={25}
+                //         />
+                //     </View>
+                // </TouchableOpacity>
+            }
+    }, [userData])
 
     return (
         <Stack.Navigator>
