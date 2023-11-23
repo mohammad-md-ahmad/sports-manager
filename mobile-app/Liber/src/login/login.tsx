@@ -17,6 +17,8 @@ import globalStyles from "../../styles/styles";
 import { useNavigation } from "@react-navigation/native";
 import BaseComponent from "../common/baseComponent";
 import { Screens } from "../../helpers/constants";
+import { OneSignal } from "react-native-onesignal";
+import { getNotificatonToken } from "../../helpers/tokenManage";
 
 const styles = StyleSheet.create({
     containerView: {

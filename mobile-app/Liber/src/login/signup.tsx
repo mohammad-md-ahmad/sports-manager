@@ -16,6 +16,7 @@ import RegisterService from "../../api/RegisterService";
 import { useNavigation } from "@react-navigation/native";
 import { Screens, UserType } from "../../helpers/constants";
 import ErrorView from "../common/errorView";
+import { OneSignal } from "react-native-onesignal";
 
 interface UserFormData {
     first_name: string;
@@ -25,6 +26,7 @@ interface UserFormData {
     type: string;
     password: string;
     password_confirmation: string;
+    pushSubscriptionId: string;
 }
 
 
@@ -36,6 +38,7 @@ interface CompanyFormData {
         username: string;
         email: string;
         type: string;
+        pushSubscriptionId: string;
         password: string;
         password_confirmation: string;
     };
@@ -74,6 +77,7 @@ export default function Signup(): React.JSX.Element {
                 createUserRequest: {
                     ...formData,
                     type: UserType.CompanyUser,
+                    pushSubscriptionId: OneSignal.User.pushSubscription.getPushSubscriptionId()
                 }
             };
 
@@ -90,6 +94,7 @@ export default function Signup(): React.JSX.Element {
             const userFormData: UserFormData = {
                 ...formData,
                 type: UserType.CustomerUser,
+                pushSubscriptionId: OneSignal.User.pushSubscription.getPushSubscriptionId()
             };
 
             registerService.createUser(userFormData)

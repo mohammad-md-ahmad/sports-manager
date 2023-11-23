@@ -21,6 +21,8 @@ import { getUserData } from '../../helpers/userDataManage';
 import ScheduleForm from '../schedule/scheduleForm';
 import Search from '../search/search';
 import UserBooking from '../booking/userBooking';
+import { OneSignal } from 'react-native-onesignal';
+import { getNotificatonToken } from '../../helpers/tokenManage';
 
 const Stack = createStackNavigator();
 
@@ -66,6 +68,11 @@ const AppNavigator = () => {
     useEffect(() => {
         getUserData().then((data: string | null) => {
             setUserData(data === null ? null : JSON.parse(data));
+            if (data !== null) {
+                let user = JSON.parse(data);
+                OneSignal.User.addTags({ user_uuid: user.uuid, user_type: user.type });
+            }
+
         });
     }, []);
 
