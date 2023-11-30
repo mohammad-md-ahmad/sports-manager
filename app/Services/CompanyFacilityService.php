@@ -12,8 +12,10 @@ use App\Services\Data\Address\CreateAddressRequest;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
+use App\Services\Data\CompanyFacility\SearchCompanyFacilitiesRequest;
 use App\Services\Data\Gallery\CreateGalleryRequest;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -27,6 +29,9 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     ) {
     }
 
+    /**
+     * @throws Exception
+     */
     public function get(GetCompanyFacilityRequest $data): CompanyFacility
     {
         try {
@@ -44,12 +49,32 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     /**
      * @throws Exception
      */
-    public function getAll(): LengthAwarePaginator
+    public function getAll(SearchCompanyFacilitiesRequest $data): LengthAwarePaginator
     {
         try {
-            $facilities = CompanyFacility::with(['address', 'gallery'])->jsonPaginate();
+            $facilitiesQuery = CompanyFacility::query();
 
-            return $facilities;
+            $facilitiesQuery->when($data->name, function (Builder $query) use ($data) {
+                $query->where('name', 'LIKE', '%'.$data->name.'%');
+            });
+
+            $facilitiesQuery->when($data->type, function (Builder $query) use ($data) {
+                $query->where('type', $data->type);
+            });
+
+            $facilitiesQuery->when($data->country_id, function (Builder $query) use ($data) {
+                $query->whereHas('address', function (Builder $query) use ($data) {
+                    $query->where('country_id', $data->country_id);
+                });
+            });
+
+            $facilitiesQuery->when($data->city, function (Builder $query) use ($data) {
+                $query->whereHas('address', function (Builder $query) use ($data) {
+                    $query->where('city', 'LIKE', '%'.$data->city.'%');
+                });
+            });
+
+            return $facilitiesQuery->with(['address.country', 'gallery'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
 

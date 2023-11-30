@@ -6,6 +6,7 @@ use App\Models\CompanyFacility;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
+use App\Services\Data\CompanyFacility\SearchCompanyFacilitiesRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -13,7 +14,7 @@ interface CompanyFacilityServiceInterface
 {
     public function get(GetCompanyFacilityRequest $data): CompanyFacility;
 
-    public function getAll(): LengthAwarePaginator;
+    public function getAll(SearchCompanyFacilitiesRequest $data): LengthAwarePaginator;
 
     public function getAllByCompany(GetCompanyFacilitiesRequest $data): Collection;
 

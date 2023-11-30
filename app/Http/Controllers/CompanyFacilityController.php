@@ -8,6 +8,7 @@ use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
+use App\Services\Data\CompanyFacility\SearchCompanyFacilitiesRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -37,10 +38,10 @@ class CompanyFacilityController extends Controller
         }
     }
 
-    public function getAll(Request $request): JsonResponse
+    public function getAll(SearchCompanyFacilitiesRequest $request): JsonResponse
     {
         try {
-            $data = $this->companyFacilityService->getAll();
+            $data = $this->companyFacilityService->getAll($request);
 
             return response()->json([
                 'message' => __('Facilities has been retrieved successfully.'),
