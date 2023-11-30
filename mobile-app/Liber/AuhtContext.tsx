@@ -1,8 +1,9 @@
 // AuthContext.js
 import { createContext, useContext, useEffect, useState } from 'react';
 import { clearToken, getToken, storeToken } from './helpers/tokenManage';
-import { clearUserData, storeUserData } from './helpers/userDataManage';
+import { clearUserData, getUserData, storeUserData } from './helpers/userDataManage';
 import { clearCompanyData, storeCompanyData } from './helpers/companyDataManage';
+import { OneSignal } from 'react-native-onesignal';
 
 interface AuthContextType {
     isAuthenticated: boolean;
@@ -24,6 +25,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             .then(token => {
                 if (token) {
                     // Token found, user is authenticated
+                    getUserData().then((data: string | null) => {
+                        let user = JSON.parse(data);
+                        OneSignal.login(user?.uuid);
+                    });
+
                     setIsAuthenticated(true);
                 } else {
                     // No token found, user is not authenticated
@@ -38,6 +44,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const login = async (data: Object) => {
         // Implement your login logic here, and set isAuthenticated to true upon success
         if (data.token) {
+            OneSignal.login(data?.user?.uuid);
             await storeUserData(data.user);
             if (data.company)
                 await storeCompanyData(data.company);
@@ -52,6 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await clearToken();
         await clearCompanyData();
         await clearUserData();
+        OneSignal.logout();
         setIsAuthenticated(false);
     };
 

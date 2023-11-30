@@ -12,7 +12,8 @@ import { getUserData } from '../../helpers/userDataManage';
 import BookingService from '../../api/BookingService';
 import { date } from 'yup';
 
-export default function AgendaScreen(): React.JSX.Element {
+export default function AgendaScreen({ route }): React.JSX.Element {
+    const { facility } = route?.params ?? { facility: null };
     const navigation = useNavigation();
     const scheduleService = new ScheduleService();
     const bookingService = new BookingService();
@@ -133,9 +134,15 @@ export default function AgendaScreen(): React.JSX.Element {
         setItems({});
         setItemsOptions({});
 
-        scheduleService.getSchedule({
+        let params = {
             'year_month': month
-        })
+        }
+
+        if (facility) {
+            params['facility_uuid'] = facility.uuid;
+        }
+
+        scheduleService.getSchedule(params)
             .then((response) => {
                 // let result = {};
 
@@ -260,7 +267,6 @@ export default function AgendaScreen(): React.JSX.Element {
             <TouchableOpacity
                 style={[styles.item, { height: reservation.height }]}
                 onPress={() => {
-                    console.log('reservation?.facility', reservation?.facility)
                     navigation.navigate(Screens.FacilityView, { 'facility': reservation?.facility })
                 }}
             >

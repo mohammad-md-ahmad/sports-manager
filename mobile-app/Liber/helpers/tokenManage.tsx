@@ -1,6 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Constants from "./constants";
-import { OneSignal } from "react-native-onesignal";
 
 export const storeToken = async (token: any) => {
   await AsyncStorage.setItem(Constants.tokenKey, token);

@@ -87,8 +87,6 @@ function ScheduleForm({ route }): React.JSX.Element {
 
         formData['facility_uuid'] = facility.uuid;
 
-        console.log(formData);
-
         scheduleService.createBatch(formData).then((response) => {
             // Handle a successful API response
             navigator.navigate(Screens.facilityView);

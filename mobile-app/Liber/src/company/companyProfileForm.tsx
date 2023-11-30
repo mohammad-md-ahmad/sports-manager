@@ -1,16 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 
 import {
     Image,
-    Keyboard,
-    KeyboardAvoidingView,
-    Platform,
     ScrollView,
     StyleSheet,
     Text,
     TextInput,
     TouchableOpacity,
-    TouchableWithoutFeedback,
     View,
 } from "react-native";
 import globalStyles from "../../styles/styles";
