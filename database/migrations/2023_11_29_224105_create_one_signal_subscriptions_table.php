@@ -15,8 +15,8 @@ return new class extends Migration
         Schema::create('one_signal_subscriptions', function (Blueprint $table) {
             $table->id();
             $table->efficientUuid('uuid')->unique();
-            $table->unsignedBigInteger('subscription_id')->unique();
-            $table->unsignedBigInteger('one_signal_id')->unique();
+            $table->unsignedBigInteger('subscription_id')->unique()->nullable();
+            $table->unsignedBigInteger('one_signal_id')->unique()->nullable();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('status', 50)->default(OneSignalSubscriptionStatus::Active->name);

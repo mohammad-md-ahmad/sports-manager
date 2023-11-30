@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property string $id
  * @property Company $company
+ * @property Address $address
+ * @property Gallery $gallery
  */
 class CompanyFacility extends Model
 {
