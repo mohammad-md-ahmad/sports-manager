@@ -268,9 +268,11 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                         'date_time_to' => $daySchedule->date_time_to,
                         'status' => $daySchedule->status->name,
                         'bookings' => $daySchedule->bookings,
-                        'facility' => $daySchedule->schedule->facility->withoutRelations(),
+                        'facility' => array_merge(
+                            $daySchedule->schedule->facility->withoutRelations()->toArray(), [
+                                'gallery' => $daySchedule->schedule->facility->gallery,
+                            ]),
                         'company' => $daySchedule->schedule->facility->company,
-                        'gallery' => $daySchedule->schedule->facility->gallery,
                     ];
                 });
 
