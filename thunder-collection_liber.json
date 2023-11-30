@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2023-11-14T17:26:09.440Z",
+    "dateExported": "2023-11-30T00:55:22.975Z",
     "version": "1.1",
     "folders": [
         {
@@ -453,6 +453,29 @@
             "tests": []
         },
         {
+            "_id": "b41e48e1-d3bc-4ba6-b8c2-793fba92357d",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ddc0a8d2-2197-4b15-9d55-a27afb0584e6",
+            "name": "get all facilities - name filter",
+            "url": "{{host}}/facilities",
+            "method": "GET",
+            "sortNum": 45000,
+            "created": "2023-11-30T00:31:59.996Z",
+            "modified": "2023-11-30T00:35:58.114Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"facility\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
             "_id": "509aec64-2638-44d0-8eba-1203f85fb96d",
             "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
             "containerId": "4d009276-7d69-43e1-b7e5-38e1f4e3d0ab",
@@ -468,6 +491,29 @@
                 "type": "json",
                 "raw": "{\n  \"username\": \"super_admin\",\n  \"password\": \"P@ssw0rd\"\n}",
                 "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "23529d0b-dfe5-40a6-9a9f-f4061b6d5bc1",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ddc0a8d2-2197-4b15-9d55-a27afb0584e6",
+            "name": "get all facilities - country id filter",
+            "url": "{{host}}/facilities",
+            "method": "GET",
+            "sortNum": 55000,
+            "created": "2023-11-30T00:33:09.453Z",
+            "modified": "2023-11-30T00:35:21.772Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"country_uuid\": \"3a2147f5-0224-4866-8b10-38d7d8b32d61\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
             },
             "tests": []
         },
@@ -509,6 +555,29 @@
             "tests": []
         },
         {
+            "_id": "724c5bdb-67c6-4bbf-8527-3766d9ec00b0",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ddc0a8d2-2197-4b15-9d55-a27afb0584e6",
+            "name": "get all facilities - city filter",
+            "url": "{{host}}/facilities",
+            "method": "GET",
+            "sortNum": 65000,
+            "created": "2023-11-30T00:36:26.646Z",
+            "modified": "2023-11-30T00:36:50.623Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"city\": \"trrr\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
             "_id": "6234b8df-318c-4803-923a-776e0bc4c494",
             "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
             "containerId": "ba551953-2cf5-4fe5-8ecf-e8cdd1d0cd78",
@@ -523,6 +592,29 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"date_from\": \"2023-11-03\",\n  \"date_to\": \"2023-11-05\",\n  \"time_from\": \"12:00:00\",\n  \"time_to\": \"15:00:00\",\n  \"slot\": 60\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "832a6619-ef05-4c0f-9e70-a0bca90a17ec",
+            "colId": "9f736624-be7e-4565-b712-38d3072b78e3",
+            "containerId": "ddc0a8d2-2197-4b15-9d55-a27afb0584e6",
+            "name": "get all facilities - type filter",
+            "url": "{{host}}/facilities",
+            "method": "GET",
+            "sortNum": 75000,
+            "created": "2023-11-30T00:37:04.572Z",
+            "modified": "2023-11-30T00:52:02.627Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"type\": \"MINI_FOOTBALL_PLAYGROUND\"\n}",
                 "form": []
             },
             "auth": {
@@ -586,12 +678,12 @@
             "method": "GET",
             "sortNum": 95000,
             "created": "2023-11-12T11:18:41.519Z",
-            "modified": "2023-11-12T23:21:17.989Z",
+            "modified": "2023-11-15T22:54:54.142Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"company_uuid\": \"e99cf682-a1b8-44aa-9362-12bcb2edb6bd\",\n  \"year_month\": \"2023-11\"\n}",
+                "raw": "{\n  \"company_uuids\": \"e99cf682-a1b8-44aa-9362-12bcb2edb6bd\",\n  \"customer_user_uuid\": \"6a38ea05-64c8-4ad5-8d3f-83856332a6c5\",\n  \"year_month\": \"2023-11\"\n}",
                 "form": []
             },
             "auth": {
