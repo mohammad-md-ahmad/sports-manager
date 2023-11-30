@@ -22,7 +22,6 @@ import ScheduleForm from '../schedule/scheduleForm';
 import Search from '../search/search';
 import UserBooking from '../booking/userBooking';
 import { OneSignal } from 'react-native-onesignal';
-import { getNotificatonToken } from '../../helpers/tokenManage';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +55,13 @@ const AppNavigator = () => {
         navigator.navigate(Screens.ScheduleForm, { "facility": facility });
     }
 
+    function onCalendarViewPress(): void {
+        let routes = navigator.getState().routes[0].state.routes;
+        let { facility } = routes[routes.length - 1].params;
+
+        navigator.navigate(Screens.Calendar, { "facility": facility });
+    }
+
     useEffect(() => {
         let routesStack = navigator.getState().routes[0].state?.routes ?? [{ name: Screens.Dashboard }];
         let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
@@ -70,59 +76,77 @@ const AppNavigator = () => {
             setUserData(data === null ? null : JSON.parse(data));
             if (data !== null) {
                 let user = JSON.parse(data);
-                OneSignal.User.addTags({ user_uuid: user.uuid, user_type: user.type });
+                OneSignal.User.addTags({ user_type: user.type });
             }
 
         });
     }, []);
 
-    let content;
+    const [content, setContent] = useState(<></>);
+
     useEffect(() => {
-        if (userData.type && userData.type == UserType.CompanyUser)
-            switch (currentScreen) {
-                case Screens.Facilities:
-                    content =
-                        <TouchableOpacity
-                            onPress={() => onAddFacilityPress()}>
-                            <View style={{ margin: 15 }}>
-                                <Icon
-                                    name="add" // Replace with your desired icon name
-                                    type="material"
-                                    size={25}
+        console.log("userData", userData)
+        if (userData.type)
+            if (userData.type == UserType.CompanyUser) {
+                switch (currentScreen) {
+                    case Screens.Facilities:
+                        setContent(
+                            <TouchableOpacity
+                                onPress={() => onAddFacilityPress()}>
+                                <View style={{ margin: 15 }}>
+                                    <Icon
+                                        name="add" // Replace with your desired icon name
+                                        type="material"
+                                        size={25}
 
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    break;
-                case Screens.FacilityView:
-                    content =
-                        <TouchableOpacity
-                            onPress={() => onScheduleFormPress()}>
-                            <View style={{ margin: 15 }}>
-                                <Icon
-                                    name="edit" // Replace with your desired icon name
-                                    type="material"
-                                    size={25}
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                        break;
+                    case Screens.FacilityView:
+                        setContent(
+                            <TouchableOpacity
+                                onPress={() => onScheduleFormPress()}>
+                                <View style={{ margin: 15 }}>
+                                    <Icon
+                                        name="edit" // Replace with your desired icon name
+                                        type="material"
+                                        size={25}
 
-                                />
-                            </View>
-                        </TouchableOpacity>
-                    break;
-                default:
-                    content =
-                        <></>
-                // <TouchableOpacity
-                //     onPress={() => toggleSearch()}>
-                //     <View style={{ margin: 15 }}>
-                //         <Icon
-                //             name="search" // Replace with your desired icon name
-                //             type="material"
-                //             size={25}
-                //         />
-                //     </View>
-                // </TouchableOpacity>
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                        break;
+                    default:
+                        setContent(<></>)
+                }
+            } else {
+                switch (currentScreen) {
+                    case Screens.FacilityView:
+                        setContent(
+                            <TouchableOpacity
+                                onPress={() => onCalendarViewPress()}>
+                                <View style={{ margin: 15 }}>
+                                    <Icon
+                                        name="calendar-month" // Replace with your desired icon name
+                                        type="material"
+                                        size={25}
+
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                        break;
+                    default:
+                        setContent(<></>)
+                }
+            }else{
+                setContent(<></>)
             }
-    }, [userData])
+
+    }, [userData, currentScreen])
 
     return (
         <Stack.Navigator>

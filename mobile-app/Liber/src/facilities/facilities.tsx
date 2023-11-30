@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
     SafeAreaView,
@@ -6,10 +6,11 @@ import {
     VirtualizedList,
 } from "react-native";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Screens } from "../../helpers/constants";
+import { Screens, UserType } from "../../helpers/constants";
 import FacilityCard from "../common/facilityCard";
 import FacilityService from "../../api/FacilityService";
 import colors from "../../styles/colors";
+import { getUserData } from "../../helpers/userDataManage";
 
 function Facilities(): React.JSX.Element {
     const navigator = useNavigation();
@@ -20,18 +21,36 @@ function Facilities(): React.JSX.Element {
     }
 
     const [facilities, setFacilities] = useState([]);
+    const [userData, setUserData] = useState({});
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            facilityService.listByCompany()
-                .then((response) => {
-                    setFacilities(response.data?.data);
-                }).catch((error) => {
-                });
+            getUserData().then((data: string | null) => {
+                setUserData(data === null ? null : JSON.parse(data));
+            });
+
         }, [])
     );
+
+    useEffect(() => {
+        if (userData.type)
+            if (userData.type == UserType.CompanyUser) {
+                facilityService.listByCompany()
+                    .then((response) => {
+                        setFacilities(response.data?.data);
+                    }).catch((error) => {
+                    });
+            }
+            else {
+                facilityService.list()
+                    .then((response) => {
+                        setFacilities(response.data?.data);
+                    }).catch((error) => {
+                    });
+            }
+    }, [userData]);
 
     const getItem = (_data: unknown, index: number) => facilities[index];
     const getItemCount = (_data: unknown) => facilities.length;
