@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Services\PushNotificationService;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -17,10 +18,12 @@ class PushNotificationController extends Controller
     ) {
     }
 
-    public function sendNotification(): JsonResponse
+    public function sendNotification(Request $request): JsonResponse
     {
         try {
-            $this->pushNotificationService->createNotification();
+            $this->pushNotificationService->createNotification([
+                $request->get('user_uuid'),
+            ], $request->get('message'));
 
             return response()->json([
                 'message' => __('Notification has been retrieved successfully.'),
