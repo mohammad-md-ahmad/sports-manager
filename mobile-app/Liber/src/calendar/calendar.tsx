@@ -373,9 +373,9 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                 >
                     <View style={styles.modalContent}>
                         <View>
-                            <Text>{currentSlot?.date_time_from?.split(' ')[0]}</Text>
-                            <Text>{currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
                             <Text>Booked By: {currentBooking?.customer_user?.full_name}</Text>
+                            <Text>Date: {currentSlot?.date_time_from?.split(' ')[0]}</Text>
+                            <Text>Time: {currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
                         </View>
                         {
                             currentBooking?.status == BookingStatus.Pending ?
