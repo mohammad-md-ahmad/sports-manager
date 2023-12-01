@@ -8,7 +8,7 @@ use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OneSignalUser extends Model
+class OneSignalSubscription extends Model
 {
     use BindsOnUuid;
     use GeneratesUuid;

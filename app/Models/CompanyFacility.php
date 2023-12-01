@@ -53,6 +53,7 @@ class CompanyFacility extends Model
 
     protected $hidden = [
         'id',
+        'company_id',
         'created_at',
         'updated_at',
         'deleted_at',

@@ -55,6 +55,8 @@ class Booking extends Model
 
     protected $hidden = [
         'id',
+        'customer_user_id',
+        'schedule_details_id',
         'created_at',
         'updated_at',
         'deleted_at',

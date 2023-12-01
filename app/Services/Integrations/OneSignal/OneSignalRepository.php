@@ -37,6 +37,10 @@ class OneSignalRepository
             'contents' => ['en' => $data['message']],
         ];
 
+        if ($data['buttons']) {
+            $requestBody['buttons'] = $data['buttons'];
+        }
+
         $this->httpWrapper->buildRequest(
             self::CREATE_NOTIFICATION,
             'POST',

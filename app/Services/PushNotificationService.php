@@ -16,14 +16,15 @@ class PushNotificationService
     /**
      * @throws Exception
      */
-    public function createNotification(array $user_uuids, string $message): bool
+    public function createNotification(array $user_uuids, string $message, array $buttons = []): bool
     {
         try {
-            Log::info(print_r($user_uuids, true));
-            Log::info($message);
-
             $data['user_uuids'] = $user_uuids;
             $data['message'] = $message;
+
+            if ($buttons) {
+                $data['buttons'] = $buttons;
+            }
 
             $this->oneSignalRepository->createNotification($data);
 

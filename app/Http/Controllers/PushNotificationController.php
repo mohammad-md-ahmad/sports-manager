@@ -23,7 +23,7 @@ class PushNotificationController extends Controller
         try {
             $this->pushNotificationService->createNotification([
                 $request->get('user_uuid'),
-            ], $request->get('message'));
+            ], $request->get('message'), $request->get('buttons'));
 
             return response()->json([
                 'message' => __('Notification has been retrieved successfully.'),
