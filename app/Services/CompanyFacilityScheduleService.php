@@ -217,7 +217,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
             $monthDays = $monthDaysQuery->get();
 
             $result = $monthDays->mapWithKeys(function ($monthDay) use ($data, $daySlotsStatusesCountQuery, $daySlotsCountArr) {
-                $daySchedules = ScheduleDetails::with(['bookings.customer_user', 'schedule.facility.company'])
+                $daySchedules = ScheduleDetails::with(['bookings.customerUser', 'schedule.facility.company'])
                     ->where(DB::raw('DATE_FORMAT(date_time_from, "%Y-%m-%d")'), $monthDay->month_day)
                     ->when($data->company_id, function (Builder $query) use ($data) {
                         $query->whereHas('schedule', function (Builder $query) use ($data) {

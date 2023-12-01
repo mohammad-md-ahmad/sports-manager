@@ -73,6 +73,10 @@ class User extends Authenticatable
         'type' => UserType::class,
     ];
 
+    protected $appends = [
+        'full_name',
+    ];
+
     public function profilePicture(): Attribute
     {
         return Attribute::make(
