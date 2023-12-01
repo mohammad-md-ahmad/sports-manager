@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $schedule_details_id
  * @property BookingStatus $status
  * @property ScheduleDetails $scheduleDetails
+ * @property User $customerUser
  */
 class Booking extends Model
 {
@@ -62,5 +63,10 @@ class Booking extends Model
     public function scheduleDetails(): BelongsTo
     {
         return $this->belongsTo(ScheduleDetails::class);
+    }
+
+    public function customerUser(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

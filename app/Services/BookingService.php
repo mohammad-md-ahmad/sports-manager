@@ -105,7 +105,7 @@ class BookingService implements BookingServiceInterface
             DB::commit();
 
             $this->pushNotificationService->createNotification(
-                [$user->uuid],
+                [$booking->customerUser->uuid],
                 __('Your booking request of facility :facility_name on :date has been approved', [
                     'facility_name' => $booking->scheduleDetails->facility->name,
                     'date' => $booking->scheduleDetails->date_time_from,
@@ -152,7 +152,7 @@ class BookingService implements BookingServiceInterface
             DB::commit();
 
             $this->pushNotificationService->createNotification(
-                [$user->uuid],
+                [$booking->customerUser->uuid],
                 __('Your booking request of facility :facility_name on :date has been declined', [
                     'facility_name' => $booking->scheduleDetails->facility->name,
                     'date' => $booking->scheduleDetails->date_time_from,

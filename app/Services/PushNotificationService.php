@@ -19,6 +19,9 @@ class PushNotificationService
     public function createNotification(array $user_uuids, string $message): bool
     {
         try {
+            Log::info(print_r($user_uuids, true));
+            Log::info($message);
+
             $data['user_uuids'] = $user_uuids;
             $data['message'] = $message;
 
