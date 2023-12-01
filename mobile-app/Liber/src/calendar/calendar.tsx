@@ -209,8 +209,8 @@ export default function AgendaScreen({ route }): React.JSX.Element {
             })
     }
 
-    const onViewPress = (slot, reservation: AgendaEntry): void => {
-        toggleModal(slot, reservation);
+    const onViewPress = (slot, booking: AgendaEntry): void => {
+        toggleModal(slot, booking);
     }
 
     const buildBookingBtns = (slot) => {
@@ -233,7 +233,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                         buttonStyle={styles.viewButton}
                     />
                 </View>
-            } else if (booking?.status === BookingStatus.Pending) {
+            } else if (booking?.status === BookingStatus.Approved) {
                 return <View style={styles.buttonRow}>
                     <Button
                         onPress={() => onViewPress(slot, booking)}
@@ -375,6 +375,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                         <View>
                             <Text>{currentSlot?.date_time_from?.split(' ')[0]}</Text>
                             <Text>{currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
+                            <Text>Booked By: {currentBooking?.customer_user?.full_name}</Text>
                         </View>
                         {
                             currentBooking?.status == BookingStatus.Pending ?
