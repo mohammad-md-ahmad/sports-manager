@@ -30,17 +30,24 @@ class OneSignalRepository
     public function createNotification($data): OneSignalResponse
     {
         $requestBody = [
-            'tag' => $data['one_signal_user_id'],
+            'app_id' => self::APP_ID,
+            'include_aliases' => ['external_id' => $data['user_uuids']],
+            'target_channel' => 'push',
+            'data' => ['foo' => 'bar'],
+            'contents' => ['en' => $data['message']],
         ];
 
         $this->httpWrapper->buildRequest(
             self::CREATE_NOTIFICATION,
             'POST',
             $requestBody,
+            [
+                'Authorization' => 'Basic '.config('providers.one-signal.rest_api_key'),
+            ]
         );
 
-        $result = $this->httpWrapper->makeRequest(HttpRequestTypesEnum::BasicAuth);
-        dd($result);
+        $result = $this->httpWrapper->makeRequest(HttpRequestTypesEnum::Basic);
+
         $response = new OneSignalResponse(
             'company_information',
             $result->responseStatus(),

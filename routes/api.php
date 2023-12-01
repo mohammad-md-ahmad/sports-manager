@@ -6,6 +6,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyFacilityController;
 use App\Http\Controllers\CompanyFacilityScheduleController;
 use App\Http\Controllers\MiscController;
+use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -87,6 +88,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
+
+    Route::prefix('push-notifications')->group(function () {
+        Route::post('/send', [PushNotificationController::class, 'sendNotification'])->name('push-notifications.send');
+    });
 });
 
 Route::get('/test', function () {

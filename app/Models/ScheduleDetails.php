@@ -22,6 +22,7 @@ use Illuminate\Support\Collection;
  * @property ScheduleDetailsStatus $status
  * @property Collection $bookings
  * @property Schedule $schedule
+ * @property CompanyFacility $facility
  */
 class ScheduleDetails extends Model
 {

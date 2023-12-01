@@ -16,10 +16,13 @@ class PushNotificationService
     /**
      * @throws Exception
      */
-    public function createNotification(): bool
+    public function createNotification(array $user_uuids, string $message): bool
     {
         try {
-            $this->oneSignalRepository->createNotification();
+            $data['user_uuids'] = $user_uuids;
+            $data['message'] = $message;
+
+            $this->oneSignalRepository->createNotification($data);
 
             return true;
         } catch (Exception $exception) {

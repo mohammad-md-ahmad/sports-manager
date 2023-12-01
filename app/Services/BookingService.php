@@ -9,6 +9,7 @@ use App\Enums\BookingStatus;
 use App\Enums\ScheduleDetailsStatus;
 use App\Models\Booking;
 use App\Models\ScheduleDetails;
+use App\Models\User;
 use App\Services\Data\Booking\ApproveBookingRequest;
 use App\Services\Data\Booking\CreateBookingRequest;
 use App\Services\Data\Booking\DeclineBookingRequest;
@@ -19,12 +20,20 @@ use LogicException;
 
 class BookingService implements BookingServiceInterface
 {
+    public function __construct(
+        protected PushNotificationService $pushNotificationService,
+    ) {
+    }
+
     /**
      * @throws Exception
      */
     public function store(CreateBookingRequest $data): Booking
     {
         try {
+            /** @var User $user */
+            $user = auth()->user();
+
             /** @var ScheduleDetails $scheduleDetails */
             $scheduleDetails = ScheduleDetails::findOrFail($data->schedule_details_id);
 
@@ -40,6 +49,15 @@ class BookingService implements BookingServiceInterface
             $scheduleDetails->update(['status' => ScheduleDetailsStatus::Pending->name]);
 
             DB::commit();
+
+            $this->pushNotificationService->createNotification(
+                [$scheduleDetails->facility->company->companyUser()->user->uuid],
+                __('User :user wants to book your facility :facility_name on :date', [
+                    'user' => $user->full_name,
+                    'facility_name' => $scheduleDetails->facility->name,
+                    'date' => $scheduleDetails->date_time_from,
+                ])
+            );
 
             return $booking;
         } catch (Exception $exception) {
@@ -57,6 +75,9 @@ class BookingService implements BookingServiceInterface
     public function approve(ApproveBookingRequest $data): bool
     {
         try {
+            /** @var User $user */
+            $user = auth()->user();
+
             /** @var Booking $booking */
             $booking = Booking::findOrFail($data->id);
 
@@ -83,6 +104,14 @@ class BookingService implements BookingServiceInterface
 
             DB::commit();
 
+            $this->pushNotificationService->createNotification(
+                [$user->uuid],
+                __('Your booking request of facility :facility_name on :date has been approved', [
+                    'facility_name' => $booking->scheduleDetails->facility->name,
+                    'date' => $booking->scheduleDetails->date_time_from,
+                ])
+            );
+
             return true;
         } catch (Exception $exception) {
             DB::rollBack();
@@ -99,6 +128,9 @@ class BookingService implements BookingServiceInterface
     public function decline(DeclineBookingRequest $data): bool
     {
         try {
+            /** @var User $user */
+            $user = auth()->user();
+
             /** @var Booking $booking */
             $booking = Booking::findOrFail($data->id);
 
@@ -118,6 +150,14 @@ class BookingService implements BookingServiceInterface
             ]);
 
             DB::commit();
+
+            $this->pushNotificationService->createNotification(
+                [$user->uuid],
+                __('Your booking request of facility :facility_name on :date has been declined', [
+                    'facility_name' => $booking->scheduleDetails->facility->name,
+                    'date' => $booking->scheduleDetails->date_time_from,
+                ])
+            );
 
             return true;
         } catch (Exception $exception) {

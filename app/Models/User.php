@@ -16,8 +16,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
+ * @property string $id
+ * @property string $uuid
  * @property string $first_name
  * @property string $last_name
+ * @property string $full_name
  * @property string $username
  * @property string $email
  * @property UserType $type
@@ -90,5 +93,14 @@ class User extends Authenticatable
     public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'model');
+    }
+
+    public function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->first_name.' '.$this->last_name;
+            }
+        );
     }
 }

@@ -92,6 +92,7 @@ class HttpWrapper
                     HttpDataEncodingsEnum::Form => $this->makeBasicAuthRequest(asForm: true),
                     default => $this->makeBasicAuthRequest()
                 },
+                HttpRequestTypesEnum::Basic => $this->makeBasicRequest(),
                 HttpRequestTypesEnum::Token => $this->makeTokenRequest()
             };
 
@@ -116,6 +117,22 @@ class HttpWrapper
         }
 
         return $this->buildResponse();
+    }
+
+    protected function makeBasicRequest(): Response
+    {
+        $method = $this->method ?? HttpMethodsEnum::GET->name;
+
+        return Http::retry(times: $this->retries, sleepMilliseconds: $this->millisecondsBetweenRetries, when: function (Exception $exception, PendingRequest $request) {
+            return $exception instanceof ConnectionException;
+        }, throw: false)
+            ->connectTimeout($this->connectTimeOutInSeconds)
+            ->timeout($this->requestTimeOutInSeconds)
+            ->withHeaders($this->headers)
+            ->$method(
+                $this->url,
+                $this->data ?: []
+            );
     }
 
     protected function makeBasicAuthRequest(bool $asForm = false): Response

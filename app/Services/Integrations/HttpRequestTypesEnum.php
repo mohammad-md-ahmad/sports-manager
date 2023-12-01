@@ -7,5 +7,6 @@ namespace App\Services\Integrations;
 enum HttpRequestTypesEnum
 {
     case BasicAuth;
+    case Basic;
     case Token;
 }
