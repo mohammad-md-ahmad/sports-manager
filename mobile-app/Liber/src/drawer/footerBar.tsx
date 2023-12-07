@@ -42,17 +42,6 @@ const FooterBar: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={[styles.button, (currentScreen === Screens.CompanyProfile || currentScreen === Screens.UserProfile) && styles.activeButton]}
-                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile)}
-            >
-                <Icon
-                    name="person-outline" // Replace with your desired icon name
-                    type="material"
-                    size={25}
-                />
-            </TouchableOpacity>
-
-            <TouchableOpacity
                 style={[styles.button, (currentScreen === Screens.Facilities || currentScreen === Screens.UserBooking) && styles.activeButton]}
                 onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.Facilities : Screens.UserBooking)}
             >
@@ -73,6 +62,18 @@ const FooterBar: React.FC = () => {
                     size={25}
                 />
             </TouchableOpacity>
+
+            <TouchableOpacity
+                style={[styles.button, (currentScreen === Screens.CompanyProfile || currentScreen === Screens.UserProfile) && styles.activeButton]}
+                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile)}
+            >
+                <Icon
+                    name="person-outline" // Replace with your desired icon name
+                    type="material"
+                    size={25}
+                />
+            </TouchableOpacity>
+
         </View>
     );
 };

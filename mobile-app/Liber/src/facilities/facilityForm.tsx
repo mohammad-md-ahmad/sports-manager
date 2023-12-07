@@ -217,8 +217,8 @@ export default function FacilityForm(): React.JSX.Element {
 
     const handleSubmit = (data) => {
         let sanitizedFormData = data;
-console.log(selectedFacilityPhotosBase64);
-sanitizedFormData.companyFacilityPhotos = selectedFacilityPhotosBase64;
+        console.log(selectedFacilityPhotosBase64);
+        sanitizedFormData.companyFacilityPhotos = selectedFacilityPhotosBase64;
 
         facilityService.create(sanitizedFormData).then((response) => {
             navigator.navigate(Screens.Facilities);
@@ -476,6 +476,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         marginTop: 10,
+        color: colors.PrimaryBlue,
     },
     buttonContainer: {
         flexDirection: 'row',
