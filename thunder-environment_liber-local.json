@@ -1,0 +1,16 @@
+{
+    "client": "Thunder Client",
+    "environmentName": "liber-local",
+    "dateExported": "2023-12-08T21:23:30.315Z",
+    "version": "1.0",
+    "variables": [
+        {
+            "name": "host",
+            "value": "localhost:81/api"
+        },
+        {
+            "name": "token",
+            "value": "1|iwjAUnVn0XPd70xaytZJtlCaPj3xPJCa8HW0DNJgcd5a096d"
+        }
+    ]
+}

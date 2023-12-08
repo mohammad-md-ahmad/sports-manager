@@ -1,0 +1,16 @@
+{
+    "client": "Thunder Client",
+    "environmentName": "liber-server",
+    "dateExported": "2023-12-08T21:23:48.683Z",
+    "version": "1.0",
+    "variables": [
+        {
+            "name": "host",
+            "value": "liber.quad-bh.com/api"
+        },
+        {
+            "name": "token",
+            "value": "112|VTWVUGUVDXYhY7bPPjKrMZI48ERchGX4D0DbMwq7d7ebd6a2"
+        }
+    ]
+}
