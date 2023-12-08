@@ -153,6 +153,16 @@ export default function Search(): React.JSX.Element {
         <ScrollView style={styles.scrollView}>
             <View style={styles.formContainer}>
 
+                <View>
+                    <TextInput
+                        placeholder="Facility Name"
+                        placeholderTextColor={placeHolderTextColor}
+                        style={styles.formTextInput}
+                        value={formData.name}
+                        onChangeText={(text) => handleInputChange('name', text)}
+                    />
+                </View>
+
                 <TouchableOpacity style={styles.section} onPress={toggleFormOpen}>
                     <Text style={styles.sectionTitle}>
                         {isFormOpen ? '▼' : '▶'} Filters
@@ -160,15 +170,7 @@ export default function Search(): React.JSX.Element {
                 </TouchableOpacity>
                 {isFormOpen && (
                     <>
-                        <View>
-                            <TextInput
-                                placeholder="Facility Name"
-                                placeholderTextColor={placeHolderTextColor}
-                                style={styles.formTextInput}
-                                value={formData.name}
-                                onChangeText={(text) => handleInputChange('name', text)}
-                            />
-                        </View>
+
 
                         <View>
                             <DropDownPicker
@@ -212,22 +214,23 @@ export default function Search(): React.JSX.Element {
                             />
                         </View>
 
-                        <Button
-                            onPress={() => onSearchPress()}
-                            title="Search"
-                            buttonStyle={styles.button}
-                        />
                     </>
                 )}
 
-                <VirtualizedList
-                    initialNumToRender={6}
-                    renderItem={({ item }) => <FacilityCard facility={item} />}
-                    keyExtractor={item => item.uuid}
-                    getItemCount={getItemCount}
-                    getItem={getItem}
+                <Button
+                    onPress={() => onSearchPress()}
+                    title="Search"
+                    buttonStyle={styles.button}
                 />
             </View>
+
+            <VirtualizedList
+                initialNumToRender={6}
+                renderItem={({ item }) => <FacilityCard facility={item} />}
+                keyExtractor={item => item.uuid}
+                getItemCount={getItemCount}
+                getItem={getItem}
+            />
         </ScrollView>
     );
 }
@@ -265,6 +268,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     sectionTitle: {
+        color: colors.PrimaryBlue,
         fontSize: 18,
         fontWeight: 'bold',
         marginTop: 10,

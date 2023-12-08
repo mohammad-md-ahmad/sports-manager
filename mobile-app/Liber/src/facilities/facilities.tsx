@@ -71,15 +71,8 @@ function Facilities(): React.JSX.Element {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginVertical: 5,
+        marginVertical: 0,
 
-    },
-    item: {
-        backgroundColor: colors.PrimaryBlue,
-        height: 150,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        padding: 20,
     },
     title: {
         fontSize: 32,

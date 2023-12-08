@@ -77,13 +77,16 @@ export default function CompanyDashboard(): React.JSX.Element {
 const styles = StyleSheet.create({
     containerView: {
         flex: 1,
-        marginVertical: 5,
+        marginVertical: 0,
 
     },
     cardView: {
         borderRadius: 10,
         borderColor: colors.PrimaryGreenLight,
-        borderWidth: 0.5
+        borderWidth: 0.5,
+        marginHorizontal: 15,
+        marginTop: 7,
+        marginBottom: 7
     },
     container: {
         height: 200

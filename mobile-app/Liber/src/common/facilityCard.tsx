@@ -51,7 +51,10 @@ const styles = StyleSheet.create({
     cardView: {
         borderRadius: 10,
         borderColor: colors.PrimaryGreenLight,
-        borderWidth: 0.5
+        borderWidth: 0.5,
+        marginHorizontal: 15,
+        marginTop: 7,
+        marginBottom: 7
     },
     container: {
         flexDirection: 'row',
