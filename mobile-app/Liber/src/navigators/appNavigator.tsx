@@ -22,6 +22,8 @@ import ScheduleForm from '../schedule/scheduleForm';
 import Search from '../search/search';
 import UserBooking from '../booking/userBooking';
 import { OneSignal } from 'react-native-onesignal';
+import companyProfileTabs from './companyProfileTabs';
+import programManagmentTabs from './programManagmentTabs';
 
 const Stack = createStackNavigator();
 
@@ -67,7 +69,11 @@ const AppNavigator = () => {
         let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
         dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
     }, [navigator.getState().routes[0].state?.index])
-
+    
+    useEffect(() => {
+       console.log(navigator.getState());
+        
+    }, [navigator.getState()])
 
     const [userData, setUserData] = useState({});
 
@@ -196,7 +202,7 @@ const AppNavigator = () => {
 
                 <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedile Form' }} component={ScheduleForm} />
 
-                <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
+                <Stack.Screen name={Screens.companyProfileTabs} options={{ title: 'Profile' }} component={companyProfileTabs} />
                 <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
 
                 <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
@@ -205,7 +211,10 @@ const AppNavigator = () => {
                 <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
                 <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />
 
-                <Stack.Screen name={Screens.UserBooking} options={{ title: 'UserBooking' }} component={UserBooking} />
+                <Stack.Screen name={Screens.UserBooking} options={{ title: 'User Booking' }} component={UserBooking} />
+
+                <Stack.Screen name={Screens.programManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
+
 
                 <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
 

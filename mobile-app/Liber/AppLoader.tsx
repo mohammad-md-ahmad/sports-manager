@@ -17,8 +17,8 @@ import { useAuth } from './AuhtContext';
 
 import LoginScreen from './src/login/login';
 import Signup from './src/login/signup';
-import DrawerNavigator from './src/drawer/drawerNavigator';
-import FooterBar from './src/drawer/footerBar';
+import DrawerNavigator from './src/navigators/drawerNavigator';
+import FooterBar from './src/navigators/footerBar';
 
 
 function AppLoader(): JSX.Element {

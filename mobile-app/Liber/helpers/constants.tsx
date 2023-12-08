@@ -41,6 +41,10 @@ export enum Screens {
     Login = "Login",
     Search = "Search",
     UserBooking = "UserBooking",
+    companyProfileTabs = "companyProfileTabs",
+    programManagmentTabs = "programManagmentTabs",
+    Reports = "Reports",
+    Notifications = "Notifications",
 }
 
 export enum SlotStatus {
