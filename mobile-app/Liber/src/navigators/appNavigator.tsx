@@ -200,7 +200,7 @@ const AppNavigator = () => {
                 <Stack.Screen name={Screens.FacilityForm} options={{ title: 'Facility Form' }} component={FacilityForm} />
                 <Stack.Screen name={Screens.FacilityView} options={{ title: 'Facility View' }} component={FacilityView} />
 
-                <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedile Form' }} component={ScheduleForm} />
+                <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedule Form' }} component={ScheduleForm} />
 
                 <Stack.Screen name={Screens.companyProfileTabs} options={{ title: 'Profile' }} component={companyProfileTabs} />
                 <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />

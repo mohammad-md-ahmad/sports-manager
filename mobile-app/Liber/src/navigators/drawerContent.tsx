@@ -143,6 +143,19 @@ export default function DrawerContent(props: any): React.JSX.Element {
                         )}
                         onPress={() => navigateTo(Screens.About)}
                         style={currentScreen === Screens.About && styles.activeDrawerItem}
+                    />        
+                    
+                                <DrawerItem
+                        label="Facilities"
+                        icon={({ focused, color, size }) => (
+                            <Icon
+                                name="info" // Replace with your desired icon name
+                                type="material"
+                                size={25}
+                            />
+                        )}
+                        onPress={() => navigateTo(Screens.Facilities)}
+                        style={currentScreen === Screens.Facilities && styles.activeDrawerItem}
                     />
                 </ScrollView>
                 <DrawerItem

@@ -195,7 +195,7 @@ export default function FacilityForm(): React.JSX.Element {
     }
 
     const handleCancel = () => {
-        navigator.navigate('Facilities');
+        navigator.navigate(Screens.Facilities);
     };
 
     const sanitizeFormData = (data) => {
@@ -457,14 +457,14 @@ const styles = StyleSheet.create({
         backgroundColor: 'transparent',
         padding: 10,
         borderRadius: 5,
-        marginTop: 10,
+        marginTop: 0,
         width: '100%',
     },
     submitButton: {
         ...globalStyles.button,
         padding: 10,
         borderRadius: 5,
-        marginTop: 10,
+        marginTop: 0,
         width: '100%',
     },
     section: {
@@ -481,6 +481,7 @@ const styles = StyleSheet.create({
     buttonContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+        marginTop: 10,
     },
     buttonWrapper: {
         width: '48%',

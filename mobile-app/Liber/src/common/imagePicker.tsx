@@ -67,7 +67,7 @@ const ImagePicker = (props) => {
                 </View>
             ))}
             <View style={{ marginTop: 20 }}>
-                <Button title="Upload Facility Photos" onPress={openImagePicker} buttonStyle={styles.button} />
+                <Button title="Upload Photos" onPress={openImagePicker} buttonStyle={styles.button} />
             </View>
         </View>
     );

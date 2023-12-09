@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 
 import {
     Image,
@@ -18,6 +18,7 @@ import { getCompanyData } from "../../helpers/companyDataManage";
 import Constants, { Screens } from "../../helpers/constants";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ErrorView from "../common/errorView";
+import ImagePicker from "../common/imagePicker";
 
 interface CompanyFormData {
     uuid: string | null;
@@ -25,6 +26,7 @@ interface CompanyFormData {
     name_ar: string;
     description: string;
     logo: string | null;
+
     createAddressRequest: {
         line_1: string;
         line_2: string;
@@ -34,6 +36,8 @@ interface CompanyFormData {
         postcode: string;
         country_uuid: string;
     };
+
+    companyFacilityPhotos: Array<string>;
 }
 
 export default function CompanyProfileForm(): React.JSX.Element {
@@ -58,6 +62,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
             postcode: '',
             country_uuid: '',
         },
+        companyFacilityPhotos: [],
     });
 
     useFocusEffect(
@@ -150,6 +155,22 @@ export default function CompanyProfileForm(): React.JSX.Element {
     async function onImageBrowsePress(): Promise<void> {
         await selectImage();
     }
+
+    const [selectedFacilityPhotos, setSelectedFacilityPhotos] = useState<Array<string>>([]);
+    const [selectedFacilityPhotosBase64, setSelectedFacilityPhotosBase64] = useState<Array<string>>([]);
+
+
+    const handleImagesChange = (newPhotos) => {
+        setSelectedFacilityPhotosBase64(newPhotos);
+        setFormData((prevData) => ({
+            ...prevData,
+            ['companyFacilityPhotos']: newPhotos,
+        }));
+    }
+
+    const handleCancel = () => {
+        navigator.navigate(Screens.companyProfileTabs);
+    };
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -285,11 +306,27 @@ export default function CompanyProfileForm(): React.JSX.Element {
                         />
                     </View>
 
+                    <ImagePicker
+                        selectedImages={selectedFacilityPhotos}
+                        setSelectedImages={setSelectedFacilityPhotos}
+                        selectedImagesBase64={selectedFacilityPhotosBase64}
+                        setSelectedImagesBase64={(newPhotos) => handleImagesChange(newPhotos)}
+                    />
+
                     <Button
                         onPress={() => onSubmitPress()}
                         title="Submit"
                         buttonStyle={styles.button}
                     />
+
+                    <View style={styles.buttonContainer}>
+                        <View style={styles.buttonWrapper}>
+                            <Button onPress={() => handleCancel()} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
+                        </View>
+                        <View style={styles.buttonWrapper}>
+                            <Button onPress={() => onSubmitPress()} title="Submit" buttonStyle={styles.submitButton} />
+                        </View>
+                    </View>
                 </View>
             </View>
             {/* </TouchableWithoutFeedback>
@@ -339,5 +376,29 @@ const styles = StyleSheet.create({
         top: 100,
         left: 210
     },
-
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10
+    },
+    buttonWrapper: {
+        width: '48%',
+    },
+    cancelButton: {
+        color: 'red',
+        shadowColor: 'green',
+        overlayColor: 'blue',
+        backgroundColor: 'transparent',
+        padding: 10,
+        borderRadius: 5,
+        //marginTop: 10,
+        width: '100%',
+    },
+    submitButton: {
+        ...globalStyles.button,
+        padding: 10,
+        borderRadius: 5,
+        width: '100%',
+        marginTop: 0,
+    },
 });
