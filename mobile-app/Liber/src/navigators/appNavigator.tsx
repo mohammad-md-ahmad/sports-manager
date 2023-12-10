@@ -22,7 +22,6 @@ import ScheduleForm from '../schedule/scheduleForm';
 import Search from '../search/search';
 import UserBooking from '../booking/userBooking';
 import { OneSignal } from 'react-native-onesignal';
-import companyProfileTabs from './companyProfileTabs';
 import programManagmentTabs from './programManagmentTabs';
 
 const Stack = createStackNavigator();
@@ -64,15 +63,20 @@ const AppNavigator = () => {
         navigator.navigate(Screens.Calendar, { "facility": facility });
     }
 
+    function onEditComapnyPress(): void {
+        navigator.navigate(Screens.CompanyProfileForm);
+    }
+
+
     useEffect(() => {
         let routesStack = navigator.getState().routes[0].state?.routes ?? [{ name: Screens.Dashboard }];
         let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
         dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
     }, [navigator.getState().routes[0].state?.index])
-    
+
     useEffect(() => {
-       console.log(navigator.getState());
-        
+        console.log(navigator.getState());
+
     }, [navigator.getState()])
 
     const [userData, setUserData] = useState({});
@@ -95,6 +99,21 @@ const AppNavigator = () => {
         if (userData.type)
             if (userData.type == UserType.CompanyUser) {
                 switch (currentScreen) {
+                    case Screens.CompanyProfile:
+                        setContent(
+                            <TouchableOpacity
+                                onPress={() => onEditComapnyPress()}>
+                                <View style={{ margin: 15 }}>
+                                    <Icon
+                                        name="edit" // Replace with your desired icon name
+                                        type="material"
+                                        size={25}
+
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                        break;
                     case Screens.Facilities:
                         setContent(
                             <TouchableOpacity
@@ -148,9 +167,9 @@ const AppNavigator = () => {
                     default:
                         setContent(<></>)
                 }
-            }else{
-                setContent(<></>)
-            }
+            } else {
+            setContent(<></>)
+        }
 
     }, [userData, currentScreen])
 
@@ -202,7 +221,7 @@ const AppNavigator = () => {
 
                 <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedule Form' }} component={ScheduleForm} />
 
-                <Stack.Screen name={Screens.companyProfileTabs} options={{ title: 'Profile' }} component={companyProfileTabs} />
+                <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
                 <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
 
                 <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
@@ -213,7 +232,7 @@ const AppNavigator = () => {
 
                 <Stack.Screen name={Screens.UserBooking} options={{ title: 'User Booking' }} component={UserBooking} />
 
-                <Stack.Screen name={Screens.programManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
+                <Stack.Screen name={Screens.ProgramManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
 
 
                 <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
@@ -224,3 +243,5 @@ const AppNavigator = () => {
 };
 
 export default AppNavigator;
+
+

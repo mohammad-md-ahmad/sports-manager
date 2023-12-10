@@ -10,7 +10,7 @@ import Reports from '../reports/reports';
 
 const Tab = createMaterialTopTabNavigator();
 
-export default function programManagmentTabs() {
+export default function ProgramManagmentTabs() {
     return (
         <Tab.Navigator
             screenOptions={{

@@ -42,8 +42,8 @@ const FooterBar: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={[styles.button, (currentScreen === Screens.programManagmentTabs || currentScreen === Screens.UserBooking) && styles.activeButton]}
-                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.programManagmentTabs : Screens.UserBooking)}
+                style={[styles.button, (currentScreen === Screens.ProgramManagmentTabs || currentScreen === Screens.UserBooking) && styles.activeButton]}
+                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.ProgramManagmentTabs : Screens.UserBooking)}
             >
                 <Icon
                     name="star" // Replace with your desired icon name
@@ -64,8 +64,8 @@ const FooterBar: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={[styles.button, (currentScreen === Screens.companyProfileTabs || currentScreen === Screens.UserProfile) && styles.activeButton]}
-                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.companyProfileTabs : Screens.UserProfile)}
+                style={[styles.button, (currentScreen === Screens.CompanyProfile || currentScreen === Screens.UserProfile) && styles.activeButton]}
+                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile)}
             >
                 <Icon
                     name="person-outline" // Replace with your desired icon name

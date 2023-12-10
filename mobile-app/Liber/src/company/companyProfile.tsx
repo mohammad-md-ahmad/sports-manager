@@ -8,6 +8,13 @@ import colors from '../../styles/colors';
 import { getCompanyData } from '../../helpers/companyDataManage';
 import CompanyService from '../../api/CompanyService';
 import Constants, { Screens } from '../../helpers/constants';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Facilities from '../facilities/facilities';
+import AgendaScreen from '../calendar/calendar';
+import Rating from '../rating/rating';
+import CompanyDetails from './companyDetails';
+
+const Tab = createMaterialTopTabNavigator();
 
 export default function CompanyProfile() {
     // Extract user information from the route parameters
@@ -54,41 +61,55 @@ export default function CompanyProfile() {
     );
 
     return (
-        <View style={styles.container}>
-            <Image source={companyData.logo} style={styles.logo} />
+        <>
+            <View style={styles.container}>
+                <Image source={companyData.logo} style={styles.logo} />
+                <View>
+                    <Text style={styles.name}>{companyData.name}</Text>
+                    <Text style={styles.description}>{companyData.description}</Text>
+                </View>
+                {/* <Button
+                    onPress={() => onEditPress()}
+                    title="Edit"
+                    buttonStyle={styles.button}
+                /> */}
 
-            <Text style={styles.name}>{companyData.name}</Text>
-            <Text style={styles.description}>{companyData.description}</Text>
-
-            <Button
-                onPress={() => onEditPress()}
-                title="Edit"
-                buttonStyle={styles.button}
-            />
-
-            {/* Add more fields as needed */}
-        </View >
+                {/* Add more fields as needed */}
+            </View >
+            <Tab.Navigator
+                screenOptions={{
+                    tabBarIndicatorStyle: {
+                        borderBottomWidth: 3,
+                        borderBottomColor: colors.PrimaryGreen,
+                    },
+                }}>
+                <Tab.Screen name={Screens.CompanyDetails} options={{ title: 'Home' }} component={CompanyDetails} />
+                <Tab.Screen name={Screens.Facilities} options={{ title: 'Booking' }} component={Facilities} />
+                <Tab.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
+                <Tab.Screen name={Screens.Ratings} options={{ title: 'Rating' }} component={Rating} />
+            </Tab.Navigator>
+        </>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
+        // flex: 1,
+        // alignItems: 'center',
+        flexDirection: 'row',
     },
     logo: {
         width: 150,
         height: 150,
         borderRadius: 75,
-        marginBottom: 10,
-        marginTop: 10,
+        margin: 10,
         borderWidth: 0,
         resizeMode: 'contain',
     },
     name: {
+        marginTop: 50,
         ...globalStyles.text,
         fontSize: 20,
-        marginBottom: 5,
         color: colors.PrimaryBlue,
     },
     description: {
@@ -97,7 +118,6 @@ const styles = StyleSheet.create({
         padding: 10,
         fontSize: 16,
         color: 'gray',
-        marginBottom: 20,
     },
     infoContainer: {
         flexDirection: 'row',

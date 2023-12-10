@@ -86,8 +86,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
                                     size={25}
                                 />
                             )}
-                            onPress={() => navigateTo(Screens.programManagmentTabs)}
-                            style={currentScreen === Screens.programManagmentTabs && styles.activeDrawerItem}
+                            onPress={() => navigateTo(Screens.ProgramManagmentTabs)}
+                            style={currentScreen === Screens.ProgramManagmentTabs && styles.activeDrawerItem}
                         /> : <></>
                     }
 
@@ -100,8 +100,8 @@ export default function DrawerContent(props: any): React.JSX.Element {
                                 size={25}
                             />
                         )}
-                        onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.companyProfileTabs : Screens.UserProfile)}
-                        style={currentScreen === (userData?.type == UserType.CompanyUser ? Screens.companyProfileTabs : Screens.UserProfile) && styles.activeDrawerItem}
+                        onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile)}
+                        style={currentScreen === (userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile) && styles.activeDrawerItem}
                     />
 
                     <DrawerItem

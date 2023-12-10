@@ -169,7 +169,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
     }
 
     const handleCancel = () => {
-        navigator.navigate(Screens.companyProfileTabs);
+        navigator.navigate(Screens.CompanyProfile);
     };
 
     return (
