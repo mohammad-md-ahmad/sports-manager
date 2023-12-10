@@ -17,6 +17,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Screens, UserType } from "../../helpers/constants";
 import ErrorView from "../common/errorView";
 import { OneSignal } from "react-native-onesignal";
+import ImagePicker from "../common/imagePicker";
 
 interface UserFormData {
     first_name: string;
@@ -42,6 +43,7 @@ interface CompanyFormData {
         password: string;
         password_confirmation: string;
     };
+    companyFacilityPhotos: Array<string>;
 }
 
 export default function Signup(): React.JSX.Element {
@@ -60,6 +62,7 @@ export default function Signup(): React.JSX.Element {
         name: '',
         type: '',
         is_company: false,
+        companyFacilityPhotos: [],
     });
 
     const [errors, setErrors] = useState(null);
@@ -110,6 +113,17 @@ export default function Signup(): React.JSX.Element {
 
         }
     };
+
+    const [selectedFacilityPhotos, setSelectedFacilityPhotos] = useState<Array<string>>([]);
+    const [selectedFacilityPhotosBase64, setSelectedFacilityPhotosBase64] = useState<Array<string>>([]);
+
+    const handleImagesChange = (newPhotos) => {
+        setSelectedFacilityPhotosBase64(newPhotos);
+        setFormData((prevData) => ({
+            ...prevData,
+            ['companyFacilityPhotos']: newPhotos,
+        }));
+    }
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -215,6 +229,13 @@ export default function Signup(): React.JSX.Element {
                                 style={styles.formTextInput}
                                 value={formData.name}
                                 onChangeText={(text) => handleInputChange('name', text)}
+                            />
+
+                            <ImagePicker
+                                selectedImages={selectedFacilityPhotos}
+                                setSelectedImages={setSelectedFacilityPhotos}
+                                selectedImagesBase64={selectedFacilityPhotosBase64}
+                                setSelectedImagesBase64={(newPhotos) => handleImagesChange(newPhotos)}
                             />
                         </View>
                     }

@@ -15,6 +15,7 @@ import { Button } from "react-native-elements";
 import ScheduleService from "../../api/ScheduleService";
 import { useNavigation } from "@react-navigation/native";
 import ErrorView from "../common/errorView";
+import { Screens } from "../../helpers/constants";
 
 interface ScheduleFormData {
     time_from: string;
@@ -89,7 +90,7 @@ function ScheduleForm({ route }): React.JSX.Element {
 
         scheduleService.createBatch(formData).then((response) => {
             // Handle a successful API response
-            navigator.navigate(Screens.facilityView);
+            navigator.navigate(Screens.FacilityView, { 'facility': facility });
         })
             .catch((error) => {
                 // Handle API request errors here
@@ -104,6 +105,9 @@ function ScheduleForm({ route }): React.JSX.Element {
         }));
     }
 
+    const handleCancel = () => {
+        navigator.navigate(Screens.FacilityView, { 'facility': facility });
+    };
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -188,11 +192,15 @@ function ScheduleForm({ route }): React.JSX.Element {
                         onCancel={hideTimePicker}
                     />
 
-                    <Button
-                        onPress={() => onSubmitPress()}
-                        title="Submit"
-                        buttonStyle={styles.button}
-                    />
+                    <View style={styles.buttonContainer}>
+                        <View style={styles.buttonWrapper}>
+                            <Button onPress={() => handleCancel()} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
+                        </View>
+                        <View style={styles.buttonWrapper}>
+                            <Button onPress={() => onSubmitPress()} title="Submit" buttonStyle={styles.submitButton} />
+                        </View>
+                    </View>
+
                 </View>
             </View>
         </ScrollView>
@@ -240,7 +248,31 @@ const styles = StyleSheet.create({
         top: 100,
         left: 210
     },
-
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10
+    },
+    buttonWrapper: {
+        width: '48%',
+    },
+    cancelButton: {
+        color: 'red',
+        shadowColor: 'green',
+        overlayColor: 'blue',
+        backgroundColor: 'transparent',
+        padding: 10,
+        borderRadius: 5,
+        //marginTop: 10,
+        width: '100%',
+    },
+    submitButton: {
+        ...globalStyles.button,
+        padding: 10,
+        borderRadius: 5,
+        width: '100%',
+        marginTop: 0,
+    },
 });
 
 export default ScheduleForm;
