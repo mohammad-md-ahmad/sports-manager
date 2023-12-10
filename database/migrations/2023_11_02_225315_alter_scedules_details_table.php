@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('schedule_details', function (Blueprint $table) {
-            if (Schema::hasColumn('schedule_details', 'name')) {
+        if (Schema::hasColumn('schedule_details', 'name')) {
+            Schema::table('schedule_details', function (Blueprint $table) {
+                $table->dropUnique(['name', 'schedule_id']);
                 $table->dropColumn('name');
-            }
+            });
+        }
 
+        Schema::table('schedule_details', function (Blueprint $table) {
             $table->json('details')->after('date_time_to')->nullable();
         });
     }
