@@ -45,6 +45,7 @@ export enum Screens {
     programManagmentTabs = "programManagmentTabs",
     Reports = "Reports",
     Notifications = "Notifications",
+    Ratings = "Ratings",
 }
 
 export enum SlotStatus {

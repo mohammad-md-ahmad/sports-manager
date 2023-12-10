@@ -5,21 +5,27 @@ import colors from '../../styles/colors';
 import { Calendar } from 'react-native-calendars';
 import AgendaScreen from '../calendar/calendar';
 import { Screens } from '../../helpers/constants';
+import Rating from '../rating/rating';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function companyProfileTabs() {
     return (
-        <Tab.Navigator
-            screenOptions={{
-                tabBarIndicatorStyle: {
-                    borderBottomWidth: 3,
-                    borderBottomColor: colors.PrimaryGreen,
-                },
-            }}>
-            <Tab.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
-            <Tab.Screen name={Screens.Facilities} options={{ title: 'User Booking' }} component={Facilities} />
-            <Tab.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
-        </Tab.Navigator>
+        <>
+            <CompanyProfile></CompanyProfile>
+            <Tab.Navigator
+                screenOptions={{
+                    tabBarIndicatorStyle: {
+                        borderBottomWidth: 3,
+                        borderBottomColor: colors.PrimaryGreen,
+                    },
+                }}>
+                <Tab.Screen name={Screens.CompanyProfile} options={{ title: 'Home' }} component={CompanyProfile} />
+                <Tab.Screen name={Screens.Facilities} options={{ title: 'User Booking' }} component={Facilities} />
+                <Tab.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
+                <Tab.Screen name={Screens.Ratings} options={{ title: 'Rating' }} component={Rating} />
+            </Tab.Navigator>
+        </>
+
     );
 }

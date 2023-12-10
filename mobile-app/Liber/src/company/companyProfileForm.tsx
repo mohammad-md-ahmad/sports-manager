@@ -37,7 +37,7 @@ interface CompanyFormData {
         country_uuid: string;
     };
 
-    companyFacilityPhotos: Array<string>;
+    companyPhotos: Array<string>;
 }
 
 export default function CompanyProfileForm(): React.JSX.Element {
@@ -62,7 +62,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
             postcode: '',
             country_uuid: '',
         },
-        companyFacilityPhotos: [],
+        companyPhotos: [],
     });
 
     useFocusEffect(
@@ -164,7 +164,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
         setSelectedFacilityPhotosBase64(newPhotos);
         setFormData((prevData) => ({
             ...prevData,
-            ['companyFacilityPhotos']: newPhotos,
+            ['companyPhotos']: newPhotos,
         }));
     }
 
