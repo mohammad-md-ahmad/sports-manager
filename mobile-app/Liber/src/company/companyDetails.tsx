@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     StyleSheet,
@@ -10,20 +10,38 @@ import { useSelector } from "react-redux";
 import Swiper from "react-native-swiper";
 import colors from "../../styles/colors";
 import { Image } from "react-native-elements";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function CompanyDetails(): React.JSX.Element {
     const companyData = useSelector(state => state.companyData);
+
+
+    const onLoadEnd = () => {
+        console.log('Success loading image');
+    };
+
+    const onError = () => {
+        // Handle error if the image fails to load
+        console.log('Error loading image');
+    };
+
+    useEffect(() => {
+    }, [companyData])
+
     return (
         <View style={globalStyles.containerView}>
             <View style={styles.swiperContainer}>
+
                 {companyData?.gallery ?
-                    <Swiper style={styles.wrapper} showsButtons={true}>
+                    <Swiper showsButtons={true}>
                         {
                             companyData?.gallery?.map((galleryItem, index) => (
                                 <View style={styles.slide}>
                                     <Image
                                         source={galleryItem.image ? { uri: galleryItem.image } : require('./../../assets/images/liber_logo.png')}
                                         style={styles.image}
+                                        onLoadEnd={onLoadEnd}
+                                        onError={onError}
                                     />
                                 </View>
                             ))
@@ -57,7 +75,7 @@ const styles = StyleSheet.create({
     slide: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        //alignItems: 'center',
     },
     image: {
         width: '100%',
