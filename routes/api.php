@@ -7,6 +7,7 @@ use App\Http\Controllers\CompanyFacilityController;
 use App\Http\Controllers\CompanyFacilityScheduleController;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\PushNotificationController;
+use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -91,6 +92,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('push-notifications')->group(function () {
         Route::post('/send', [PushNotificationController::class, 'sendNotification'])->name('push-notifications.send');
+    });
+
+    Route::prefix('ratings')->group(function () {
+
+        Route::post('/', [RatingController::class, 'store'])->name('ratings.store');
+        Route::get('/entity-ratings', [RatingController::class, 'getEntityRatings'])->name('ratings.entity-ratings');
     });
 });
 

@@ -9,7 +9,10 @@ use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Contracts\Services\CompanyServiceInterface;
 use App\Contracts\Services\CompanyUserServiceInterface;
 use App\Contracts\Services\GalleryServiceInterface;
+use App\Contracts\Services\RatingServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
+use App\Models\Company;
+use App\Models\CompanyFacility;
 use App\Services\AddressService;
 use App\Services\BookingService;
 use App\Services\CompanyFacilityScheduleService;
@@ -17,9 +20,11 @@ use App\Services\CompanyFacilityService;
 use App\Services\CompanyService;
 use App\Services\CompanyUserService;
 use App\Services\GalleryService;
+use App\Services\RatingService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
+use Spatie\LaravelData\Support\DataConfig;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -36,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(GalleryServiceInterface::class, GalleryService::class);
         $this->app->bind(CompanyFacilityScheduleServiceInterface::class, CompanyFacilityScheduleService::class);
         $this->app->bind(BookingServiceInterface::class, BookingService::class);
+        $this->app->bind(RatingServiceInterface::class, RatingService::class);
     }
 
     /**
@@ -64,5 +70,10 @@ class AppServiceProvider extends ServiceProvider
 
             return in_array($imgFormat, $allowedExtensions);
         }, message: __('image should be of type jpg, png and 2 MB size maximum.'));
+
+        app(DataConfig::class)->enforceMorphMap([
+            'company_model' => Company::class,
+            'facility_model' => CompanyFacility::class,
+        ]);
     }
 }

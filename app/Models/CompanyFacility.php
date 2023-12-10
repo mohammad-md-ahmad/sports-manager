@@ -6,6 +6,7 @@ use App\Casts\JsonCast;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -59,6 +60,10 @@ class CompanyFacility extends Model
         'deleted_at',
     ];
 
+    protected $appends = [
+        'total_rating',
+    ];
+
     public function company(): BelongsTo
     {
         return $this->belongsTo(Company::class, 'company_id');
@@ -72,5 +77,19 @@ class CompanyFacility extends Model
     public function gallery(): MorphMany
     {
         return $this->morphMany(Gallery::class, 'model');
+    }
+
+    public function ratings(): MorphMany
+    {
+        return $this->morphMany(Rating::class, 'rated_entity');
+    }
+
+    public function totalRating(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->ratings()->avg('rating');
+            }
+        );
     }
 }

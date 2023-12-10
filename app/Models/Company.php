@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -51,9 +52,10 @@ class Company extends Model
         'deleted_at',
     ];
 
-    //    protected $appends = [
-    //        'hasBookedSlot',
-    //    ];
+    protected $appends = [
+        // 'hasBookedSlot',
+        'total_rating',
+    ];
 
     public function logo(): Attribute
     {
@@ -78,5 +80,19 @@ class Company extends Model
         $companyUser = $this->hasMany(CompanyUser::class)->first();
 
         return $companyUser;
+    }
+
+    public function ratings(): MorphMany
+    {
+        return $this->morphMany(Rating::class, 'rated_entity');
+    }
+
+    public function totalRating(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->ratings()->avg('rating');
+            }
+        );
     }
 }
