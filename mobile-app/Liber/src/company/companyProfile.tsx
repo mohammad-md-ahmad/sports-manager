@@ -7,12 +7,14 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import { getCompanyData } from '../../helpers/companyDataManage';
 import CompanyService from '../../api/CompanyService';
-import Constants, { Screens } from '../../helpers/constants';
+import Constants, { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Facilities from '../facilities/facilities';
 import AgendaScreen from '../calendar/calendar';
 import Rating from '../rating/rating';
 import CompanyDetails from './companyDetails';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserData } from '../../helpers/userDataManage';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -20,6 +22,7 @@ export default function CompanyProfile() {
     // Extract user information from the route parameters
 
     const navigator = useNavigation();
+    const dispatch = useDispatch();
 
     const [companyData, setCompanyData] = useState({
         name: '',
@@ -38,25 +41,24 @@ export default function CompanyProfile() {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
+            getUserData().then((data: string | null) => {
+                if (data !== null) {
+                    let user = JSON.parse(data);
+                    if (user?.type == UserType.CompanyUser) {
+                        companyService.getCompany().then((response) => {
+                            console.log('company data', response.data)
+                            setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
+                            dispatch({ type: GlobaSateKey.SetCompanyData, payload: response.data.data });
+                        }).catch((error) => {
+                            console.error('company error', error)
+                        });
+                    } else {
+                        setCompanyData(useSelector(state => state.companyData))
+                    }
+                }
 
-            companyService.getCompany().then((response) => {
-                console.log('company data', response.data)
-                setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-            }).catch((error) => {
-                console.error('company error', error)
             });
 
-            // getCompanyData().then((data: string | null) => {
-            //     if (data !== null) {
-            //         let parsedData = JSON.parse(data);
-            //         console.log('parsedData-------', parsedData)
-
-            //         if (parsedData.logo == null)
-            //             parsedData.logo = require('./../../assets/images/liber_logo.png');
-
-            //         setCompanyData({ ...parsedData });
-            //     }
-            // });
         }, [])
     );
 
@@ -68,13 +70,6 @@ export default function CompanyProfile() {
                     <Text style={styles.name}>{companyData.name}</Text>
                     <Text style={styles.description}>{companyData.description}</Text>
                 </View>
-                {/* <Button
-                    onPress={() => onEditPress()}
-                    title="Edit"
-                    buttonStyle={styles.button}
-                /> */}
-
-                {/* Add more fields as needed */}
             </View >
             <Tab.Navigator
                 screenOptions={{

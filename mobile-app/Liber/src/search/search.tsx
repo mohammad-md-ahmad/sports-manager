@@ -61,7 +61,6 @@ export default function Search(): React.JSX.Element {
         } else if (field === 'country_uuid') {
             setSelectedCountry(value);
         }
-        console.log("dd list", value())
         setFormData({ ...formData, [field]: value() });
     };
 
@@ -84,16 +83,6 @@ export default function Search(): React.JSX.Element {
 
 
     function onSearchPress(): void {
-        console.log('search key', formData)
-        // companyService.update(formData).then((response) => {
-        //     // Handle a successful API response
-        //    // navigator.navigate(Screens.CompanyProfile);
-        // })
-        //     .catch((error) => {
-        //         // Handle API request errors here
-        //       //  setErrors(error.response.data.errors)
-        //     });
-
         facilityService.list(sanitizeFormData(formData))
             .then((response) => {
                 setFacilities(response.data?.data.data);

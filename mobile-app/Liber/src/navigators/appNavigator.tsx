@@ -14,7 +14,7 @@ import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity, View } from 'react-native';
-import { Screens, UserType } from '../../helpers/constants';
+import { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
 import { getUserData } from '../../helpers/userDataManage';
@@ -71,13 +71,8 @@ const AppNavigator = () => {
     useEffect(() => {
         let routesStack = navigator.getState().routes[0].state?.routes ?? [{ name: Screens.Dashboard }];
         let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
-        dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
+        dispatch({ type: GlobaSateKey.SetCurrentScreen, payload: screen });
     }, [navigator.getState().routes[0].state?.index])
-
-    useEffect(() => {
-        console.log(navigator.getState());
-
-    }, [navigator.getState()])
 
     const [userData, setUserData] = useState({});
 
@@ -95,7 +90,6 @@ const AppNavigator = () => {
     const [content, setContent] = useState(<></>);
 
     useEffect(() => {
-        console.log("userData", userData)
         if (userData.type)
             if (userData.type == UserType.CompanyUser) {
                 switch (currentScreen) {

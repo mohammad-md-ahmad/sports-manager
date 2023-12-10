@@ -14,7 +14,7 @@ import BaseComponent from "../common/baseComponent";
 import { useNavigation } from "@react-navigation/native";
 import { getUserData } from "../../helpers/userDataManage";
 import { Icon } from "react-native-elements";
-import { Screens, UserType } from "../../helpers/constants";
+import { GlobaSateKey, Screens, UserType } from "../../helpers/constants";
 import colors from "../../styles/colors";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -40,7 +40,7 @@ export default function DrawerContent(props: any): React.JSX.Element {
 
     const navigateTo = (screen: string) => {
         navigator.navigate(screen);
-        dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
+        dispatch({ type: GlobaSateKey.SetCurrentScreen, payload: screen });
     }
 
     const [userData, setUserData] = useState({});
@@ -143,9 +143,9 @@ export default function DrawerContent(props: any): React.JSX.Element {
                         )}
                         onPress={() => navigateTo(Screens.About)}
                         style={currentScreen === Screens.About && styles.activeDrawerItem}
-                    />        
-                    
-                                <DrawerItem
+                    />
+
+                    <DrawerItem
                         label="Facilities"
                         icon={({ focused, color, size }) => (
                             <Icon

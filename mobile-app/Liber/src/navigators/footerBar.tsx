@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
-import { Screens, UserType } from '../../helpers/constants';
+import { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { getUserData } from '../../helpers/userDataManage';
 
 
@@ -16,7 +16,7 @@ const FooterBar: React.FC = () => {
     const navigateTo = (screen: string) => {
 
         navigator.navigate(screen);
-        dispatch({ type: 'SET_CURRENT_SCREEN', payload: screen });
+        dispatch({ type: GlobaSateKey.SetCurrentScreen, payload: screen });
     }
 
     const [userData, setUserData] = useState({});

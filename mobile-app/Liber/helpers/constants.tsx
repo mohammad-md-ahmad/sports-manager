@@ -59,3 +59,9 @@ export enum BookingStatus {
     Declined = "Declined",
     Pending = "Pending",
 }
+
+export enum GlobaSateKey {
+    SetLoading = "SET_LOADING",
+    SetCurrentScreen = "SET_CURRENT_SCREEN",
+    SetCompanyData = "SET_COMPANY_DATA",
+  }

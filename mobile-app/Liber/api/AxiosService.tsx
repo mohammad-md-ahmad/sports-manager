@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
-import Constants from '../helpers/constants';
+import Constants, { GlobaSateKey } from '../helpers/constants';
 import { getToken } from '../helpers/tokenManage';
 import { useDispatch } from 'react-redux';
 import ToastHelper from '../helpers/toast';
@@ -26,15 +26,15 @@ abstract class AxiosService {
 
     protected objectToQueryParams(obj) {
         const queryParams = [];
-        
+
         for (const key in obj) {
-          if (obj.hasOwnProperty(key)) {
-            queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
-          }
+            if (obj.hasOwnProperty(key)) {
+                queryParams.push(`${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
+            }
         }
-        
+
         return queryParams.join('&');
-      }
+    }
 
     private setupInterceptors() {
         const dispatch = useDispatch();
@@ -42,7 +42,7 @@ abstract class AxiosService {
 
         this.instance.interceptors.request.use(
             async (config) => {
-                dispatch({ type: 'SET_LOADING', payload: true });
+                dispatch({ type: GlobaSateKey.SetLoading, payload: true });
                 // You can modify the request config here (e.g., add headers)
                 const token = await getToken();
                 if (token) {
@@ -54,7 +54,7 @@ abstract class AxiosService {
                 return config;
             },
             (error) => {
-                dispatch({ type: 'SET_LOADING', payload: false });
+                dispatch({ type: GlobaSateKey.SetLoading, payload: false });
                 if (axios.isCancel(error)) {
                     // Request was canceled
                     return Promise.reject(error);
@@ -78,7 +78,7 @@ abstract class AxiosService {
         this.instance.interceptors.response.use(
             (response) => {
                 // You can handle successful responses here
-                dispatch({ type: 'SET_LOADING', payload: false });
+                dispatch({ type: GlobaSateKey.SetLoading, payload: false });
 
                 //console.log(response.data.message)
 
@@ -86,11 +86,11 @@ abstract class AxiosService {
                 if (originalRequest.method !== 'get') {
                     ToastHelper.successToast(response.data.message);
                 }
-                
+
                 return response;
             },
             (error) => {
-                dispatch({ type: 'SET_LOADING', payload: false });
+                dispatch({ type: GlobaSateKey.SetLoading, payload: false });
                 if (axios.isCancel(error)) {
                     // Request was canceled
                     return Promise.reject(error);

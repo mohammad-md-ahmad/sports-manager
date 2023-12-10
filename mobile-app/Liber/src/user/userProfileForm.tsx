@@ -70,7 +70,6 @@ export default function UserProfileForm(): React.JSX.Element {
     const [errors, setErrors] = useState(null);
 
     function onSubmitPress(): void {
-        console.log(formData);
         userService.update(formData).then((response) => {
             // Handle a successful API response
             navigator.navigate(Screens.UserProfile);
