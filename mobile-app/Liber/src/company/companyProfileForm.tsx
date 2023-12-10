@@ -312,13 +312,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
                         selectedImagesBase64={selectedFacilityPhotosBase64}
                         setSelectedImagesBase64={(newPhotos) => handleImagesChange(newPhotos)}
                     />
-
-                    <Button
-                        onPress={() => onSubmitPress()}
-                        title="Submit"
-                        buttonStyle={styles.button}
-                    />
-
+                    
                     <View style={styles.buttonContainer}>
                         <View style={styles.buttonWrapper}>
                             <Button onPress={() => handleCancel()} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
