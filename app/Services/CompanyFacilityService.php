@@ -38,7 +38,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
             /** @var CompanyFacility $companyFacility */
             $companyFacility = CompanyFacility::findOrFail($data->id);
 
-            return $companyFacility;
+            return $companyFacility->with(['company', 'address.country', 'gallery']);
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::get: '.$exception->getMessage());
 
@@ -74,7 +74,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
                 });
             });
 
-            return $facilitiesQuery->with(['address.country', 'gallery'])->jsonPaginate();
+            return $facilitiesQuery->with(['company', 'address.country', 'gallery'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
 
@@ -85,7 +85,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     public function getAllByCompany(GetCompanyFacilitiesRequest $data): Collection
     {
         try {
-            return $data->company->facilities()->with(['address', 'gallery'])->get();
+            return $data->company->facilities()->with(['company', 'address.country', 'gallery'])->get();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAllByCompany: '.$exception->getMessage());
 

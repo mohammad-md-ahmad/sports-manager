@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $id
  * @property string $uuid
  * @property CompanyUser $companyUser
+ * @property Gallery $gallery
  */
 class Company extends Model
 {
@@ -72,6 +73,11 @@ class Company extends Model
     public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'model');
+    }
+
+    public function gallery(): MorphMany
+    {
+        return $this->morphMany(Gallery::class, 'model');
     }
 
     public function companyUser(): ?CompanyUser

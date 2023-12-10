@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Contracts\Services\AddressServiceInterface;
 use App\Contracts\Services\CompanyServiceInterface;
 use App\Contracts\Services\CompanyUserServiceInterface;
+use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserType;
 use App\Models\Company;
@@ -16,6 +17,7 @@ use App\Services\Data\Company\CreateCompanyRequest;
 use App\Services\Data\Company\DeleteCompanyRequest;
 use App\Services\Data\Company\GetCompanyRequest;
 use App\Services\Data\Company\UpdateCompanyRequest;
+use App\Services\Data\Gallery\CreateGalleryRequest;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use App\Traits\ImageUpload;
@@ -34,6 +36,7 @@ class CompanyService implements CompanyServiceInterface
         protected UserServiceInterface $userService,
         protected CompanyUserServiceInterface $companyUserService,
         protected AddressServiceInterface $addressService,
+        protected GalleryServiceInterface $galleryService,
     ) {
     }
 
@@ -41,7 +44,11 @@ class CompanyService implements CompanyServiceInterface
     {
         try {
             /** @var Company $company */
-            $company = Company::findOrFail($data->id);
+            $company = Company::query()
+                ->where('id', $data->id)
+                ->with(['address', 'gallery'])
+                ->get()
+                ->first();
 
             return $company;
         } catch (Exception $exception) {
@@ -54,7 +61,7 @@ class CompanyService implements CompanyServiceInterface
     public function getAll(Request $request): Collection
     {
         try {
-            $companies = Company::all();
+            $companies = Company::with(['address', 'gallery'])->get();
 
             return $companies;
         } catch (Exception $exception) {
@@ -145,6 +152,18 @@ class CompanyService implements CompanyServiceInterface
                 $uploadedImg = $this->uploadLogo($data->logo, $company->id);
                 $company->logo = $uploadedImg;
                 $company->save();
+            }
+
+            if ($data->companyPhotos && count($data->companyPhotos) > 0) {
+                foreach ($data->companyPhotos as $photo) {
+                    $createGalleryRequest = new CreateGalleryRequest(
+                        model_type: Company::class,
+                        model_id: (string) $company->id,
+                        image: $photo,
+                    );
+
+                    $this->galleryService->store($createGalleryRequest);
+                }
             }
 
             DB::commit();
