@@ -11,6 +11,7 @@ import Swiper from "react-native-swiper";
 import colors from "../../styles/colors";
 import { Image } from "react-native-elements";
 import { ActivityIndicator } from "react-native-paper";
+import MasonryList from '@react-native-seoul/masonry-list';
 
 export default function CompanyDetails(): React.JSX.Element {
     const companyData = useSelector(state => state.companyData);
@@ -26,11 +27,12 @@ export default function CompanyDetails(): React.JSX.Element {
     };
 
     useEffect(() => {
+
     }, [companyData])
 
     return (
         <View style={globalStyles.containerView}>
-            <View style={styles.swiperContainer}>
+            {/* <View style={styles.swiperContainer}>
 
                 {companyData?.gallery ?
                     <Swiper showsButtons={true}>
@@ -52,8 +54,32 @@ export default function CompanyDetails(): React.JSX.Element {
                         <Text style={styles.subName}>No Images</Text>
                     </>
                 }
-            </View>
+            </View> */}
 
+            {companyData?.gallery ?
+                <>
+                    <MasonryList
+                        data={companyData?.gallery}
+                        placeholderImage={require('./../../assets/images/liber_logo.png')}
+                        renderItem={(galleryItem) => (
+                            <View style={styles.item}>
+                                <Image
+                                    source={galleryItem?.item?.image ? { uri: galleryItem?.item?.image } : require('./../../assets/images/liber_logo.png')}
+                                    style={styles.image}
+                                    onLoadEnd={onLoadEnd}
+                                    onError={onError}
+                                />
+                            </View>
+                        )}
+                        numColumns={2}
+                        columnWidth={150}
+                    />
+                </>
+                :
+                <>
+                    <Text style={styles.subName}>No Images</Text>
+                </>
+            }
         </View>
     );
 }
@@ -73,14 +99,16 @@ const styles = StyleSheet.create({
     wrapper: {
     },
     slide: {
-        flex: 1,
-        justifyContent: 'center',
+        backgroundColor: 'red',
+        //flex: 1,
+        //justifyContent: 'center',
         //alignItems: 'center',
     },
     image: {
         width: '100%',
-        height: '100%',
+        height: 250,
         resizeMode: 'cover',
+        borderRadius: 15,
     },
     userInfo: {
         flexDirection: 'column',
@@ -96,4 +124,14 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         color: colors.PrimaryBlue
     },
+    item: {
+        padding: 10,
+        backgroundColor: '#fff',
+        borderRadius: 5,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
+    },
+
 });
