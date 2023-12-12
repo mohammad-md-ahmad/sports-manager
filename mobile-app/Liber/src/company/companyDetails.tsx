@@ -12,6 +12,7 @@ import colors from "../../styles/colors";
 import { Image } from "react-native-elements";
 import { ActivityIndicator } from "react-native-paper";
 import MasonryList from '@react-native-seoul/masonry-list';
+import CompanyImageCard from "./companyImageCard";
 
 export default function CompanyDetails(): React.JSX.Element {
     const companyData = useSelector(state => state.companyData);
@@ -29,6 +30,10 @@ export default function CompanyDetails(): React.JSX.Element {
     useEffect(() => {
 
     }, [companyData])
+
+    const renderItem = (item) => {
+        return <CompanyImageCard companyImage={item.item} />
+    }
 
     return (
         <View style={globalStyles.containerView}>
@@ -60,19 +65,8 @@ export default function CompanyDetails(): React.JSX.Element {
                 <>
                     <MasonryList
                         data={companyData?.gallery}
-                        placeholderImage={require('./../../assets/images/liber_logo.png')}
-                        renderItem={(galleryItem) => (
-                            <View style={styles.item}>
-                                <Image
-                                    source={galleryItem?.item?.image ? { uri: galleryItem?.item?.image } : require('./../../assets/images/liber_logo.png')}
-                                    style={styles.image}
-                                    onLoadEnd={onLoadEnd}
-                                    onError={onError}
-                                />
-                            </View>
-                        )}
+                        renderItem={renderItem}
                         numColumns={2}
-                        columnWidth={150}
                     />
                 </>
                 :
