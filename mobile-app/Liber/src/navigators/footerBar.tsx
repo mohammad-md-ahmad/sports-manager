@@ -42,22 +42,22 @@ const FooterBar: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={[styles.button, (currentScreen === Screens.ProgramManagmentTabs || currentScreen === Screens.UserBooking) && styles.activeButton]}
-                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.ProgramManagmentTabs : Screens.UserBooking)}
+                style={[styles.button, currentScreen === Screens.Search && styles.activeButton]}
+                onPress={() => navigateTo(Screens.Search)}
             >
                 <Icon
-                    name="star" // Replace with your desired icon name
+                    name="search" // Replace with your desired icon name
                     type="material"
                     size={25}
                 />
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={[styles.button, currentScreen === Screens.Search && styles.activeButton]}
-                onPress={() => navigateTo(Screens.Search)}
+                style={[styles.button, (currentScreen === Screens.ProgramManagmentTabs || currentScreen === Screens.UserBooking) && styles.activeButton]}
+                onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.ProgramManagmentTabs : Screens.UserBooking)}
             >
                 <Icon
-                    name="search" // Replace with your desired icon name
+                    name="star" // Replace with your desired icon name
                     type="material"
                     size={25}
                 />

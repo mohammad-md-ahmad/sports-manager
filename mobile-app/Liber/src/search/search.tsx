@@ -81,8 +81,8 @@ export default function Search(): React.JSX.Element {
         return sanitizedData;
     };
 
-
     function onSearchPress(): void {
+        setIsFormOpen(false);
         facilityService.list(sanitizeFormData(formData))
             .then((response) => {
                 setFacilities(response.data?.data.data);
@@ -159,7 +159,6 @@ export default function Search(): React.JSX.Element {
                 </TouchableOpacity>
                 {isFormOpen && (
                     <>
-
 
                         <View>
                             <DropDownPicker

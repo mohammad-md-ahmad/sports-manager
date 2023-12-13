@@ -104,6 +104,10 @@ export default function UserProfileForm(): React.JSX.Element {
         await selectImage();
     }
 
+    const handleCancel = () => {
+        navigator.navigate(Screens.UserProfile);
+    };
+
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -131,7 +135,6 @@ export default function UserProfileForm(): React.JSX.Element {
                             {errors != null ? <ErrorView errorData={errors} /> : <></>}
 
                             <View>
-                                <Text style={styles.label}>First Name</Text>
                                 <TextInput
                                     placeholder="First Name"
                                     placeholderTextColor={placeHolderTextColor}
@@ -142,7 +145,6 @@ export default function UserProfileForm(): React.JSX.Element {
                             </View>
 
                             <View>
-                                <Text style={styles.label}>Last Name</Text>
                                 <TextInput
                                     placeholder="Last Name"
                                     placeholderTextColor={placeHolderTextColor}
@@ -153,7 +155,6 @@ export default function UserProfileForm(): React.JSX.Element {
                             </View>
 
                             <View>
-                                <Text style={styles.label}>Username</Text>
                                 <TextInput
                                     placeholder="Username"
                                     placeholderTextColor={placeHolderTextColor}
@@ -164,7 +165,6 @@ export default function UserProfileForm(): React.JSX.Element {
                             </View>
 
                             <View>
-                                <Text style={styles.label}>Email</Text>
                                 <TextInput
                                     placeholder="Email"
                                     placeholderTextColor={placeHolderTextColor}
@@ -175,13 +175,21 @@ export default function UserProfileForm(): React.JSX.Element {
 
                             </View>
 
-
-
-                            <Button
+                            {/* <Button
                                 onPress={() => onSubmitPress()}
                                 title="Submit"
                                 buttonStyle={styles.button}
-                            />
+                            /> */}
+
+
+                            <View style={styles.buttonContainer}>
+                                <View style={styles.buttonWrapper}>
+                                    <Button onPress={() => handleCancel()} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
+                                </View>
+                                <View style={styles.buttonWrapper}>
+                                    <Button onPress={() => onSubmitPress()} title="Submit" buttonStyle={styles.submitButton} />
+                                </View>
+                            </View>
                         </View>
                     </View>
                 </TouchableWithoutFeedback>
@@ -208,9 +216,27 @@ const styles = StyleSheet.create({
     formTextInput: {
         ...globalStyles.inputText
     },
-    button: {
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10
+    },
+    buttonWrapper: {
+        width: '48%',
+    },
+    cancelButton: {
         ...globalStyles.button,
-        width: '100%'
+        color: 'red',
+        backgroundColor: 'transparent',
+        padding: 10,
+        width: '100%',
+        marginTop: 0,
+    },
+    submitButton: {
+        ...globalStyles.button,
+        padding: 10,
+        width: '100%',
+        marginTop: 0,
     },
 
     label: {

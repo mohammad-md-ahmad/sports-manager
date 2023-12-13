@@ -66,10 +66,8 @@ export default function CompanyProfile() {
         <>
             <View style={styles.container}>
                 <Image source={companyData.logo} style={styles.logo} />
-                <View>
-                    <Text style={styles.name}>{companyData.name}</Text>
-                    <Text style={styles.description}>{companyData.description}</Text>
-                </View>
+                <Text style={styles.name}>{companyData.name}</Text>
+                <Text style={styles.description}>{companyData.description}</Text>
             </View >
             <Tab.Navigator
                 screenOptions={{
@@ -78,9 +76,10 @@ export default function CompanyProfile() {
                         borderBottomColor: colors.PrimaryGreen,
                     },
                 }}>
-                <Tab.Screen name={Screens.CompanyDetails} options={{ title: 'Home' }} component={CompanyDetails} />
-                <Tab.Screen name={Screens.Facilities} options={{ title: 'Booking' }} component={Facilities} />
-                <Tab.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
+                <Tab.Screen name={Screens.CompanyDetails} options={{ title: 'Info' }} component={CompanyDetails} />
+                <Tab.Screen name={Screens.CompanyPhotos} options={{ title: 'Photos' }} component={CompanyDetails} />
+                {/* <Tab.Screen name={Screens.Facilities} options={{ title: 'Booking' }} component={Facilities} />
+                <Tab.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} /> */}
                 <Tab.Screen name={Screens.Ratings} options={{ title: 'Rating' }} component={Rating} />
             </Tab.Navigator>
         </>
@@ -89,9 +88,7 @@ export default function CompanyProfile() {
 
 const styles = StyleSheet.create({
     container: {
-        // flex: 1,
-        // alignItems: 'center',
-        flexDirection: 'row',
+        alignItems: 'center',
     },
     logo: {
         width: 150,
@@ -102,7 +99,6 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     name: {
-        marginTop: 50,
         ...globalStyles.text,
         fontSize: 20,
         color: colors.PrimaryBlue,

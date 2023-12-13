@@ -128,7 +128,6 @@ export default function Signup(): React.JSX.Element {
                     {errors != null ? <ErrorView errorData={errors} /> : <></>}
 
                     <View>
-                        <Text style={styles.label}>First Name</Text>
                         <TextInput
                             placeholder="First Name"
                             placeholderTextColor={placeHolderTextColor}
@@ -139,7 +138,6 @@ export default function Signup(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Last Name</Text>
                         <TextInput
                             placeholder="Last Name"
                             placeholderTextColor={placeHolderTextColor}
@@ -150,7 +148,6 @@ export default function Signup(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Username</Text>
                         <TextInput
                             placeholder="Username"
                             placeholderTextColor={placeHolderTextColor}
@@ -161,7 +158,6 @@ export default function Signup(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Email</Text>
                         <TextInput
                             placeholder="Email"
                             placeholderTextColor={placeHolderTextColor}
@@ -173,7 +169,6 @@ export default function Signup(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Password</Text>
                         <TextInput
                             placeholder="Password"
                             placeholderTextColor={placeHolderTextColor}
@@ -185,7 +180,6 @@ export default function Signup(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Confirm Password</Text>
                         <TextInput
                             placeholder="Confirm Password"
                             placeholderTextColor={placeHolderTextColor}

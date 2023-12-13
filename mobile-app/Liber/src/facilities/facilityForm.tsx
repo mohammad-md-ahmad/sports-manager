@@ -239,7 +239,6 @@ export default function FacilityForm(): React.JSX.Element {
                 {isFacilityDetailsOpen && (
                     <>
                         <View>
-                            <Text style={styles.label}>Name</Text>
                             <TextInput
                                 value={formik.values.name}
                                 onChangeText={formik.handleChange('name')}
@@ -253,7 +252,6 @@ export default function FacilityForm(): React.JSX.Element {
                         }
 
                         <View>
-                            <Text style={styles.label}>Facility Type</Text>
                             <DropDownPicker
                                 textStyle={{ color: colors.PrimaryBlue }}
                                 placeholder="Select Facility Type"
@@ -273,7 +271,6 @@ export default function FacilityForm(): React.JSX.Element {
                         }
 
                         <View>
-                            <Text style={styles.label}>Length (in Meters)</Text>
                             <TextInput
                                 value={formik.values.details.length}
                                 onChangeText={formik.handleChange('details.length')}
@@ -287,7 +284,6 @@ export default function FacilityForm(): React.JSX.Element {
                         }
 
                         <View>
-                            <Text style={styles.label}>Width (in Meters)</Text>
                             <TextInput
                                 value={formik.values.details.width}
                                 onChangeText={formik.handleChange('details.width')}
@@ -309,7 +305,6 @@ export default function FacilityForm(): React.JSX.Element {
                 {isAddressOpen && (
                     <>
                         <View>
-                            <Text style={styles.label}>Line 1</Text>
                             <TextInput
                                 value={formik.values.createAddressRequest.line_1}
                                 onChangeText={formik.handleChange('createAddressRequest.line_1')}
@@ -323,7 +318,6 @@ export default function FacilityForm(): React.JSX.Element {
                         }
 
                         <View>
-                            <Text style={styles.label}>Line 2</Text>
                             <TextInput
                                 value={formik.values.createAddressRequest.line_2}
                                 onChangeText={formik.handleChange('createAddressRequest.line_2')}
@@ -334,7 +328,6 @@ export default function FacilityForm(): React.JSX.Element {
                         </View>
 
                         <View>
-                            <Text style={styles.label}>Line 3</Text>
                             <TextInput
                                 value={formik.values.createAddressRequest.line_3}
                                 onChangeText={formik.handleChange('createAddressRequest.line_3')}
@@ -345,7 +338,6 @@ export default function FacilityForm(): React.JSX.Element {
                         </View>
 
                         <View>
-                            <Text style={styles.label}>City</Text>
                             <TextInput
                                 value={formik.values.createAddressRequest.city}
                                 onChangeText={formik.handleChange('createAddressRequest.city')}
@@ -359,7 +351,6 @@ export default function FacilityForm(): React.JSX.Element {
                         }
 
                         <View>
-                            <Text style={styles.label}>Region / State</Text>
                             <TextInput
                                 value={formik.values.createAddressRequest.region}
                                 onChangeText={formik.handleChange('createAddressRequest.region')}
@@ -373,7 +364,6 @@ export default function FacilityForm(): React.JSX.Element {
                         }
 
                         <View>
-                            <Text style={styles.label}>Post Code</Text>
                             <TextInput
                                 value={formik.values.createAddressRequest.postcode}
                                 onChangeText={formik.handleChange('createAddressRequest.postcode')}
@@ -387,7 +377,6 @@ export default function FacilityForm(): React.JSX.Element {
                         }
 
                         <View>
-                            <Text style={styles.label}>Country</Text>
                             <DropDownPicker
                                 textStyle={{ color: colors.PrimaryBlue }}
                                 placeholder="Select Country"
@@ -438,12 +427,6 @@ const styles = StyleSheet.create({
     },
     input: {
         ...globalStyles.inputText,
-        // backgroundColor: 'transparent',
-        // borderColor: 'dodgerblue',
-        // borderWidth: 1,
-        // borderRadius: 5,
-        // marginBottom: 10,
-        // paddingLeft: 10,
     },
     dropDown: {
         ...globalStyles.inputText,
@@ -453,17 +436,17 @@ const styles = StyleSheet.create({
         ...globalStyles.inputTextLabel
     },
     cancelButton: {
+        ...globalStyles.button,
         color: 'red',
         backgroundColor: 'transparent',
         padding: 10,
-        borderRadius: 5,
+        borderRadius: 50,
         marginTop: 0,
         width: '100%',
     },
     submitButton: {
         ...globalStyles.button,
         padding: 10,
-        borderRadius: 5,
         marginTop: 0,
         width: '100%',
     },

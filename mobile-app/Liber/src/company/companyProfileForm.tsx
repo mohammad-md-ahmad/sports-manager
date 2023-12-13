@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     Image,
@@ -19,6 +19,8 @@ import Constants, { Screens } from "../../helpers/constants";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ErrorView from "../common/errorView";
 import ImagePicker from "../common/imagePicker";
+import DropDownPicker from "react-native-dropdown-picker";
+import { getCountries } from "../../helpers/countriesDataManage";
 
 interface CompanyFormData {
     uuid: string | null;
@@ -172,6 +174,48 @@ export default function CompanyProfileForm(): React.JSX.Element {
         navigator.navigate(Screens.CompanyProfile);
     };
 
+    const [openCountryList, setOpenCountryList] = useState(false);
+    const [countries, setCountries] = useState([]);
+    const [selectedCountry, setSelectedCountry] = useState<string>('');
+
+    const handleDropdownChange = (field: keyof FormData, value: string) => {
+        if (field.startsWith('createAddressRequest.')) {
+            if (field === 'createAddressRequest.country_uuid') {
+                const [parentField, nestedField] = field.split('.');
+
+                setSelectedCountry(value);
+
+                setFormData({
+                    ...formData,
+                    [parentField]: {
+                        ...formData[parentField],
+                        [nestedField]: value,
+                    },
+                });
+            }
+        }
+
+    };
+
+    useEffect(() => {
+        getCountries().then((response) => {
+            if (response) {
+                const json: any[] = JSON.parse(response);
+
+                let data = [];
+
+                json.forEach((item) => {
+                    data.push({
+                        label: item?.name,
+                        value: item?.country_uuid,
+                    });
+                });
+
+                setCountries(data);
+            }
+        })
+    }, []);
+
     return (
         <ScrollView style={styles.scrollView}>
             {/* <KeyboardAvoidingView style={styles.containerView}
@@ -197,7 +241,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     {errors != null ? <ErrorView errorData={errors} /> : <></>}
 
                     <View>
-                        <Text style={styles.label}>Company Name</Text>
                         <TextInput
                             placeholder="Company Name"
                             placeholderTextColor={placeHolderTextColor}
@@ -208,7 +251,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Company Name Ar</Text>
                         <TextInput
                             placeholder="Company Name Ar"
                             placeholderTextColor={placeHolderTextColor}
@@ -219,7 +261,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Description</Text>
                         <TextInput
                             placeholder="Description"
                             placeholderTextColor={placeHolderTextColor}
@@ -230,7 +271,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Line 1</Text>
                         <TextInput
                             value={formData.createAddressRequest.line_1}
                             onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
@@ -241,7 +281,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Line 2</Text>
                         <TextInput
                             value={formData.createAddressRequest.line_2}
                             onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
@@ -252,7 +291,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Line 3</Text>
                         <TextInput
                             value={formData.createAddressRequest.line_3}
                             onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
@@ -263,7 +301,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>City</Text>
                         <TextInput
                             value={formData.createAddressRequest.city}
                             onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
@@ -274,7 +311,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Region</Text>
                         <TextInput
                             value={formData.createAddressRequest.region}
                             onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
@@ -285,7 +321,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Postcode</Text>
                         <TextInput
                             value={formData.createAddressRequest.postcode}
                             onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
@@ -296,13 +331,25 @@ export default function CompanyProfileForm(): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Country</Text>
-                        <TextInput
+                        {/* <TextInput
                             value={formData.createAddressRequest.country_uuid}
                             onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
                             placeholder="Country"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
+                        /> */}
+                        <DropDownPicker
+                            textStyle={{ color: colors.PrimaryBlue }}
+                            placeholder="Select Country"
+                            placeholderStyle={{ color: colors.PrimaryBlue }}
+                            open={openCountryList}
+                            value={selectedCountry}
+                            items={countries}
+                            setOpen={setOpenCountryList}
+                            setValue={(text: any) => {
+                                handleDropdownChange('createAddressRequest.country_uuid', text)
+                            }}
+                            style={styles.dropDown}
                         />
                     </View>
 
@@ -312,7 +359,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
                         selectedImagesBase64={selectedFacilityPhotosBase64}
                         setSelectedImagesBase64={(newPhotos) => handleImagesChange(newPhotos)}
                     />
-                    
+
                     <View style={styles.buttonContainer}>
                         <View style={styles.buttonWrapper}>
                             <Button onPress={() => handleCancel()} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
@@ -379,20 +426,21 @@ const styles = StyleSheet.create({
         width: '48%',
     },
     cancelButton: {
+        ...globalStyles.button,
         color: 'red',
-        shadowColor: 'green',
-        overlayColor: 'blue',
         backgroundColor: 'transparent',
         padding: 10,
-        borderRadius: 5,
-        //marginTop: 10,
         width: '100%',
+        marginTop: 0,
     },
     submitButton: {
         ...globalStyles.button,
         padding: 10,
-        borderRadius: 5,
         width: '100%',
         marginTop: 0,
+    },
+    dropDown: {
+        ...globalStyles.inputText,
+        marginBottom: 10,
     },
 });

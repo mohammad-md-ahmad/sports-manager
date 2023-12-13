@@ -23,7 +23,7 @@ const globalStyles = StyleSheet.create({
   },
   inputText: {
     fontSize: 14,
-    borderRadius: 5,
+    borderRadius: 50,
     borderWidth: 1,
     borderColor: colors.PrimaryBlue,
     backgroundColor: colors.White,
@@ -40,7 +40,7 @@ const globalStyles = StyleSheet.create({
   },
   button: {
     backgroundColor: colors.PrimaryBlue,
-    borderRadius: 5,
+    borderRadius: 50,
     height: 40,
     marginTop: 10,
     alignItems: "center",

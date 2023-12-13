@@ -1,6 +1,6 @@
 // Loader.tsx
 import React from 'react';
-import { View, ActivityIndicator, StyleSheet, Text } from 'react-native';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import { Overlay } from 'react-native-elements';
@@ -15,7 +15,7 @@ const Loader: React.FC<LoaderProps> = ({ loading }) => {
     return (
         <View>
             <Overlay isVisible={loading} overlayStyle={styles.overlay} >
-                <ActivityIndicator size="large" color="#0000ff" />
+                <ActivityIndicator size="large" color={colors.PrimaryBlue} />
             </Overlay>
         </View>
     );
@@ -28,11 +28,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.3)'
-    },
-    text: {
-        color: colors.PrimaryGreen,
-        fontFamily: fonts.Poppins.bold
-    },
+    }
 });
 
 export default Loader;

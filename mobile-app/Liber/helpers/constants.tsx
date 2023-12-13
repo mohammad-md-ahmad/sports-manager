@@ -42,6 +42,7 @@ export enum Screens {
     Search = "Search",
     UserBooking = "UserBooking",
     CompanyDetails = "CompanyDetails",
+    CompanyPhotos = "CompanyPhotos",
     ProgramManagmentTabs = "ProgramManagmentTabs",
     Reports = "Reports",
     Notifications = "Notifications",
