@@ -5,16 +5,14 @@ import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
-import { getCompanyData } from '../../helpers/companyDataManage';
 import CompanyService from '../../api/CompanyService';
 import Constants, { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Facilities from '../facilities/facilities';
-import AgendaScreen from '../calendar/calendar';
 import Rating from '../rating/rating';
 import CompanyDetails from './companyDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../../helpers/userDataManage';
+import CompanyPhotos from './companyPhotos';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -30,8 +28,8 @@ export default function CompanyProfile() {
         logo: require('./../../assets/images/liber_logo.png')
     });
 
-    function onEditPress(): void {
-        navigator.navigate(Screens.CompanyProfileForm)
+    function onBookingPress(): void {
+        navigator.navigate(Screens.Calendar)
     }
 
     const companyService = new CompanyService();
@@ -67,7 +65,11 @@ export default function CompanyProfile() {
             <View style={styles.container}>
                 <Image source={companyData.logo} style={styles.logo} />
                 <Text style={styles.name}>{companyData.name}</Text>
-                <Text style={styles.description}>{companyData.description}</Text>
+                <Button
+                    onPress={() => onBookingPress()}
+                    title="Booking"
+                    buttonStyle={styles.button}
+                />
             </View >
             <Tab.Navigator
                 screenOptions={{
@@ -77,7 +79,7 @@ export default function CompanyProfile() {
                     },
                 }}>
                 <Tab.Screen name={Screens.CompanyDetails} options={{ title: 'Info' }} component={CompanyDetails} />
-                <Tab.Screen name={Screens.CompanyPhotos} options={{ title: 'Photos' }} component={CompanyDetails} />
+                <Tab.Screen name={Screens.CompanyPhotos} options={{ title: 'Photos' }} component={CompanyPhotos} />
                 {/* <Tab.Screen name={Screens.Facilities} options={{ title: 'Booking' }} component={Facilities} />
                 <Tab.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} /> */}
                 <Tab.Screen name={Screens.Ratings} options={{ title: 'Rating' }} component={Rating} />
@@ -123,7 +125,8 @@ const styles = StyleSheet.create({
     },
     button: {
         ...globalStyles.button,
-        width: 250,
+        width: 300,
+        marginBottom: 15
     },
 });
 
