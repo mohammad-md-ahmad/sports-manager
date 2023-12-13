@@ -9,16 +9,12 @@ import {
     Colors
 } from 'react-native/Libraries/NewAppScreen';
 import { NavigationContainer } from '@react-navigation/native';
-import { createDrawerNavigator } from '@react-navigation/drawer';
-
 import { createStackNavigator } from '@react-navigation/stack';
-
 import { useAuth } from './AuhtContext';
-
 import LoginScreen from './src/login/login';
 import Signup from './src/login/signup';
-import DrawerNavigator from './src/navigators/drawerNavigator';
 import FooterBar from './src/navigators/footerBar';
+import AppNavigator from './src/navigators/appNavigator';
 
 
 function AppLoader(): JSX.Element {
@@ -41,7 +37,7 @@ function AppLoader(): JSX.Element {
             />
             {isAuthenticated ?
                 <>
-                    <DrawerNavigator />
+                    <AppNavigator />
                     <FooterBar />
                 </>
                 :

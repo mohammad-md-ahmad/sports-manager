@@ -23,6 +23,7 @@ import Search from '../search/search';
 import UserBooking from '../booking/userBooking';
 import { OneSignal } from 'react-native-onesignal';
 import programManagmentTabs from './programManagmentTabs';
+import BaseComponent from '../common/baseComponent';
 
 const Stack = createStackNavigator();
 
@@ -50,14 +51,14 @@ const AppNavigator = () => {
     }
 
     function onScheduleFormPress(): void {
-        let routes = navigator.getState().routes[0].state.routes;
+        let routes = navigator.getState().routes;
         let { facility } = routes[routes.length - 1].params;
 
         navigator.navigate(Screens.ScheduleForm, { "facility": facility });
     }
 
     function onCalendarViewPress(): void {
-        let routes = navigator.getState().routes[0].state.routes;
+        let routes = navigator.getState().routes.state.routes;
         let { facility } = routes[routes.length - 1].params;
 
         navigator.navigate(Screens.Calendar, { "facility": facility });
@@ -67,12 +68,16 @@ const AppNavigator = () => {
         navigator.navigate(Screens.CompanyProfileForm);
     }
 
-
     useEffect(() => {
-        let routesStack = navigator.getState().routes[0].state?.routes ?? [{ name: Screens.Dashboard }];
-        let screen = routesStack[routesStack?.length - 1].name ?? Screens.Dashboard;
-        dispatch({ type: GlobaSateKey.SetCurrentScreen, payload: screen });
-    }, [navigator.getState().routes[0].state?.index])
+        const unsubscribe = navigator.addListener('state', () => {
+            // This function will be called when the navigation state changes
+            const { index, routes } = navigator.getState();
+            dispatch({ type: GlobaSateKey.SetCurrentScreen, payload: routes[index].name });
+        });
+
+        // Clean up the subscription when the component is unmounted
+        return unsubscribe;
+    }, [navigator]);
 
     const [userData, setUserData] = useState({});
 
@@ -168,71 +173,46 @@ const AppNavigator = () => {
     }, [userData, currentScreen])
 
     return (
-        <Stack.Navigator>
-            <Stack.Group
-                screenOptions={{
-                    //headerShown:false,
-                    headerStyle: { backgroundColor: colors.PrimaryGreen },
-                    headerLeft: () =>
-                        <>
-                            {currentScreen == Screens.Dashboard ?
-                                <TouchableOpacity
-                                    onPress={() => toggleDrawer()}>
-                                    <View style={{ margin: 15 }}>
-                                        <Icon
-                                            name="menu" // Replace with your desired icon name
-                                            type="material"
-                                            size={25}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                                :
-                                <TouchableOpacity
-                                    onPress={() => toggleBack()}>
-                                    <View style={{ margin: 15 }}>
-                                        <Icon
-                                            name="arrow-back" // Replace with your desired icon name
-                                            type="material"
-                                            size={25}
-                                        />
-                                    </View>
-                                </TouchableOpacity>
-                            }
-                        </>
-                    ,
-                    headerRight: () =>
-                        <>
-                            {content}
-                        </>
-                }}
-            >
+        <BaseComponent>
+            <Stack.Navigator>
+                <Stack.Group
+                    screenOptions={{
+                        //headerShown:false,
+                        headerStyle: { backgroundColor: colors.PrimaryGreen },
 
-                <Stack.Screen name={Screens.Dashboard} options={{ title: 'Dashboard' }} component={Dashboard} />
+                        headerRight: () =>
+                            <>
+                                {content}
+                            </>
+                    }}
+                >
+                    <Stack.Screen name={Screens.Dashboard} options={{ title: 'Dashboard' }} component={Dashboard} />
 
-                <Stack.Screen name={Screens.Facilities} options={{ title: 'Facilities' }} component={Facilities} />
-                <Stack.Screen name={Screens.FacilityForm} options={{ title: 'Facility Form' }} component={FacilityForm} />
-                <Stack.Screen name={Screens.FacilityView} options={{ title: 'Facility View' }} component={FacilityView} />
+                    <Stack.Screen name={Screens.Facilities} options={{ title: 'Facilities' }} component={Facilities} />
+                    <Stack.Screen name={Screens.FacilityForm} options={{ title: 'Facility Form' }} component={FacilityForm} />
+                    <Stack.Screen name={Screens.FacilityView} options={{ title: 'Facility View' }} component={FacilityView} />
 
-                <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedule Form' }} component={ScheduleForm} />
+                    <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedule Form' }} component={ScheduleForm} />
 
-                <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
-                <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
+                    <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
+                    <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
 
-                <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
-                <Stack.Screen name={Screens.UserProfileForm} options={{ title: 'Profile Form' }} component={UserProfileForm} />
+                    <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
+                    <Stack.Screen name={Screens.UserProfileForm} options={{ title: 'Profile Form' }} component={UserProfileForm} />
 
-                <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
-                <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />
+                    <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
+                    <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />
 
-                <Stack.Screen name={Screens.UserBooking} options={{ title: 'User Booking' }} component={UserBooking} />
+                    <Stack.Screen name={Screens.UserBooking} options={{ title: 'User Booking' }} component={UserBooking} />
 
-                <Stack.Screen name={Screens.ProgramManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
+                    <Stack.Screen name={Screens.ProgramManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
 
 
-                <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
+                    <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />
 
-            </Stack.Group>
-        </Stack.Navigator>
+                </Stack.Group>
+            </Stack.Navigator>
+        </BaseComponent>
     );
 };
 

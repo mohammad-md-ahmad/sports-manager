@@ -117,7 +117,6 @@ function ScheduleForm({ route }): React.JSX.Element {
                     {errors != null ? <ErrorView errorData={errors} /> : <></>}
 
                     <View>
-                        <Text style={styles.label}>Start Date</Text>
                         <TextInput
                             placeholder="Start Date"
                             placeholderTextColor={placeHolderTextColor}
@@ -129,7 +128,6 @@ function ScheduleForm({ route }): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>Start Time</Text>
                         <TextInput
                             placeholder="Start Time"
                             placeholderTextColor={placeHolderTextColor}
@@ -142,7 +140,6 @@ function ScheduleForm({ route }): React.JSX.Element {
 
 
                     <View>
-                        <Text style={styles.label}>End Date</Text>
                         <TextInput
                             placeholder="End Date"
                             placeholderTextColor={placeHolderTextColor}
@@ -154,7 +151,6 @@ function ScheduleForm({ route }): React.JSX.Element {
                     </View>
 
                     <View>
-                        <Text style={styles.label}>End Time</Text>
                         <TextInput
                             placeholder="End Time"
                             placeholderTextColor={placeHolderTextColor}
@@ -167,9 +163,8 @@ function ScheduleForm({ route }): React.JSX.Element {
 
 
                     <View>
-                        <Text style={styles.label}>Slot (in minutes)</Text>
                         <TextInput
-                            placeholder="90"
+                            placeholder="Slot (in minutes) ex: 90"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
                             value={formData.slot}
@@ -257,19 +252,18 @@ const styles = StyleSheet.create({
         width: '48%',
     },
     cancelButton: {
+        ...globalStyles.button,
         color: 'red',
         shadowColor: 'green',
         overlayColor: 'blue',
         backgroundColor: 'transparent',
         padding: 10,
-        borderRadius: 5,
-        //marginTop: 10,
+        marginTop: 0,
         width: '100%',
     },
     submitButton: {
         ...globalStyles.button,
         padding: 10,
-        borderRadius: 5,
         width: '100%',
         marginTop: 0,
     },
