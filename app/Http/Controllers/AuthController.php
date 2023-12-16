@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
@@ -57,7 +58,7 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request): JsonResponse
     {
         try {
             // delete the current token that was used for the request
@@ -70,6 +71,32 @@ class AuthController extends Controller
             Log::error('Unable to logout user: '.$exception->getMessage());
 
             return response()->json(['message' => __('Unable to logout user!')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function sendPasswordResetLink(Request $request): JsonResponse
+    {
+        $status = null;
+
+        try {
+            $request->validate([
+                'email' => 'required|email',
+            ]);
+
+            $email = $request->only('email');
+
+            $status = Password::sendResetLink(
+                $email
+            );
+
+            return response()->json(['message' => __('Password reset link has been sent successfully!')], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to send password reset link!'),
+                'errors' => __($status),
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 }

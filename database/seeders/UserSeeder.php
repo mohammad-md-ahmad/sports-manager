@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
         ], [
             'first_name' => 'Super',
             'last_name' => 'Admin',
-            'email' => 'super_admin@sports-manager.com',
+            'email' => 'super_admin@liber.com',
             'password' => Hash::make('P@ssw0rd'),
             'type' => UserType::ADMIN->name,
         ]);

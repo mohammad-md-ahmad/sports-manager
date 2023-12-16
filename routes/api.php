@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::post('/reset-password/send-link', [AuthController::class, 'sendPasswordResetLink'])->name('reset-password.send-link');
 
 Route::prefix('register')->group(function () {
     Route::post('/company', [RegisterController::class, 'registerCompany'])->name('register.company');
