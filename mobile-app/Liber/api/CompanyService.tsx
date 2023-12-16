@@ -8,9 +8,13 @@ class CompanyService extends AxiosService {
         this.companyDataPromise = this.initializePromise(getCompanyData);
     }
 
+    async list() {
+        return this.get(`/companies`);
+    }
+
+
     async getCompany() {
         const companyData = await this.companyDataPromise;
-        console.log('companyData.uuid',companyData.uuid)
         return this.get(`/companies/${companyData.uuid}`);
     }
 

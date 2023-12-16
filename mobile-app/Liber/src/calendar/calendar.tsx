@@ -14,7 +14,7 @@ import { date } from 'yup';
 
 export default function AgendaScreen({ route }): React.JSX.Element {
     const { facility } = route?.params ?? { facility: null };
-    const navigation = useNavigation();
+    const navigator = useNavigation();
     const scheduleService = new ScheduleService();
     const bookingService = new BookingService();
     const [items, setItems] = useState(undefined);
@@ -267,7 +267,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
             <TouchableOpacity
                 style={[styles.item, { height: reservation.height }]}
                 onPress={() => {
-                    navigation.navigate(Screens.FacilityView, { 'facility': reservation?.facility })
+                    navigator.navigate(Screens.FacilityView, { 'facility': reservation?.facility })
                 }}
             >
                 <View style={styles.row}>
