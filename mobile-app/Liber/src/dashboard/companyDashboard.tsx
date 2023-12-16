@@ -2,34 +2,32 @@ import React, { useEffect, useState } from "react";
 
 import {
     SafeAreaView,
-    ScrollView,
     StyleSheet,
-    Text,
-    View,
     VirtualizedList,
 } from "react-native";
 import colors from "../../styles/colors";
-import FacilityCard from "../common/facilityCard";
-import FacilityService from "../../api/FacilityService";
 import MiscService from "../../api/MiscService";
 import { useFocusEffect } from "@react-navigation/native";
 import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { storeCountries } from "../../helpers/countriesDataManage";
+import CompanyService from "../../api/CompanyService";
+import CompanyCard from "../common/companyCard";
 
 export default function CompanyDashboard(): React.JSX.Element {
-    const facilityService = new FacilityService();
+    const companyService = new CompanyService();
     const miscService = new MiscService();
 
-    const [facilities, setFacilities] = useState([]);
+    const [companies, setCompanies] = useState([]);
 
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            facilityService.list({})
+            companyService.list({})
                 .then((response) => {
-                    setFacilities(response.data?.data.data);
+                    console.log('companies', response.data)
+                    setCompanies(response.data?.data);
                 }).catch((error) => {
                 });
 
@@ -42,14 +40,14 @@ export default function CompanyDashboard(): React.JSX.Element {
         }, [])
     );
 
-    const getItem = (_data: unknown, index: number) => facilities[index];
-    const getItemCount = (_data: unknown) => facilities.length;
+    const getItem = (_data: unknown, index: number) => companies[index] ?? 0;
+    const getItemCount = (_data: unknown) => companies?.length ?? 0;
 
     return (
         <SafeAreaView style={styles.container}>
             <VirtualizedList
                 initialNumToRender={6}
-                renderItem={({ item }) => <FacilityCard facility={item} />}
+                renderItem={({ item }) => <CompanyCard company={item} />}
                 keyExtractor={item => item.uuid}
                 getItemCount={getItemCount}
                 getItem={getItem}
