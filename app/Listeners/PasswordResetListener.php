@@ -26,6 +26,7 @@ class PasswordResetListener
      */
     public function handle(PasswordResetEvent $event)
     {
+        $event->user->tokens()->delete();
         $event->user->notify(new PasswordResetConfirmation());
     }
 }

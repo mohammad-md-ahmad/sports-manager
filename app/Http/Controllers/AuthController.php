@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
@@ -90,6 +91,13 @@ class AuthController extends Controller
             );
 
             return response()->json(['message' => __('Password reset link has been sent successfully!')], Response::HTTP_OK);
+        } catch (ValidationException $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Validation errors!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
 
