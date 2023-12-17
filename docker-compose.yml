@@ -5,6 +5,7 @@ version: "3.8"
 services:
   app:
     image: kooldev/php:8.2-nginx
+    container_name: "${COMPOSE_PROJECT_NAME}-app"
     ports:
       - "${KOOL_APP_PORT:-80}:80"
     environment:
@@ -31,6 +32,7 @@ services:
       test: mysqladmin -p${DB_PASSWORD-pass} ping
   cache:
     image: redis:6-alpine
+    container_name: "${COMPOSE_PROJECT_NAME}-cache"
     volumes:
       - cache:/data:delegated
     networks:
