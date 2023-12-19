@@ -9,7 +9,6 @@ class RegisterService extends AxiosService {
     async createUser(data: Object) {
         return this.post('/register/user', data);
     }
-
 }
 
 export default RegisterService;

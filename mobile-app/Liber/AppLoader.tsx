@@ -15,6 +15,7 @@ import LoginScreen from './src/login/login';
 import Signup from './src/login/signup';
 import FooterBar from './src/navigators/footerBar';
 import AppNavigator from './src/navigators/appNavigator';
+import ForgetPassword from './src/login/forget-password';
 
 
 function AppLoader(): JSX.Element {
@@ -47,6 +48,7 @@ function AppLoader(): JSX.Element {
                 >
                     <Stack.Screen name="Login" options={{ title: 'Login' }} component={LoginScreen} />
                     <Stack.Screen name="Signup" options={{ title: 'Signup' }} component={Signup} />
+                    <Stack.Screen name="ForgetPassword" options={{ title: 'Forgot Your Password?' }} component={ForgetPassword} />
                 </Stack.Navigator>
             }
         </NavigationContainer>

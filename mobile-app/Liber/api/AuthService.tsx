@@ -9,6 +9,10 @@ class AuthService extends AxiosService {
     async logout() {
         return this.post('/logout');
     }
+
+    async sendResetPasswordLink(data: Object) {
+        return this.post('/reset-password/send-link', data);
+    }
 }
 
 export default AuthService;

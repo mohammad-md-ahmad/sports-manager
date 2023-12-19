@@ -77,8 +77,6 @@ class AuthController extends Controller
 
     public function sendPasswordResetLink(Request $request): JsonResponse
     {
-        $status = null;
-
         try {
             $request->validate([
                 'email' => 'required|email',
@@ -86,11 +84,7 @@ class AuthController extends Controller
 
             $email = $request->only('email');
 
-            $status = Password::sendResetLink(
-                $email
-            );
-
-            return response()->json(['message' => __('Password reset link has been sent successfully!')], Response::HTTP_OK);
+            Password::sendResetLink($email);
         } catch (ValidationException $exception) {
             Log::error($exception->getMessage());
 
@@ -100,11 +94,8 @@ class AuthController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
-
-            return response()->json([
-                'message' => __('Unable to send password reset link!'),
-                'errors' => __($status),
-            ], Response::HTTP_BAD_REQUEST);
         }
+
+        return response()->json(['message' => __('If this email address is registered in our platform, a password reset link will be sent.')], Response::HTTP_OK);
     }
 }

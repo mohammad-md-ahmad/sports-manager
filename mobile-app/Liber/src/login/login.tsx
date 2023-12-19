@@ -40,6 +40,10 @@ const styles = StyleSheet.create({
         ...globalStyles.button,
         width: 250,
     },
+    textButton: {
+        ...globalStyles.textButton,
+        width: 250,
+    },
     imageConatiner: {
         alignItems: "center",
         marginTop: 10,
@@ -78,6 +82,10 @@ export default function LoginScreen(): React.JSX.Element {
         navigator.navigate(Screens.Signup);
     }
 
+    function onForgetPasswordPress(): void {
+        navigator.navigate(Screens.ForgetPassword);
+    }
+
     return (
         <BaseComponent>
             <KeyboardAvoidingView style={styles.containerView} behavior="padding">
@@ -104,6 +112,12 @@ export default function LoginScreen(): React.JSX.Element {
                                 secureTextEntry={true}
                                 value={password}
                                 onChangeText={(text) => setPassword(text)}
+                            />
+                            <Button
+                                onPress={() => onForgetPasswordPress()}
+                                title="Forgot Your Password?"
+                                buttonStyle={styles.textButton}
+                                titleStyle={globalStyles.textButtonTitle}
                             />
                             <Button
                                 onPress={() => onLoginPress()}

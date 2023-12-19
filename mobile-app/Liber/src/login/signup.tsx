@@ -106,7 +106,6 @@ export default function Signup(): React.JSX.Element {
                     setErrors(error.response.data.errors)
                     // Handle API request errors here
                 });
-
         }
     };
 
