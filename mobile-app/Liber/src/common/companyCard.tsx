@@ -7,6 +7,7 @@ import { Screens } from '../../helpers/constants';
 import fonts from '../../styles/fonts';
 import Swiper from 'react-native-swiper';
 import globalStyles from '../../styles/styles';
+import RatingRowWithNumber from './ratingRowWithNumber';
 
 interface Company {
     name: string;
@@ -35,10 +36,13 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
         <View style={styles.cardContainer}>
             {/* User Info Section */}
             <TouchableOpacity onPress={handleCompanyClick} activeOpacity={0.8}>
-                <View style={styles.userInfo}>
+                <View style={styles.userInfoContainer}>
                     <Image source={{ uri: company?.logo }} style={styles.avatar} />
-                    <View>
-                        <Text style={styles.userName}>{company?.name}</Text>
+                    <View style={styles.userInfo}>
+                        <View style={styles.nameRatingRow}>
+                            <Text style={styles.userName}>{company?.name}</Text>
+                            <RatingRowWithNumber ratingData={{ratingNumber: company?.total_rating}} />
+                        </View>
                         <Text style={styles.postTime}>{
                             (company?.address?.region ?? '') +
                             (company?.address?.region && company?.address?.city ? ', ' : '') +
@@ -56,7 +60,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
                     <Swiper style={styles.wrapper} showsButtons={true}>
                         {
                             company?.gallery?.map((galleryItem, index) => (
-                                <View style={styles.slide}>
+                                <View style={styles.slide} key={index}>
                                     <Image source={{ uri: galleryItem.image }} style={styles.postImage} />
                                 </View>
                             ))
@@ -96,9 +100,15 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         marginHorizontal: 10,
     },
+    userInfoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
     userInfo: {
         flexDirection: 'row',
         marginBottom: 12,
+        width: '100%',
+        flex: 1,
     },
     avatar: {
         width: 40,
@@ -144,7 +154,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginHorizontal: 5,
     },
+    nameRatingRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 14,
+        width: '100%',
+    }
 });
-
 
 export default CompanyCard;

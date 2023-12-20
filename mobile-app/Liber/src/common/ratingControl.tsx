@@ -1,33 +1,34 @@
-import { useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { useEffect, useState } from 'react';
 import StarRating from 'react-native-star-rating';
 import colors from '../../styles/colors';
 
-function RatingControl(props): React.JSX.Element {
-    const [rating, setRating] = useState(props?.rating ?? 0);
+interface RatingData {
+    ratingNumber: number,
+    disabled: boolean,
+}
 
-    const onStarRatingPress = (rating) => {
-        setRating(rating);
+interface RatingDataProps {
+    ratingData: RatingData;
+}
+
+const RatingControl: React.FC<RatingDataProps> = ({ ratingData }) => {
+    const [rating, setRating] = useState(ratingData?.ratingNumber ?? 0);
+
+    const onStarRatingPress = (ratingNumber) => {
+        setRating(ratingNumber);
     }
 
     return (
         <StarRating
-            disabled={props?.disabled ?? false}
+            disabled={ratingData?.disabled ?? false}
             maxStars={5}
             rating={rating}
-            selectedStar={(rating) => onStarRatingPress(rating)}
+            selectedStar={(ratingNumber) => onStarRatingPress(ratingNumber)}
             starSize={20}
-            starStyle={
-                styles.star
-            }
+            fullStarColor={colors.Orange}
+            emptyStarColor={colors.Orange}
         />
     );
 }
-
-const styles = StyleSheet.create({
-    star: {
-        color: colors.Orange
-    }
-});
 
 export default RatingControl;

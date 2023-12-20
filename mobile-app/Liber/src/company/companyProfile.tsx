@@ -13,6 +13,8 @@ import CompanyDetails from './companyDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../../helpers/userDataManage';
 import CompanyPhotos from './companyPhotos';
+import RatingControl from '../common/ratingControl';
+import RatingRowWithNumber from '../common/ratingRowWithNumber';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -65,6 +67,7 @@ export default function CompanyProfile() {
             <View style={styles.container}>
                 <Image source={companyData.logo} style={styles.logo} />
                 <Text style={styles.name}>{companyData.name}</Text>
+                <RatingRowWithNumber ratingData={{ratingNumber: companyData?.total_rating}} />
                 <Button
                     onPress={() => onBookingPress()}
                     title="Booking"
@@ -128,5 +131,14 @@ const styles = StyleSheet.create({
         width: 300,
         marginBottom: 15
     },
+    ratingRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 14,
+    },
+    ratingText: {
+        fontSize: 16,
+        color: colors.PrimaryBlue,
+        marginEnd: 5,
+    },
 });
-

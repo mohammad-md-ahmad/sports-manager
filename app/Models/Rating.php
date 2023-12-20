@@ -25,6 +25,7 @@ class Rating extends Model
         'rated_entity_type',
         'rated_entity_id',
         'user_id',
+        'booking_id',
         'commenter_name',
         'rating',
         'comment',
