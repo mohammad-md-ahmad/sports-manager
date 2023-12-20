@@ -17,7 +17,7 @@ const RatingItem: React.FC<RatingItemProps> = ({ rating }) => {
         <View style={styles.cardContainer}>
             <View style={styles.commenterRow}>
                 <Text style={styles.commenterName}>{rating.commenter_name}</Text>
-                <RatingControl rating={rating?.rating} disabled={true} />
+                <RatingControl ratingData={{ratingNumber: rating?.rating}} />
             </View>
             <Text style={styles.commentText}>{rating.comment}</Text>
         </View>

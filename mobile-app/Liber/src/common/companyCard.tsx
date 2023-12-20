@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     userInfo: {
-        flexDirection: 'row',
+        flexDirection: 'column',
         marginBottom: 12,
         width: '100%',
         flex: 1,
@@ -157,7 +157,6 @@ const styles = StyleSheet.create({
     nameRatingRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 14,
         width: '100%',
     }
 });

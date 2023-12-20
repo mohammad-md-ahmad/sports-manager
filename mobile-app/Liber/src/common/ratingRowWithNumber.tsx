@@ -14,7 +14,7 @@ interface RatingDataProps {
 const RatingRowWithNumber: React.FC<RatingDataProps> = ({ ratingData }) => {
     useEffect(() => {
         console.log('RATING NUMBER hhh', ratingData.ratingNumber);
-    }, []);
+    }, [ratingData]);
 
     return (
         <View style={styles.ratingRow}>
@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
     ratingRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 14,
     },
     ratingText: {
         fontSize: 16,
