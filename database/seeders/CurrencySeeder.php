@@ -18,5 +18,12 @@ class CurrencySeeder extends Seeder
         ], [
             'is_enabled' => true,
         ]);
+
+        Currency::updateOrCreate([
+            'name' => 'US Dollar',
+            'iso_short_code' => 'USD',
+        ], [
+            'is_enabled' => true,
+        ]);
     }
 }

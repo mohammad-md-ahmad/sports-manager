@@ -20,7 +20,16 @@ class CountrySeeder extends Seeder
         ], [
             'allowed_to_operate' => true,
             'distance_metric' => DistanceMetric::KILOMETRES->name,
-            'currency_id' => Currency::first()->id ?? Currency::factory()->create()->id,
+            'currency_id' => Currency::query()->where('iso_short_code', 'LBP')->first()->id ?? Currency::factory()->create()->id,
+        ]);
+
+        Country::updateOrCreate([
+            'name' => 'Palestine',
+            'iso_short_code' => 'PS',
+        ], [
+            'allowed_to_operate' => true,
+            'distance_metric' => DistanceMetric::KILOMETRES->name,
+            'currency_id' => Currency::query()->where('iso_short_code', 'USD')->first()->id ?? Currency::factory()->create()->id,
         ]);
     }
 }
