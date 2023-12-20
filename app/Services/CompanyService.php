@@ -262,8 +262,6 @@ class CompanyService implements CompanyServiceInterface
     }
 
     /**
-     * @param string $logo
-     * @return bool
      * @throws Exception
      */
     private function deleteLogo(string $logo): bool
