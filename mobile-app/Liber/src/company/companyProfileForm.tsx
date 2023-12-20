@@ -75,9 +75,10 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
             companyService.getCompany().then((response) => {
                 console.log('company data', response.data);
-                response.data.data.createAddressRequest = { ...response.data.data.address }
+                response.data.data.address = { ...response.data.data.address }
                 setFormData({ ...response.data.data, logo: null });
                 setLogo({ uri: response.data?.data?.logo });
+                setSelectedCountry(response.data?.data?.address?.country_uuid);
             }).catch((error) => {
                 console.error('company error', error)
             });
@@ -160,7 +161,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
     const [selectedFacilityPhotos, setSelectedFacilityPhotos] = useState<Array<string>>([]);
     const [selectedFacilityPhotosBase64, setSelectedFacilityPhotosBase64] = useState<Array<string>>([]);
 
-
     const handleImagesChange = (newPhotos) => {
         setSelectedFacilityPhotosBase64(newPhotos);
         setFormData((prevData) => ({
@@ -177,23 +177,16 @@ export default function CompanyProfileForm(): React.JSX.Element {
     const [countries, setCountries] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState<string>('');
 
-    const handleDropdownChange = (field: keyof FormData, value: string) => {
-        if (field.startsWith('address.')) {
-            if (field === 'address.country_uuid') {
-                const [parentField, nestedField] = field.split('.');
+    const handleCountryDropdownChange = (callback) => {
+        setSelectedCountry(callback(selectedCountry));
 
-                setSelectedCountry(value);
-
-                setFormData({
-                    ...formData,
-                    [parentField]: {
-                        ...formData[parentField],
-                        [nestedField]: value,
-                    },
-                });
-            }
-        }
-
+        setFormData({
+            ...formData,
+            address: {
+                ...formData.address,
+                country_uuid: callback(formData.address.country_uuid),
+            },
+        });
     };
 
     useEffect(() => {
@@ -345,9 +338,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
                             value={selectedCountry}
                             items={countries}
                             setOpen={setOpenCountryList}
-                            setValue={(text: any) => {
-                                handleDropdownChange('address.country_uuid', text)
-                            }}
+                            setValue={(callback) => handleCountryDropdownChange(callback)}
                             style={styles.dropDown}
                         />
                     </View>

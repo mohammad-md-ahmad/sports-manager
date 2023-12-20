@@ -28,9 +28,8 @@ export default function Search(): React.JSX.Element {
         type: null
     });
 
-
     const handleInputChange = (field: string, value: string) => {
-        if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
+        if (field.startsWith('details.') || field.startsWith('address.')) {
             // Handle nested objects
             const [parentField, nestedField] = field.split('.');
             setFormData({

@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property string $id
+ * @property string $uuid
+ */
 class Country extends Model
 {
     use BindsOnUuid;
