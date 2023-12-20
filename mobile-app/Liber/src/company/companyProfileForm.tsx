@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-
 import {
     Image,
     ScrollView,
@@ -29,7 +28,8 @@ interface CompanyFormData {
     description: string;
     logo: string | null;
 
-    createAddressRequest: {
+    address: {
+        uuid: string;
         line_1: string;
         line_2: string;
         line_3: string;
@@ -43,8 +43,8 @@ interface CompanyFormData {
 }
 
 export default function CompanyProfileForm(): React.JSX.Element {
-
     let companyService = new CompanyService();
+
     const navigator = useNavigation();
 
     const [logo, setLogo] = useState(require('./../../assets/images/liber_logo.png'));
@@ -55,7 +55,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
         name_ar: '',
         description: '',
         logo: null,
-        createAddressRequest: {
+        address: {
+            uuid: '',
             line_1: '',
             line_2: '',
             line_3: '',
@@ -72,7 +73,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-
             companyService.getCompany().then((response) => {
                 console.log('company data', response.data);
                 response.data.data.createAddressRequest = { ...response.data.data.address }
@@ -81,7 +81,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
             }).catch((error) => {
                 console.error('company error', error)
             });
-
 
             // getCompanyData().then((data: string | null) => {
             //     if (data !== null) {
@@ -108,7 +107,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
     );
 
     const handleInputChange = (field: string, value: string) => {
-        if (field.startsWith('details.') || field.startsWith('createAddressRequest.')) {
+        if (field.startsWith('details.') || field.startsWith('address.')) {
             // Handle nested objects
             const [parentField, nestedField] = field.split('.');
             setFormData({
@@ -122,17 +121,17 @@ export default function CompanyProfileForm(): React.JSX.Element {
             setFormData({ ...formData, [field]: value });
         }
     };
+
     const [errors, setErrors] = useState(null);
 
     function onSubmitPress(): void {
         companyService.update(formData).then((response) => {
             // Handle a successful API response
             navigator.navigate(Screens.CompanyProfile);
-        })
-            .catch((error) => {
-                // Handle API request errors here
-                setErrors(error.response.data.errors)
-            });
+        }).catch((error) => {
+            // Handle API request errors here
+            setErrors(error.response.data.errors)
+        });
     }
 
     const selectImage = async () => {
@@ -179,8 +178,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
     const [selectedCountry, setSelectedCountry] = useState<string>('');
 
     const handleDropdownChange = (field: keyof FormData, value: string) => {
-        if (field.startsWith('createAddressRequest.')) {
-            if (field === 'createAddressRequest.country_uuid') {
+        if (field.startsWith('address.')) {
+            if (field === 'address.country_uuid') {
                 const [parentField, nestedField] = field.split('.');
 
                 setSelectedCountry(value);
@@ -272,8 +271,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
                     <View>
                         <TextInput
-                            value={formData.createAddressRequest.line_1}
-                            onChangeText={(text) => handleInputChange('createAddressRequest.line_1', text)}
+                            value={formData.address.line_1}
+                            onChangeText={(text) => handleInputChange('address.line_1', text)}
                             placeholder="Line 1"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
@@ -282,8 +281,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
                     <View>
                         <TextInput
-                            value={formData.createAddressRequest.line_2}
-                            onChangeText={(text) => handleInputChange('createAddressRequest.line_2', text)}
+                            value={formData.address.line_2}
+                            onChangeText={(text) => handleInputChange('address.line_2', text)}
                             placeholder="Line 2"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
@@ -292,8 +291,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
                     <View>
                         <TextInput
-                            value={formData.createAddressRequest.line_3}
-                            onChangeText={(text) => handleInputChange('createAddressRequest.line_3', text)}
+                            value={formData.address.line_3}
+                            onChangeText={(text) => handleInputChange('address.line_3', text)}
                             placeholder="Line 3"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
@@ -302,8 +301,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
                     <View>
                         <TextInput
-                            value={formData.createAddressRequest.city}
-                            onChangeText={(text) => handleInputChange('createAddressRequest.city', text)}
+                            value={formData.address.city}
+                            onChangeText={(text) => handleInputChange('address.city', text)}
                             placeholder="City"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
@@ -312,8 +311,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
                     <View>
                         <TextInput
-                            value={formData.createAddressRequest.region}
-                            onChangeText={(text) => handleInputChange('createAddressRequest.region', text)}
+                            value={formData.address.region}
+                            onChangeText={(text) => handleInputChange('address.region', text)}
                             placeholder="Region / State"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
@@ -322,8 +321,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
                     <View>
                         <TextInput
-                            value={formData.createAddressRequest.postcode}
-                            onChangeText={(text) => handleInputChange('createAddressRequest.postcode', text)}
+                            value={formData.address.postcode}
+                            onChangeText={(text) => handleInputChange('address.postcode', text)}
                             placeholder="Post Code"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
@@ -332,8 +331,8 @@ export default function CompanyProfileForm(): React.JSX.Element {
 
                     <View>
                         {/* <TextInput
-                            value={formData.createAddressRequest.country_uuid}
-                            onChangeText={(text) => handleInputChange('createAddressRequest.country_uuid', text)}
+                            value={formData.address.country_uuid}
+                            onChangeText={(text) => handleInputChange('address.country_uuid', text)}
                             placeholder="Country"
                             placeholderTextColor={placeHolderTextColor}
                             style={styles.formTextInput}
@@ -347,7 +346,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
                             items={countries}
                             setOpen={setOpenCountryList}
                             setValue={(text: any) => {
-                                handleDropdownChange('createAddressRequest.country_uuid', text)
+                                handleDropdownChange('address.country_uuid', text)
                             }}
                             style={styles.dropDown}
                         />

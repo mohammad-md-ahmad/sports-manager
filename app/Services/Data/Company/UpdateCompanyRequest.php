@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Data\Company;
 
 use App\Models\Company;
-use App\Services\Data\Address\UpdateAddressRequest;
+use App\Services\Data\Address\CreateOrUpdateAddressRequest;
 use App\Services\Data\Core\UuidToEntityCaster;
 use App\Services\Data\User\UpdateUserRequest;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
@@ -22,9 +22,9 @@ class UpdateCompanyRequest extends Data
         public string|Optional|null $name,
         public string|Optional|null $description,
         public string|Optional|null $logo,
-        public UpdateAddressRequest|Optional|null $updateAddressRequest,
-        public UpdateUserRequest|Optional|null $updateUserRequest,
+        public ?UpdateUserRequest $user = null,
         public ?array $companyPhotos = null,
+        public ?CreateOrUpdateAddressRequest $address = null,
     ) {
     }
 }

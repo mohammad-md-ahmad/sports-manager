@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Data\Company;
+namespace App\Services\Data\Address;
 
-use App\Models\Company;
+use App\Models\Address;
 use App\Services\Data\Core\UuidToEntityCaster;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
-class DeleteCompanyRequest extends Data
+class DeleteAddressRequest extends Data
 {
     public function __construct(
         #[FromRouteParameter('uuid')]
-        #[WithCast(UuidToEntityCaster::class, Company::class)]
+        #[WithCast(UuidToEntityCaster::class, Address::class)]
         public string $id,
     ) {
     }

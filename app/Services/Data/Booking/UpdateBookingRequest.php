@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Data\Company;
+namespace App\Services\Data\Booking;
 
 use App\Models\Company;
 use App\Services\Data\Address\UpdateAddressRequest;
@@ -13,7 +13,7 @@ use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
-class UpdateCompanyRequest extends Data
+class UpdateBookingRequest extends Data
 {
     public function __construct(
         #[FromRouteParameter('uuid')]

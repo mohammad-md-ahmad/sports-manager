@@ -11,7 +11,6 @@ use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Optional;
 
 class UpdateAddressRequest extends Data
 {
@@ -20,18 +19,18 @@ class UpdateAddressRequest extends Data
         #[FromRouteParameter('uuid')]
         #[WithCast(UuidToEntityCaster::class, Address::class)]
         public string $id,
-        public string|Optional $model_type,
-        public string|Optional $model_id,
-        public string|Optional $line_1,
-        public string|Optional $line_2,
-        public string|Optional $line_3,
-        public string|Optional $city,
-        public string|Optional $region,
-        public string|Optional $postcode,
-        public array|Optional $geocode_data,
+        public ?string $model_type = null,
+        public ?string $model_id = null,
+        public ?string $line_1 = null,
+        public ?string $line_2 = null,
+        public ?string $line_3 = null,
+        public ?string $city = null,
+        public ?string $region = null,
+        public ?string $postcode = null,
+        public ?array $geocode_data = null,
         #[MapInputName('country_uuid')]
         #[WithCast(UuidToEntityCaster::class, Country::class)]
-        public string|Optional $country_id,
+        public ?string $country_id = null,
     ) {
     }
 }

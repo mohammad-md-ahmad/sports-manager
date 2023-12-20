@@ -11,7 +11,9 @@ use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserType;
 use App\Models\Company;
+use App\Models\User;
 use App\Services\Data\Address\CreateAddressRequest;
+use App\Services\Data\Address\CreateOrUpdateAddressRequest;
 use App\Services\Data\Address\UpdateAddressRequest;
 use App\Services\Data\Company\CreateCompanyRequest;
 use App\Services\Data\Company\DeleteCompanyRequest;
@@ -40,6 +42,9 @@ class CompanyService implements CompanyServiceInterface
     ) {
     }
 
+    /**
+     * @throws Exception
+     */
     public function get(GetCompanyRequest $data): Company
     {
         try {
@@ -58,6 +63,9 @@ class CompanyService implements CompanyServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAll(Request $request): Collection
     {
         try {
@@ -71,6 +79,9 @@ class CompanyService implements CompanyServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function store(CreateCompanyRequest $data): Company
     {
         $uploadedImg = null;
@@ -84,7 +95,6 @@ class CompanyService implements CompanyServiceInterface
             if ($data->createUserRequest instanceof CreateUserRequest) {
                 $data->createUserRequest->type = UserType::COMPANY_USER->name;
 
-                /** @var User $user */
                 $user = $this->userService->store($data->createUserRequest);
 
                 $this->companyUserService->store($company->id, $user->id);
@@ -107,6 +117,8 @@ class CompanyService implements CompanyServiceInterface
 
             DB::commit();
 
+            $company->refresh();
+
             return $company;
         } catch (Exception $exception) {
             DB::rollBack();
@@ -121,6 +133,9 @@ class CompanyService implements CompanyServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function update(UpdateCompanyRequest $data): Company
     {
         $uploadedImg = null;
@@ -133,18 +148,30 @@ class CompanyService implements CompanyServiceInterface
 
             $company->update($data->toArray());
 
-            if ($data->updateUserRequest instanceof UpdateUserRequest) {
-                $data->updateUserRequest->type = UserType::COMPANY_USER->name;
+            if ($data->user instanceof UpdateUserRequest) {
+                $data->user->type = UserType::COMPANY_USER->name;
 
                 /** @var User $user */
-                $this->userService->update($data->updateUserRequest);
+                $this->userService->update($data->user);
             }
 
-            if ($data->updateAddressRequest instanceof UpdateAddressRequest) {
-                $data->updateAddressRequest->model_type = Company::class;
-                $data->updateAddressRequest->model_id = (string) $company->id;
+            if ($data->address instanceof CreateOrUpdateAddressRequest) {
+                $data->address->model_type = Company::class;
+                $data->address->model_id = (string) $company->id;
 
-                $this->addressService->update($data->updateAddressRequest);
+                if ($company->address) {
+                    UpdateAddressRequest::validate($data->address->toArray());
+
+                    $updateAddressRequest = UpdateAddressRequest::from($data->address->toArray());
+
+                    $this->addressService->update($updateAddressRequest);
+                } else {
+                    CreateAddressRequest::validate($data->address->toArray());
+
+                    $createAddressRequest = CreateAddressRequest::from($data->address->toArray());
+
+                    $this->addressService->store($createAddressRequest);
+                }
             }
 
             // after company got updated successfully, upload and update the logo
@@ -156,17 +183,22 @@ class CompanyService implements CompanyServiceInterface
 
             if ($data->companyPhotos && count($data->companyPhotos) > 0) {
                 foreach ($data->companyPhotos as $photo) {
-                    $createGalleryRequest = new CreateGalleryRequest(
-                        model_type: Company::class,
-                        model_id: (string) $company->id,
-                        image: $photo,
-                    );
+                    $galleryData = [
+                        'model_type' => Company::class,
+                        'model_id' => (string) $company->id,
+                        'image' => $photo,
+                    ];
+
+                    CreateGalleryRequest::validate($galleryData);
+                    $createGalleryRequest = CreateGalleryRequest::from($galleryData);
 
                     $this->galleryService->store($createGalleryRequest);
                 }
             }
 
             DB::commit();
+
+            $company->refresh();
 
             return $company;
         } catch (Exception $exception) {
@@ -182,6 +214,9 @@ class CompanyService implements CompanyServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete(DeleteCompanyRequest $data): bool
     {
         try {
@@ -226,6 +261,11 @@ class CompanyService implements CompanyServiceInterface
         }
     }
 
+    /**
+     * @param string $logo
+     * @return bool
+     * @throws Exception
+     */
     private function deleteLogo(string $logo): bool
     {
         try {
