@@ -17,8 +17,10 @@ class ScheduleService extends AxiosService {
     }
 
     async getCompanySchedule(data: Object) {
-        const companyData = await this.companyDataPromise;
-        data['company_uuid'] = companyData.uuid;
+        if (!data['company_uuid']) {
+            const companyData = await this.companyDataPromise;
+            data['company_uuid'] = companyData.uuid;
+        }
         return this.get(`/schedules/company-schedule?${this.objectToQueryParams(data)}`);
     }
 

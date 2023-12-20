@@ -11,6 +11,7 @@ import { BookingStatus, Screens, SlotStatus, UserType } from '../../helpers/cons
 import { getUserData } from '../../helpers/userDataManage';
 import BookingService from '../../api/BookingService';
 import { date } from 'yup';
+import { useSelector } from 'react-redux';
 
 export default function AgendaScreen({ route }): React.JSX.Element {
     const { facility } = route?.params ?? { facility: null };
@@ -128,6 +129,8 @@ export default function AgendaScreen({ route }): React.JSX.Element {
         return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
     }
 
+    const companyData = useSelector(state => state.companyData);
+
     const loadData = (month) => {
         month = month || currentMonth;
 
@@ -141,6 +144,9 @@ export default function AgendaScreen({ route }): React.JSX.Element {
         if (facility) {
             params['facility_uuid'] = facility.uuid;
         }
+
+        if (companyData)
+            params['company_uuid'] = companyData.uuid;
 
         scheduleService.getSchedule(params)
             .then((response) => {

@@ -24,6 +24,7 @@ import UserBooking from '../booking/userBooking';
 import { OneSignal } from 'react-native-onesignal';
 import programManagmentTabs from './programManagmentTabs';
 import BaseComponent from '../common/baseComponent';
+import CompanyView from '../company/companyView';
 
 const Stack = createStackNavigator();
 
@@ -196,6 +197,7 @@ const AppNavigator = () => {
 
                     <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
                     <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />
+                    <Stack.Screen name={Screens.CompanyView} options={{ title: 'Company View' }} component={CompanyView} />
 
                     <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
                     <Stack.Screen name={Screens.UserProfileForm} options={{ title: 'Profile Form' }} component={UserProfileForm} />

@@ -3,11 +3,12 @@ import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button, Card, Icon, ListItem } from 'react-native-elements';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
-import { Screens } from '../../helpers/constants';
+import { GlobaSateKey, Screens } from '../../helpers/constants';
 import fonts from '../../styles/fonts';
 import Swiper from 'react-native-swiper';
 import globalStyles from '../../styles/styles';
 import RatingRowWithNumber from './ratingRowWithNumber';
+import { useDispatch } from 'react-redux';
 
 interface Company {
     name: string;
@@ -24,11 +25,15 @@ interface CompanyCardProps {
 
 const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
     const navigator = useNavigation();
+    const dispatch = useDispatch();
+
     const handleCompanyClick = () => {
-        navigator.navigate(Screens.CompanyProfile);
+        dispatch({ type: GlobaSateKey.SetCompanyData, payload: company });
+        navigator.navigate(Screens.CompanyView);
     }
 
     function onBookingPress(): void {
+        dispatch({ type: GlobaSateKey.SetCompanyData, payload: company });
         navigator.navigate(Screens.Calendar)
     }
 
@@ -41,7 +46,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
                     <View style={styles.userInfo}>
                         <View style={styles.nameRatingRow}>
                             <Text style={styles.userName}>{company?.name}</Text>
-                            <RatingRowWithNumber ratingData={{ratingNumber: company?.total_rating}} />
+                            <RatingRowWithNumber ratingData={{ ratingNumber: company?.total_rating }} />
                         </View>
                         <Text style={styles.postTime}>{
                             (company?.address?.region ?? '') +
