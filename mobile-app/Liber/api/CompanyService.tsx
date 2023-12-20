@@ -3,6 +3,7 @@ import AxiosService from './AxiosService';
 
 class CompanyService extends AxiosService {
     private companyDataPromise: Promise<any>;
+
     constructor() {
         super();
         this.companyDataPromise = this.initializePromise(getCompanyData);
@@ -11,7 +12,6 @@ class CompanyService extends AxiosService {
     async list() {
         return this.get(`/companies`);
     }
-
 
     async getCompany() {
         const companyData = await this.companyDataPromise;

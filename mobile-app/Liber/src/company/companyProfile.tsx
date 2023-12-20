@@ -8,7 +8,7 @@ import colors from '../../styles/colors';
 import CompanyService from '../../api/CompanyService';
 import Constants, { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import Rating from '../rating/rating';
+import Rating from '../rating/companyRating';
 import CompanyDetails from './companyDetails';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../../helpers/userDataManage';

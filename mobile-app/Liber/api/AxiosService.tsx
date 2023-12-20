@@ -50,6 +50,7 @@ abstract class AxiosService {
                 }
 
                 console.log('Request Body Data:', config.data);
+                console.log('Request Body Params:', config.params);
 
                 return config;
             },

@@ -1,18 +1,18 @@
 const Constants = {
     //apiUrl: 'http://192.168.0.105:81/api',
-    // apiUrl: 'http://192.168.1.105/api', // Mohammad A. local server
-     apiUrl: 'https://liber.quad-bh.com/api',
+    apiUrl: 'http://192.168.1.105/api', // Mohammad A. local server
+    //  apiUrl: 'https://liber.quad-bh.com/api',
     //assetsUrl: 'http://192.168.0.105:81/storage',
-    assetsUrl: 'https://liber.quad-bh.com/storage',
-    imagesUrl: 'https://liber.quad-bh.com/files/images',
-    // assetsUrl: 'http://192.168.1.105/storage', // Mohammad A. local server
-    // imagesUrl: 'http://192.168.1.105/files/images', // Mohammad A. local server
+    // assetsUrl: 'https://liber.quad-bh.com/storage',
+    // imagesUrl: 'https://liber.quad-bh.com/files/images',
+    assetsUrl: 'http://192.168.1.105/storage', // Mohammad A. local server
+    imagesUrl: 'http://192.168.1.105/files/images', // Mohammad A. local server
     tokenKey: 'auth_token',
     userDataKey: 'user_data',
     companyDataKey: 'company_data',
     facilityTypesKey: 'facility_types',
     countriesKey: 'countries',
-    oneSignalAppID:'c9163259-17f6-4cd0-b6c6-6d3a9241f1b4',
+    oneSignalAppID: 'c9163259-17f6-4cd0-b6c6-6d3a9241f1b4',
 };
 
 export default Constants;
@@ -65,4 +65,8 @@ export enum GlobaSateKey {
     SetLoading = "SET_LOADING",
     SetCurrentScreen = "SET_CURRENT_SCREEN",
     SetCompanyData = "SET_COMPANY_DATA",
-  }
+}
+
+export enum EntityType {
+    Company = 'App\\Models\\Company',
+}
