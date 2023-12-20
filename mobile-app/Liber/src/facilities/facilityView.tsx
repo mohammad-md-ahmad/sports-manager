@@ -37,10 +37,25 @@ function FacilityView({ route }): React.JSX.Element {
                     </View> : <></>
                 }
                 <View style={styles.userInfo}>
-                    <Text style={styles.name}>Name: {facility?.name}</Text>
-                    <Text style={styles.subName}>Type: {facility?.type}</Text>
-                    <Text style={styles.subName}>Length: {facility?.details.length}</Text>
-                    <Text style={styles.subName}>Width: {facility?.details.width}</Text>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Name:</Text>
+                        <Text style={styles.value}>{facility?.name}</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Type:</Text>
+                        <Text style={styles.value}>{facility?.type}</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Length:</Text>
+                        <Text style={styles.value}>{facility?.details.length}</Text>
+                    </View>
+                    <View style={styles.row}>
+                        <Text style={styles.label}>Width:</Text>
+                        <Text style={styles.value}>{facility?.details.width}</Text>
+                    </View>
+
+
+
                 </View>
 
             </View>
@@ -76,14 +91,18 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         padding: 10
     },
-    name: {
+    label: {
         fontSize: 18,
         fontWeight: 'bold',
+        color: colors.PrimaryBlue,
+        width: 100,
+    }, value: {
+        fontSize: 18,
+        fontWeight: 'normal',
         color: colors.PrimaryBlue
-    }, subName: {
-        fontSize: 16,
-        fontWeight: 'bold',
-        color: colors.PrimaryBlue
+    },
+    row: {
+        flexDirection: 'row',
     },
 });
 
