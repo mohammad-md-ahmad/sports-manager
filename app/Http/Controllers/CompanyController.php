@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Services\CompanyServiceInterface;
 use App\Services\Data\Company\CreateCompanyRequest;
 use App\Services\Data\Company\GetCompanyRequest;
+use App\Services\Data\Company\SearchCompaniesRequest;
 use App\Services\Data\Company\UpdateCompanyRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -20,7 +21,7 @@ class CompanyController extends Controller
     ) {
     }
 
-    public function getAll(Request $request): JsonResponse
+    public function getAll(SearchCompaniesRequest $request): JsonResponse
     {
         try {
             $data = $this->companyService->getAll($request);
