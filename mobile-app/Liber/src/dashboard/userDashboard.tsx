@@ -27,9 +27,9 @@ export default function UserDashboard(): React.JSX.Element {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            companyService.list()
+            companyService.list({})
                 .then((response) => {
-                    setCompanies(response.data?.data);
+                    setCompanies(response.data?.data?.data);
                 }).catch((error) => {
                 });
 

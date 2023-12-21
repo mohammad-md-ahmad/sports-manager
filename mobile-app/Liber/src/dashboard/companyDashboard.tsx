@@ -27,7 +27,7 @@ export default function CompanyDashboard(): React.JSX.Element {
             companyService.list({})
                 .then((response) => {
                     console.log('companies', response.data)
-                    setCompanies(response.data?.data);
+                    setCompanies(response.data?.data?.data);
                 }).catch((error) => {
                 });
 
