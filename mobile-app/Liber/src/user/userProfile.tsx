@@ -49,12 +49,6 @@ export default function UserProfile() {
             <Text style={styles.username}>{userData.username}</Text>
             <Text style={styles.email}>{userData.email}</Text>
 
-            <Button
-                onPress={() => onEditPress()}
-                title="Edit"
-                buttonStyle={styles.button}
-            />
-
             {/* Add more fields as needed */}
         </View >
     );

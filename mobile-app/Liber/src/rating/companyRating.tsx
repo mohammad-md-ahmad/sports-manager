@@ -7,9 +7,11 @@ import {
 import RatingService from "../../api/RatingService";
 import colors from "../../styles/colors";
 import RatingItem from "./ratingItem";
+import { useSelector } from "react-redux";
 
 export default function CompanyRating(): React.JSX.Element {
     const ratingService = new RatingService();
+    const companyData = useSelector(state => state.companyData);
 
     const [companyRatingList, setCompanyRatingList] = useState([]);
 
@@ -18,7 +20,7 @@ export default function CompanyRating(): React.JSX.Element {
     }, []);
 
     const loadCompanyRatingList = () => {
-        ratingService.companyRatingList().then((response) => {
+        ratingService.companyRatingList({ uuid: companyData.uuid }).then((response) => {
             console.log(response.data?.data);
             setCompanyRatingList(response.data?.data?.ratings ?? []);
         }).catch((error) => {
