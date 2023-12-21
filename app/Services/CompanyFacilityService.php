@@ -82,6 +82,9 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAllByCompany(GetCompanyFacilitiesRequest $data): Collection
     {
         try {
@@ -93,6 +96,9 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function store(CreateCompanyFacilityRequest $data): CompanyFacility
     {
         try {

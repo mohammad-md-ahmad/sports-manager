@@ -9,8 +9,8 @@ class CompanyService extends AxiosService {
         this.companyDataPromise = this.initializePromise(getCompanyData);
     }
 
-    async list() {
-        return this.get(`/companies`);
+    async list(data: Object) {
+        return this.get(`/companies?${this.objectToQueryParams(data)}`);
     }
 
     async getCompany() {

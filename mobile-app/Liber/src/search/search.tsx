@@ -12,15 +12,15 @@ import {
 import globalStyles, { placeHolderTextColor } from "../../styles/styles";
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
-import CompanyService from "../../api/CompanyService";
 import DropDownPicker from "react-native-dropdown-picker";
 import { getCountries } from "../../helpers/countriesDataManage";
 import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
-import FacilityCard from "../common/facilityCard";
-import FacilityService from "../../api/FacilityService";
+import CompanyCard from "../common/companyCard";
+import CompanyService from "../../api/CompanyService";
 
 export default function Search(): React.JSX.Element {
-    const facilityService = new FacilityService();
+    const companyService = new CompanyService();
+
     const [formData, setFormData] = useState({
         name: null,
         city: null,
@@ -29,19 +29,7 @@ export default function Search(): React.JSX.Element {
     });
 
     const handleInputChange = (field: string, value: string) => {
-        if (field.startsWith('details.') || field.startsWith('address.')) {
-            // Handle nested objects
-            const [parentField, nestedField] = field.split('.');
-            setFormData({
-                ...formData,
-                [parentField]: {
-                    ...formData[parentField],
-                    [nestedField]: value,
-                },
-            });
-        } else {
-            setFormData({ ...formData, [field]: value });
-        }
+        setFormData({ ...formData, [field]: value });
     };
 
     const [openFacilityTypeList, setOpenFacilityTypeList] = useState(false);
@@ -53,14 +41,29 @@ export default function Search(): React.JSX.Element {
     const [selectedFacilityType, setSelectedFacilityType] = useState<string>('');
     const [selectedCountry, setSelectedCountry] = useState<string>('');
 
+    const [facilities, setFacilities] = useState([]);
 
-    const handleDropdownChange = (field: keyof FormData, value: string) => {
-        if (field === 'type') {
-            setSelectedFacilityType(value);
-        } else if (field === 'country_uuid') {
-            setSelectedCountry(value);
-        }
-        setFormData({ ...formData, [field]: value() });
+    const [isFormOpen, setIsFormOpen] = useState(true);
+
+    const getItem = (_data: unknown, index: number) => facilities[index];
+    const getItemCount = (_data: unknown) => facilities.length;
+
+    const handleFacilityTypeDropdownChange = (callback) => {
+        setSelectedFacilityType(callback(selectedFacilityType));
+
+        setFormData({
+            ...formData,
+            type: callback(formData.type),
+        });
+    };
+
+    const handleCountryDropdownChange = (callback) => {
+        setSelectedCountry(callback(selectedCountry));
+
+        setFormData({
+            ...formData,
+            country_uuid: callback(formData.country_uuid),
+        });
     };
 
     const sanitizeFormData = (data) => {
@@ -82,11 +85,12 @@ export default function Search(): React.JSX.Element {
 
     function onSearchPress(): void {
         setIsFormOpen(false);
-        facilityService.list(sanitizeFormData(formData))
-            .then((response) => {
-                setFacilities(response.data?.data.data);
-            }).catch((error) => {
-            });
+
+        companyService.list(sanitizeFormData(formData)).then((response) => {
+            setFacilities(response.data?.data.data);
+        }).catch((error) => {
+            console.error(error);
+        });
     }
 
     useEffect(() => {
@@ -127,15 +131,9 @@ export default function Search(): React.JSX.Element {
         })
     }, []);
 
-    const [facilities, setFacilities] = useState([]);
-    const getItem = (_data: unknown, index: number) => facilities[index];
-    const getItemCount = (_data: unknown) => facilities.length;
-
     const toggleFormOpen = () => {
         setIsFormOpen(!isFormOpen);
     };
-
-    const [isFormOpen, setIsFormOpen] = useState(true);
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -143,7 +141,7 @@ export default function Search(): React.JSX.Element {
 
                 <View>
                     <TextInput
-                        placeholder="Facility Name"
+                        placeholder="Company Name"
                         placeholderTextColor={placeHolderTextColor}
                         style={styles.formTextInput}
                         value={formData.name}
@@ -158,7 +156,6 @@ export default function Search(): React.JSX.Element {
                 </TouchableOpacity>
                 {isFormOpen && (
                     <>
-
                         <View>
                             <DropDownPicker
                                 textStyle={{ color: colors.PrimaryBlue }}
@@ -168,9 +165,7 @@ export default function Search(): React.JSX.Element {
                                 value={selectedCountry}
                                 items={countries}
                                 setOpen={setOpenCountryList}
-                                setValue={(text: any) => {
-                                    handleDropdownChange('country_uuid', text)
-                                }}
+                                setValue={(callback) => handleCountryDropdownChange(callback)}
                                 style={styles.dropDown}
                             />
                         </View>
@@ -194,13 +189,10 @@ export default function Search(): React.JSX.Element {
                                 value={selectedFacilityType}
                                 items={facilityTypes}
                                 setOpen={setOpenFacilityTypeList}
-                                setValue={(text: any) => {
-                                    handleDropdownChange('type', text)
-                                }}
+                                setValue={(callback) => handleFacilityTypeDropdownChange(callback)}
                                 style={styles.dropDown}
                             />
                         </View>
-
                     </>
                 )}
 
@@ -213,7 +205,7 @@ export default function Search(): React.JSX.Element {
 
             <VirtualizedList
                 initialNumToRender={6}
-                renderItem={({ item }) => <FacilityCard facility={item} />}
+                renderItem={({ item }) => <CompanyCard company={item} />}
                 keyExtractor={item => item.uuid}
                 getItemCount={getItemCount}
                 getItem={getItem}
@@ -261,4 +253,3 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
 });
-
