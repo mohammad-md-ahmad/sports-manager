@@ -17,12 +17,12 @@ class RatingService extends AxiosService {
         });
     }
 
-    async companyRatingList() {
+    async companyRatingList(params) {
         const companyData = await this.companyDataPromise;
 
         return this.get(`/ratings/entity-ratings`, {
             params: {
-                rated_entity_uuid: companyData?.uuid,
+                rated_entity_uuid: params.uuid ? params.uuid : companyData?.uuid,
                 rated_entity_type: EntityType.Company,
             }
         });
