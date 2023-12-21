@@ -52,7 +52,7 @@ class CompanyService implements CompanyServiceInterface
             /** @var Company $company */
             $company = Company::query()
                 ->where('id', $data->id)
-                ->with(['address', 'gallery'])
+                ->with(['address', 'gallery', 'ratings'])
                 ->get()
                 ->first();
 
@@ -94,7 +94,7 @@ class CompanyService implements CompanyServiceInterface
                 });
             });
 
-            return $companiesQuery->with(['address', 'gallery'])->jsonPaginate();
+            return $companiesQuery->with(['address', 'gallery', 'ratings'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('CompanyService::get: '.$exception->getMessage());
 
