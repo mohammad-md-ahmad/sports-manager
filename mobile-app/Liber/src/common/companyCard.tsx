@@ -122,12 +122,14 @@ const styles = StyleSheet.create({
         marginRight: 8,
     },
     userName: {
+        color: colors.PrimaryBlue,
         fontWeight: 'bold',
     },
     postTime: {
-        color: '#555',
+        color: colors.Black,
     },
     postText: {
+        color: colors.Black,
         marginBottom: 12,
     },
     postImage: {

@@ -9,6 +9,7 @@ const colors = {
     OffWhite: '#f0f0f0',
     Gray: 'gray',
     Orange: 'orange',
+    Black: 'black',
 };
 
 export default colors;
