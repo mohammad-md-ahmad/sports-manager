@@ -141,7 +141,7 @@ export default function Search(): React.JSX.Element {
 
                 <View>
                     <TextInput
-                        placeholder="Facility Name"
+                        placeholder="Company Name"
                         placeholderTextColor={placeHolderTextColor}
                         style={styles.formTextInput}
                         value={formData.name}
