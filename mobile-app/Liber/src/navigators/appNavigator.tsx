@@ -69,6 +69,12 @@ const AppNavigator = () => {
         navigator.navigate(Screens.CompanyProfileForm);
     }
 
+    function onEditUserPress(): void {
+        navigator.navigate(Screens.UserProfileForm);
+    }
+
+
+
     useEffect(() => {
         const unsubscribe = navigator.addListener('state', () => {
             // This function will be called when the navigation state changes
@@ -149,6 +155,21 @@ const AppNavigator = () => {
                 }
             } else {
                 switch (currentScreen) {
+                    case Screens.UserProfile:
+                        setContent(
+                            <TouchableOpacity
+                                onPress={() => onEditUserPress()}>
+                                <View style={{ margin: 15 }}>
+                                    <Icon
+                                        name="edit" // Replace with your desired icon name
+                                        type="material"
+                                        size={25}
+
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                        break;
                     case Screens.FacilityView:
                         setContent(
                             <TouchableOpacity
