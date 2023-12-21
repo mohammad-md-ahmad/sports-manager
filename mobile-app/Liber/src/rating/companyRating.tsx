@@ -16,11 +16,12 @@ export default function CompanyRating(): React.JSX.Element {
     const [companyRatingList, setCompanyRatingList] = useState([]);
 
     useEffect(() => {
-        loadCompanyRatingList();
-    }, []);
+        if (companyData?.uuid)
+            loadCompanyRatingList();
+    }, [companyData]);
 
     const loadCompanyRatingList = () => {
-        ratingService.companyRatingList({ uuid: companyData.uuid }).then((response) => {
+        ratingService.companyRatingList({ uuid: companyData?.uuid }).then((response) => {
             console.log(response.data?.data);
             setCompanyRatingList(response.data?.data?.ratings ?? []);
         }).catch((error) => {
