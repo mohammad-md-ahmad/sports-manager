@@ -12,6 +12,7 @@ use App\Services\Data\User\GetUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use App\Traits\ImageUpload;
 use Exception;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -21,6 +22,20 @@ use Illuminate\Validation\ValidationException;
 class UserService implements UserServiceInterface
 {
     use ImageUpload;
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(): LengthAwarePaginator
+    {
+        try {
+            return User::jsonPaginate();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
 
     public function get(GetUserRequest $data): User
     {

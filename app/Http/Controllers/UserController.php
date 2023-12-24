@@ -12,6 +12,7 @@ use App\Services\Data\User\GetUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -20,6 +21,25 @@ class UserController extends Controller
     public function __construct(
         protected UserServiceInterface $userService
     ) {
+    }
+
+    public function getAll(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->userService->getAll($request);
+
+            return response()->json([
+                'message' => __('Users has been retrieved successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to retrieve users!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     public function get(GetUserRequest $request): JsonResponse
