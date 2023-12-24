@@ -76,6 +76,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('bookings')->group(function () {
 
+        Route::get('/', [BookingController::class, 'getAll'])->name('bookings.get-all');
         Route::post('/', [BookingController::class, 'store'])->name('bookings.store');
         Route::post('/{uuid}/approve', [BookingController::class, 'approve'])->name('bookings.approve');
         Route::post('/{uuid}/decline', [BookingController::class, 'decline'])->name('bookings.decline');
@@ -83,6 +84,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('users')->group(function () {
 
+        Route::get('/', [UserController::class, 'getAll'])->name('users.get-all');
         Route::post('/', [UserController::class, 'storeAdmin'])->name('users.create-admin');
         Route::get('/{uuid}', [UserController::class, 'get'])->name('users.get');
         Route::put('/{uuid}', [UserController::class, 'update'])->name('users.update');

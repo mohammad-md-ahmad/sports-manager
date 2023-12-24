@@ -8,11 +8,13 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
@@ -25,6 +27,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $email
  * @property UserType $type
  * @property string $profile_picture
+ * @property Collection $bookings
  */
 class User extends Authenticatable
 {
@@ -84,6 +87,15 @@ class User extends Authenticatable
         );
     }
 
+    public function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->first_name.' '.$this->last_name;
+            }
+        );
+    }
+
     public function companyUser(): HasOne
     {
         return $this->hasOne(CompanyUser::class);
@@ -99,12 +111,8 @@ class User extends Authenticatable
         return $this->morphOne(Address::class, 'model');
     }
 
-    public function fullName(): Attribute
+    public function bookings(): HasMany
     {
-        return Attribute::make(
-            get: function () {
-                return $this->first_name.' '.$this->last_name;
-            }
-        );
+        return $this->hasMany(Booking::class, 'customer_user_id');
     }
 }

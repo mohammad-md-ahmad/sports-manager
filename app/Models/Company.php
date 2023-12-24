@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 /**
  * @property string $id
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property CompanyUser $companyUser
  * @property Gallery $gallery
  * @property Address $address
+ * @property Collection $bookings
  */
 class Company extends Model
 {
@@ -67,6 +69,15 @@ class Company extends Model
         );
     }
 
+    public function totalRating(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->ratings()->avg('rating');
+            }
+        );
+    }
+
     public function facilities(): HasMany
     {
         return $this->hasMany(CompanyFacility::class);
@@ -95,12 +106,12 @@ class Company extends Model
         return $this->morphMany(Rating::class, 'rated_entity');
     }
 
-    public function totalRating(): Attribute
+    public function bookings(): HasMany
     {
-        return Attribute::make(
-            get: function () {
-                return $this->ratings()->avg('rating');
-            }
-        );
+        return $this->facilities()
+            ->join('schedules', 'company_facilities.id', '=', 'schedules.company_facility_id')
+            ->join('schedule_details', 'schedules.id', '=', 'schedule_details.schedule_id')
+            ->join('bookings', 'schedule_details.id', '=', 'bookings.schedule_details_id')
+            ->select('bookings.*');
     }
 }

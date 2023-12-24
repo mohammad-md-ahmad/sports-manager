@@ -8,12 +8,15 @@ use App\Contracts\Services\BookingServiceInterface;
 use App\Enums\BookingStatus;
 use App\Enums\ScheduleDetailsStatus;
 use App\Models\Booking;
+use App\Models\Company;
 use App\Models\ScheduleDetails;
 use App\Models\User;
 use App\Services\Data\Booking\ApproveBookingRequest;
 use App\Services\Data\Booking\CreateBookingRequest;
 use App\Services\Data\Booking\DeclineBookingRequest;
+use App\Services\Data\Booking\GetBookingsRequest;
 use Exception;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use LogicException;
@@ -23,6 +26,30 @@ class BookingService implements BookingServiceInterface
     public function __construct(
         protected PushNotificationService $pushNotificationService,
     ) {
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAll(GetBookingsRequest $data): LengthAwarePaginator
+    {
+        try {
+            if ($data->user_id) {
+                /** @var User $user */
+                $user = User::findOrFail($data->user_id);
+
+                return $user->bookings()->jsonPaginate();
+            }
+
+            /** @var Company $company */
+            $company = Company::findOrFail($data->company_id);
+
+            return $company->bookings()->jsonPaginate();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
     }
 
     /**

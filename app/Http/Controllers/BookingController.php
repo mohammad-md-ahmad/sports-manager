@@ -8,6 +8,7 @@ use App\Contracts\Services\BookingServiceInterface;
 use App\Services\Data\Booking\ApproveBookingRequest;
 use App\Services\Data\Booking\CreateBookingRequest;
 use App\Services\Data\Booking\DeclineBookingRequest;
+use App\Services\Data\Booking\GetBookingsRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -21,10 +22,28 @@ class BookingController extends Controller
     ) {
     }
 
+    public function getAll(GetBookingsRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->bookingService->getAll($request);
+
+            return response()->json([
+                'message' => __('Bookings has been retrieved successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to retrieve bookings!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function store(CreateBookingRequest $request): JsonResponse
     {
         try {
-
             $data = $this->bookingService->store($request);
 
             return response()->json([
