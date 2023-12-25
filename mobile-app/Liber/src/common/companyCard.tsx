@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     postTime: {
-        color: colors.Black,
+        color: colors.Gray,
     },
     postText: {
         color: colors.Black,
