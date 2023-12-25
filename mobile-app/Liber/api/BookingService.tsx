@@ -3,6 +3,7 @@ import AxiosService from './AxiosService';
 
 class BookingService extends AxiosService {
     private userDataPromise: Promise<any>;
+
     constructor() {
         super();
         this.userDataPromise = this.initializePromise(getUserData);
@@ -24,6 +25,11 @@ class BookingService extends AxiosService {
         return this.post(`/bookings/${data.uuid}/decline`, {});
     }
 
+    async list(params: Object) {
+        return this.get('/bookings', {
+            params: params
+        });
+    }
 }
 
 export default BookingService;

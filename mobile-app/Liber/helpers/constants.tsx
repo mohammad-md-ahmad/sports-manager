@@ -45,6 +45,7 @@ export enum Screens {
     Reports = "Reports",
     Notifications = "Notifications",
     Ratings = "Ratings",
+    BookingHistoryList = "BookingHistoryList",
 }
 
 export enum SlotStatus {

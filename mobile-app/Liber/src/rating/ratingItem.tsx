@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import RatingControl from '../common/ratingControl';
+import colors from '../../styles/colors';
 
 interface Rating {
     commenter_name: string;
@@ -42,9 +43,10 @@ const styles = StyleSheet.create({
     },
     commenterName: {
         width: '48%', // 50% width with a little space for margin
+        color: colors.PrimaryBlue
     },
     commentText: {
-
+        color: colors.Gray
     },
 });
 

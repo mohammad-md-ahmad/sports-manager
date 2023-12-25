@@ -8,10 +8,11 @@ interface RatingData {
 }
 
 interface RatingDataProps {
-    ratingData: RatingData;
+    ratingData?: RatingData;
+    callback?: (result: number) => void;
 }
 
-const RatingControl: React.FC<RatingDataProps> = ({ ratingData }) => {
+const RatingControl: React.FC<RatingDataProps> = ({ ratingData, callback }) => {
     const [rating, setRating] = useState(ratingData?.ratingNumber ?? 0);
 
     useEffect(() => {
@@ -20,8 +21,12 @@ const RatingControl: React.FC<RatingDataProps> = ({ ratingData }) => {
         }
     }, [ratingData]);
 
-    const onStarRatingPress = (ratingNumber) => {
+    const onStarRatingPress = (ratingNumber: number) => {
         setRating(ratingNumber);
+
+        if (callback) {
+            callback(ratingNumber);
+        }
     }
 
     return (

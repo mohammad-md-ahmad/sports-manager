@@ -12,6 +12,13 @@ const globalStyles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: colors.White,
     },
+    tabContainerView: {
+        flex: 1,
+        alignItems: "center",
+        backgroundColor: colors.White,
+        paddingVertical: 15,
+        paddingHorizontal: 5,
+    },
     loginScreenContainer: {
         flex: 1,
     },

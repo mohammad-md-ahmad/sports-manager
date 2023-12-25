@@ -7,6 +7,11 @@ import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import UserService from '../../api/UserService';
 import Constants, { Screens } from '../../helpers/constants';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import BookingHistoryList from '../booking/bookingHistoryList';
+import Notifications from '../notifications/notifications';
+
+const Tab = createMaterialTopTabNavigator();
 
 export default function UserProfile() {
     // Extract user information from the route parameters
@@ -40,17 +45,28 @@ export default function UserProfile() {
         }, [])
     );
 
-
     return (
-        <View style={styles.container}>
-            <Image source={userData.profile_picture} style={styles.logo} />
+        <>
+            <View style={styles.container}>
+                <Image source={userData.profile_picture} style={styles.logo} />
 
-            <Text style={styles.name}>{userData.first_name + ' ' + userData.last_name}</Text>
-            <Text style={styles.username}>{userData.username}</Text>
-            <Text style={styles.email}>{userData.email}</Text>
+                <Text style={styles.name}>{userData.first_name + ' ' + userData.last_name}</Text>
+                <Text style={styles.username}>{userData.username}</Text>
+                <Text style={styles.email}>{userData.email}</Text>
 
-            {/* Add more fields as needed */}
-        </View >
+                {/* Add more fields as needed */}
+            </View >
+            <Tab.Navigator
+                screenOptions={{
+                    tabBarIndicatorStyle: {
+                        borderBottomWidth: 3,
+                        borderBottomColor: colors.PrimaryGreen,
+                    },
+                }}>
+                <Tab.Screen name={Screens.BookingHistoryList} options={{ title: 'Booking History' }} component={BookingHistoryList} />
+                <Tab.Screen name={Screens.Notifications} options={{ title: 'Notifications' }} component={Notifications} />
+            </Tab.Navigator>
+        </>
     );
 }
 
