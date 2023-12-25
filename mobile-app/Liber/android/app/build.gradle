@@ -2,6 +2,8 @@ apply plugin: "com.android.application"
 apply plugin: "com.facebook.react"
 
 project.ext.envConfigFiles = [
+    debug: ".env",
+    release: ".env",
     productiondebug: ".env.production",
     productionrelease: ".env.production",
 ]

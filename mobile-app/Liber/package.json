@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "android": "react-native run-android",
-    "android:prod-release": "react-native run-android --variant=productionrelease",
-    "android:prod": "react-native run-android --variant=productiondebug",
+    "android": "react-native run-android --mode=productionrelease",
+    "android:prod-release": "react-native run-android --mode=productionrelease",
+    "android:prod": "react-native run-android --mode=productiondebug",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
