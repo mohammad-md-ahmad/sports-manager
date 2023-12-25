@@ -70,7 +70,7 @@ export default function CompanyProfile() {
                 <RatingRowWithNumber ratingData={{ratingNumber: companyData?.total_rating}} />
                 <Button
                     onPress={() => onBookingPress()}
-                    title="Booking"
+                    title="Book Now!"
                     buttonStyle={styles.button}
                 />
             </View >

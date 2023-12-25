@@ -29,8 +29,6 @@ export default function Dashboard(): React.JSX.Element {
         }, [])
     );
 
-
-
     const [userData, setUserData] = useState({});
 
     useEffect(() => {
