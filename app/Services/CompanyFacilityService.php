@@ -74,7 +74,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
                 });
             });
 
-            return $facilitiesQuery->with(['company', 'address.country', 'gallery'])->jsonPaginate();
+            return $facilitiesQuery->with(['company', 'address.country', 'gallery', 'schedule.bookings'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
 

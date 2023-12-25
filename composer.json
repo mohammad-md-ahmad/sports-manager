@@ -12,7 +12,8 @@
         "laravel/sanctum": "*",
         "laravel/tinker": "^2.8",
         "spatie/laravel-data": "^3.9",
-        "spatie/laravel-json-api-paginate": "^1.13"
+        "spatie/laravel-json-api-paginate": "^1.13",
+        "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

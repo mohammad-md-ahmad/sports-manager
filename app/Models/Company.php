@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Staudenmeir\EloquentHasManyDeep\HasManyDeep;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * @property string $id
@@ -28,6 +30,7 @@ class Company extends Model
     use BindsOnUuid;
     use GeneratesUuid;
     use HasFactory;
+    use HasRelationships;
     use SoftDeletes;
 
     /**
@@ -106,12 +109,8 @@ class Company extends Model
         return $this->morphMany(Rating::class, 'rated_entity');
     }
 
-    public function bookings(): HasMany
+    public function bookings(): HasManyDeep
     {
-        return $this->facilities()
-            ->join('schedules', 'company_facilities.id', '=', 'schedules.company_facility_id')
-            ->join('schedule_details', 'schedules.id', '=', 'schedule_details.schedule_id')
-            ->join('bookings', 'schedule_details.id', '=', 'bookings.schedule_details_id')
-            ->select('bookings.*');
+        return $this->hasManyDeep(Booking::class, [CompanyFacility::class, Schedule::class, ScheduleDetails::class]);
     }
 }

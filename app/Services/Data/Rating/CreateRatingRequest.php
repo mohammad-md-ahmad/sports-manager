@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Data\Rating;
 
+use App\Models\Booking;
 use App\Models\User;
 use App\Rules\MorphModelExists;
 use App\Services\Data\Core\UuidToEntityCaster;
@@ -23,6 +24,9 @@ class CreateRatingRequest extends Data
         #[MapInputName('user_uuid')]
         #[WithCast(UuidToEntityCaster::class, User::class)]
         public ?string $user_id = null,
+        #[MapInputName('booking_uuid')]
+        #[WithCast(UuidToEntityCaster::class, Booking::class)]
+        public ?string $booking_id = null,
     ) {
         $this->rated_entity_id = (string) app($this->rated_entity_type)::whereUuid($this->rated_entity_id)->first()->id ?? null;
 

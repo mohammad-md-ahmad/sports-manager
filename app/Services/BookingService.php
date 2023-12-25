@@ -38,13 +38,13 @@ class BookingService implements BookingServiceInterface
                 /** @var User $user */
                 $user = User::findOrFail($data->user_id);
 
-                return $user->bookings()->jsonPaginate();
+                return $user->bookings()->with(['company'])->jsonPaginate();
             }
 
             /** @var Company $company */
             $company = Company::findOrFail($data->company_id);
 
-            return $company->bookings()->jsonPaginate();
+            return $company->bookings()->with(['company'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
 

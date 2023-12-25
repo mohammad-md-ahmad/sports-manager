@@ -10,11 +10,10 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Collection;
 
 /**
  * @property string $id
@@ -23,7 +22,7 @@ use Illuminate\Support\Collection;
  * @property Company $company
  * @property Address $address
  * @property Gallery $gallery
- * @property Collection $schedules
+ * @property Schedule $schedule
  */
 class CompanyFacility extends Model
 {
@@ -96,16 +95,8 @@ class CompanyFacility extends Model
         return $this->morphMany(Rating::class, 'rated_entity');
     }
 
-    public function schedules(): HasMany
+    public function schedule(): HasOne
     {
-        return $this->hasMany(Schedule::class);
-    }
-
-    public function bookings(): HasMany
-    {
-        return $this->schedules()
-            ->join('schedule_details', 'schedules.id', '=', 'schedule_details.schedule_id')
-            ->join('bookings', 'schedule_details.id', '=', 'bookings.schedule_details_id')
-            ->select('bookings.*');
+        return $this->hasOne(Schedule::class);
     }
 }
