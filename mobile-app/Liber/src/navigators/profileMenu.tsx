@@ -53,11 +53,18 @@ export default function ProfileMenu() {
                     setUserData(user);
                     if (user?.type == UserType.CompanyUser) {
 
-                        addItemAtIndex({
-                            title: "Users",
-                            icon: "group",
-                            navigateTo: Screens.UsersList
-                        }, 1)
+                        addItemsAtIndex([
+                            {
+                                title: "Users",
+                                icon: "group",
+                                navigateTo: Screens.UsersList
+                            },
+                            {
+                                title: "Payment",
+                                icon: "payments",
+                                navigateTo: Screens.PaymentMethodsForm
+                            }
+                        ], 1)
 
                         companyService.getCompany().then((response) => {
                             setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
@@ -109,12 +116,12 @@ export default function ProfileMenu() {
     ]);
 
     // Function to add an item at a specific index
-    const addItemAtIndex = (newItem, insertIndex) => {
+    const addItemsAtIndex = (newItems, insertIndex) => {
         // Create a copy of the array to avoid mutating the state directly
         const newArray = [...menuItems];
 
         // Use splice to insert the new item at the specified index
-        newArray.splice(insertIndex, 0, newItem);
+        newArray.splice(insertIndex, 0, ...newItems);
 
         // Update the state with the new array
         setMenuItems(newArray);

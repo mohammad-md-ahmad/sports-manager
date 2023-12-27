@@ -49,6 +49,7 @@ export enum Screens {
     BookingHistoryList = "BookingHistoryList",
     ProfileMenu = "ProfileMenu",
     UsersList = "UsersList",
+    PaymentMethodsForm = "PaymentMethodsForm",
 }
 
 export enum SlotStatus {
