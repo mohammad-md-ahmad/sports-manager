@@ -34,6 +34,7 @@ export enum Screens {
     Calendar = "Calendar",
     About = "About",
     ScheduleForm = "ScheduleForm",
+    ScheduleEditForm = "ScheduleEditForm",
     Signup = "Signup",
     Login = "Login",
     ForgetPassword = "ForgetPassword",

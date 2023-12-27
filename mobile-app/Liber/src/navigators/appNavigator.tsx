@@ -26,6 +26,7 @@ import programManagmentTabs from './programManagmentTabs';
 import BaseComponent from '../common/baseComponent';
 import CompanyView from '../company/companyView';
 import ProfileMenu from './profileMenu';
+import ScheduleEditForm from '../schedule/scheduleEditForm';
 
 const Stack = createStackNavigator();
 
@@ -216,6 +217,7 @@ const AppNavigator = () => {
                     <Stack.Screen name={Screens.FacilityView} options={{ title: 'Facility View' }} component={FacilityView} />
 
                     <Stack.Screen name={Screens.ScheduleForm} options={{ title: 'Schedule Form' }} component={ScheduleForm} />
+                    <Stack.Screen name={Screens.ScheduleEditForm} options={{ title: 'Schedule Form' }} component={ScheduleEditForm} />
 
                     <Stack.Screen name={Screens.CompanyProfile} options={{ title: 'Profile' }} component={CompanyProfile} />
                     <Stack.Screen name={Screens.CompanyProfileForm} options={{ title: 'Profile Form' }} component={CompanyProfileForm} />

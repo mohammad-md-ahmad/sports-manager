@@ -5,13 +5,15 @@ import calendarIDs from './calendarIDs';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import ScheduleService from '../../api/ScheduleService';
 import colors from '../../styles/colors';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import globalStyles from '../../styles/styles';
 import { BookingStatus, Screens, SlotStatus, UserType } from '../../helpers/constants';
 import { getUserData } from '../../helpers/userDataManage';
 import BookingService from '../../api/BookingService';
 import { date } from 'yup';
 import { useSelector } from 'react-redux';
+import fonts from '../../styles/fonts';
+import { getCompanyData } from '../../helpers/companyDataManage';
 
 export default function AgendaScreen({ route }): React.JSX.Element {
     const { facility } = route?.params ?? { facility: null };
@@ -131,7 +133,14 @@ export default function AgendaScreen({ route }): React.JSX.Element {
 
     const companyData = useSelector(state => state.companyData);
 
-    const loadData = (month) => {
+    const [currentCompanyData, setCurrentCompanyData] = useState({});
+    useEffect(() => {
+        getCompanyData().then((data: string | null) => {
+            setCurrentCompanyData(data === null ? null : JSON.parse(data));
+        });
+    }, []);
+
+    const loadData = (month = null) => {
         month = month || currentMonth;
 
         setItems({});
@@ -255,9 +264,24 @@ export default function AgendaScreen({ route }): React.JSX.Element {
         return btns;
     }
 
+    function onDeleteSlotPress(slot): void {
+
+        scheduleService.deleteScheduleDetails(slot.uuid).then((response) => {
+            // Handle a successful API response
+            loadData();
+        }).catch((error) => {
+            // Handle API request errors here
+            setErrors(error.response.data.errors)
+        });
+    }
+
+    function onEditSlotPress(slot): void {
+        navigator.navigate(Screens.ScheduleEditForm, { 'schedule': slot })
+    }
+
     const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
         const fontSize = isFirst && false ? 16 : 14;
-        const color = isFirst && false ? 'black' : '#43515c';
+        const color = colors.PrimaryBlue;// isFirst && false ? 'black' : '#43515c';
 
         //console.log(reservation);
 
@@ -277,15 +301,44 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                 }}
             >
                 <View style={styles.row}>
-                    <Text style={{ fontSize, color }}>{reservation?.company?.name}</Text>
+                    <Text style={styles.slotTitle}>{reservation?.company?.name}</Text>
                     <View style={styles.rightContent}>
+                        {
+                            (userData?.type == UserType.CompanyUser && currentCompanyData?.uuid == companyData?.uuid) ?
+                                <>
+                                    <TouchableOpacity
+                                        onPress={() => onEditSlotPress(reservation)}>
+                                        <View>
+                                            <Icon
+                                                name="edit" // Replace with your desired icon name
+                                                type="material"
+                                                size={25}
+                                                color={colors.PrimaryBlue}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                        onPress={() => onDeleteSlotPress(reservation)}>
+                                        <View>
+                                            <Icon
+                                                name="delete" // Replace with your desired icon name
+                                                type="material"
+                                                size={25}
+                                                color={colors.PrimaryBlue}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                </>
+                                :
+                                <></>
+                        }
                         <StatusCircle color={getStatusColor(reservation.status)} />
                     </View>
                 </View>
 
                 <View style={styles.row}>
-                    <Text style={{ fontSize, color }}>{reservation?.facility?.name}</Text>
-                    <Text style={{ fontSize, color }}>{reservation.date_time_from.split(' ')[1] + " - " + reservation.date_time_to.split(' ')[1]}</Text>
+                    <Text style={styles.slotDetails}>{reservation?.facility?.name}</Text>
+                    <Text style={styles.slotDetails}>{reservation.date_time_from.split(' ')[1] + " - " + reservation.date_time_to.split(' ')[1]}</Text>
                 </View>
 
                 <View style={styles.row}>
@@ -296,7 +349,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                                 title="Book"
                                 buttonStyle={styles.button}
                             /> : <></> :
-                                reservation?.bookings?.length > 0 ?
+                                (reservation?.bookings?.length > 0 && currentCompanyData?.uuid == companyData?.uuid) ?
                                     buildBookingBtns(reservation) : <></>
                         }
                     </View>
@@ -434,6 +487,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     rightContent: {
+        flexDirection: 'row',
         alignItems: 'flex-end', // Move the circle to the right
     },
     circle: {
@@ -488,5 +542,17 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
+    },
+    slotTitle: {
+        ...globalStyles.text,
+        fontFamily: fonts.Poppins.regular,
+        fontSize: 16,
+        color: colors.PrimaryBlue,
+    },
+    slotDetails: {
+        ...globalStyles.text,
+        fontFamily: fonts.Poppins.medium,
+        fontSize: 14,
+        color: colors.Gray,
     },
 });
