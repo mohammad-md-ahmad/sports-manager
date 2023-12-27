@@ -324,7 +324,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                                                 name="delete" // Replace with your desired icon name
                                                 type="material"
                                                 size={25}
-                                                color={colors.PrimaryBlue}
+                                                color={colors.SecondaryRed}
                                             />
                                         </View>
                                     </TouchableOpacity>
