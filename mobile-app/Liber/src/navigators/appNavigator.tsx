@@ -27,6 +27,7 @@ import BaseComponent from '../common/baseComponent';
 import CompanyView from '../company/companyView';
 import ProfileMenu from './profileMenu';
 import ScheduleEditForm from '../schedule/scheduleEditForm';
+import UsersList from '../user/usersList';
 
 const Stack = createStackNavigator();
 
@@ -227,6 +228,8 @@ const AppNavigator = () => {
 
                     <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
                     <Stack.Screen name={Screens.UserProfileForm} options={{ title: 'Profile Form' }} component={UserProfileForm} />
+
+                    <Stack.Screen name={Screens.UsersList} options={{ title: 'Users' }} component={UsersList} />
 
                     <Stack.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} />
                     <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />

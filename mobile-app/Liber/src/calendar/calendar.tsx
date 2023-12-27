@@ -304,7 +304,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                     <Text style={styles.slotTitle}>{reservation?.company?.name}</Text>
                     <View style={styles.rightContent}>
                         {
-                            (userData?.type == UserType.CompanyUser && currentCompanyData?.uuid == companyData?.uuid) ?
+                            (userData?.type == UserType.CompanyUser && currentCompanyData?.uuid == companyData?.uuid && reservation.status == SlotStatus.Available) ?
                                 <>
                                     <TouchableOpacity
                                         onPress={() => onEditSlotPress(reservation)}>
@@ -332,7 +332,12 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                                 :
                                 <></>
                         }
-                        <StatusCircle color={getStatusColor(reservation.status)} />
+                        {
+                            reservation.status != SlotStatus.Available ?
+                                <StatusCircle color={getStatusColor(reservation.status)} />
+                                :
+                                <></>
+                        }
                     </View>
                 </View>
 

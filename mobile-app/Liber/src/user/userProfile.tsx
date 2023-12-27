@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
-import { Button } from 'react-native-elements';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import UserService from '../../api/UserService';
-import Constants, { Screens } from '../../helpers/constants';
+import { Screens } from '../../helpers/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import BookingHistoryList from '../booking/bookingHistoryList';
 import Notifications from '../notifications/notifications';

@@ -52,8 +52,14 @@ export default function ProfileMenu() {
                     let user = JSON.parse(data);
                     setUserData(user);
                     if (user?.type == UserType.CompanyUser) {
+
+                        addItemAtIndex({
+                            title: "Users",
+                            icon: "group",
+                            navigateTo: Screens.UsersList
+                        }, 1)
+
                         companyService.getCompany().then((response) => {
-                            console.log('company data', response.data)
                             setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
                             dispatch({ type: GlobaSateKey.SetCompanyData, payload: response.data.data });
                         }).catch((error) => {
@@ -68,23 +74,9 @@ export default function ProfileMenu() {
                         });
                     }
                 }
-
             });
         }, [])
     );
-
-    const onLogoutPress = () => {
-        authService.logout().then((response) => {
-            // Handle a successful API response
-            logout();
-
-        }).catch((error) => {
-            // Handle API request errors here
-            console.error('Error logout:', error);
-        }).finally(() => {
-            logout();
-        });
-    };
 
     const handleUserCardClick = () => {
         if (userData?.type == UserType.CompanyUser) {
@@ -98,7 +90,7 @@ export default function ProfileMenu() {
         return <MenuItemCard menuItem={item.item} />
     }
 
-    const menuItems = [
+    const [menuItems, setMenuItems] = useState([
         {
             title: "Calendar",
             icon: "calendar-month",
@@ -114,7 +106,19 @@ export default function ProfileMenu() {
             icon: "logout",
             navigateTo: null
         }
-    ]
+    ]);
+
+    // Function to add an item at a specific index
+    const addItemAtIndex = (newItem, insertIndex) => {
+        // Create a copy of the array to avoid mutating the state directly
+        const newArray = [...menuItems];
+
+        // Use splice to insert the new item at the specified index
+        newArray.splice(insertIndex, 0, newItem);
+
+        // Update the state with the new array
+        setMenuItems(newArray);
+    };
 
     return (
         <View style={styles.containerView}>
