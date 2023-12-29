@@ -9,6 +9,7 @@ use App\Services\Data\Booking\ApproveBookingRequest;
 use App\Services\Data\Booking\CreateBookingRequest;
 use App\Services\Data\Booking\DeclineBookingRequest;
 use App\Services\Data\Booking\GetBookingsRequest;
+use App\Services\Data\Booking\GetCustomerBookingsRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -26,6 +27,25 @@ class BookingController extends Controller
     {
         try {
             $data = $this->bookingService->getAll($request);
+
+            return response()->json([
+                'message' => __('Bookings has been retrieved successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to retrieve bookings!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function getAllByCustomer(GetCustomerBookingsRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->bookingService->getAllByCustomer($request);
 
             return response()->json([
                 'message' => __('Bookings has been retrieved successfully!'),

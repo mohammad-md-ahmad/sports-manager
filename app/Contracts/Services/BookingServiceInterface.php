@@ -8,6 +8,7 @@ use App\Services\Data\Booking\ApproveBookingRequest;
 use App\Services\Data\Booking\CreateBookingRequest;
 use App\Services\Data\Booking\DeclineBookingRequest;
 use App\Services\Data\Booking\GetBookingsRequest;
+use App\Services\Data\Booking\GetCustomerBookingsRequest;
 use App\Services\Data\User\DeleteUserRequest;
 use App\Services\Data\User\GetUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
@@ -26,4 +27,6 @@ interface BookingServiceInterface
     public function approve(ApproveBookingRequest $data): bool;
 
     public function decline(DeclineBookingRequest $data): bool;
+
+    public function getAllByCustomer(GetCustomerBookingsRequest $data): LengthAwarePaginator;
 }

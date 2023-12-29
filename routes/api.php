@@ -59,6 +59,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::post('/', [CompanyCustomerController::class, 'store'])->name('company-customers.create');
                 Route::get('/', [CompanyCustomerController::class, 'getAll'])->name('company-customers.get-all');
             });
+
+            Route::prefix('bookings')->group(function () {
+
+                Route::get('/customer/get-all', [BookingController::class, 'getAllByCustomer'])->name('bookings.get-all-by-customer');
+            });
         });
     });
 
