@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\Services\AddressServiceInterface;
+use App\Contracts\Services\AppInfoServiceInterface;
 use App\Contracts\Services\BookingServiceInterface;
 use App\Contracts\Services\CompanyCustomerServiceInterface;
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
@@ -15,6 +16,7 @@ use App\Contracts\Services\UserServiceInterface;
 use App\Models\Company;
 use App\Models\CompanyFacility;
 use App\Services\AddressService;
+use App\Services\AppInfoService;
 use App\Services\BookingService;
 use App\Services\CompanyCustomerService;
 use App\Services\CompanyFacilityScheduleService;
@@ -45,6 +47,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(BookingServiceInterface::class, BookingService::class);
         $this->app->bind(RatingServiceInterface::class, RatingService::class);
         $this->app->bind(CompanyCustomerServiceInterface::class, CompanyCustomerService::class);
+        $this->app->bind(AppInfoServiceInterface::class, AppInfoService::class);
     }
 
     /**

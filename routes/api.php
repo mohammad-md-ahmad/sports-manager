@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AppInfoController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CompanyController;
@@ -30,6 +31,10 @@ Route::post('/reset-password/send-link', [AuthController::class, 'sendPasswordRe
 Route::prefix('register')->group(function () {
     Route::post('/company', [RegisterController::class, 'registerCompany'])->name('register.company');
     Route::post('/user', [RegisterController::class, 'registerUser'])->name('register.user');
+});
+
+Route::prefix('app-info')->group(function () {
+    Route::get('/', [AppInfoController::class, 'get'])->name('app-info.get');
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
