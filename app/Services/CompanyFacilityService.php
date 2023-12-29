@@ -9,10 +9,13 @@ use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Contracts\Services\GalleryServiceInterface;
 use App\Models\CompanyFacility;
 use App\Services\Data\Address\CreateAddressRequest;
+use App\Services\Data\Address\CreateOrUpdateAddressRequest;
+use App\Services\Data\Address\UpdateAddressRequest;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\SearchCompanyFacilitiesRequest;
+use App\Services\Data\CompanyFacility\UpdateCompanyFacilityRequest;
 use App\Services\Data\Gallery\CreateGalleryRequest;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -38,7 +41,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
             /** @var CompanyFacility $companyFacility */
             $companyFacility = CompanyFacility::findOrFail($data->id);
 
-            return $companyFacility->with(['company', 'address.country', 'gallery']);
+            return $companyFacility->with(['company', 'address.country', 'gallery'])->first();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::get: '.$exception->getMessage());
 
@@ -138,27 +141,67 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
         }
     }
 
-    // public function update(UpdateAddressRequest $data): Address
-    // {
-    //     try {
-    //         /** @var Address $address */
-    //         $address = Address::findOrFail($data->id);
+    public function update(UpdateCompanyFacilityRequest $data): CompanyFacility
+    {
+        try {
+            DB::beginTransaction();
 
-    //         DB::beginTransaction();
+            $data->facility->update($data->toArray());
 
-    //         $address->update($data->toArray());
+            if ($data->address instanceof CreateOrUpdateAddressRequest) {
+                $data->address->model_type = CompanyFacility::class;
+                $data->address->model_id = (string) $data->facility->id;
 
-    //         DB::commit();
+                if ($data->facility->address) {
+                    $updateAddressRequestData = array_merge($data->address->toArray(), [
+                        'uuid' => $data->facility->address->uuid,
+                    ]);
 
-    //         return $address;
-    //     } catch (Exception $exception) {
-    //         DB::rollBack();
+                    UpdateAddressRequest::validate($updateAddressRequestData);
 
-    //         Log::error('AddressService::update: '.$exception->getMessage());
+                    $updateAddressRequest = UpdateAddressRequest::from($updateAddressRequestData);
 
-    //         throw $exception;
-    //     }
-    // }
+                    $this->addressService->update($updateAddressRequest);
+                } else {
+                    CreateAddressRequest::validate($data->address->toArray());
+
+                    $createAddressRequest = CreateAddressRequest::from($data->address->toArray());
+
+                    $this->addressService->store($createAddressRequest);
+                }
+            }
+
+            if ($data->companyFacilityPhotos && count($data->companyFacilityPhotos) > 0) {
+                $this->deleteOldGallery($data->facility);
+
+                foreach ($data->companyFacilityPhotos as $photo) {
+                    $galleryData = [
+                        'model_type' => CompanyFacility::class,
+                        'model_id' => (string) $companyFacility->id,
+                        'image' => $photo,
+                    ];
+
+                    CreateGalleryRequest::validate($galleryData);
+
+                    $createGalleryRequest = CreateGalleryRequest::from($galleryData);
+
+                    $this->galleryService->store($createGalleryRequest);
+                }
+            }
+
+            DB::commit();
+
+            $data->facility->refresh();
+
+            return $data->facility;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error('AddressService::update: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
 
     // public function delete(DeleteCompanyRequest $data): bool
     // {
@@ -170,4 +213,15 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     //         throw $exception;
     //     }
     // }
+
+    private function deleteOldGallery(CompanyFacility $facility)
+    {
+        try {
+            DB::transaction(function () use ($facility) {
+                $facility->gallery->delete();
+            });
+        } catch (Exception $exception) {
+            throw $exception;
+        }
+    }
 }

@@ -11,6 +11,7 @@ use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserType;
 use App\Models\Company;
+use App\Models\Gallery;
 use App\Models\User;
 use App\Services\Data\Address\CreateAddressRequest;
 use App\Services\Data\Address\CreateOrUpdateAddressRequest;
@@ -183,9 +184,13 @@ class CompanyService implements CompanyServiceInterface
                 $data->address->model_id = (string) $company->id;
 
                 if ($company->address) {
-                    UpdateAddressRequest::validate($data->address->toArray());
+                    $updateAddressRequestData = array_merge($data->address->toArray(), [
+                        'uuid' => $company->address->uuid,
+                    ]);
 
-                    $updateAddressRequest = UpdateAddressRequest::from($data->address->toArray());
+                    UpdateAddressRequest::validate($updateAddressRequestData);
+
+                    $updateAddressRequest = UpdateAddressRequest::from($updateAddressRequestData);
 
                     $this->addressService->update($updateAddressRequest);
                 } else {
@@ -205,6 +210,8 @@ class CompanyService implements CompanyServiceInterface
             }
 
             if ($data->companyPhotos && count($data->companyPhotos) > 0) {
+                $this->deleteOldGallery($company);
+
                 foreach ($data->companyPhotos as $photo) {
                     $galleryData = [
                         'model_type' => Company::class,
@@ -294,6 +301,19 @@ class CompanyService implements CompanyServiceInterface
         } catch (Exception $exception) {
             Log::error('Delete company logo: '.$exception->getMessage());
 
+            throw $exception;
+        }
+    }
+
+    private function deleteOldGallery(Company $company)
+    {
+        try {
+            DB::transaction(function () use ($company) {
+                $company->gallery->each(function (Gallery $galleryPhoto) {
+                    $galleryPhoto->delete();
+                });
+            });
+        } catch (Exception $exception) {
             throw $exception;
         }
     }

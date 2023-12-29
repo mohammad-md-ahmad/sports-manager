@@ -9,11 +9,13 @@ use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\SearchCompanyFacilitiesRequest;
+use App\Services\Data\CompanyFacility\UpdateCompanyFacilityRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class CompanyFacilityController extends Controller
 {
@@ -86,21 +88,28 @@ class CompanyFacilityController extends Controller
         }
     }
 
-    // public function update(UpdateCompanyRequest $request): JsonResponse
-    // {
-    //     try {
-    //         $data = $this->companyService->update($request);
+    public function update(UpdateCompanyFacilityRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->companyFacilityService->update($request);
 
-    //         return response()->json([
-    //             'message' => __('Company has been updated successfully.'),
-    //             'data' => $data->toArray(),
-    //         ], Response::HTTP_OK);
-    //     } catch (Exception $exception) {
-    //         Log::error('Unable to update Company: '.$exception->getMessage());
+            return response()->json([
+                'message' => __('Company Facility has been updated successfully.'),
+                'data' => $data->toArray(),
+            ], Response::HTTP_OK);
+        } catch (ValidationException $exception) {
+            Log::error('Unable to store Company Facility: '.$exception->getMessage());
 
-    //         return response()->json(['message' => __('Failed to update Company.')], Response::HTTP_BAD_REQUEST);
-    //     }
-    // }
+            return response()->json([
+                'message' => __('Failed to update Company Facility.'),
+                'errors' => $exception->validator->errors()->messages(),
+            ], Response::HTTP_BAD_REQUEST);
+        } catch (Exception $exception) {
+            Log::error('Unable to update Company Facility: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to update Company Facility.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
 
     // public function delete(DeleteUserRequest $request): JsonResponse
     // {
