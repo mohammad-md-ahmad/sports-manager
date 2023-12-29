@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2023-12-29T09:07:27.146Z",
+    "dateExported": "2023-12-29T19:07:20.095Z",
     "version": "1.1",
     "folders": [
         {
@@ -73,6 +73,20 @@
             "containerId": "",
             "created": "2023-12-10T09:23:15.227Z",
             "sortNum": 30000
+        },
+        {
+            "_id": "d832650a-d7b8-40e8-9200-0bcd2dad41e7",
+            "name": "app info",
+            "containerId": "",
+            "created": "2023-12-29T17:45:50.851Z",
+            "sortNum": 40000
+        },
+        {
+            "_id": "169441c5-9914-495e-abb2-b1221de92ce0",
+            "name": "app list",
+            "containerId": "",
+            "created": "2023-12-29T18:20:10.112Z",
+            "sortNum": 50000
         }
     ],
     "requests": [
@@ -229,12 +243,12 @@
             "method": "POST",
             "sortNum": 10000,
             "created": "2023-12-10T08:15:16.422Z",
-            "modified": "2023-12-10T08:15:16.422Z",
+            "modified": "2023-12-29T16:33:51.742Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"user_uuid\": \"447de02b-47a4-4c3e-ab58-3f1bc6f68edd\",\n  \"schedule_details_uuid\": \"2a949ddd-1f70-4cd7-adaa-e60722a5183d\"\n}",
+                "raw": "{\n  \"user_uuid\": \"95d4f9ad-0206-46ad-be27-19086cd4fd73\",\n  \"schedule_details_uuid\": \"c38f1610-7fcc-4ce0-b781-5b6b98a854ca\"\n}",
                 "form": []
             },
             "auth": {
@@ -350,11 +364,11 @@
             "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
             "containerId": "f2684d83-8f2d-4651-980a-a4e6c34cfc68",
             "name": "approve booking",
-            "url": "{{host}}/bookings/8492e50d-f354-4163-b0cd-f5250a7042b4/approve",
+            "url": "{{host}}/bookings/5316cbc6-150c-4927-a3ec-f83cc5dd7a78/approve",
             "method": "POST",
             "sortNum": 20000,
             "created": "2023-12-10T08:15:16.424Z",
-            "modified": "2023-12-10T08:15:16.424Z",
+            "modified": "2023-12-29T16:34:03.233Z",
             "headers": [],
             "params": [],
             "auth": {
@@ -897,6 +911,112 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"user_uuid\": \"95d4f9ad-0206-46ad-be27-19086cd4fd73\",\n  \"settings\": {\n    \"auto_approve\": true\n  }\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "468edcd0-357e-4cdc-b87f-1a7d12b34a7b",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "b7b465d5-aee0-4593-856c-de00a636b3c7",
+            "name": "company customers - toggle auto approve",
+            "url": "{{host}}/company-customers/4674986d-79dd-4a3e-a121-a9bb55585fdc/toggle-auto-approve",
+            "method": "PUT",
+            "sortNum": 120000,
+            "created": "2023-12-29T16:53:31.546Z",
+            "modified": "2023-12-29T16:56:15.422Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "94107a37-2efd-4256-8989-a936d8cf6699",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "f2684d83-8f2d-4651-980a-a4e6c34cfc68",
+            "name": "bookings - get all by customer",
+            "url": "{{host}}/companies/7d26f38b-9b1c-418c-861a-6ecee182a67d/bookings/customer/get-all",
+            "method": "GET",
+            "sortNum": 120000,
+            "created": "2023-12-29T17:17:29.695Z",
+            "modified": "2023-12-29T17:20:56.834Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"company_customer_record_uuid\": \"4674986d-79dd-4a3e-a121-a9bb55585fdc\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "b6cf3c85-8fde-4a9b-8567-c8bb357d3005",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "d832650a-d7b8-40e8-9200-0bcd2dad41e7",
+            "name": "app info - get",
+            "url": "{{host}}/app-info",
+            "method": "GET",
+            "sortNum": 130000,
+            "created": "2023-12-29T17:46:01.486Z",
+            "modified": "2023-12-29T17:46:20.337Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"key\": \"about\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "c734af62-6b9e-417c-885b-231d40697108",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "169441c5-9914-495e-abb2-b1221de92ce0",
+            "name": "app list - get company list",
+            "url": "{{host}}/company-list/7d26f38b-9b1c-418c-861a-6ecee182a67d",
+            "method": "GET",
+            "sortNum": 130000,
+            "created": "2023-12-29T18:20:10.112Z",
+            "modified": "2023-12-29T18:24:25.868Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"key\": \"Payment_methods\"\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "e0de4195-5279-4fc0-aa0e-eb241aa88136",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "169441c5-9914-495e-abb2-b1221de92ce0",
+            "name": "app list - update company list",
+            "url": "{{host}}/company-list/7d26f38b-9b1c-418c-861a-6ecee182a67d",
+            "method": "POST",
+            "sortNum": 140000,
+            "created": "2023-12-29T19:05:29.915Z",
+            "modified": "2023-12-29T19:06:05.909Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"key\": \"Payment_methods\",\n  \"value\": [\n    \"cash\"\n  ]\n}",
                 "form": []
             },
             "auth": {
