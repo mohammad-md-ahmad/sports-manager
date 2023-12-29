@@ -12,6 +12,7 @@ use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Contracts\Services\CompanyServiceInterface;
 use App\Contracts\Services\CompanyUserServiceInterface;
 use App\Contracts\Services\GalleryServiceInterface;
+use App\Contracts\Services\NotificationServiceInterface;
 use App\Contracts\Services\RatingServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Models\Company;
@@ -26,6 +27,7 @@ use App\Services\CompanyFacilityService;
 use App\Services\CompanyService;
 use App\Services\CompanyUserService;
 use App\Services\GalleryService;
+use App\Services\NotificationService;
 use App\Services\RatingService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Validator;
@@ -51,6 +53,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CompanyCustomerServiceInterface::class, CompanyCustomerService::class);
         $this->app->bind(AppInfoServiceInterface::class, AppInfoService::class);
         $this->app->bind(AppListServiceInterface::class, AppListService::class);
+        $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
     }
 
     /**

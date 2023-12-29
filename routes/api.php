@@ -9,6 +9,7 @@ use App\Http\Controllers\CompanyCustomerController;
 use App\Http\Controllers\CompanyFacilityController;
 use App\Http\Controllers\CompanyFacilityScheduleController;
 use App\Http\Controllers\MiscController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RegisterController;
@@ -131,8 +132,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::prefix('company-list')->group(function () {
+
         Route::get('/{company}', [AppListController::class, 'get'])->name('company-list.get');
         Route::post('/{company}', [AppListController::class, 'updateCompanyList'])->name('company-list.update');
+    });
+
+    Route::prefix('notifications')->group(function () {
+
+        Route::get('/user/{user_uuid}/get-all', [NotificationController::class, 'getUserNotifications'])->name('notifications.user.get-all');
     });
 });
 
