@@ -58,8 +58,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
                 Route::post('/', [CompanyCustomerController::class, 'store'])->name('company-customers.create');
                 Route::get('/', [CompanyCustomerController::class, 'getAll'])->name('company-customers.get-all');
-                Route::put('/{uuid}', [CompanyCustomerController::class, 'update'])->name('company-customers.update');
-                Route::delete('/{uuid}', [CompanyCustomerController::class, 'update'])->name('company-customers.delete');
             });
         });
     });
@@ -76,8 +74,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 
-    Route::prefix('customers')->group(function () {
+    Route::prefix('company-customers')->group(function () {
         Route::get('/{companyCustomer}', [CompanyCustomerController::class, 'get'])->name('company-customers.get');
+        Route::put('/{uuid}', [CompanyCustomerController::class, 'update'])->name('company-customers.update');
+        Route::put('/{uuid}/toggle-auto-approve', [CompanyCustomerController::class, 'toggleAutoApprove'])->name('company-customers.toggle-auto-approve');
+        Route::delete('/{uuid}', [CompanyCustomerController::class, 'delete'])->name('company-customers.delete');
     });
 
     Route::prefix('schedules')->group(function () {

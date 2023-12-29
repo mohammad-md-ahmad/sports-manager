@@ -10,6 +10,7 @@ use App\Services\Data\CompanyCustomer\CreateCompanyCustomerRequest;
 use App\Services\Data\CompanyCustomer\DeleteCompanyCustomerRequest;
 use App\Services\Data\CompanyCustomer\GetCompanyCustomerRequest;
 use App\Services\Data\CompanyCustomer\GetCompanyCustomersRequest;
+use App\Services\Data\CompanyCustomer\ToggleAutoApproveCompanyCustomerRequest;
 use App\Services\Data\CompanyCustomer\UpdateCompanyCustomerRequest;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -88,6 +89,32 @@ class CompanyCustomerService implements CompanyCustomerServiceInterface
             DB::beginTransaction();
 
             $data->companyCustomer->delete();
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function toggleAutoApprove(ToggleAutoApproveCompanyCustomerRequest $data): bool
+    {
+        try {
+            /** @var CompanyCustomer $companyCustomerRecord */
+            $companyCustomerRecord = CompanyCustomer::findOrFail($data->id);
+
+            DB::beginTransaction();
+
+            $autoApprove = ! empty($companyCustomerRecord->settings['auto_approve']) ? ! $companyCustomerRecord->settings['auto_approve'] : true;
+
+            $companyCustomerRecord->update([
+                'settings->auto_approve' => $autoApprove,
+            ]);
 
             DB::commit();
 
