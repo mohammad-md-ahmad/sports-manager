@@ -13,7 +13,7 @@ class UserService extends AxiosService {
 
     async getUsers() {
         const companyData = await this.companyDataPromise;
-        return this.get(`/users/list/${companyData.uuid}`);
+        return this.get(`/companies/${companyData.uuid}/customers`);
     }
 
     async getUser() {
