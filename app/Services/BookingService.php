@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Contracts\Services\BookingServiceInterface;
 use App\Enums\BookingStatus;
 use App\Enums\ScheduleDetailsStatus;
+use App\Events\BookingApproved;
 use App\Models\Booking;
 use App\Models\Company;
 use App\Models\ScheduleDetails;
@@ -143,8 +144,6 @@ class BookingService implements BookingServiceInterface
                 'status' => ScheduleDetailsStatus::Booked->name,
             ]);
 
-            DB::commit();
-
             $this->pushNotificationService->createNotification(
                 [$booking->customerUser->uuid],
                 __('Your booking request of facility :facility_name on :date has been approved', [
@@ -152,6 +151,10 @@ class BookingService implements BookingServiceInterface
                     'date' => $booking->scheduleDetails->date_time_from,
                 ])
             );
+
+            event(new BookingApproved($booking));
+
+            DB::commit();
 
             return true;
         } catch (Exception $exception) {

@@ -37,7 +37,7 @@ class OneSignalRepository
             'contents' => ['en' => $data['message']],
         ];
 
-        if ($data['buttons']) {
+        if (! empty($data['buttons'])) {
             $requestBody['buttons'] = $data['buttons'];
         }
 
