@@ -10,6 +10,7 @@ use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleReque
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\UpdateCompanyFacilityScheduleDetailRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -98,6 +99,22 @@ class CompanyFacilityScheduleController extends Controller
             Log::error('Unable to store Company Facility Schedule : '.$exception->getMessage());
 
             return response()->json(['message' => __('Failed to create Company Facility Schedule.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update(UpdateCompanyFacilityScheduleDetailRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->companyFacilityScheduleService->update($request);
+
+            return response()->json([
+                'message' => __('Company Facility Schedule Detail has been updated successfully.'),
+                'data' => $data->toArray(),
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to store Company Facility Schedule Detail: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to create Company Facility Schedule Detail.')], Response::HTTP_BAD_REQUEST);
         }
     }
 }

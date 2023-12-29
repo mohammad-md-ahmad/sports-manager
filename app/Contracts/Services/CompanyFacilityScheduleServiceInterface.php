@@ -8,6 +8,7 @@ use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleReque
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\UpdateCompanyFacilityScheduleDetailRequest;
 use Illuminate\Support\Collection;
 use stdClass;
 
@@ -22,4 +23,6 @@ interface CompanyFacilityScheduleServiceInterface
     public function store(CreateCompanyFacilityScheduleRequest $data): ScheduleDetails;
 
     public function storeBatch(CreateCompanyFacilityScheduleBatchRequest $data): bool;
+
+    public function update(UpdateCompanyFacilityScheduleDetailRequest $data): ScheduleDetails;
 }

@@ -15,6 +15,7 @@ use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleReque
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\UpdateCompanyFacilityScheduleDetailRequest;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -375,6 +376,33 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
             DB::rollBack();
 
             Log::error('CompanyFacilityScheduleService::storeBatch: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(UpdateCompanyFacilityScheduleDetailRequest $data): ScheduleDetails
+    {
+        try {
+            DB::beginTransaction();
+
+            /** @var ScheduleDetails $scheduleDetail */
+            $scheduleDetail = ScheduleDetails::findOrFail($data->id);
+
+            $scheduleDetail->update(array_filter($data->toArray(), function ($value) {
+                return $value !== null;
+            }));
+
+            DB::commit();
+
+            return $scheduleDetail;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error('CompanyFacilityScheduleService::update: '.$exception->getMessage());
 
             throw $exception;
         }
