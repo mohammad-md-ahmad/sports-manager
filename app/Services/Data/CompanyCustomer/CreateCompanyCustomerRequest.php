@@ -22,7 +22,7 @@ class CreateCompanyCustomerRequest extends Data
         #[WithCast(UuidToEntityCaster::class, User::class)]
         public string $user_id,
         public array $settings,
-        public ?CompanyCustomerStatus $status = CompanyCustomerStatus::Active,
+        public string|CompanyCustomerStatus|null $status = CompanyCustomerStatus::Active,
         public ?bool $is_member = false,
     ) {
     }

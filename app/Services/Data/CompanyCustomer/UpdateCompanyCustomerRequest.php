@@ -14,7 +14,7 @@ class UpdateCompanyCustomerRequest extends Data
     public function __construct(
         #[FromRouteParameter('companyCustomer')]
         public CompanyCustomer $companyCustomer,
-        public ?CompanyCustomerStatus $status = CompanyCustomerStatus::Active,
+        public string|CompanyCustomerStatus|null $status = null,
         public ?array $settings = [],
         public ?bool $is_member = false,
     ) {
