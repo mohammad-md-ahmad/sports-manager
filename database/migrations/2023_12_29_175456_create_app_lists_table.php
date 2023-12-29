@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('app_info', function (Blueprint $table) {
+        Schema::create('app_lists', function (Blueprint $table) {
             $table->id();
             $table->string('key', 100)->unique();
-            $table->text('value');
+            $table->json('value');
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('app_info');
+        Schema::dropIfExists('app_lists');
     }
 };

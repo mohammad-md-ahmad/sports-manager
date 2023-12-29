@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppInfoController;
+use App\Http\Controllers\AppListController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CompanyController;
@@ -127,6 +128,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::post('/', [RatingController::class, 'store'])->name('ratings.store');
         Route::get('/entity-ratings', [RatingController::class, 'getEntityRatings'])->name('ratings.entity-ratings');
+    });
+
+    Route::prefix('company-list')->group(function () {
+        Route::get('/{company}', [AppListController::class, 'get'])->name('company-list.get');
+        Route::post('/{company}', [AppListController::class, 'updateCompanyList'])->name('company-list.update');
     });
 });
 

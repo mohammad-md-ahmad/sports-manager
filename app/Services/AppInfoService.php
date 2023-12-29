@@ -15,10 +15,10 @@ class AppInfoService implements AppInfoServiceInterface
     public function get(GetAppInfoByKey $data): array
     {
         try {
-            $companyInfo = AppInfo::query()->where('key', $data->key)->first();
+            $appInfo = AppInfo::query()->where('key', $data->key)->first();
 
             return [
-                $data->key => $companyInfo->value,
+                $data->key => $appInfo->value,
             ];
         } catch (Exception $exception) {
             Log::error('AppInfoService::get: '.$exception->getMessage());
