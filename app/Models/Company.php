@@ -24,6 +24,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property Gallery $gallery
  * @property Address $address
  * @property Collection $bookings
+ * @property Collection $customers
  */
 class Company extends Model
 {
@@ -112,5 +113,10 @@ class Company extends Model
     public function bookings(): HasManyDeep
     {
         return $this->hasManyDeep(Booking::class, [CompanyFacility::class, Schedule::class, ScheduleDetails::class]);
+    }
+
+    public function customers(): HasMany
+    {
+        return $this->hasMany(CompanyCustomer::class);
     }
 }

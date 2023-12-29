@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\CompanyCustomerController;
 use App\Http\Controllers\CompanyFacilityController;
 use App\Http\Controllers\CompanyFacilityScheduleController;
 use App\Http\Controllers\MiscController;
@@ -52,6 +53,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 // Route::put('/{uuid}', [CompanyController::class, 'update'])->name('companies.update');
                 // Route::delete('/{uuid}', [CompanyController::class, 'delete'])->name('companies.delete');
             });
+
+            Route::prefix('customers')->group(function () {
+
+                Route::post('/', [CompanyCustomerController::class, 'store'])->name('company-customers.create');
+                Route::get('/', [CompanyCustomerController::class, 'getAll'])->name('company-customers.get-all');
+                Route::put('/{uuid}', [CompanyCustomerController::class, 'update'])->name('company-customers.update');
+                Route::delete('/{uuid}', [CompanyCustomerController::class, 'update'])->name('company-customers.delete');
+            });
         });
     });
 
@@ -65,6 +74,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::post('/batch', [CompanyFacilityScheduleController::class, 'storeBatch'])->name('schedules.create-batch');
             });
         });
+    });
+
+    Route::prefix('customers')->group(function () {
+        Route::get('/{companyCustomer}', [CompanyCustomerController::class, 'get'])->name('company-customers.get');
     });
 
     Route::prefix('schedules')->group(function () {

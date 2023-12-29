@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Company;
+use App\Models\CompanyCustomer;
 use App\Models\CompanyFacility;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
@@ -45,5 +46,6 @@ class RouteServiceProvider extends ServiceProvider
         // explicit binding
         Route::model('company', Company::class);
         Route::model('facility', CompanyFacility::class);
+        Route::model('companyCustomer', CompanyCustomer::class);
     }
 }
