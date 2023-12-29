@@ -25,8 +25,7 @@ const globalStyles = StyleSheet.create({
     text: {
         color: colors.PrimaryGreen,
         fontFamily: fonts.Poppins.bold,
-        paddingLeft: 10,
-        paddingRight: 10
+        paddingHorizontal: 10,
     },
     inputText: {
         fontSize: 14,
