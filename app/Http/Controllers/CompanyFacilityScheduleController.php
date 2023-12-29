@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatchRequest;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\DeleteCompanyFacilityScheduleDetailRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
@@ -115,6 +116,21 @@ class CompanyFacilityScheduleController extends Controller
             Log::error('Unable to store Company Facility Schedule Detail: '.$exception->getMessage());
 
             return response()->json(['message' => __('Failed to create Company Facility Schedule Detail.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function delete(DeleteCompanyFacilityScheduleDetailRequest $request): JsonResponse
+    {
+        try {
+            $this->companyFacilityScheduleService->delete($request);
+
+            return response()->json([
+                'message' => __('Company Facility Schedule Detail has been deleted successfully.'),
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to delete Company Facility Schedule Detail: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to delete Company Facility Schedule Detail.')], Response::HTTP_BAD_REQUEST);
         }
     }
 }

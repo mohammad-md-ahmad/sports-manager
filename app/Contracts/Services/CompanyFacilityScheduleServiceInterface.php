@@ -5,6 +5,7 @@ namespace App\Contracts\Services;
 use App\Models\ScheduleDetails;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatchRequest;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\DeleteCompanyFacilityScheduleDetailRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
@@ -25,4 +26,6 @@ interface CompanyFacilityScheduleServiceInterface
     public function storeBatch(CreateCompanyFacilityScheduleBatchRequest $data): bool;
 
     public function update(UpdateCompanyFacilityScheduleDetailRequest $data): ScheduleDetails;
+
+    public function delete(DeleteCompanyFacilityScheduleDetailRequest $data): bool;
 }

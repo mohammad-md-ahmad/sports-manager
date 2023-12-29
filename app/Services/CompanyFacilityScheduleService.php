@@ -12,6 +12,7 @@ use App\Models\Schedule;
 use App\Models\ScheduleDetails;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleBatchRequest;
 use App\Services\Data\CompanyFacilitySchedule\CreateCompanyFacilityScheduleRequest;
+use App\Services\Data\CompanyFacilitySchedule\DeleteCompanyFacilityScheduleDetailRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyFacilityScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetCompanyScheduleRequest;
 use App\Services\Data\CompanyFacilitySchedule\GetScheduleRequest;
@@ -403,6 +404,23 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
             DB::rollBack();
 
             Log::error('CompanyFacilityScheduleService::update: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function delete(DeleteCompanyFacilityScheduleDetailRequest $data): bool
+    {
+        try {
+            $scheduleDetail = ScheduleDetails::findOrFail($data->id);
+
+            DB::transaction(function () use ($scheduleDetail) {
+                $scheduleDetail->delete();
+            });
+
+            return true;
+        } catch (Exception $exception) {
+            Log::error('CompanyFacilityScheduleService::delete: '.$exception->getMessage());
 
             throw $exception;
         }

@@ -86,6 +86,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/company-schedule', [CompanyFacilityScheduleController::class, 'getCompanySchedule'])->name('schedules.company-schedule');
         Route::get('/facility-schedule', [CompanyFacilityScheduleController::class, 'getFacilitySchedule'])->name('schedules.facility-schedule');
         Route::put('/{uuid}', [CompanyFacilityScheduleController::class, 'update'])->name('schedules.update');
+        Route::delete('/{uuid}', [CompanyFacilityScheduleController::class, 'delete'])->name('schedules.update');
     });
 
     Route::prefix('bookings')->group(function () {
