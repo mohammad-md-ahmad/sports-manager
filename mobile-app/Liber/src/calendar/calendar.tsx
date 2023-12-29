@@ -12,6 +12,7 @@ import BookingService from '../../api/BookingService';
 import { useSelector } from 'react-redux';
 import fonts from '../../styles/fonts';
 import { getCompanyData } from '../../helpers/companyDataManage';
+import DeleteConfirmation from '../common/deleteConfirmation';
 
 export default function AgendaScreen({ route }): React.JSX.Element {
     const { facility } = route?.params ?? { facility: null };
@@ -262,16 +263,32 @@ export default function AgendaScreen({ route }): React.JSX.Element {
         return btns;
     }
 
-    function onDeleteSlotPress(slot): void {
+    const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+    const [slotTobeDeleted, setSlotTobeDeleted] = useState(null);
 
-        scheduleService.deleteScheduleDetails(slot.slot_uuid).then((response) => {
+    function onDeleteSlotPress(slot): void {
+        setSlotTobeDeleted(slot);
+        setIsDeleteModalVisible(true);
+    }
+
+    const handleDelete = () => {
+        // Perform delete action
+        scheduleService.deleteScheduleDetails(slotTobeDeleted.slot_uuid).then((response) => {
             // Handle a successful API response
             loadData();
+            setIsDeleteModalVisible(false);
+            setSlotTobeDeleted(null);
         }).catch((error) => {
             // Handle API request errors here
             setErrors(error.response.data.errors)
         });
-    }
+
+    };
+
+    const handleCancel = () => {
+        setSlotTobeDeleted(null);
+        setIsDeleteModalVisible(false);
+    };
 
     function onEditSlotPress(slot): void {
         navigator.navigate(Screens.ScheduleEditForm, { 'schedule': slot })
@@ -395,6 +412,11 @@ export default function AgendaScreen({ route }): React.JSX.Element {
 
     return (
         <>
+            <DeleteConfirmation
+                isVisible={isDeleteModalVisible}
+                onDelete={handleDelete}
+                onCancel={handleCancel}
+            />
             <Agenda
                 items={items}
                 loadItemsForMonth={loadItems}

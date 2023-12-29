@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import UserService from '../../api/UserService';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserCard from '../common/userCard';
+import { getUserData } from '../../helpers/userDataManage';
 
 function UsersList(): React.JSX.Element {
     const userService = new UserService();
@@ -15,11 +16,18 @@ function UsersList(): React.JSX.Element {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            userService.getUsers()
-                .then((response) => {
-                    setUsers(response.data?.data?.data);
-                }).catch((error) => {
-                });
+            getUserData().then((data: string | null) => {
+                var temp = [data === null ? null : JSON.parse(data)]
+                userService.getUsers()
+                    .then((response) => {
+                        //console.log("userssss", temp)
+                        setUsers(response.data?.data?.data);
+                        //setUsers(temp);
+                    }).catch((error) => {
+                    });
+            });
+
+
         }, [])
     );
 
