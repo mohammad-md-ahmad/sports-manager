@@ -17,11 +17,11 @@ class ScheduleService extends AxiosService {
     }
 
     async updateScheduleDetails(data: Object) {
-        return this.put(`/schedules/${data.schedule_uuid}/`, data);
+        return this.put(`/schedules/${data.schedule_details_uuid}`, data);
     }
 
-    async deleteScheduleDetails(schedule_uuid: string) {
-        return this.delete(`/schedules/${schedule_uuid}/`);
+    async deleteScheduleDetails(schedule_details_uuid: string) {
+        return this.delete(`/schedules/${schedule_details_uuid}`);
     }
 
     async getCompanySchedule(data: Object) {

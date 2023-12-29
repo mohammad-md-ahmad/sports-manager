@@ -16,7 +16,7 @@ import ErrorView from "../common/errorView";
 import { Screens } from "../../helpers/constants";
 
 interface ScheduleFormData {
-    schedule_uuid: string;
+    schedule_details_uuid: string;
     date_time_from: string;
     date_time_to: string;
 }
@@ -31,7 +31,7 @@ function ScheduleEditForm({ route }): React.JSX.Element {
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const [formData, setFormData] = useState<ScheduleFormData>({
-        schedule_uuid: '',
+        schedule_details_uuid: '',
         date_time_from: '',
         date_time_to: '',
     });
@@ -44,6 +44,7 @@ function ScheduleEditForm({ route }): React.JSX.Element {
     };
 
     useEffect(() => {
+        console.log("schedulescheduleschedule", schedule)
         setFormData(schedule);
     }, [])
 
@@ -79,7 +80,7 @@ function ScheduleEditForm({ route }): React.JSX.Element {
     const onSubmitPress = () => {
         // Handle the form submission with the selected date (formDate)
 
-        formData['schedule_uuid'] = schedule.uuid;
+        formData['schedule_details_uuid'] = schedule.slot_uuid;
 
         scheduleService.updateScheduleDetails(formData).then((response) => {
             // Handle a successful API response

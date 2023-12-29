@@ -1,7 +1,6 @@
-import React, { Component, useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Modal } from 'react-native';
 import { Agenda, DateData, AgendaEntry } from 'react-native-calendars';
-import calendarIDs from './calendarIDs';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import ScheduleService from '../../api/ScheduleService';
 import colors from '../../styles/colors';
@@ -10,7 +9,6 @@ import globalStyles from '../../styles/styles';
 import { BookingStatus, Screens, SlotStatus, UserType } from '../../helpers/constants';
 import { getUserData } from '../../helpers/userDataManage';
 import BookingService from '../../api/BookingService';
-import { date } from 'yup';
 import { useSelector } from 'react-redux';
 import fonts from '../../styles/fonts';
 import { getCompanyData } from '../../helpers/companyDataManage';
@@ -266,7 +264,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
 
     function onDeleteSlotPress(slot): void {
 
-        scheduleService.deleteScheduleDetails(slot.uuid).then((response) => {
+        scheduleService.deleteScheduleDetails(slot.slot_uuid).then((response) => {
             // Handle a successful API response
             loadData();
         }).catch((error) => {
