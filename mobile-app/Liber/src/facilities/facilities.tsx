@@ -9,7 +9,6 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Screens, UserType } from "../../helpers/constants";
 import FacilityCard from "../common/facilityCard";
 import FacilityService from "../../api/FacilityService";
-import colors from "../../styles/colors";
 import { getUserData } from "../../helpers/userDataManage";
 
 function Facilities(): React.JSX.Element {

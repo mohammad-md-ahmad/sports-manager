@@ -21,8 +21,8 @@ function UsersList(): React.JSX.Element {
                 userService.getUsers()
                     .then((response) => {
                         //console.log("userssss", temp)
-                        setUsers(response.data?.data?.data);
-                        //setUsers(temp);
+                        //setUsers(response.data?.data?.data);
+                        setUsers(temp);
                     }).catch((error) => {
                     });
             });

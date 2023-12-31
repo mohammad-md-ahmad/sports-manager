@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import { Button, Card, ListItem } from 'react-native-elements';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import globalStyles from '../../styles/styles';
+import { Switch } from 'react-native-gesture-handler';
 
 interface User {
     name: string;
     email: string;
     imageUri: string;
+    isAutoApprove: boolean;
 }
 
 interface UserCardProps {
@@ -16,25 +18,44 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({ user }) => {
+
+    const [currentUser, setCurrentUser] = useState(user);
+
+    const handleInputChange = (key: string, value: any) => {
+        setCurrentUser((prevData) => ({
+            ...prevData,
+            [key]: value,
+        }));
+    }
+
     return (
         <Card containerStyle={styles.cardView}>
             <View style={styles.container}>
                 <Image
-                    source={user.imageUri ? { uri: user.imageUri } : require('./../../assets/images/liber_logo.png')}
+                    source={currentUser.imageUri ? { uri: currentUser.imageUri } : require('./../../assets/images/liber_logo.png')}
                     style={styles.image}
                 />
                 <View style={styles.userInfo}>
                     <View style={styles.row}>
                         <Text style={styles.label}>Name:</Text>
-                        <Text style={styles.value}>{user?.full_name}</Text>
+                        <Text style={styles.value}>{currentUser?.full_name}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Email:</Text>
-                        <Text style={styles.value}>{user?.email}</Text>
+                        <Text style={styles.value}>{currentUser?.email}</Text>
                     </View>
 
                 </View>
 
+            </View>
+            <View style={styles.switchContainer}>
+                <Text style={styles.switchLabel}>Auto Approve</Text>
+                <Switch
+                    value={currentUser?.isAutoApprove}
+                    onValueChange={() => { handleInputChange('isAutoApprove', !currentUser?.isAutoApprove) }}
+                    trackColor={{ false: colors.PrimaryBlueLight, true: colors.PrimaryBlueLight }}
+                    thumbColor={currentUser?.isAutoApprove ? colors.PrimaryBlue : colors.OffWhite}
+                />
             </View>
             <View>
                 <View style={styles.buttonRow}>
@@ -48,6 +69,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
                         title="View"
                         buttonStyle={styles.viewButton}
                     />
+
                 </View>
             </View>
         </Card>
@@ -79,14 +101,18 @@ const styles = StyleSheet.create({
         marginTop: 15,
     },
     label: {
+        ...globalStyles.text,
         fontSize: 18,
-        fontWeight: 'bold',
         color: colors.PrimaryBlue,
-        width: 80,
-    }, value: {
+        width: 70,
+        paddingHorizontal: 0,
+    },
+    value: {
+        ...globalStyles.text,
         fontSize: 18,
-        fontWeight: 'normal',
-        color: colors.PrimaryBlue
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.regular,
+        paddingHorizontal: 0,
     },
     row: {
         flexDirection: 'row',
@@ -108,6 +134,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 20,
     },
+    switchContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    switchLabel: {
+        ...globalStyles.text,
+        fontSize: 18,
+        fontFamily: fonts.Poppins.regular,
+        color: colors.PrimaryBlue
+    }
 });
 
 export default UserCard;

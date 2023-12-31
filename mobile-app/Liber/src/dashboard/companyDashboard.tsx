@@ -12,6 +12,8 @@ import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { storeCountries } from "../../helpers/countriesDataManage";
 import CompanyService from "../../api/CompanyService";
 import CompanyCard from "../common/companyCard";
+import { useDispatch, useSelector } from "react-redux";
+import { GlobaSateKey } from "../../helpers/constants";
 
 export default function CompanyDashboard(): React.JSX.Element {
     const companyService = new CompanyService();
@@ -19,24 +21,41 @@ export default function CompanyDashboard(): React.JSX.Element {
 
     const [companies, setCompanies] = useState([]);
 
+    const companiesList = useSelector(state => state.companiesList);
+
+    const facilityTypes = useSelector(state => state.facilityTypes);
+    const countries = useSelector(state => state.countries);
+
+    const dispatch = useDispatch();
+
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            companyService.list({})
-                .then((response) => {
-                    console.log('companies', response.data)
-                    setCompanies(response.data?.data?.data);
-                }).catch((error) => {
-                });
+            if (companiesList) {
+                setCompanies(companiesList);
+            } else {
+                companyService.list({})
+                    .then((response) => {
+                        setCompanies(response.data?.data?.data);
+                        dispatch({ type: GlobaSateKey.SetCompaniesList, payload: response.data?.data?.data });
+                    }).catch((error) => {
+                    });
+            }
 
-            miscService.lists().then((response) => {
-                storeFacilityTypes(response.data?.data?.facility_types);
-                storeCountries(response.data?.data?.countries);
-            }).catch((error) => {
-                console.log(error);
-            });
+            if (!facilityTypes || !countries) {
+                miscService.lists().then((response) => {
+                    storeFacilityTypes(response.data?.data?.facility_types);
+                    storeCountries(response.data?.data?.countries);
+
+                    dispatch({ type: GlobaSateKey.SetFacilityTypes, payload: response.data?.data?.facility_types });
+                    dispatch({ type: GlobaSateKey.SetCountries, payload: response.data?.data?.countries });
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
+
         }, [])
     );
 
