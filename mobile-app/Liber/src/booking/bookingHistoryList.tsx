@@ -47,13 +47,10 @@ export default function BookingHistoryList(): React.JSX.Element {
         } else if (userData?.type == UserType.CustomerUser) {
             filter.user_uuid = userData?.uuid;
         }
-        console.log('userData', userData);
-        console.log('filter d', filter);
+
         bookingService.list(filter).then((response) => {
             setBookingHistory(response.data?.data?.data);
-            console.log(response.data?.data?.data);
         }).catch((error) => {
-            console.log(error);
         });
     }
 

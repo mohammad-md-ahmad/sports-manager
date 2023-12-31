@@ -20,9 +20,7 @@ const ImagePicker = (props) => {
 
         launchImageLibrary(options, (response) => {
             if (response.didCancel) {
-                console.log('User cancelled image picker');
             } else if (response.error) {
-                console.log('Image picker error: ', response.error);
             } else if (response.assets && response.assets.length > 0) {
                 const newImages = response.assets.map((asset) => asset.uri);
                 const newBase64Images = response.assets.map((asset) => asset.base64);
@@ -34,12 +32,10 @@ const ImagePicker = (props) => {
     };
 
     useEffect(() => {
-        console.log('selectedImages', selectedImages);
         props?.setSelectedImages(selectedImages);
     }, [selectedImages]);
 
     useEffect(() => {
-        console.log('selectedImages base64', selectedImagesBase64);
         props?.setSelectedImagesBase64(selectedImagesBase64);
     }, [selectedImagesBase64]);
 

@@ -14,7 +14,6 @@ class FacilityService extends AxiosService {
 
     async create(data: Object) {
         const companyData = await this.companyDataPromise;
-        console.log('companyData', companyData);
         return this.post(`/companies/${companyData.uuid}/facilities`, data);
     }
 

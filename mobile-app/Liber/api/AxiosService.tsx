@@ -49,8 +49,8 @@ abstract class AxiosService {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
 
-                console.log('Request Body Data:', config.data);
-                console.log('Request Body Params:', config.params);
+                // console.log('Request Body Data:', config.data);
+                // console.log('Request Body Params:', config.params);
 
                 return config;
             },
@@ -80,8 +80,6 @@ abstract class AxiosService {
             (response) => {
                 // You can handle successful responses here
                 dispatch({ type: GlobaSateKey.SetLoading, payload: false });
-
-                //console.log(response.data.message)
 
                 const originalRequest = response.config;
                 if (originalRequest.method !== 'get') {

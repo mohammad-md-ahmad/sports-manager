@@ -22,7 +22,6 @@ export default function CompanyRating(): React.JSX.Element {
 
     const loadCompanyRatingList = () => {
         ratingService.companyRatingList({ uuid: companyData?.uuid }).then((response) => {
-            console.log(response.data?.data);
             setCompanyRatingList(response.data?.data?.ratings ?? []);
         }).catch((error) => {
             console.error(error);

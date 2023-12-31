@@ -74,36 +74,13 @@ export default function CompanyProfileForm(): React.JSX.Element {
             // You can put the logic here that you want to run when the component should reload.
 
             companyService.getCompany().then((response) => {
-                console.log('company data', response.data);
                 response.data.data.address = { ...response.data.data.address }
                 setFormData({ ...response.data.data, logo: null });
                 setLogo({ uri: response.data?.data?.logo });
                 setSelectedCountry(response.data?.data?.address?.country_uuid);
             }).catch((error) => {
-                console.error('company error', error)
             });
-
-            // getCompanyData().then((data: string | null) => {
-            //     if (data !== null) {
-            //         let parsedData = JSON.parse(data);
-            //         console.log('parsedData-------', parsedData)
-
-            //         // if (parsedData.logo == null)
-            //         //   parsedData.logo = require('./../../assets/images/liber_logo.png');
-
-            //         parsedData.createAddressRequest = {
-            //             line_1: '',
-            //             line_2: '',
-            //             line_3: '',
-            //             city: '',
-            //             region: '',
-            //             postcode: '',
-            //             country_uuid: '',
-            //         }
-
-            //         setFormData({ ...parsedData });
-            //     }
-            // });
+            
         }, [])
     );
 

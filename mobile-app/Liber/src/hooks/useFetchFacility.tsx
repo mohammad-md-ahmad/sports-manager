@@ -19,7 +19,6 @@ export const useFetchFacility = () => {
 
         try {
             const { data } = await facilityService.listByCompany();
-console.log('data', data);
             if (isTop) {
                 const newList = [...data?.data, ...facilities];
                 const slicedData = [...newList].slice(0, MAX_LENGTH);

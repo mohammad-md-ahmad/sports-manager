@@ -102,7 +102,6 @@ export default function Signup(): React.JSX.Element {
                     navigator.navigate(Screens.Login);
                 })
                 .catch((error) => {
-                    console.log('error ****************************** ', error)
                     setErrors(error.response.data.errors)
                     // Handle API request errors here
                 });

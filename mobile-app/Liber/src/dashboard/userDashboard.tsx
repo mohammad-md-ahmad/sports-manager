@@ -50,7 +50,6 @@ export default function UserDashboard(): React.JSX.Element {
                     dispatch({ type: GlobaSateKey.SetFacilityTypes, payload: response.data?.data?.facility_types });
                     dispatch({ type: GlobaSateKey.SetCountries, payload: response.data?.data?.countries });
                 }).catch((error) => {
-                    console.log(error);
                 });
             }
 

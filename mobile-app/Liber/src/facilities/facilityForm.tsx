@@ -217,13 +217,11 @@ export default function FacilityForm(): React.JSX.Element {
 
     const handleSubmit = (data) => {
         let sanitizedFormData = data;
-        console.log(selectedFacilityPhotosBase64);
         sanitizedFormData.companyFacilityPhotos = selectedFacilityPhotosBase64;
 
         facilityService.create(sanitizedFormData).then((response) => {
             navigator.navigate(Screens.Facilities);
         }).catch((error) => {
-            console.log('the error', error.response.data);
         });
     };
 
