@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, VirtualizedList } from 'react-native';
 import fonts from '../../styles/fonts';
 import { useFocusEffect } from '@react-navigation/native';
-import UserService from '../../api/UserService';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserCard from '../common/userCard';
 import { getUserData } from '../../helpers/userDataManage';
+import CompanyCustomersService from '../../api/CompanyCustomersService';
 
 function UsersList(): React.JSX.Element {
-    const userService = new UserService();
+    const companyCustomersService = new CompanyCustomersService();
 
     const [users, setUsers] = useState([]);
     useFocusEffect(
@@ -18,7 +18,7 @@ function UsersList(): React.JSX.Element {
 
             getUserData().then((data: string | null) => {
                 var temp = [data === null ? null : JSON.parse(data)]
-                userService.getUsers()
+                companyCustomersService.getUsers()
                     .then((response) => {
                         setUsers(response.data?.data?.data);
                         //setUsers(temp);

@@ -5,6 +5,7 @@ import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
 import globalStyles from '../../styles/styles';
 import { Switch } from 'react-native-gesture-handler';
+import CompanyCustomersService from '../../api/CompanyCustomersService';
 
 interface User {
     name: string;
@@ -21,11 +22,19 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
     const [currentUser, setCurrentUser] = useState(user);
 
+    const companyCustomersService = new CompanyCustomersService();
+
     const handleInputChange = (key: string, value: any) => {
         setCurrentUser((prevData) => ({
             ...prevData,
             [key]: value,
         }));
+
+        companyCustomersService.toggleAutoApprove(currentUser)
+            .then((response) => {
+
+            }).catch((error) => {
+            });
     }
 
     return (
