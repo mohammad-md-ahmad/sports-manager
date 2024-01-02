@@ -7,6 +7,7 @@ const initialState = {
   loading: false,
   currentScreen: 'Dashboard',
   companyData: null,
+  userData: null,
   companiesList: null,
   facilityTypes: null,
   countries: null,
@@ -29,6 +30,13 @@ const currentScreenReducer = (state = initialState.currentScreen, action) => {
 
 const companyDataReducer = (state = initialState.companyData, action) => {
   if (action.type === GlobaSateKey.SetCompanyData) {
+    return action.payload;
+  }
+  return state;
+};
+
+const userDataReducer = (state = initialState.userData, action) => {
+  if (action.type === GlobaSateKey.SetUserData) {
     return action.payload;
   }
   return state;
@@ -60,6 +68,7 @@ const rootReducer = combineReducers({
   loading: loadingReducer,
   currentScreen: currentScreenReducer,
   companyData: companyDataReducer,
+  userData: userDataReducer,
   companiesList: companiesListReducer,
   facilityTypes: facilityTypesReducer,
   countries: countriesReducer,

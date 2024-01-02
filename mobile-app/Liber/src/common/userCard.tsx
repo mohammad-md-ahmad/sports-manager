@@ -6,6 +6,9 @@ import fonts from '../../styles/fonts';
 import globalStyles from '../../styles/styles';
 import { Switch } from 'react-native-gesture-handler';
 import CompanyCustomersService from '../../api/CompanyCustomersService';
+import { GlobaSateKey, Screens } from '../../helpers/constants';
+import { useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 
 interface User {
     name: string;
@@ -35,6 +38,13 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
 
             }).catch((error) => {
             });
+    }
+    const dispatch = useDispatch();
+    const navigator = useNavigation();
+
+    function onHistoryPress() {
+        dispatch({ type: GlobaSateKey.SetUserData, payload: user });
+        navigator.navigate(Screens.UserBookingHistoryList);
     }
 
     return (
@@ -69,7 +79,7 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
             <View>
                 <View style={styles.buttonRow}>
                     <Button
-                        onPress={() => { }}
+                        onPress={() => onHistoryPress()}
                         title="Hisotry"
                         buttonStyle={styles.historyButton}
                     />
