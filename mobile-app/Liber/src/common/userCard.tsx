@@ -11,29 +11,43 @@ import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 
 interface User {
+    uuid: string;
     name: string;
     email: string;
     imageUri: string;
     isAutoApprove: boolean;
 }
 
-interface UserCardProps {
-    user: User;
+interface CompanyCustomer {
+    uuid: string;
+    settings: {
+        auto_approve: boolean;
+    }
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user }) => {
+interface UserCardProps {
+    user: User;
+    companyCustomer: CompanyCustomer;
+}
+
+const UserCard: React.FC<UserCardProps> = ({ user, companyCustomer }) => {
 
     const [currentUser, setCurrentUser] = useState(user);
+    const [currentCompanyCustomer, setCompanyCustomer] = useState(companyCustomer);
 
     const companyCustomersService = new CompanyCustomersService();
 
     const handleInputChange = (key: string, value: any) => {
-        setCurrentUser((prevData) => ({
-            ...prevData,
-            [key]: value,
-        }));
+        if (key == 'autoApprove')
+            setCompanyCustomer((prevData) => ({
+                ...prevData,
+                ["settings"]: {
+                    ...currentCompanyCustomer["settings"],
+                    ['auto_approve']: value,
+                },
+            }));
 
-        companyCustomersService.toggleAutoApprove(currentUser)
+        companyCustomersService.toggleAutoApprove(currentCompanyCustomer)
             .then((response) => {
 
             }).catch((error) => {
@@ -70,10 +84,10 @@ const UserCard: React.FC<UserCardProps> = ({ user }) => {
             <View style={styles.switchContainer}>
                 <Text style={styles.switchLabel}>Auto Approve</Text>
                 <Switch
-                    value={currentUser?.isAutoApprove}
-                    onValueChange={() => { handleInputChange('isAutoApprove', !currentUser?.isAutoApprove) }}
+                    value={currentCompanyCustomer?.settings?.auto_approve}
+                    onValueChange={() => { handleInputChange('autoApprove', !currentCompanyCustomer?.settings?.auto_approve) }}
                     trackColor={{ false: colors.PrimaryBlueLight, true: colors.PrimaryBlueLight }}
-                    thumbColor={currentUser?.isAutoApprove ? colors.PrimaryBlue : colors.OffWhite}
+                    thumbColor={currentCompanyCustomer?.settings?.auto_approve ? colors.PrimaryBlue : colors.OffWhite}
                 />
             </View>
             <View>

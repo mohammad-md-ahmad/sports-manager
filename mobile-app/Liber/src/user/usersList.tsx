@@ -20,6 +20,7 @@ function UsersList(): React.JSX.Element {
                 var temp = [data === null ? null : JSON.parse(data)]
                 companyCustomersService.getUsers()
                     .then((response) => {
+                        console.log(response.data?.data?.data)
                         setUsers(response.data?.data?.data);
                         //setUsers(temp);
                     }).catch((error) => {
@@ -38,7 +39,7 @@ function UsersList(): React.JSX.Element {
         <SafeAreaView style={styles.container}>
             <VirtualizedList
                 initialNumToRender={6}
-                renderItem={({ item }) => <UserCard user={item} />}
+                renderItem={({ item }) => <UserCard user={item?.customer} companyCustomer={item} />}
                 keyExtractor={item => item.uuid}
                 getItemCount={getItemCount}
                 getItem={getItem}
