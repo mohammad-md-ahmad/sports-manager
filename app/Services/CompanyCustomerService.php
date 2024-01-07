@@ -33,7 +33,7 @@ class CompanyCustomerService implements CompanyCustomerServiceInterface
     public function getAll(GetCompanyCustomersRequest $data): LengthAwarePaginator
     {
         try {
-            return $data->company->customers()->jsonPaginate();
+            return $data->company->customers()->with('customer')->jsonPaginate();
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
 
