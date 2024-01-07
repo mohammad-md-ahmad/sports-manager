@@ -31,6 +31,7 @@ import UsersList from '../user/usersList';
 import PaymentMethodsForm from '../payments/paymentMethodsForm';
 import BookingHistoryList from '../booking/bookingHistoryList';
 import UserBookingHistoryList from '../booking/userBookingHistoryList';
+import UserView from '../user/userView';
 
 const Stack = createStackNavigator();
 
@@ -230,6 +231,7 @@ const AppNavigator = () => {
                     <Stack.Screen name={Screens.ProfileMenu} options={{ title: 'Menu' }} component={ProfileMenu} />
 
                     <Stack.Screen name={Screens.UserProfile} options={{ title: 'Profile' }} component={UserProfile} />
+                    <Stack.Screen name={Screens.UserView} options={{ title: 'User View' }} component={UserView} />
                     <Stack.Screen name={Screens.UserProfileForm} options={{ title: 'Profile Form' }} component={UserProfileForm} />
 
                     <Stack.Screen name={Screens.UsersList} options={{ title: 'Users' }} component={UsersList} />

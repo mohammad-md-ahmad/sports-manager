@@ -12,10 +12,9 @@ import { useNavigation } from '@react-navigation/native';
 
 interface User {
     uuid: string;
-    name: string;
+    full_name: string;
     email: string;
-    imageUri: string;
-    isAutoApprove: boolean;
+    profile_picture: string;
 }
 
 interface CompanyCustomer {
@@ -61,11 +60,16 @@ const UserCard: React.FC<UserCardProps> = ({ user, companyCustomer }) => {
         navigator.navigate(Screens.UserBookingHistoryList);
     }
 
+    function onViewPress() {
+        dispatch({ type: GlobaSateKey.SetUserData, payload: user });
+        navigator.navigate(Screens.UserView);
+    }
+
     return (
         <Card containerStyle={styles.cardView}>
             <View style={styles.container}>
                 <Image
-                    source={currentUser.imageUri ? { uri: currentUser.imageUri } : require('./../../assets/images/liber_logo.png')}
+                    source={currentUser.profile_picture ? { uri: currentUser.profile_picture } : require('./../../assets/images/liber_logo.png')}
                     style={styles.image}
                 />
                 <View style={styles.userInfo}>
@@ -98,7 +102,7 @@ const UserCard: React.FC<UserCardProps> = ({ user, companyCustomer }) => {
                         buttonStyle={styles.historyButton}
                     />
                     <Button
-                        onPress={() => { }}
+                        onPress={() => { onViewPress() }}
                         title="View"
                         buttonStyle={styles.viewButton}
                     />

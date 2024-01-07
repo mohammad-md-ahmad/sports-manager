@@ -11,9 +11,9 @@ class UserService extends AxiosService {
         this.companyDataPromise = this.initializePromise(getCompanyData);
     }
 
-    async getUser() {
+    async getUser(user = null) {
         const userData = await this.userDataPromise;
-        return this.get(`/users/${userData.uuid}`);
+        return this.get(`/users/${user ? user.uuid : userData.uuid}`);
     }
 
     async create(data: Object) {

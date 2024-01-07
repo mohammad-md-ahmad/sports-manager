@@ -31,6 +31,7 @@ export enum Screens {
     CompanyView = "CompanyView",
     UserProfile = "UserProfile",
     UserProfileForm = "UserProfileForm",
+    UserView = "UserView",
     Calendar = "Calendar",
     About = "About",
     ScheduleForm = "ScheduleForm",
