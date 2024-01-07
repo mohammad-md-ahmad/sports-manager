@@ -2,7 +2,7 @@ import { getCompanyData } from '../helpers/companyDataManage';
 import { getUserData } from '../helpers/userDataManage';
 import AxiosService from './AxiosService';
 
-class UserService extends AxiosService {
+class CompanyCustomersService extends AxiosService {
     private userDataPromise: Promise<any>;
     private companyDataPromise: Promise<any>;
     constructor() {
@@ -11,18 +11,15 @@ class UserService extends AxiosService {
         this.companyDataPromise = this.initializePromise(getCompanyData);
     }
 
-    async getUser() {
-        const userData = await this.userDataPromise;
-        return this.get(`/users/${userData.uuid}`);
+    async getUsers() {
+        const companyData = await this.companyDataPromise;
+        return this.get(`/companies/${companyData.uuid}/customers`);
     }
 
-    async create(data: Object) {
-        return this.post('/users', data);
-    }
 
-    async update(data: Object) {
-        return this.put('/users/' + data.uuid, data);
+    async toggleAutoApprove(data: Object) {
+        return this.put(`/company-customers/${data?.uuid}/toggle-auto-approve`);
     }
 }
 
-export default UserService;
+export default CompanyCustomersService;

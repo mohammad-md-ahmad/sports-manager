@@ -6,7 +6,11 @@ import { GlobaSateKey } from '../helpers/constants';
 const initialState = {
   loading: false,
   currentScreen: 'Dashboard',
-  companyData: null
+  companyData: null,
+  userData: null,
+  companiesList: null,
+  facilityTypes: null,
+  countries: null,
 };
 
 // Create your reducer functions
@@ -17,7 +21,6 @@ const loadingReducer = (state = initialState.loading, action) => {
   return state;
 };
 
-// Create your reducer functions
 const currentScreenReducer = (state = initialState.currentScreen, action) => {
   if (action.type === GlobaSateKey.SetCurrentScreen) {
     return action.payload;
@@ -25,9 +28,36 @@ const currentScreenReducer = (state = initialState.currentScreen, action) => {
   return state;
 };
 
-// Create your reducer functions
 const companyDataReducer = (state = initialState.companyData, action) => {
   if (action.type === GlobaSateKey.SetCompanyData) {
+    return action.payload;
+  }
+  return state;
+};
+
+const userDataReducer = (state = initialState.userData, action) => {
+  if (action.type === GlobaSateKey.SetUserData) {
+    return action.payload;
+  }
+  return state;
+};
+
+const companiesListReducer = (state = initialState.companiesList, action) => {
+  if (action.type === GlobaSateKey.SetCompaniesList) {
+    return action.payload;
+  }
+  return state;
+};
+
+const facilityTypesReducer = (state = initialState.facilityTypes, action) => {
+  if (action.type === GlobaSateKey.SetFacilityTypes) {
+    return action.payload;
+  }
+  return state;
+};
+
+const countriesReducer = (state = initialState.countries, action) => {
+  if (action.type === GlobaSateKey.SetCountries) {
     return action.payload;
   }
   return state;
@@ -38,6 +68,10 @@ const rootReducer = combineReducers({
   loading: loadingReducer,
   currentScreen: currentScreenReducer,
   companyData: companyDataReducer,
+  userData: userDataReducer,
+  companiesList: companiesListReducer,
+  facilityTypes: facilityTypesReducer,
+  countries: countriesReducer,
 });
 
 // Create the Redux store

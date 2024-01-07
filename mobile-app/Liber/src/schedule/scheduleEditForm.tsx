@@ -44,7 +44,6 @@ function ScheduleEditForm({ route }): React.JSX.Element {
     };
 
     useEffect(() => {
-        console.log("schedulescheduleschedule", schedule)
         setFormData(schedule);
     }, [])
 

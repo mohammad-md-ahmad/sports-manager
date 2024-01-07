@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import {
     Image,
@@ -7,16 +7,11 @@ import {
     View,
 } from "react-native";
 import globalStyles from "../../styles/styles";
-import { useNavigation } from "@react-navigation/native";
-import { Button } from "react-native-elements";
-import fonts from "../../styles/fonts";
-import { Screens } from "../../helpers/constants";
 import colors from "../../styles/colors";
 import Swiper from "react-native-swiper";
 
 function FacilityView({ route }): React.JSX.Element {
     const { facility } = route?.params ?? {};
-
     return (
         <View style={styles.containerView}>
             <View style={styles.container}>

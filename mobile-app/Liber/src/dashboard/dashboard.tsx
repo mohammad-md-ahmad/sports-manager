@@ -24,7 +24,6 @@ export default function Dashboard(): React.JSX.Element {
                 storeFacilityTypes(response.data?.data?.facility_types);
                 storeCountries(response.data?.data?.countries);
             }).catch((error) => {
-                console.log(error);
             });
         }, [])
     );

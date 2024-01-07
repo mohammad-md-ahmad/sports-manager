@@ -90,7 +90,6 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking, user_uuid, callback 
             onRateInputHidden();
             callback();
         }).catch((error) => {
-            console.log(error);
         });
     }
 

@@ -46,11 +46,9 @@ export default function CompanyProfile() {
                     let user = JSON.parse(data);
                     if (user?.type == UserType.CompanyUser) {
                         companyService.getCompany().then((response) => {
-                            console.log('company data', response.data)
                             setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
                             dispatch({ type: GlobaSateKey.SetCompanyData, payload: response.data.data });
                         }).catch((error) => {
-                            console.error('company error', error)
                         });
                     } else {
                         setCompanyData(useSelector(state => state.companyData))

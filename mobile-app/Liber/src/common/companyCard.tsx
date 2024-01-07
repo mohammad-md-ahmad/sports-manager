@@ -1,10 +1,9 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
-import { Button, Card, Icon, ListItem } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { GlobaSateKey, Screens } from '../../helpers/constants';
-import fonts from '../../styles/fonts';
 import Swiper from 'react-native-swiper';
 import globalStyles from '../../styles/styles';
 import RatingRowWithNumber from './ratingRowWithNumber';

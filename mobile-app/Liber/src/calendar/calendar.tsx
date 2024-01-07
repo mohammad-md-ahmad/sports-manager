@@ -171,7 +171,6 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                 // setItems(response.data?.data);
 
             }).catch((error) => {
-                console.log('error', error);
             });
     }
 
@@ -179,10 +178,8 @@ export default function AgendaScreen({ route }): React.JSX.Element {
 
         bookingService.bookRequest({ schedule_details_uuid: reservation.slot_uuid })
             .then((response) => {
-                console.log('booking', response)
                 loadData();
             }).catch((error) => {
-                console.log(error);
             });
     }
 
@@ -200,12 +197,10 @@ export default function AgendaScreen({ route }): React.JSX.Element {
     }
 
     const onApprovePress = (reservation: AgendaEntry): void => {
-        console.log(reservation);
         bookingService.bookApprove({ uuid: reservation.uuid })
             .then((response) => {
                 loadData();
             }).catch((error) => {
-                console.log(error);
             }).finally(() => {
                 closeModal();
             })
@@ -214,10 +209,8 @@ export default function AgendaScreen({ route }): React.JSX.Element {
     const onDeclinePress = (reservation: AgendaEntry): void => {
         bookingService.bookDecline({ uuid: reservation.uuid })
             .then((response) => {
-                console.log('onDeclinePress', response)
                 loadData();
             }).catch((error) => {
-                console.log(error);
             }).finally(() => {
                 closeModal();
             })
@@ -297,8 +290,6 @@ export default function AgendaScreen({ route }): React.JSX.Element {
     const renderItem = (reservation: AgendaEntry, isFirst: boolean) => {
         const fontSize = isFirst && false ? 16 : 14;
         const color = colors.PrimaryBlue;// isFirst && false ? 'black' : '#43515c';
-
-        //console.log(reservation);
 
         const StatusCircle = ({ color }) => (
             <View style={[styles.circle, { backgroundColor: color }]}></View>

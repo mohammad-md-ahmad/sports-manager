@@ -29,6 +29,8 @@ import ProfileMenu from './profileMenu';
 import ScheduleEditForm from '../schedule/scheduleEditForm';
 import UsersList from '../user/usersList';
 import PaymentMethodsForm from '../payments/paymentMethodsForm';
+import BookingHistoryList from '../booking/bookingHistoryList';
+import UserBookingHistoryList from '../booking/userBookingHistoryList';
 
 const Stack = createStackNavigator();
 
@@ -238,6 +240,8 @@ const AppNavigator = () => {
                     <Stack.Screen name={Screens.Search} options={{ title: 'Search' }} component={Search} />
 
                     <Stack.Screen name={Screens.UserBooking} options={{ title: 'User Booking' }} component={UserBooking} />
+                    <Stack.Screen name={Screens.BookingHistoryList} options={{ title: 'Booking History' }} component={BookingHistoryList} />
+                    <Stack.Screen name={Screens.UserBookingHistoryList} options={{ title: 'Booking History' }} component={UserBookingHistoryList} />
 
                     <Stack.Screen name={Screens.ProgramManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
 

@@ -158,7 +158,6 @@ export default function UserBooking(): React.JSX.Element {
                 // setItems(response.data?.data);
 
             }).catch((error) => {
-                console.log('error', error);
             });
     }
 
@@ -166,10 +165,8 @@ export default function UserBooking(): React.JSX.Element {
 
         bookingService.bookRequest({ schedule_details_uuid: slot.slot_uuid })
             .then((response) => {
-                console.log('booking', response)
                 loadData();
             }).catch((error) => {
-                console.log(error);
             });
     }
 
@@ -187,12 +184,10 @@ export default function UserBooking(): React.JSX.Element {
     }
 
     const onApprovePress = (slot: AgendaEntry): void => {
-        console.log(slot);
         bookingService.bookApprove({ uuid: slot.uuid })
             .then((response) => {
                 loadData();
             }).catch((error) => {
-                console.log(error);
             }).finally(() => {
                 closeModal();
             })
@@ -201,10 +196,8 @@ export default function UserBooking(): React.JSX.Element {
     const onDeclinePress = (slot: AgendaEntry): void => {
         bookingService.bookDecline({ uuid: slot.uuid })
             .then((response) => {
-                console.log('onDeclinePress', response)
                 loadData();
             }).catch((error) => {
-                console.log(error);
             }).finally(() => {
                 closeModal();
             })

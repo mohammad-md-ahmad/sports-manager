@@ -1,7 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native';
 import colors from '../../styles/colors';
 import RatingControl from './ratingControl';
-import { useEffect } from 'react';
 
 interface RatingData {
     ratingNumber: number,
@@ -12,10 +11,6 @@ interface RatingDataProps {
 }
 
 const RatingRowWithNumber: React.FC<RatingDataProps> = ({ ratingData }) => {
-    useEffect(() => {
-        console.log('RATING NUMBER hhh', ratingData.ratingNumber);
-    }, [ratingData]);
-
     return (
         <View style={styles.ratingRow}>
             <Text style={styles.ratingText}>{ratingData.ratingNumber}</Text>

@@ -10,31 +10,22 @@ import { getUserData } from "../../helpers/userDataManage";
 import { UserType } from "../../helpers/constants";
 import BookingCard from "./bookingCard";
 import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
-export default function BookingHistoryList(): React.JSX.Element {
+export default function UserBookingHistoryList(): React.JSX.Element {
     const bookingService = new BookingService();
 
-    const [userData, setUserData] = useState({});
-    const [companyData, setCompanyData] = useState({});
+    const userData = useSelector(state => state.userData);
     const [bookingHistory, setBookingHistory] = useState([]);
 
     useFocusEffect(
         React.useCallback(() => {
-            if (!userData || !companyData) {
+            if (userData) {
                 getBookingHistoryList();
             }
-        }, [userData, companyData])
+        }, [userData])
     );
 
-    useEffect(() => {
-        getUserData().then((data: string | null) => {
-            setUserData(data === null ? null : JSON.parse(data));
-        });
-
-        getCompanyData().then((data: string | null) => {
-            setCompanyData(data === null ? null : JSON.parse(data));
-        });
-    }, []);
 
     function getBookingHistoryList() {
         let filter = {
@@ -42,11 +33,7 @@ export default function BookingHistoryList(): React.JSX.Element {
             user_uuid: null,
         };
 
-        if (userData?.type == UserType.CompanyUser) {
-            filter.company_uuid = companyData?.uuid;
-        } else if (userData?.type == UserType.CustomerUser) {
-            filter.user_uuid = userData?.uuid;
-        }
+        filter.user_uuid = userData?.uuid;
 
         bookingService.list(filter).then((response) => {
             setBookingHistory(response.data?.data?.data);
@@ -61,7 +48,7 @@ export default function BookingHistoryList(): React.JSX.Element {
         <SafeAreaView style={styles.container}>
             <VirtualizedList
                 initialNumToRender={6}
-                renderItem={({ item }) => <BookingCard booking={item} user_uuid={userData?.uuid} callback={getBookingHistoryList}/>}
+                renderItem={({ item }) => <BookingCard booking={item} user_uuid={userData?.uuid} callback={getBookingHistoryList} />}
                 keyExtractor={item => item.uuid}
                 getItemCount={getItemCount}
                 getItem={getItem}

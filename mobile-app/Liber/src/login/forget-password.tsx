@@ -41,10 +41,8 @@ export default function ForgetPassword(): React.JSX.Element {
         authService.sendResetPasswordLink(formData)
             .then((response) => {
                 setSuccessResponseMessage(response.data?.message);
-                console.log('RESSSSS', response);
             })
             .catch((error) => {
-                console.log('error ****************************** ', error)
                 setErrors(error.response.data.errors)
             });
     };

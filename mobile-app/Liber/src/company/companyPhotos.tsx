@@ -19,12 +19,10 @@ export default function CompanyPhotos(): React.JSX.Element {
 
 
     const onLoadEnd = () => {
-        console.log('Success loading image');
     };
 
     const onError = () => {
         // Handle error if the image fails to load
-        console.log('Error loading image');
     };
 
     useEffect(() => {
