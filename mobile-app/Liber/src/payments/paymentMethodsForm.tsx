@@ -1,28 +1,61 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { CheckBox } from 'react-native-elements';
+import CompanyService from '../../api/CompanyService';
+import { useFocusEffect } from '@react-navigation/native';
+import globalStyles from '../../styles/styles';
+import colors from '../../styles/colors';
+import fonts from '../../styles/fonts';
 
 const PaymentMethodsForm = () => {
-    const [selectedMethods, setSelectedMethods] = useState([]);
+    const [paymentMethods, setPaymentMethods] = useState([]);
 
-    const paymentMethods = [
-        { uuid: '1', name: 'Credit Card' },
-        { uuid: '2', name: 'PayPal' },
-        { uuid: '3', name: 'Apple Pay' }];
+    let companyService = new CompanyService();
 
-    const handleToggleMethod = (method) => {
-        const updatedMethods = [...selectedMethods];
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
 
-        if (updatedMethods.includes(method)) {
-            // If method is already selected, remove it
-            const index = updatedMethods.indexOf(method);
-            updatedMethods.splice(index, 1);
-        } else {
-            // If method is not selected, add it
-            updatedMethods.push(method);
-        }
+            companyService.getCompanyList({
+                "key": "Payment_methods"
+            }).then((response) => {
+                let pMethods = [];
+                response.data?.data?.app_list?.Payment_methods.forEach(element => {
+                    pMethods.push({
+                        name: element,
+                        isSelected: response.data?.data?.company_list?.Payment_methods.includes(element)
+                    }
+                    )
+                });
+                setPaymentMethods(pMethods);
+            }).catch((error) => {
+            });
 
-        setSelectedMethods(updatedMethods);
+        }, [])
+    );
+
+    // const paymentMethods = [
+    //     { uuid: '1', name: 'Credit Card' },
+    //     { uuid: '2', name: 'PayPal' },
+    //     { uuid: '3', name: 'Apple Pay' }];
+
+    const handleToggleMethod = (method: any) => {
+
+        console.log("method", method);
+        console.log("selected ", paymentMethods.map(obj =>
+            obj.name === method.name ? { ...obj, isSelected: !method.isSelected } : obj
+        ));
+
+        let newMethods = paymentMethods.map(obj =>
+            obj.name === method.name ? { ...obj, isSelected: !method.isSelected } : obj
+        );
+        setPaymentMethods(newMethods);
+
+        // setPaymentMethods((prevData) => ({
+        //     ...prevData,
+        //     [method.name]: method,
+        // }));
     };
 
     return (
@@ -30,22 +63,17 @@ const PaymentMethodsForm = () => {
             <Text style={styles.title}>Select Payment Methods</Text>
             {paymentMethods.map((method) => (
                 <TouchableOpacity
-                    key={method.uuid}
+                    key={method.name}
                     style={styles.methodItem}
-                    onPress={() => handleToggleMethod(method.uuid)}
+                    onPress={() => handleToggleMethod(method)}
                 >
                     <CheckBox
-                        value={selectedMethods.includes(method.uuid)}
-                        onValueChange={() => handleToggleMethod(method.uuid)}
+                        checked={method.isSelected}
+                        onValueChange={() => handleToggleMethod(method)}
                     />
                     <Text style={styles.methodText}>{method.name}</Text>
                 </TouchableOpacity>
             ))}
-            {selectedMethods.length > 0 && (
-                <Text style={styles.selectedMethodsText}>
-                    Selected Methods: {selectedMethods.join(', ')}
-                </Text>
-            )}
         </View>
     );
 };
@@ -55,8 +83,8 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     title: {
-        fontSize: 18,
-        fontWeight: 'bold',
+        ...globalStyles.text,
+        color: colors.PrimaryBlue,
         marginBottom: 16,
     },
     methodItem: {
@@ -65,8 +93,10 @@ const styles = StyleSheet.create({
         marginBottom: 12,
     },
     methodText: {
+        ...globalStyles.text,
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.regular,
         fontSize: 16,
-        marginLeft: 8,
     },
     selectedMethodsText: {
         marginTop: 16,
