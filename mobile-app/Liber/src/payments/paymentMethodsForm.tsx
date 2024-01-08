@@ -35,27 +35,13 @@ const PaymentMethodsForm = () => {
         }, [])
     );
 
-    // const paymentMethods = [
-    //     { uuid: '1', name: 'Credit Card' },
-    //     { uuid: '2', name: 'PayPal' },
-    //     { uuid: '3', name: 'Apple Pay' }];
-
     const handleToggleMethod = (method: any) => {
-
-        console.log("method", method);
-        console.log("selected ", paymentMethods.map(obj =>
-            obj.name === method.name ? { ...obj, isSelected: !method.isSelected } : obj
-        ));
 
         let newMethods = paymentMethods.map(obj =>
             obj.name === method.name ? { ...obj, isSelected: !method.isSelected } : obj
         );
-        setPaymentMethods(newMethods);
 
-        // setPaymentMethods((prevData) => ({
-        //     ...prevData,
-        //     [method.name]: method,
-        // }));
+        setPaymentMethods(newMethods);
     };
 
     return (
