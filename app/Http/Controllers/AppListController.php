@@ -9,6 +9,7 @@ use App\Services\Data\AppList\GetCompanyListByKeyRequest;
 use App\Services\Data\AppList\UpdateCompanyListRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -33,6 +34,44 @@ class AppListController extends Controller
 
             return response()->json([
                 'message' => __('Unable to retrieve List!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function getAllAppLists(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->AppListService->getAllAppLists($request);
+
+            return response()->json([
+                'message' => __('App Lists has been retrieved successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to retrieve App Lists!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function getAllAppListKeys(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->AppListService->getAllAppListKeys($request);
+
+            return response()->json([
+                'message' => __('App List Keys has been retrieved successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to retrieve App List Keys!'),
                 'errors' => $exception->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }

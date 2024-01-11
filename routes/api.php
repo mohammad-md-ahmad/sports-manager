@@ -134,7 +134,14 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('company-list')->group(function () {
 
         Route::get('/{company}', [AppListController::class, 'get'])->name('company-list.get');
+        Route::get('/get-all-app-lists', [AppListController::class, 'getAllAppLists'])->name('app-list.get-all');
         Route::post('/{company}', [AppListController::class, 'updateCompanyList'])->name('company-list.update');
+    });
+
+    Route::prefix('app-list')->group(function () {
+
+        Route::get('/get-all', [AppListController::class, 'getAllAppLists'])->name('app-list.get-all');
+        Route::get('/get-all/keys', [AppListController::class, 'getAllAppListKeys'])->name('app-list.get-all-keys');
     });
 
     Route::prefix('notifications')->group(function () {

@@ -10,6 +10,8 @@ use App\Models\CompanyList;
 use App\Services\Data\AppList\GetCompanyListByKeyRequest;
 use App\Services\Data\AppList\UpdateCompanyListRequest;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -35,6 +37,32 @@ class AppListService implements AppListServiceInterface
             ];
         } catch (Exception $exception) {
             Log::error('AppListService::get: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function getAllAppLists(): LengthAwarePaginator
+    {
+        try {
+            $appLists = AppList::query()->jsonPaginate();
+
+            return $appLists;
+        } catch (Exception $exception) {
+            Log::error('AppListService::getAllAppLists: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function getAllAppListKeys(): Collection
+    {
+        try {
+            $appLists = AppList::query()->pluck('key');
+
+            return $appLists;
+        } catch (Exception $exception) {
+            Log::error('AppListService::getAllAppLists: '.$exception->getMessage());
 
             throw $exception;
         }
