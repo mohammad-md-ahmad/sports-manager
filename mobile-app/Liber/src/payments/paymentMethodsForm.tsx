@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { CheckBox } from 'react-native-elements';
+import { Button, CheckBox } from 'react-native-elements';
 import CompanyService from '../../api/CompanyService';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import globalStyles from '../../styles/styles';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import { Screens } from '../../helpers/constants';
 
 const PaymentMethodsForm = () => {
     const [paymentMethods, setPaymentMethods] = useState([]);
@@ -44,6 +45,27 @@ const PaymentMethodsForm = () => {
         setPaymentMethods(newMethods);
     };
 
+    function onSubmitPress(): void {
+
+        let newMethods = paymentMethods.filter(obj =>
+            obj.isSelected
+        ).map(obj => obj.name);
+
+        companyService.postCompanyList({
+            "key": "Payment_methods",
+            "value": newMethods
+        }).then((response) => {
+
+        }).catch((error) => {
+        });
+
+    }
+
+    const navigator = useNavigation();
+    const handleCancel = () => {
+        navigator.navigate(Screens.ProfileMenu);
+    };
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Select Payment Methods</Text>
@@ -60,6 +82,15 @@ const PaymentMethodsForm = () => {
                     <Text style={styles.methodText}>{method.name}</Text>
                 </TouchableOpacity>
             ))}
+
+            <View style={styles.buttonContainer}>
+                <View style={styles.buttonWrapper}>
+                    <Button onPress={() => handleCancel()} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
+                </View>
+                <View style={styles.buttonWrapper}>
+                    <Button onPress={() => onSubmitPress()} title="Submit" buttonStyle={styles.submitButton} />
+                </View>
+            </View>
         </View>
     );
 };
@@ -87,6 +118,28 @@ const styles = StyleSheet.create({
     selectedMethodsText: {
         marginTop: 16,
         fontSize: 16,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginTop: 10
+    },
+    buttonWrapper: {
+        width: '48%',
+    },
+    cancelButton: {
+        ...globalStyles.button,
+        color: 'red',
+        backgroundColor: 'transparent',
+        padding: 10,
+        width: '100%',
+        marginTop: 0,
+    },
+    submitButton: {
+        ...globalStyles.button,
+        padding: 10,
+        width: '100%',
+        marginTop: 0,
     },
 });
 
