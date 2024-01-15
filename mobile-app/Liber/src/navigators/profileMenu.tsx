@@ -2,12 +2,9 @@ import React, { useState } from "react";
 
 import { StyleSheet, Text, View, } from "react-native";
 import globalStyles from "../../styles/styles";
-import { useAuth } from "../../AuhtContext";
-import AuthService from "../../api/AuthService";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
-import { DrawerItem } from "@react-navigation/drawer";
-import { Card, Icon, Image } from "react-native-elements";
+import { Card, Image } from "react-native-elements";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -19,11 +16,8 @@ import MasonryList from '@react-native-seoul/masonry-list';
 import MenuItemCard from "./menuItemCard";
 
 export default function ProfileMenu() {
-    const { logout } = useAuth();
-    const authService = new AuthService();
     const navigation = useNavigation();
     const dispatch = useDispatch();
-    const currentScreen = useSelector(state => state.currentScreen);
 
     const [companyData, setCompanyData] = useState({
         name: '',
@@ -37,7 +31,10 @@ export default function ProfileMenu() {
         email: '',
         type: null,
         profile_picture: require('./../../assets/images/liber_logo.png')
-    })
+    });
+
+    const companyCachedData = useSelector(state => state.companyData);
+    const userCachedData = useSelector(state => state.currentUserData);
 
     const userService = new UserService();
     const companyService = new CompanyService();
@@ -66,19 +63,29 @@ export default function ProfileMenu() {
                             }
                         ], 1)
 
-                        companyService.getCompany().then((response) => {
-                            setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-                            dispatch({ type: GlobaSateKey.SetCompanyData, payload: response.data.data });
-                        }).catch((error) => {
-                            console.error('company error', error)
-                        });
+                        if (companyCachedData) {
+                            setCompanyData(companyCachedData);
+                        } else {
+                            companyService.getCompany().then((response) => {
+                                setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
+                                dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
+                            }).catch((error) => {
+                                console.error('company error', error)
+                            });
+                        }
                     } else {
 
-                        userService.getUser().then((response) => {
-                            setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
-                        }).catch((error) => {
-                            console.error('user error', error)
-                        });
+                        if (userCachedData) {
+                            setUserData(userCachedData);
+                        } else {
+                            userService.getUser().then((response) => {
+                                setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
+                                dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } } });
+
+                            }).catch((error) => {
+                                console.error('user error', error)
+                            });
+                        }
                     }
                 }
             });
