@@ -72,7 +72,6 @@ export default function UserProfileForm(): React.JSX.Element {
     const dispatch = useDispatch();
 
     function onSubmitPress(): void {
-        console.log(formData);
         userService.update(formData).then((response) => {
             // Handle a successful API response
             dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } } });
