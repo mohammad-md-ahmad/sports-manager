@@ -70,6 +70,7 @@ export enum GlobaSateKey {
     SetLoading = "SET_LOADING",
     SetCurrentScreen = "SET_CURRENT_SCREEN",
     SetCompanyData = "SET_COMPANY_DATA",
+    SetCurrentCompanyData = "SET_CURRENT_COMPANY_DATA",
     SetUserData = "SET_USER_DATA",
     SetCurrentUserData = "SET_CURRENT_USER_DATA",
     SetCompaniesList = "SET_COMPANIES_LIST",

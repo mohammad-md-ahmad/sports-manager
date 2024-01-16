@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             if (data.company) {
                 await storeCompanyData(data.company);
-                dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...data?.company, logo: { uri: data?.company?.logo } } });
+                dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...data?.company, logo: { uri: data?.company?.logo } } });
             }
 
             await storeToken(data.token);

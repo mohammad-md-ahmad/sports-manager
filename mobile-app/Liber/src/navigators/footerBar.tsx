@@ -57,7 +57,7 @@ const FooterBar: React.FC = () => {
                 onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.ProgramManagmentTabs : Screens.UserBooking)}
             >
                 <Icon
-                    name={(currentScreen === Screens.ProgramManagmentTabs || currentScreen === Screens.UserBooking) ? "star-outline" : "star"}  // Replace with your desired icon name
+                    name={(currentScreen === Screens.ProgramManagmentTabs || currentScreen === Screens.UserBooking) ? "star" : "star-outline"}  // Replace with your desired icon name
                     type="material"
                     size={25}
                 />
@@ -68,7 +68,7 @@ const FooterBar: React.FC = () => {
                 onPress={() => navigateTo(Screens.ProfileMenu)}
             >
                 <Icon
-                    name={currentScreen === Screens.ProfileMenu ? "person-outline" : "person"} // Replace with your desired icon name
+                    name={currentScreen === Screens.ProfileMenu ? "person" : "person-outline"} // Replace with your desired icon name
                     type="material"
                     size={25}
                 />

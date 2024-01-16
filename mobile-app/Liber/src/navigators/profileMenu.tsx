@@ -33,7 +33,7 @@ export default function ProfileMenu() {
         profile_picture: require('./../../assets/images/liber_logo.png')
     });
 
-    const companyCachedData = useSelector(state => state.companyData);
+    const companyCachedData = useSelector(state => state.currentCompanyData);
     const userCachedData = useSelector(state => state.currentUserData);
 
     const userService = new UserService();
@@ -68,7 +68,7 @@ export default function ProfileMenu() {
                         } else {
                             companyService.getCompany().then((response) => {
                                 setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-                                dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
+                                dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
                             }).catch((error) => {
                                 console.error('company error', error)
                             });
