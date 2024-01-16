@@ -14,12 +14,13 @@ import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button, Icon } from "react-native-elements";
 import { launchImageLibrary } from 'react-native-image-picker';
 import { getCompanyData } from "../../helpers/companyDataManage";
-import Constants, { Screens } from "../../helpers/constants";
+import Constants, { GlobaSateKey, Screens } from "../../helpers/constants";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import ErrorView from "../common/errorView";
 import ImagePicker from "../common/imagePicker";
 import DropDownPicker from "react-native-dropdown-picker";
 import { getCountries } from "../../helpers/countriesDataManage";
+import { useDispatch } from "react-redux";
 
 interface CompanyFormData {
     uuid: string | null;
@@ -101,10 +102,13 @@ export default function CompanyProfileForm(): React.JSX.Element {
     };
 
     const [errors, setErrors] = useState(null);
+    const dispatch = useDispatch();
 
     function onSubmitPress(): void {
         companyService.update(formData).then((response) => {
             // Handle a successful API response
+            dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
+
             navigator.navigate(Screens.CompanyProfile);
         }).catch((error) => {
             // Handle API request errors here
