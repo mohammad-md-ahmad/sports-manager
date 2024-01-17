@@ -223,23 +223,25 @@ export default function AgendaScreen({ route }): React.JSX.Element {
     const buildBookingBtns = (slot) => {
         let btns = slot?.bookings.map(booking => {
             if (booking?.status === BookingStatus.Pending) {
-                return <View style={styles.buttonRow}>
-                    <Button
-                        onPress={() => onApprovePress(booking)}
-                        title="Approve"
-                        buttonStyle={styles.approveButton}
-                    />
-                    <Button
-                        onPress={() => onDeclinePress(booking)}
-                        title="Reject"
-                        buttonStyle={styles.rejectButton}
-                    />
-                    <Button
-                        onPress={() => onViewPress(slot, booking)}
-                        title="View"
-                        buttonStyle={styles.viewButton}
-                    />
-                </View>
+                return (
+                    <View style={styles.buttonRow}>
+                        <Button
+                            onPress={() => onApprovePress(booking)}
+                            title="Approve"
+                            buttonStyle={styles.approveButton}
+                        />
+                        <Button
+                            onPress={() => onDeclinePress(booking)}
+                            title="Reject"
+                            buttonStyle={styles.rejectButton}
+                        />
+                        <Button
+                            onPress={() => onViewPress(slot, booking)}
+                            title="View"
+                            buttonStyle={styles.viewButton}
+                        />
+                    </View>
+                )
             } else if (booking?.status === BookingStatus.Approved) {
                 return <View style={styles.buttonRow}>
                     <Button
@@ -353,7 +355,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                 </View>
 
                 <View style={styles.row}>
-                    <View style={styles.rightContent}>
+                    <View style={styles.rightContentStack}>
                         {
                             userData?.type == UserType.CustomerUser ? reservation?.status != SlotStatus.Booked ? <Button
                                 onPress={() => onBookPress(reservation)}
@@ -448,9 +450,9 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                 >
                     <View style={styles.modalContent}>
                         <View>
-                            <Text>Booked By: {currentBooking?.customer_user?.full_name}</Text>
-                            <Text>Date: {currentSlot?.date_time_from?.split(' ')[0]}</Text>
-                            <Text>Time: {currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
+                            <Text style={styles.text}>Booked By: {currentBooking?.customer_user?.full_name}</Text>
+                            <Text style={styles.text}>Date: {currentSlot?.date_time_from?.split(' ')[0]}</Text>
+                            <Text style={styles.text}>Time: {currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
                         </View>
                         {
                             currentBooking?.status == BookingStatus.Pending ?
@@ -484,6 +486,11 @@ const styles = StyleSheet.create({
         marginRight: 10,
         marginTop: 17
     },
+    text: {
+        ...globalStyles.text,
+        color: colors.Black,
+        fontFamily: fonts.Poppins.regular,
+    },
     emptyDate: {
         height: 15,
         flex: 1,
@@ -504,6 +511,10 @@ const styles = StyleSheet.create({
     },
     rightContent: {
         flexDirection: 'row',
+        alignItems: 'flex-end', // Move the circle to the right
+    },   
+     rightContentStack: {
+        //flexDirection: 'row',
         alignItems: 'flex-end', // Move the circle to the right
     },
     circle: {
@@ -553,11 +564,12 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '80%',
-        height: '50%',
+        height: '20%',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 10,
-        alignItems: 'center',
     },
     slotTitle: {
         ...globalStyles.text,
