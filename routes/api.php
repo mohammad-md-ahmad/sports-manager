@@ -83,7 +83,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('surveys')->group(function () {
 
         Route::get('/{uuid}', [CompanySurveyController::class, 'get'])->name('company-surveys.get');
-        Route::get('/get-all/company/{company}', [CompanySurveyController::class, 'getAllByCompany'])->name('company-surveys.company.get-all');
+        Route::get('/get-all/company/{company}', [CompanySurveyController::class, 'getAllByCompany'])->name('company-surveys.get-all.company');
+        Route::put('/{uuid}', [CompanySurveyController::class, 'update'])->name('company-surveys.update');
     });
 
     Route::prefix('facilities')->group(function () {

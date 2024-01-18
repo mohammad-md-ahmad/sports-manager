@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2024-01-18T18:52:49.625Z",
+    "dateExported": "2024-01-18T19:24:49.230Z",
     "version": "1.1",
     "folders": [
         {
@@ -1072,6 +1072,29 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"name\": \"survey 4\",\n  \"questions\": [\n    \"what do you like about our facilities?\",\n    \"Would you recommend us to your friends?\"\n    ],\n    \"is_active\": true\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "4677d932-cef7-434f-98b3-bf2cc3f041eb",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "b4dc865c-065b-41d8-86d5-1f83436ac538",
+            "name": "company surveys - update",
+            "url": "{{host}}/surveys/adec6a45-179c-406f-b343-77ea71c469f8",
+            "method": "PUT",
+            "sortNum": 165000,
+            "created": "2024-01-18T19:06:55.017Z",
+            "modified": "2024-01-18T19:15:16.230Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"survey 4 - edited\",\n  \"questions\": [\n    {\n      \"uuid\": \"1eb77238-e44a-4f54-a49d-a4c4c20d6d3b\",\n      \"question\": \"what do you like about our facilities? edited\",\n      \"order\": 1\n    },\n    {\n      \"is_new\": true,\n      \"question\": \"what do you like about our facilities? sdfewdafsdfd\",\n      \"order\": 2\n    }\n  ],\n  \"is_active\": true\n}",
                 "form": []
             },
             "auth": {
