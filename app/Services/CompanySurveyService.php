@@ -9,10 +9,11 @@ use App\Models\CompanyFacility;
 use App\Models\CompanySurvey;
 use App\Models\CompanySurveyQuestion;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
-use App\Services\Data\CompanyFacility\GetCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\SearchCompanyFacilitiesRequest;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyQuestionRequest;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyRequest;
+use App\Services\Data\CompanySurvey\GetAllCompanySurveysRequest;
+use App\Services\Data\CompanySurvey\GetCompanySurveyRequest;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -22,22 +23,38 @@ use Illuminate\Support\Facades\Log;
 
 class CompanySurveyService implements CompanySurveyServiceInterface
 {
-    // /**
-    //  * @throws Exception
-    //  */
-    // public function get(GetCompanyFacilityRequest $data): CompanyFacility
-    // {
-    //     try {
-    //         /** @var CompanyFacility $companyFacility */
-    //         $companyFacility = CompanyFacility::findOrFail($data->id);
+    /**
+     * @throws Exception
+     */
+    public function get(GetCompanySurveyRequest $data): CompanySurvey
+    {
+        try {
+            /** @var CompanySurvey $survey */
+            $survey = CompanySurvey::findOrFail($data->id);
 
-    //         return $companyFacility->with(['company', 'address.country', 'gallery'])->first();
-    //     } catch (Exception $exception) {
-    //         Log::error('CompanyFacilityService::get: '.$exception->getMessage());
+            return $survey->with(['questions', 'company'])->first();
+        } catch (Exception $exception) {
+            Log::error('CompanySurveyService::get: '.$exception->getMessage());
 
-    //         throw $exception;
-    //     }
-    // }
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getAllByCompany(GetAllCompanySurveysRequest $data): LengthAwarePaginator
+    {
+        try {
+            $surveys = CompanySurvey::where('company_id', $data->company->id);
+
+            return $surveys->with(['questions', 'company'])->jsonPaginate();
+        } catch (Exception $exception) {
+            Log::error('CompanySurveyService::getAllByCompany: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
 
     // /**
     //  * @throws Exception

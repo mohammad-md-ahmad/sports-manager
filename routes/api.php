@@ -80,6 +80,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
         });
     });
 
+    Route::prefix('surveys')->group(function () {
+
+        Route::get('/{uuid}', [CompanySurveyController::class, 'get'])->name('company-surveys.get');
+        Route::get('/get-all/company/{company}', [CompanySurveyController::class, 'getAllByCompany'])->name('company-surveys.company.get-all');
+    });
+
     Route::prefix('facilities')->group(function () {
         Route::get('/', [CompanyFacilityController::class, 'getAll'])->name('facilities.get-all');
 
