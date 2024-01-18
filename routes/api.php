@@ -8,6 +8,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyCustomerController;
 use App\Http\Controllers\CompanyFacilityController;
 use App\Http\Controllers\CompanyFacilityScheduleController;
+use App\Http\Controllers\CompanySurveyController;
 use App\Http\Controllers\MiscController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PushNotificationController;
@@ -70,6 +71,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('bookings')->group(function () {
 
                 Route::get('/customer/get-all', [BookingController::class, 'getAllByCustomer'])->name('bookings.get-all-by-customer');
+            });
+
+            Route::prefix('surveys')->group(function () {
+
+                Route::post('/', [CompanySurveyController::class, 'store'])->name('company-surveys.create');
             });
         });
     });

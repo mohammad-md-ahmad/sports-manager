@@ -10,6 +10,7 @@ use App\Contracts\Services\CompanyCustomerServiceInterface;
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
 use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Contracts\Services\CompanyServiceInterface;
+use App\Contracts\Services\CompanySurveyServiceInterface;
 use App\Contracts\Services\CompanyUserServiceInterface;
 use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\NotificationServiceInterface;
@@ -25,6 +26,7 @@ use App\Services\CompanyCustomerService;
 use App\Services\CompanyFacilityScheduleService;
 use App\Services\CompanyFacilityService;
 use App\Services\CompanyService;
+use App\Services\CompanySurveyService;
 use App\Services\CompanyUserService;
 use App\Services\GalleryService;
 use App\Services\NotificationService;
@@ -54,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AppInfoServiceInterface::class, AppInfoService::class);
         $this->app->bind(AppListServiceInterface::class, AppListService::class);
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
+        $this->app->bind(CompanySurveyServiceInterface::class, CompanySurveyService::class);
     }
 
     /**
