@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2024-01-18T18:32:27.592Z",
+    "dateExported": "2024-01-18T18:52:49.625Z",
     "version": "1.1",
     "folders": [
         {
@@ -38,6 +38,13 @@
             "containerId": "",
             "created": "2023-12-29T06:07:20.039Z",
             "sortNum": 9062.5
+        },
+        {
+            "_id": "b4dc865c-065b-41d8-86d5-1f83436ac538",
+            "name": "company surveys",
+            "containerId": "",
+            "created": "2024-01-18T18:19:38.539Z",
+            "sortNum": 9218.8
         },
         {
             "_id": "e70a8578-2d75-4598-9c4e-9bab3b27842a",
@@ -94,13 +101,6 @@
             "containerId": "",
             "created": "2023-12-29T22:16:20.183Z",
             "sortNum": 60000
-        },
-        {
-            "_id": "b4dc865c-065b-41d8-86d5-1f83436ac538",
-            "name": "company surveys",
-            "containerId": "",
-            "created": "2024-01-18T18:19:38.539Z",
-            "sortNum": 80000
         }
     ],
     "requests": [
@@ -1074,6 +1074,42 @@
                 "raw": "{\n  \"name\": \"survey 4\",\n  \"questions\": [\n    \"what do you like about our facilities?\",\n    \"Would you recommend us to your friends?\"\n    ],\n    \"is_active\": true\n}",
                 "form": []
             },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "21446c3f-02f7-4d92-ba9f-54cd75a9df1f",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "b4dc865c-065b-41d8-86d5-1f83436ac538",
+            "name": "company surveys - get",
+            "url": "{{host}}/surveys/adec6a45-179c-406f-b343-77ea71c469f8",
+            "method": "GET",
+            "sortNum": 170000,
+            "created": "2024-01-18T18:45:31.174Z",
+            "modified": "2024-01-18T18:47:40.989Z",
+            "headers": [],
+            "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "978c7425-7154-425d-a040-a7f3e8f5d2ed",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "b4dc865c-065b-41d8-86d5-1f83436ac538",
+            "name": "company surveys - get all by company",
+            "url": "{{host}}/surveys/get-all/company/7d26f38b-9b1c-418c-861a-6ecee182a67d",
+            "method": "GET",
+            "sortNum": 180000,
+            "created": "2024-01-18T18:48:07.149Z",
+            "modified": "2024-01-18T18:49:55.830Z",
+            "headers": [],
+            "params": [],
             "auth": {
                 "type": "bearer",
                 "bearer": "{{token}}"
