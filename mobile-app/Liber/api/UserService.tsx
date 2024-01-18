@@ -4,11 +4,9 @@ import AxiosService from './AxiosService';
 
 class UserService extends AxiosService {
     private userDataPromise: Promise<any>;
-    private companyDataPromise: Promise<any>;
     constructor() {
         super();
         this.userDataPromise = this.initializePromise(getUserData);
-        this.companyDataPromise = this.initializePromise(getCompanyData);
     }
 
     async getUser(user = null) {

@@ -35,7 +35,7 @@ const FooterBar: React.FC = () => {
                 onPress={() => navigateTo(Screens.Dashboard)}
             >
                 <Icon
-                    name="home" // Replace with your desired icon name
+                    name={currentScreen === Screens.Dashboard ? "home" : "home"} // Replace with your desired icon name
                     type="material"
                     size={25}
                 />
@@ -57,7 +57,7 @@ const FooterBar: React.FC = () => {
                 onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.ProgramManagmentTabs : Screens.UserBooking)}
             >
                 <Icon
-                    name="star" // Replace with your desired icon name
+                    name={(currentScreen === Screens.ProgramManagmentTabs || currentScreen === Screens.UserBooking) ? "star" : "star-outline"}  // Replace with your desired icon name
                     type="material"
                     size={25}
                 />
@@ -68,13 +68,13 @@ const FooterBar: React.FC = () => {
                 onPress={() => navigateTo(Screens.ProfileMenu)}
             >
                 <Icon
-                    name="person-outline" // Replace with your desired icon name
+                    name={currentScreen === Screens.ProfileMenu ? "person" : "person-outline"} // Replace with your desired icon name
                     type="material"
                     size={25}
                 />
 
-            </TouchableOpacity> 
-            
+            </TouchableOpacity>
+
             {/* <TouchableOpacity
                 style={[styles.button, (currentScreen === Screens.CompanyProfile || currentScreen === Screens.UserProfile) && styles.activeButton]}
                 onPress={() => navigateTo(userData?.type == UserType.CompanyUser ? Screens.CompanyProfile : Screens.UserProfile)}

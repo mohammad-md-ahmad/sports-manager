@@ -11,6 +11,7 @@ import { BookingStatus, SlotStatus, UserType } from '../../helpers/constants';
 import { getUserData } from '../../helpers/userDataManage';
 import BookingService from '../../api/BookingService';
 import { date } from 'yup';
+import fonts from '../../styles/fonts';
 
 export default function UserBooking(): React.JSX.Element {
 
@@ -296,7 +297,7 @@ export default function UserBooking(): React.JSX.Element {
     const renderEmptyDate = () => {
         return (
             <View style={styles.emptyDate}>
-                <Text>This is empty date!</Text>
+                <Text style={{ ...globalStyles.text }}>This is empty date!</Text>
             </View>
         );
     };
@@ -316,6 +317,8 @@ export default function UserBooking(): React.JSX.Element {
 
     const toggleModal = (slot = {}, booking = {}) => {
         setCurrentSlot(slot);
+        console.log("slot", slot)
+        console.log("booking", booking)
         setCurrentBooking(booking);
         setModalVisible(!isModalVisible);
     };
@@ -366,26 +369,9 @@ export default function UserBooking(): React.JSX.Element {
                 >
                     <View style={styles.modalContent}>
                         <View>
-                            <View style={styles.row}>
-                                <Text>{currentSlot?.company?.name}</Text>
-                            </View>
-
-                            <View style={styles.row}>
-                                <Text >{currentSlot?.facility?.name}</Text>
-                                <Text >{currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
-
-                            </View>
-
+                            <Text style={styles.text}>Date: {currentSlot?.date_time_from?.split(' ')[0]}</Text>
+                            <Text style={styles.text}>Time: {currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
                         </View>
-
-                        <View>
-                            <Button
-                                onPress={() => onViewPress(currentSlot, currentSlot?.booking)}
-                                title="View"
-                                buttonStyle={styles.viewButton}
-                            />
-                        </View>
-
                     </View>
                 </TouchableOpacity>
             </Modal>
@@ -401,6 +387,11 @@ const styles = StyleSheet.create({
         padding: 10,
         marginRight: 10,
         marginTop: 17
+    },
+    text: {
+        ...globalStyles.text,
+        color: colors.Black,
+        fontFamily: fonts.Poppins.regular,
     },
     emptyDate: {
         height: 15,
@@ -470,10 +461,11 @@ const styles = StyleSheet.create({
     },
     modalContent: {
         width: '80%',
-        height: '50%',
+        height: '20%',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 10,
-        alignItems: 'center',
     },
 });

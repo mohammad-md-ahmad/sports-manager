@@ -5,11 +5,11 @@ import fonts from '../../styles/fonts';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import UserService from '../../api/UserService';
-import { Screens } from '../../helpers/constants';
+import { GlobaSateKey, Screens } from '../../helpers/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import BookingHistoryList from '../booking/bookingHistoryList';
 import Notifications from '../notifications/notifications';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,7 +18,7 @@ export default function UserProfile() {
 
     const navigator = useNavigation();
 
-    const selectedUser = useSelector(state => state.userData);
+    const userCachedData = useSelector(state => state.currentUserData);
 
     const [userData, setUserData] = useState({
         name: '',
@@ -32,18 +32,23 @@ export default function UserProfile() {
     }
 
     const userService = new UserService();
-
+    const dispatch = useDispatch();
 
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
+            if (userCachedData) {
+                setUserData(userCachedData);
+            } else {
+                userService.getUser().then((response) => {
+                    setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
+                    dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...response?.data?.data, profile_picture: { uri: response?.data?.data?.profile_picture } } });
 
-            userService.getUser(selectedUser).then((response) => {
-                setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
-            }).catch((error) => {
-                console.error('user error', error)
-            });
+                }).catch((error) => {
+                    console.error('user error', error)
+                });
+            }
         }, [])
     );
 

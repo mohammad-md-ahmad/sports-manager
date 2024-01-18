@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
 import { StyleSheet, VirtualizedList } from 'react-native';
+import fonts from '../../styles/fonts';
 import { useFocusEffect } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserCard from '../common/userCard';
 import { getUserData } from '../../helpers/userDataManage';
 import CompanyCustomersService from '../../api/CompanyCustomersService';
+import SurveyCard from './surveyCard';
 
-function UsersList(): React.JSX.Element {
+function SurviesList(): React.JSX.Element {
     const companyCustomersService = new CompanyCustomersService();
 
-    const [users, setUsers] = useState([]);
+    const [servies, setSurvies] = useState([]);
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
             getUserData().then((data: string | null) => {
+                var temp = [data === null ? null : JSON.parse(data)]
                 companyCustomersService.getUsers()
                     .then((response) => {
-                        setUsers(response.data?.data?.data);
+                        setSurvies(response.data?.data?.data);
+                        //setUsers(temp);
                     }).catch((error) => {
                     });
             });
@@ -28,14 +31,14 @@ function UsersList(): React.JSX.Element {
     );
 
 
-    const getItem = (_data: unknown, index: number) => users[index];
-    const getItemCount = (_data: unknown) => users.length;
+    const getItem = (_data: unknown, index: number) => servies[index];
+    const getItemCount = (_data: unknown) => servies.length;
 
     return (
         <SafeAreaView style={styles.container}>
             <VirtualizedList
                 initialNumToRender={6}
-                renderItem={({ item }) => <UserCard user={item?.customer} companyCustomer={item} />}
+                renderItem={({ item }) => <SurveyCard survey={item} />}
                 keyExtractor={item => item.uuid}
                 getItemCount={getItemCount}
                 getItem={getItem}
@@ -55,4 +58,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default UsersList;
+export default SurviesList;

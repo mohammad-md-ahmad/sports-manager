@@ -24,6 +24,8 @@ export default function CompanyProfile() {
     const navigator = useNavigation();
     const dispatch = useDispatch();
 
+    const companyCachedData = useSelector(state => state.currentCompanyData);
+
     const [companyData, setCompanyData] = useState({
         name: '',
         description: '',
@@ -41,22 +43,16 @@ export default function CompanyProfile() {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            getUserData().then((data: string | null) => {
-                if (data !== null) {
-                    let user = JSON.parse(data);
-                    if (user?.type == UserType.CompanyUser) {
-                        companyService.getCompany().then((response) => {
-                            setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-                            dispatch({ type: GlobaSateKey.SetCompanyData, payload: response.data.data });
-                        }).catch((error) => {
-                        });
-                    } else {
-                        setCompanyData(useSelector(state => state.companyData))
-                    }
-                }
-
-            });
-
+            if (companyCachedData) {
+                setCompanyData(companyCachedData);
+            }
+            else {
+                companyService.getCompany().then((response) => {
+                    setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
+                    dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...response?.data?.data, logo: { uri: response?.data?.data?.logo } } });
+                }).catch((error) => {
+                });
+            }
         }, [])
     );
 
@@ -65,7 +61,7 @@ export default function CompanyProfile() {
             <View style={styles.container}>
                 <Image source={companyData.logo} style={styles.logo} />
                 <Text style={styles.name}>{companyData.name}</Text>
-                <RatingRowWithNumber ratingData={{ratingNumber: companyData?.total_rating}} />
+                <RatingRowWithNumber ratingData={{ ratingNumber: companyData?.total_rating }} />
                 <Button
                     onPress={() => onBookingPress()}
                     title="Book Now!"

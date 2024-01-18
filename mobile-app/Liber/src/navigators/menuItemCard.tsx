@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Card, Icon, ListItem } from 'react-native-elements';
 import colors from '../../styles/colors';
@@ -6,6 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import fonts from '../../styles/fonts';
 import AuthService from '../../api/AuthService';
 import { useAuth } from '../../AuhtContext';
+import DeleteConfirmation from '../common/deleteConfirmation';
+import LogoutConfirmation from '../common/logoutConfirmation';
 
 interface MenuItem {
     title: string;
@@ -19,21 +21,22 @@ interface MenuItemProps {
 
 const MenuItemCard: React.FC<MenuItemProps> = ({ menuItem }) => {
     const navigation = useNavigation();
+    const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+    const authService = new AuthService();
+    const { logout } = useAuth();
+
     const handleMenuItemClick = () => {
         if (menuItem.navigateTo) {
             navigation.navigate(menuItem.navigateTo);
         }
         else {
             if (menuItem.title == "Logout") {
-                logout();
+                setIsLogoutModalVisible(true);
             }
         }
     }
 
-    const authService = new AuthService();
-    const { logout } = useAuth();
-
-    const onLogout = () => {
+    const handleLogout = () => {
         authService.logout().then((response) => {
             // Handle a successful API response
             logout();
@@ -46,22 +49,33 @@ const MenuItemCard: React.FC<MenuItemProps> = ({ menuItem }) => {
         });
     };
 
-    return (
-        <TouchableOpacity onPress={handleMenuItemClick} activeOpacity={0.8}>
-            <Card containerStyle={styles.cardView}>
-                <View style={styles.container}>
-                    <Icon
-                        name={menuItem?.icon} // Replace with your desired icon name
-                        type="material"
-                        size={25}
-                    />
-                    <View style={styles.menuItemInfo}>
-                        <Text style={styles.title}> {menuItem.title}</Text>
-                    </View>
+    const handleCancel = () => {
+        setIsLogoutModalVisible(false);
+    };
 
-                </View>
-            </Card>
-        </TouchableOpacity>
+    return (
+        <>
+            <TouchableOpacity onPress={handleMenuItemClick} activeOpacity={0.8}>
+                <Card containerStyle={styles.cardView}>
+                    <View style={styles.container}>
+                        <Icon
+                            name={menuItem?.icon} // Replace with your desired icon name
+                            type="material"
+                            size={25}
+                        />
+                        <View style={styles.menuItemInfo}>
+                            <Text style={styles.title}> {menuItem.title}</Text>
+                        </View>
+
+                    </View>
+                </Card>
+            </TouchableOpacity>
+            <LogoutConfirmation
+                isVisible={isLogoutModalVisible}
+                onLogout={handleLogout}
+                onCancel={handleCancel}
+            />
+        </>
     );
 };
 

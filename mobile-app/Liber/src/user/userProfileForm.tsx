@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
     Image,
@@ -7,7 +7,6 @@ import {
     Platform,
     ScrollView,
     StyleSheet,
-    Text,
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
@@ -18,8 +17,10 @@ import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button, Icon } from "react-native-elements";
 import UserService from "../../api/UserService";
 import { launchImageLibrary } from "react-native-image-picker";
-import Constants, { Screens } from "../../helpers/constants";
+import { GlobaSateKey, Screens } from "../../helpers/constants";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import ErrorView from "../common/errorView";
 
 interface UserFormData {
     first_name: string;
@@ -68,10 +69,12 @@ export default function UserProfileForm(): React.JSX.Element {
     }
 
     const [errors, setErrors] = useState(null);
+    const dispatch = useDispatch();
 
     function onSubmitPress(): void {
         userService.update(formData).then((response) => {
             // Handle a successful API response
+            dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } } });
             navigator.navigate(Screens.UserProfile);
         })
             .catch((error) => {

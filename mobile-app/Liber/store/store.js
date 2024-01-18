@@ -7,10 +7,13 @@ const initialState = {
   loading: false,
   currentScreen: 'Dashboard',
   companyData: null,
+  currentCompanyData: null,
   userData: null,
+  currentUserData: null,
   companiesList: null,
   facilityTypes: null,
   countries: null,
+
 };
 
 // Create your reducer functions
@@ -35,8 +38,22 @@ const companyDataReducer = (state = initialState.companyData, action) => {
   return state;
 };
 
+const currentCompanyDataReducer = (state = initialState.currentCompanyData, action) => {
+  if (action.type === GlobaSateKey.SetCurrentCompanyData) {
+    return action.payload;
+  }
+  return state;
+};
+
 const userDataReducer = (state = initialState.userData, action) => {
   if (action.type === GlobaSateKey.SetUserData) {
+    return action.payload;
+  }
+  return state;
+};
+
+const currentUserDataReducer = (state = initialState.currentUserData, action) => {
+  if (action.type === GlobaSateKey.SetCurrentUserData) {
     return action.payload;
   }
   return state;
@@ -68,7 +85,9 @@ const rootReducer = combineReducers({
   loading: loadingReducer,
   currentScreen: currentScreenReducer,
   companyData: companyDataReducer,
+  currentCompanyData: currentCompanyDataReducer,
   userData: userDataReducer,
+  currentUserData: currentUserDataReducer,
   companiesList: companiesListReducer,
   facilityTypes: facilityTypesReducer,
   countries: countriesReducer,

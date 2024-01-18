@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Card } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import { Card } from 'react-native-elements';
 
 interface Notification {
     uuid: string;
