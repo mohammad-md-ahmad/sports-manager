@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2024-01-18T19:24:49.230Z",
+    "dateExported": "2024-01-21T18:31:51.960Z",
     "version": "1.1",
     "folders": [
         {
@@ -1133,6 +1133,29 @@
             "modified": "2024-01-18T18:49:55.830Z",
             "headers": [],
             "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "c25df57f-ab2a-472d-acb3-663bd81575af",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "b4dc865c-065b-41d8-86d5-1f83436ac538",
+            "name": "company surveys - user response",
+            "url": "{{host}}/surveys/adec6a45-179c-406f-b343-77ea71c469f8/user-response",
+            "method": "POST",
+            "sortNum": 190000,
+            "created": "2024-01-21T00:11:37.612Z",
+            "modified": "2024-01-21T00:30:13.111Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"user_id\": \"16a13d56-85e3-4c61-be01-a94805afaf21\",\n  \"answers\": [\n    {\n      \"company_survey_question_id\": \"1eb77238-e44a-4f54-a49d-a4c4c20d6d3b\",\n      \"answer\": \"my answer is bla bla bla\"\n    },\n    {\n      \"company_survey_question_id\": \"e6016510-ae77-478f-8bd1-49124ddbb210\",\n      \"answer\": \"my answer for q2 is bla bla bla\"\n    }\n  ]\n}",
+                "form": []
+            },
             "auth": {
                 "type": "bearer",
                 "bearer": "{{token}}"
