@@ -85,6 +85,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/{uuid}', [CompanySurveyController::class, 'get'])->name('company-surveys.get');
         Route::get('/get-all/company/{company}', [CompanySurveyController::class, 'getAllByCompany'])->name('company-surveys.get-all.company');
         Route::put('/{uuid}', [CompanySurveyController::class, 'update'])->name('company-surveys.update');
+        Route::post('/{uuid}/user-response', [CompanySurveyController::class, 'userResponse'])->name('company-survey.user-response');
     });
 
     Route::prefix('facilities')->group(function () {

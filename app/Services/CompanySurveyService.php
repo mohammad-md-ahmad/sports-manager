@@ -6,9 +6,12 @@ namespace App\Services;
 
 use App\Contracts\Services\CompanySurveyServiceInterface;
 use App\Models\CompanySurvey;
+use App\Models\CompanySurveyAnswer;
 use App\Models\CompanySurveyQuestion;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyQuestionRequest;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyRequest;
+use App\Services\Data\CompanySurvey\CreateSurveyAnswerRequest;
+use App\Services\Data\CompanySurvey\CreateUserResponseRequest;
 use App\Services\Data\CompanySurvey\GetAllCompanySurveysRequest;
 use App\Services\Data\CompanySurvey\GetCompanySurveyRequest;
 use App\Services\Data\CompanySurvey\UpdateCompanySurveyRequest;
@@ -142,6 +145,29 @@ class CompanySurveyService implements CompanySurveyServiceInterface
             DB::rollBack();
 
             Log::error('CompanySurveyService::update: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function userResponse(CreateUserResponseRequest $data): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($data->answers as $answer) {
+                $createAnswerRequest = CreateSurveyAnswerRequest::from(array_merge($answer, ['user_id' => $data->user_id]));
+
+                CompanySurveyAnswer::create($createAnswerRequest->toArray());
+            }
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error('CompanySurveyService::userResponse: '.$exception->getMessage());
 
             throw $exception;
         }
