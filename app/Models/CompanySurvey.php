@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property bool $is_active
  * @property Company $company
  * @property Collection $questions
+ * @property Collection $responses
  */
 class CompanySurvey extends Model
 {
@@ -63,5 +64,10 @@ class CompanySurvey extends Model
     public function questions(): HasMany
     {
         return $this->hasMany(CompanySurveyQuestion::class)->orderBy('question_order');
+    }
+
+    public function responses(): HasMany
+    {
+        return $this->hasMany(CompanySurveyUserResponse::class);
     }
 }

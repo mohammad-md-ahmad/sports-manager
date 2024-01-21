@@ -13,8 +13,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $id
  * @property string $uuid
  * @property string $answer
- * @property CompanySurveyQuestion $companySurveyQuestion
- * @property User $user
+ * @property CompanySurveyUserResponse $companySurveyUserResponse
+ * @property CompanySurveyQuestion $question
  */
 class CompanySurveyAnswer extends Model
 {
@@ -29,10 +29,9 @@ class CompanySurveyAnswer extends Model
      */
     protected $fillable = [
         'uuid',
+        'company_survey_user_response_id',
         'company_survey_question_id',
-        'user_id',
         'answer',
-        'booking_id',
     ];
 
     /**
@@ -46,19 +45,19 @@ class CompanySurveyAnswer extends Model
 
     protected $hidden = [
         'id',
+        'company_survey_user_response_id',
         'company_survey_question_id',
-        'user_id',
         'created_at',
         'updated_at',
     ];
 
-    public function companySurveyQuestion(): BelongsTo
+    public function question(): BelongsTo
     {
-        return $this->belongsTo(CompanySurveyQuestion::class);
+        return $this->belongsTo(CompanySurveyQuestion::class, 'company_survey_question_id');
     }
 
-    public function user(): BelongsTo
+    public function companySurveyUserResponse(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(CompanySurveyUserResponse::class);
     }
 }

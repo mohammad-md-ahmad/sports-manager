@@ -8,6 +8,7 @@ use App\Contracts\Services\CompanySurveyServiceInterface;
 use App\Models\CompanySurvey;
 use App\Models\CompanySurveyAnswer;
 use App\Models\CompanySurveyQuestion;
+use App\Models\CompanySurveyUserResponse;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyQuestionRequest;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyRequest;
 use App\Services\Data\CompanySurvey\CreateSurveyAnswerRequest;
@@ -29,7 +30,8 @@ class CompanySurveyService implements CompanySurveyServiceInterface
     {
         try {
             /** @var CompanySurvey $survey */
-            $survey = CompanySurvey::findOrFail($data->id)->with(['questions', 'company']);
+            $survey = CompanySurvey::with(['questions', 'company', 'responses.answers.question'])
+                ->findOrFail($data->id);
 
             return $survey;
         } catch (Exception $exception) {
@@ -155,9 +157,11 @@ class CompanySurveyService implements CompanySurveyServiceInterface
         try {
             DB::beginTransaction();
 
-            foreach ($data->answers as $answer) {
-                $createAnswerRequest = CreateSurveyAnswerRequest::from(array_merge($answer, ['user_id' => $data->user_id]));
+            $userResponse = CompanySurveyUserResponse::create($data->toArray());
 
+            foreach ($data->answers as $answer) {
+                $createAnswerRequest = CreateSurveyAnswerRequest::from(array_merge($answer, ['company_survey_user_response_id' => $userResponse->id]));
+                // dd($createAnswerRequest->toArray());
                 CompanySurveyAnswer::create($createAnswerRequest->toArray());
             }
 

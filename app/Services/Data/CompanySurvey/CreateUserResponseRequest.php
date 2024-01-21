@@ -16,7 +16,7 @@ class CreateUserResponseRequest extends Data
     public function __construct(
         #[FromRouteParameter('uuid')]
         #[WithCast(UuidToEntityCaster::class, CompanySurvey::class)]
-        public string $survey_id,
+        public string $company_survey_id,
         #[WithCast(UuidToEntityCaster::class, User::class)]
         public string $user_id,
         public array $answers,

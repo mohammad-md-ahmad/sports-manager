@@ -13,11 +13,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property string $id
  * @property string $uuid
- * @property string $question
  * @property CompanySurvey $companySurvey
- * @property Collection $answers
  */
-class CompanySurveyQuestion extends Model
+class CompanySurveyUserResponse extends Model
 {
     use BindsOnUuid;
     use GeneratesUuid;
@@ -31,8 +29,8 @@ class CompanySurveyQuestion extends Model
     protected $fillable = [
         'uuid',
         'company_survey_id',
-        'question',
-        'question_order',
+        'user_id',
+        'booking_id',
     ];
 
     /**
@@ -53,7 +51,7 @@ class CompanySurveyQuestion extends Model
 
     public function companySurvey(): BelongsTo
     {
-        return $this->belongsTo(CompanySurvey::class, 'company_survey_id');
+        return $this->belongsTo(companySurvey::class);
     }
 
     public function answers(): HasMany
