@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->efficientUuid('uuid')->unique();
             $table->unsignedBigInteger('company_survey_user_response_id');
-            $table->foreign('company_survey_user_response_id')->references('id')->on('company_survey_user_response')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('company_survey_user_response_id')->references('id')->on('company_survey_user_responses')->onUpdate('cascade')->onDelete('cascade');
             $table->unsignedBigInteger('company_survey_question_id');
             $table->foreign('company_survey_question_id')->references('id')->on('company_survey_questions')->onUpdate('cascade')->onDelete('cascade');
             $table->unique(['company_survey_user_response_id', 'company_survey_question_id'], 'company_survey_answer_unique_1');
