@@ -14,6 +14,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -161,6 +162,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('notifications')->group(function () {
 
         Route::get('/user/{user_uuid}/get-all', [NotificationController::class, 'getUserNotifications'])->name('notifications.user.get-all');
+    });
+
+    Route::prefix('reports')->group(function () {
+
+        Route::get('/company/{company}', [ReportController::class, 'get'])->name('reports.get');
     });
 });
 
