@@ -10,7 +10,6 @@ class CompanySurveyService extends AxiosService {
     }
 
     async create(data: Object) {
-        console.log(data);
         const companyData = await this.companyDataPromise;
         return this.post(`/companies/${companyData.uuid}/surveys`, data);
     }
