@@ -60,7 +60,17 @@ export default function ProfileMenu() {
                                 title: "Payment",
                                 icon: "payments",
                                 navigateTo: Screens.PaymentMethodsForm
-                            }
+                            },
+                            {
+                                title: "Facilities",
+                                icon: "scoreboard",
+                                navigateTo: Screens.Facilities
+                            },
+                            {
+                                title: "Survies List",
+                                icon: "payments",
+                                navigateTo: Screens.SurviesList
+                            },
                         ], 1)
 
                         if (companyCachedData) {
