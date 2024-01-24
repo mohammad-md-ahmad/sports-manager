@@ -11,13 +11,24 @@ import { Screens } from "../../helpers/constants";
 import CompanySurveyService from "../../api/CompanySurveyService";
 
 interface FormData {
+    uuid: string;
     name: string;
     questions: Array<string>;
     is_active: boolean;
 }
 
-export default function SurveyForm(): React.JSX.Element {
+export default function SurveyForm({ route }): React.JSX.Element {
+    const { survey } = route?.params ?? {};
     const navigator = useNavigation();
+
+    const [textInputValues, setTextInputValues] = useState([]); // Initial array of empty strings
+
+    useEffect(() => {
+        if (survey) {
+            setTextInputValues(survey?.questions.map(question => question.question));
+            formik.setFieldValue('is_active', survey?.is_active)
+        }
+    }, [survey])
 
     const companySurveyService = new CompanySurveyService();
 
@@ -26,15 +37,17 @@ export default function SurveyForm(): React.JSX.Element {
     });
 
     const initialFormDataValues = {
-        name: '',
-        questions: [],
-        is_active: false
+        uuid: survey?.uuid ?? null,
+        name: survey?.name ?? "",
+        questions: survey?.questions ?? [],
+        is_active: survey?.is_active ?? false
     };
 
     const initialTouched = {
-        name: '',
-        questions: [],
-        is_active: false
+        uuid: survey?.uuid ?? null,
+        name: survey?.name ?? "",
+        questions: survey?.questions ?? [],
+        is_active: survey?.is_active ?? false
     };
 
     const formik = useFormik({
@@ -69,10 +82,19 @@ export default function SurveyForm(): React.JSX.Element {
     const handleSubmit = (data) => {
         let sanitizedFormData = data;
         sanitizedFormData['questions'] = textInputValues;
-        companySurveyService.create(sanitizedFormData).then((response) => {
-            navigator.navigate(Screens.SurviesList);
-        }).catch((error) => {
-        });
+
+        console.log(sanitizedFormData);
+        if (data.uuid) {
+            companySurveyService.update(sanitizedFormData).then((response) => {
+                navigator.navigate(Screens.SurviesList);
+            }).catch((error) => {
+            });
+        } else {
+            companySurveyService.create(sanitizedFormData).then((response) => {
+                navigator.navigate(Screens.SurviesList);
+            }).catch((error) => {
+            });
+        }
     };
 
     const [isQuestionsOpen, setIsQuestionsOpen] = useState(false);
@@ -80,8 +102,6 @@ export default function SurveyForm(): React.JSX.Element {
     const toggleQestions = () => {
         setIsQuestionsOpen(!isQuestionsOpen);
     };
-
-    const [textInputValues, setTextInputValues] = useState([]); // Initial array of empty strings
 
     const handleInputChange = (index, text) => {
         const newValues = [...textInputValues];

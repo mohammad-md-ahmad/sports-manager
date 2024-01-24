@@ -16,6 +16,7 @@ function SurviesList(): React.JSX.Element {
             // You can put the logic here that you want to run when the component should reload.
             companySurveyService.listByCompany()
                 .then((response) => {
+                    console.log(response.data?.data?.data)
                     setSurvies(response.data?.data?.data);
                     //setUsers(temp);
                 }).catch((error) => {

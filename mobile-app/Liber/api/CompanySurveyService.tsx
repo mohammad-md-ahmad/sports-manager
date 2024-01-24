@@ -14,6 +14,10 @@ class CompanySurveyService extends AxiosService {
         return this.post(`/companies/${companyData.uuid}/surveys`, data);
     }
 
+    async update(data: Object) {
+        return this.put(`/surveys/${data.uuid}`, data);
+    }
+
     async listByCompany() {
         const companyData = await this.companyDataPromise;
         return this.get(`/surveys/get-all/company/${companyData.uuid}`);
