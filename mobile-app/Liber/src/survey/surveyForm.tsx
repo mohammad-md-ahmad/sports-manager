@@ -83,7 +83,6 @@ export default function SurveyForm({ route }): React.JSX.Element {
         let sanitizedFormData = data;
         sanitizedFormData['questions'] = textInputValues;
 
-        console.log(sanitizedFormData);
         if (data.uuid) {
             companySurveyService.update(sanitizedFormData).then((response) => {
                 navigator.navigate(Screens.SurviesList);
