@@ -7,7 +7,7 @@ import {
     StyleSheet,
     TextInput,
     VirtualizedList,
-    TouchableOpacity
+    TouchableOpacity,
 } from "react-native";
 import globalStyles, { placeHolderTextColor } from "../../styles/styles";
 import colors from "../../styles/colors";
@@ -32,10 +32,8 @@ export default function Search(): React.JSX.Element {
         setFormData({ ...formData, [field]: value });
     };
 
-    const [openFacilityTypeList, setOpenFacilityTypeList] = useState(false);
     const [facilityTypes, setFacilityTypes] = useState([]);
 
-    const [openCountryList, setOpenCountryList] = useState(false);
     const [countries, setCountries] = useState([]);
 
     const [selectedFacilityType, setSelectedFacilityType] = useState<string>('');
@@ -135,6 +133,19 @@ export default function Search(): React.JSX.Element {
         setIsFormOpen(!isFormOpen);
     };
 
+
+    const [openDropdown, setOpenDropdown] = useState(null);
+
+    const handleOpen = (dropdownId) => {
+        // Close any open dropdowns
+        setOpenDropdown(dropdownId);
+    };
+
+    const handleClose = () => {
+        // Close the currently open dropdown
+        setOpenDropdown(null);
+    };
+
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.formContainer}>
@@ -161,10 +172,11 @@ export default function Search(): React.JSX.Element {
                                 textStyle={{ color: colors.PrimaryBlue }}
                                 placeholder="Select Country"
                                 placeholderStyle={{ color: colors.PrimaryBlue }}
-                                open={openCountryList}
+                                open={openDropdown == "selectedCountry"}
                                 value={selectedCountry}
                                 items={countries}
-                                setOpen={setOpenCountryList}
+                                onPress={() => handleOpen("selectedCountry")}
+                                onClose={handleClose}
                                 setValue={(callback) => handleCountryDropdownChange(callback)}
                                 style={styles.dropDown}
                             />
@@ -185,10 +197,11 @@ export default function Search(): React.JSX.Element {
                                 textStyle={{ color: colors.PrimaryBlue }}
                                 placeholder="Select Facility Type"
                                 placeholderStyle={{ color: colors.PrimaryBlue }}
-                                open={openFacilityTypeList}
+                                open={openDropdown == "selectedFacilityType"}
                                 value={selectedFacilityType}
                                 items={facilityTypes}
-                                setOpen={setOpenFacilityTypeList}
+                                onPress={() => handleOpen("selectedFacilityType")}
+                                onClose={handleClose}
                                 setValue={(callback) => handleFacilityTypeDropdownChange(callback)}
                                 style={styles.dropDown}
                             />
@@ -211,6 +224,7 @@ export default function Search(): React.JSX.Element {
                 getItem={getItem}
             />
         </ScrollView>
+
     );
 }
 

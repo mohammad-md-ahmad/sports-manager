@@ -81,7 +81,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
                 setSelectedCountry(response.data?.data?.address?.country_uuid);
             }).catch((error) => {
             });
-            
+
         }, [])
     );
 
@@ -154,7 +154,6 @@ export default function CompanyProfileForm(): React.JSX.Element {
         navigator.navigate(Screens.CompanyProfile);
     };
 
-    const [openCountryList, setOpenCountryList] = useState(false);
     const [countries, setCountries] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState<string>('');
 
@@ -188,6 +187,18 @@ export default function CompanyProfileForm(): React.JSX.Element {
             }
         })
     }, []);
+
+    const [openDropdown, setOpenDropdown] = useState(null);
+
+    const handleOpen = (dropdownId) => {
+        // Close any open dropdowns
+        setOpenDropdown(dropdownId);
+    };
+
+    const handleClose = () => {
+        // Close the currently open dropdown
+        setOpenDropdown(null);
+    };
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -315,10 +326,11 @@ export default function CompanyProfileForm(): React.JSX.Element {
                             textStyle={{ color: colors.PrimaryBlue }}
                             placeholder="Select Country"
                             placeholderStyle={{ color: colors.PrimaryBlue }}
-                            open={openCountryList}
+                            open={openDropdown == "selectedCountry"}
                             value={selectedCountry}
                             items={countries}
-                            setOpen={setOpenCountryList}
+                            onPress={() => handleOpen("selectedCountry")}
+                            onClose={handleClose}
                             setValue={(callback) => handleCountryDropdownChange(callback)}
                             style={styles.dropDown}
                         />
