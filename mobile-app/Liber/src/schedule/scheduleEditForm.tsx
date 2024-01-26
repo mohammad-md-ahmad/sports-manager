@@ -51,7 +51,7 @@ function ScheduleEditForm({ route }): React.JSX.Element {
         setDatePickerVisibility(false);
     };
 
-    const fotmatDate = (date) => {
+    const formatDate = (date) => {
         const originalDate = new Date(date);
 
         const year = originalDate.getFullYear();
@@ -69,7 +69,7 @@ function ScheduleEditForm({ route }): React.JSX.Element {
     const handleDateConfirm = (date) => {
         setFormData((prevData) => ({
             ...prevData,
-            [currentInput]: fotmatDate(date),
+            [currentInput]: formatDate(date),
         }));
         hideDatePicker();
     };

@@ -17,6 +17,8 @@ import { useNavigation } from "@react-navigation/native";
 import { Screens, UserType } from "../../helpers/constants";
 import ErrorView from "../common/errorView";
 import { OneSignal } from "react-native-onesignal";
+import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 
 interface UserFormData {
     first_name: string;
@@ -27,6 +29,8 @@ interface UserFormData {
     password: string;
     password_confirmation: string;
     pushSubscriptionId: string;
+    gender_uuid: string;
+    dob: string;
 }
 
 interface CompanyFormData {
@@ -59,6 +63,8 @@ export default function Signup(): React.JSX.Element {
         name: '',
         type: '',
         is_company: false,
+        dob: '',
+        gender_uuid: ''
     });
 
     const [errors, setErrors] = useState(null);
@@ -107,6 +113,63 @@ export default function Signup(): React.JSX.Element {
                 });
         }
     };
+
+    const [openDropdown, setOpenDropdown] = useState(null);
+
+    const handleOpen = (dropdownId) => {
+        // Close any open dropdowns
+        setOpenDropdown(dropdownId);
+    };
+
+    const handleClose = () => {
+        // Close the currently open dropdown
+        setOpenDropdown(null);
+    };
+
+    const [genders, setGenders] = useState([]);
+    const [selectedGender, setSelectedGender] = useState<string>('');
+
+    const handleGenderDropdownChange = (callback) => {
+        setSelectedGender(callback(selectedGender));
+
+        setFormData({
+            ...formData,
+
+        });
+    };
+
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+    const handleDateConfirm = (date) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [currentInput]: formatDate(date),
+        }));
+        hideDatePicker();
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+
+    const formatDate = (date) => {
+        const originalDate = new Date(date);
+
+        const year = originalDate.getFullYear();
+        const month = String(originalDate.getMonth() + 1).padStart(2, "0");
+        const day = String(originalDate.getDate()).padStart(2, "0");
+
+        const formatedDate = `${year}-${month}-${day}`;
+
+        return formatedDate;
+    }
+
+    const [currentInput, setCurrentInput] = useState('');
+    const showDatePicker = (state: string) => {
+        setDatePickerVisibility(true);
+        setCurrentInput(state);
+    };
+
 
     return (
         <ScrollView style={styles.scrollView}>
@@ -210,6 +273,45 @@ export default function Signup(): React.JSX.Element {
                         </View>
                     }
 
+                    {!formData.is_company &&
+                        <>
+                            <View>
+                                <TextInput
+                                    placeholder="End Date"
+                                    placeholderTextColor={placeHolderTextColor}
+                                    style={styles.formTextInput}
+                                    value={formData.dob}
+                                    onPressIn={() => showDatePicker('dob')}
+                                />
+                            </View>
+
+                            < View >
+
+
+                                <DropDownPicker
+                                    textStyle={{ color: colors.PrimaryBlue }}
+                                    placeholder="Select Gender"
+                                    placeholderStyle={{ color: colors.PrimaryBlue }}
+                                    open={openDropdown == "selectedGender"}
+                                    value={selectedGender}
+                                    items={genders}
+                                    onPress={() => handleOpen("selectedGender")}
+                                    onClose={handleClose}
+                                    setValue={(callback) => handleGenderDropdownChange(callback)}
+                                    style={styles.dropDown}
+                                />
+                            </View>
+
+                        </>
+                    }
+
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="date"
+                        onConfirm={handleDateConfirm}
+                        onCancel={hideDatePicker}
+                    />
+
                     <Button
                         onPress={() => onSignupPress()}
                         title="Signup"
@@ -262,6 +364,10 @@ const styles = StyleSheet.create({
     switchContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-    }
+    },
+    dropDown: {
+        ...globalStyles.inputText,
+        marginBottom: 10,
+    },
 });
 

@@ -98,7 +98,7 @@ export default function SurveyForm({ route }): React.JSX.Element {
         }
     };
 
-    const [isQuestionsOpen, setIsQuestionsOpen] = useState(false);
+    const [isQuestionsOpen, setIsQuestionsOpen] = useState(true);
 
     const toggleQestions = () => {
         setIsQuestionsOpen(!isQuestionsOpen);
