@@ -277,7 +277,7 @@ export default function Signup(): React.JSX.Element {
                         <>
                             <View>
                                 <TextInput
-                                    placeholder="End Date"
+                                    placeholder="Date of birth"
                                     placeholderTextColor={placeHolderTextColor}
                                     style={styles.formTextInput}
                                     value={formData.dob}
@@ -286,8 +286,6 @@ export default function Signup(): React.JSX.Element {
                             </View>
 
                             < View >
-
-
                                 <DropDownPicker
                                     textStyle={{ color: colors.PrimaryBlue }}
                                     placeholder="Select Gender"
