@@ -32,6 +32,8 @@ import PaymentMethodsForm from '../payments/paymentMethodsForm';
 import BookingHistoryList from '../booking/bookingHistoryList';
 import UserBookingHistoryList from '../booking/userBookingHistoryList';
 import UserView from '../user/userView';
+import SurviesList from '../survey/surviesList';
+import SurveyForm from '../survey/surveyForm';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +58,10 @@ const AppNavigator = () => {
 
     function onAddFacilityPress(): void {
         navigator.navigate(Screens.FacilityForm);
+    }
+
+    function onAddSurveyPress(): void {
+        navigator.navigate(Screens.SurveyForm);
     }
 
     function onScheduleFormPress(): void {
@@ -131,6 +137,21 @@ const AppNavigator = () => {
                         setContent(
                             <TouchableOpacity
                                 onPress={() => onAddFacilityPress()}>
+                                <View style={{ margin: 15 }}>
+                                    <Icon
+                                        name="add" // Replace with your desired icon name
+                                        type="material"
+                                        size={25}
+
+                                    />
+                                </View>
+                            </TouchableOpacity>
+                        )
+                        break;
+                    case Screens.SurviesList:
+                        setContent(
+                            <TouchableOpacity
+                                onPress={() => onAddSurveyPress()}>
                                 <View style={{ margin: 15 }}>
                                     <Icon
                                         name="add" // Replace with your desired icon name
@@ -246,6 +267,9 @@ const AppNavigator = () => {
                     <Stack.Screen name={Screens.UserBookingHistoryList} options={{ title: 'Booking History' }} component={UserBookingHistoryList} />
 
                     <Stack.Screen name={Screens.ProgramManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
+
+                    <Stack.Screen name={Screens.SurviesList} options={{ title: 'Survies List' }} component={SurviesList} />
+                    <Stack.Screen name={Screens.SurveyForm} options={{ title: 'Survey Form' }} component={SurveyForm} />
 
 
                     <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />

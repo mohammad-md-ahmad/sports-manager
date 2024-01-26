@@ -52,6 +52,8 @@ export enum Screens {
     ProfileMenu = "ProfileMenu",
     UsersList = "UsersList",
     PaymentMethodsForm = "PaymentMethodsForm",
+    SurviesList = "SurviesList",
+    SurveyForm = "SurveyForm",
 }
 
 export enum SlotStatus {

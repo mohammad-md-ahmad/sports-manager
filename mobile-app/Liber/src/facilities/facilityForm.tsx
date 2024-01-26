@@ -111,10 +111,8 @@ export default function FacilityForm(): React.JSX.Element {
         companyFacilityPhotos: false,
     };
 
-    const [openFacilityTypeList, setOpenFacilityTypeList] = useState(false);
     const [facilityTypes, setFacilityTypes] = useState([]);
 
-    const [openCountryList, setOpenCountryList] = useState(false);
     const [countries, setCountries] = useState([]);
 
     const [selectedFacilityType, setSelectedFacilityType] = useState<string>('');
@@ -225,6 +223,18 @@ export default function FacilityForm(): React.JSX.Element {
         });
     };
 
+    const [openDropdown, setOpenDropdown] = useState(null);
+
+    const handleOpen = (dropdownId) => {
+        // Close any open dropdowns
+        setOpenDropdown(dropdownId);
+    };
+
+    const handleClose = () => {
+        // Close the currently open dropdown
+        setOpenDropdown(null);
+    };
+
     return (
         <ScrollView >
             <View style={styles.container}>
@@ -254,10 +264,11 @@ export default function FacilityForm(): React.JSX.Element {
                                 textStyle={{ color: colors.PrimaryBlue }}
                                 placeholder="Select Facility Type"
                                 placeholderStyle={{ color: colors.PrimaryBlue }}
-                                open={openFacilityTypeList}
+                                open={openDropdown == "selectedFacilityType"}
                                 value={selectedFacilityType}
                                 items={facilityTypes}
-                                setOpen={setOpenFacilityTypeList}
+                                onPress={() => handleOpen("selectedFacilityType")}
+                                onClose={handleClose}
                                 setValue={(text: any) => {
                                     handleDropdownChange('type', text)
                                 }}
@@ -379,10 +390,11 @@ export default function FacilityForm(): React.JSX.Element {
                                 textStyle={{ color: colors.PrimaryBlue }}
                                 placeholder="Select Country"
                                 placeholderStyle={{ color: colors.PrimaryBlue }}
-                                open={openCountryList}
+                                open={openDropdown == "selectedCountry"}
                                 value={selectedCountry}
                                 items={countries}
-                                setOpen={setOpenCountryList}
+                                onPress={() => handleOpen("selectedCountry")}
+                                onClose={handleClose}
                                 setValue={(text: any) => {
                                     handleDropdownChange('createAddressRequest.country_uuid', text)
                                 }}
