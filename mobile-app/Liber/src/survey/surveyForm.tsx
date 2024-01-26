@@ -25,7 +25,7 @@ export default function SurveyForm({ route }): React.JSX.Element {
 
     useEffect(() => {
         if (survey) {
-            setTextInputValues(survey?.questions.map(question => question.question));
+            setTextInputValues(survey?.questions);
             formik.setFieldValue('is_active', survey?.is_active)
         }
     }, [survey])
@@ -83,10 +83,12 @@ export default function SurveyForm({ route }): React.JSX.Element {
         let sanitizedFormData = data;
         sanitizedFormData['questions'] = textInputValues;
 
+        console.log(sanitizedFormData);
         if (data.uuid) {
             companySurveyService.update(sanitizedFormData).then((response) => {
                 navigator.navigate(Screens.SurviesList);
             }).catch((error) => {
+                console.log()
             });
         } else {
             companySurveyService.create(sanitizedFormData).then((response) => {
@@ -104,27 +106,56 @@ export default function SurveyForm({ route }): React.JSX.Element {
 
     const handleInputChange = (index, text) => {
         const newValues = [...textInputValues];
-        newValues[index] = text;
+        if (survey?.uuid) {
+            newValues[index].question = text
+            newValues[index].question_order = newValues[index].question_order ?? (index + 1)
+        } else {
+            newValues[index] = text;
+        }
         setTextInputValues(newValues);
     };
 
     const renderTextInputArray = () => {
-        return textInputValues.map((value, index) => (
-            <>
-                <TextInput
-                    key={index}
-                    value={value}
-                    placeholder={`Question ${index + 1}`}
-                    onChangeText={(text) => handleInputChange(index, text)}
-                    style={styles.input}
-                />
+        if (survey?.uuid) {
+            return textInputValues.map((value, index) => (
+                <>
+                    <TextInput
+                        key={index}
+                        value={value.question}
+                        placeholder={`Question ${index + 1}`}
+                        onChangeText={(text) => handleInputChange(index, text)}
+                        style={styles.input}
+                    />
 
-            </>
-        ));
+                </>
+            ));
+        } else {
+            return textInputValues.map((value, index) => (
+                <>
+                    <TextInput
+                        key={index}
+                        value={value}
+                        placeholder={`Question ${index + 1}`}
+                        onChangeText={(text) => handleInputChange(index, text)}
+                        style={styles.input}
+                    />
+
+                </>
+            ));
+        }
     };
 
     const handleAddInput = () => {
-        setTextInputValues([...textInputValues, '']); // Add a new empty string to the array
+        if (survey?.uuid) {
+            setTextInputValues([...textInputValues,
+            {
+                "is_new": true,
+                "question": ""
+            }
+            ]); // Add a new empty string to the array
+        } else {
+            setTextInputValues([...textInputValues, '']); // Add a new empty string to the array
+        }
     };
 
     return (
@@ -154,19 +185,6 @@ export default function SurveyForm({ route }): React.JSX.Element {
                     <>
                         {renderTextInputArray()}
                         <Button title="Add" onPress={handleAddInput} buttonStyle={styles.addButton} />
-                        {/* <View>
-                            <TextInput
-                                value={formik.values.createAddressRequest.line_1}
-                                onChangeText={formik.handleChange('createAddressRequest.line_1')}
-                                placeholder="Line 1"
-                                placeholderTextColor={placeHolderTextColor}
-                                style={styles.input}
-                            />
-                        </View> */}
-                        {/* {formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1 &&
-                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.line_1}</Text>
-                        } */}
-
                     </>)}
 
 
