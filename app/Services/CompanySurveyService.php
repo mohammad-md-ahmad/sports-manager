@@ -114,21 +114,27 @@ class CompanySurveyService implements CompanySurveyServiceInterface
             for ($i = 0; $i < count($data->questions); $i++) {
                 $question = $data->questions[$i];
 
+                $createQuestionRequestArr = [
+                    'company_survey_id' => $survey->id,
+                    'question' => $question['question'],
+                ];
+
                 if (! empty($question['uuid'])) {
                     $questionRecord = CompanySurveyQuestion::whereUuid($question['uuid'])->first();
 
-                    $questionRecord->question = $question['question'];
-                    $questionRecord->question_order = $question['order'];
+                    $createQuestionRequestArr['question_order'] = $question['question_order'];
 
-                    $questionRecord->save();
+                    $createQuestionRequest = CreateCompanySurveyQuestionRequest::from($createQuestionRequestArr);
+
+                    $questionRecord->update($createQuestionRequest->toArray());
 
                     $questionsIds[] = $questionRecord->id;
                 } elseif (! empty($question['is_new'])) {
-                    $newQuestion = CompanySurveyQuestion::create([
-                        'company_survey_id' => $survey->id,
-                        'question' => $question['question'],
-                        'question_order' => ($i + 1),
-                    ]);
+                    $createQuestionRequestArr['question_order'] = ($i + 1);
+
+                    $createQuestionRequest = CreateCompanySurveyQuestionRequest::from($createQuestionRequestArr);
+
+                    $newQuestion = CompanySurveyQuestion::create($createQuestionRequest->toArray());
 
                     $questionsIds[] = $newQuestion->id;
                 }
