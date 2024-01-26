@@ -23,6 +23,11 @@ export default function Reports(): React.JSX.Element {
                 color: (opacity = 1) => `rgba(100, 100, 225, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }
+            ,{
+                data: [17, 12, 58, 40, 35, 18],
+                color: (opacity = 0.5) => `rgba(100, 100, 225, ${opacity})`, // optional
+                strokeWidth: 2 // optional
+            }
         ],
         legend: ["Rainy Days"] // optional
     };
@@ -123,21 +128,6 @@ export default function Reports(): React.JSX.Element {
                         />
                     </Card>
                 </View>
-
-                <View>
-                    <Card containerStyle={styles.cardView}>
-                        <BarChart
-                            //style={graphStyle}
-                            data={data}
-                            width={screenWidth}
-                            height={220}
-                            yAxisLabel="$"
-                            chartConfig={chartConfig}
-                            verticalLabelRotation={30}
-                        />
-                    </Card>
-                </View>
-
 
             </SafeAreaView >
         </ScrollView>
