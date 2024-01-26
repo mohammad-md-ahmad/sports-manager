@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "liber",
-    "dateExported": "2024-01-21T18:31:51.960Z",
+    "dateExported": "2024-01-26T19:17:48.821Z",
     "version": "1.1",
     "folders": [
         {
@@ -101,6 +101,13 @@
             "containerId": "",
             "created": "2023-12-29T22:16:20.183Z",
             "sortNum": 60000
+        },
+        {
+            "_id": "34faf5e3-602f-4762-aeaf-f3b95817b511",
+            "name": "reports",
+            "containerId": "",
+            "created": "2024-01-21T20:49:33.941Z",
+            "sortNum": 70000
         }
     ],
     "requests": [
@@ -1089,12 +1096,12 @@
             "method": "PUT",
             "sortNum": 165000,
             "created": "2024-01-18T19:06:55.017Z",
-            "modified": "2024-01-18T19:15:16.230Z",
+            "modified": "2024-01-26T19:15:58.503Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"name\": \"survey 4 - edited\",\n  \"questions\": [\n    {\n      \"uuid\": \"1eb77238-e44a-4f54-a49d-a4c4c20d6d3b\",\n      \"question\": \"what do you like about our facilities? edited\",\n      \"order\": 1\n    },\n    {\n      \"is_new\": true,\n      \"question\": \"what do you like about our facilities? sdfewdafsdfd\",\n      \"order\": 2\n    }\n  ],\n  \"is_active\": true\n}",
+                "raw": "{\n  \"name\": \"survey 44444 - edited\",\n  \"questions\": [\n    {\n      \"uuid\": \"1eb77238-e44a-4f54-a49d-a4c4c20d6d3b\",\n      \"question\": \"what do you like about our facilities? edited\",\n      \"question_order\": 1\n    },\n    {\n      \"is_new\": true,\n      \"question\": \"what do you like about our facilities? sdfewdafsdfd\",\n      \"question_order\": 2\n    },\n    {\n      \"is_new\": true,\n      \"question\": \"what do casdcasdadscyou like about our facilities? sdfewdafsdfd\",\n      \"question_order\": 3\n    }\n  ],\n  \"is_active\": true\n}",
                 "form": []
             },
             "auth": {
@@ -1154,6 +1161,29 @@
             "body": {
                 "type": "json",
                 "raw": "{\n  \"user_id\": \"16a13d56-85e3-4c61-be01-a94805afaf21\",\n  \"answers\": [\n    {\n      \"company_survey_question_id\": \"1eb77238-e44a-4f54-a49d-a4c4c20d6d3b\",\n      \"answer\": \"my answer is bla bla bla\"\n    },\n    {\n      \"company_survey_question_id\": \"e6016510-ae77-478f-8bd1-49124ddbb210\",\n      \"answer\": \"my answer for q2 is bla bla bla\"\n    }\n  ]\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "{{token}}"
+            },
+            "tests": []
+        },
+        {
+            "_id": "80503ae1-cb48-433f-892c-df0562817e27",
+            "colId": "569a972e-b886-4e6c-8058-11e6c6b3ac61",
+            "containerId": "34faf5e3-602f-4762-aeaf-f3b95817b511",
+            "name": "reports - get",
+            "url": "{{host}}/reports/company/7d26f38b-9b1c-418c-861a-6ecee182a67d",
+            "method": "GET",
+            "sortNum": 200000,
+            "created": "2024-01-21T20:49:42.490Z",
+            "modified": "2024-01-21T20:54:41.079Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"key\": \"CustomerDemographics\"\n}",
                 "form": []
             },
             "auth": {
