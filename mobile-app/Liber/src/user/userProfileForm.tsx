@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     Image,
@@ -19,7 +19,7 @@ import UserService from "../../api/UserService";
 import { launchImageLibrary } from "react-native-image-picker";
 import { GlobaSateKey, Screens } from "../../helpers/constants";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ErrorView from "../common/errorView";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -32,7 +32,7 @@ interface UserFormData {
     password: string;
     password_confirmation: string;
     dob: string;
-    gender_uuid: string;
+    gender: string;
 }
 
 export default function UserProfileForm(): React.JSX.Element {
@@ -49,7 +49,7 @@ export default function UserProfileForm(): React.JSX.Element {
         email: '',
         profile_picture: null,
         dob: '',
-        gender_uuid: ''
+        gender: ''
     });
 
     useFocusEffect(
@@ -59,6 +59,7 @@ export default function UserProfileForm(): React.JSX.Element {
 
             userService.getUser().then((response) => {
                 setFormData({ ...response.data.data, profile_picture: null });
+                setSelectedGender(response.data.data.gender);
                 setLogo({ uri: response.data?.data?.profile_picture });
             }).catch((error) => {
                 console.error('user error', error)
@@ -149,7 +150,23 @@ export default function UserProfileForm(): React.JSX.Element {
         setCurrentInput(state);
     };
 
+    const gendersState = useSelector(state => state.userGenders);
     const [genders, setGenders] = useState([]);
+
+    useEffect(() => {
+        if (gendersState) {
+            let data = [];
+            Object.keys(gendersState).forEach(function (key) {
+                data.push({
+                    label: gendersState[key],
+                    value: key,
+                });
+            });
+            setGenders(data);
+        }
+
+    }, [gendersState])
+
     const [selectedGender, setSelectedGender] = useState<string>('');
 
     const handleGenderDropdownChange = (callback) => {
@@ -157,7 +174,7 @@ export default function UserProfileForm(): React.JSX.Element {
 
         setFormData({
             ...formData,
-
+            gender: callback(formData.gender),
         });
     };
 

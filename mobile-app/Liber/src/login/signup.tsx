@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     Image,
@@ -13,12 +13,14 @@ import colors, { placeHolderTextColor } from "../../styles/styles";
 import { Button } from "react-native-elements";
 import globalStyles from "../../styles/styles";
 import RegisterService from "../../api/RegisterService";
-import { useNavigation } from "@react-navigation/native";
-import { Screens, UserType } from "../../helpers/constants";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { GlobaSateKey, Screens, UserType } from "../../helpers/constants";
 import ErrorView from "../common/errorView";
 import { OneSignal } from "react-native-onesignal";
 import DropDownPicker from "react-native-dropdown-picker";
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
+import { useDispatch, useSelector } from "react-redux";
+import MiscService from "../../api/MiscService";
 
 interface UserFormData {
     first_name: string;
@@ -29,7 +31,7 @@ interface UserFormData {
     password: string;
     password_confirmation: string;
     pushSubscriptionId: string;
-    gender_uuid: string;
+    gender: string;
     dob: string;
 }
 
@@ -64,7 +66,7 @@ export default function Signup(): React.JSX.Element {
         type: '',
         is_company: false,
         dob: '',
-        gender_uuid: ''
+        gender: ''
     });
 
     const [errors, setErrors] = useState(null);
@@ -114,6 +116,33 @@ export default function Signup(): React.JSX.Element {
         }
     };
 
+    const miscService = new MiscService();
+
+    const dispatch = useDispatch();
+
+    const facilityTypes = useSelector(state => state.facilityTypes);
+    const countries = useSelector(state => state.countries);
+    const gendersState = useSelector(state => state.userGenders);
+    const reportNames = useSelector(state => state.reportNames);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
+            if (!facilityTypes || !countries || !gendersState || !reportNames) {
+                miscService.lists().then((response) => {
+
+                    dispatch({ type: GlobaSateKey.SetFacilityTypes, payload: response.data?.data?.facility_types });
+                    dispatch({ type: GlobaSateKey.SetCountries, payload: response.data?.data?.countries });
+                    dispatch({ type: GlobaSateKey.SetUserGenders, payload: response.data?.data?.user_genders });
+                    dispatch({ type: GlobaSateKey.SetReportNames, payload: response.data?.data?.report_names });
+
+                }).catch((error) => {
+                });
+            }
+        }, [])
+    );
+
     const [openDropdown, setOpenDropdown] = useState(null);
 
     const handleOpen = (dropdownId) => {
@@ -126,7 +155,23 @@ export default function Signup(): React.JSX.Element {
         setOpenDropdown(null);
     };
 
+
     const [genders, setGenders] = useState([]);
+
+    useEffect(() => {
+        if (gendersState) {
+            let data = [];
+            Object.keys(gendersState).forEach(function (key) {
+                data.push({
+                    label: gendersState[key],
+                    value: key,
+                });
+            });
+            setGenders(data);
+        }
+
+    }, [gendersState])
+
     const [selectedGender, setSelectedGender] = useState<string>('');
 
     const handleGenderDropdownChange = (callback) => {
@@ -134,7 +179,7 @@ export default function Signup(): React.JSX.Element {
 
         setFormData({
             ...formData,
-
+            gender: callback(formData.gender),
         });
     };
 
@@ -169,7 +214,6 @@ export default function Signup(): React.JSX.Element {
         setDatePickerVisibility(true);
         setCurrentInput(state);
     };
-
 
     return (
         <ScrollView style={styles.scrollView}>

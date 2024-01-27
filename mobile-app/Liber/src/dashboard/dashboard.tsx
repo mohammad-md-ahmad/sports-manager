@@ -17,18 +17,23 @@ export default function Dashboard(): React.JSX.Element {
 
     const facilityTypes = useSelector(state => state.facilityTypes);
     const countries = useSelector(state => state.countries);
+    const userGenders = useSelector(state => state.userGenders);
+    const reportNames = useSelector(state => state.reportNames);
 
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
-            if (!facilityTypes || !countries) {
+
+            if (!facilityTypes || !countries || !userGenders || !reportNames) {
                 miscService.lists().then((response) => {
                     storeFacilityTypes(response.data?.data?.facility_types);
                     storeCountries(response.data?.data?.countries);
 
                     dispatch({ type: GlobaSateKey.SetFacilityTypes, payload: response.data?.data?.facility_types });
                     dispatch({ type: GlobaSateKey.SetCountries, payload: response.data?.data?.countries });
+                    dispatch({ type: GlobaSateKey.SetUserGenders, payload: response.data?.data?.user_genders });
+                    dispatch({ type: GlobaSateKey.SetReportNames, payload: response.data?.data?.report_names });
 
                 }).catch((error) => {
                 });

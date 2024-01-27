@@ -9,9 +9,12 @@ import {
 import globalStyles from "../../styles/styles";
 import colors from "../../styles/colors";
 import Swiper from "react-native-swiper";
+import { useSelector } from "react-redux";
 
 function FacilityView({ route }): React.JSX.Element {
     const { facility } = route?.params ?? {};
+
+    const facilityTypes = useSelector(state => state.facilityTypes);
     return (
         <View style={styles.containerView}>
             <View style={styles.container}>
@@ -38,7 +41,7 @@ function FacilityView({ route }): React.JSX.Element {
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Type:</Text>
-                        <Text style={styles.value}>{facility?.type}</Text>
+                        <Text style={styles.value}>{facilityTypes[facility?.type]}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Length:</Text>

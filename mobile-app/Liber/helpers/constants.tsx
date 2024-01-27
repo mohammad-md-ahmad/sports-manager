@@ -78,6 +78,8 @@ export enum GlobaSateKey {
     SetCompaniesList = "SET_COMPANIES_LIST",
     SetFacilityTypes = "SET_FACILITY_TYPES",
     SetCountries = "SET_COUNTRIES",
+    SetUserGenders = "SET_USER_GENDERS",
+    SetReportNames = "SET_REPORT_NAMES",
 }
 
 export enum EntityType {
