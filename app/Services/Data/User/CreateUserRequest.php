@@ -22,6 +22,8 @@ class CreateUserRequest extends Data
         public string $password,
         public string|Optional $profile_picture,
         public string|Optional $type,
+        public ?string $gender = '',
+        public ?string $dob = '',
     ) {
     }
 

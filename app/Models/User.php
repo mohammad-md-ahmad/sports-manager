@@ -27,6 +27,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $email
  * @property UserType $type
  * @property string $profile_picture
+ * @property UserPersonalInfo $userPersonalInfo
  * @property Collection $bookings
  * @property Collection $notifications
  */
@@ -122,5 +123,10 @@ class User extends Authenticatable
     public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'user_id');
+    }
+
+    public function userPersonalInfo(): HasOne
+    {
+        return $this->hasOne(UserPersonalInfo::class);
     }
 }

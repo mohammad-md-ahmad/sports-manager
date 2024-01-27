@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\Services\UserServiceInterface;
+use App\Enums\UserGender;
 use App\Models\User;
+use App\Models\UserPersonalInfo;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
 use App\Services\Data\User\GetUserRequest;
@@ -43,7 +45,7 @@ class UserService implements UserServiceInterface
             /** @var User $user */
             $user = User::findOrFail($data->id);
 
-            return $user;
+            return User::with(['userPersonalInfo'])->find($user->id);
         } catch (Exception $exception) {
             Log::error('UserService::get: '.$exception->getMessage());
 
@@ -58,10 +60,14 @@ class UserService implements UserServiceInterface
 
             $data->password = Hash::make($data->password);
 
+            $userData = $data->toArray();
+            unset($userData['gender']);
+            unset($userData['dob']);
+
             DB::beginTransaction();
 
             /** @var User $user */
-            $user = User::create($data->toArray());
+            $user = User::create($userData);
 
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {
@@ -70,9 +76,15 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
+            UserPersonalInfo::create([
+                'user_id' => $user->id,
+                'gender' => UserGender::tryFromName($data->gender)->name,
+                'dob' => $data->dob,
+            ]);
+
             DB::commit();
 
-            return $user;
+            return User::with(['userPersonalInfo'])->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
@@ -102,7 +114,11 @@ class UserService implements UserServiceInterface
 
             DB::beginTransaction();
 
-            $user->update($data->toArray());
+            $userData = $data->toArray();
+            unset($userData['gender']);
+            unset($userData['dob']);
+
+            $user->update($userData);
 
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {
@@ -111,9 +127,24 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
+            $userPersonalInfo = UserPersonalInfo::query()->where('user_id', $user->id)->first();
+
+            if ($userPersonalInfo) {
+                $userPersonalInfo->update([
+                    'gender' => UserGender::tryFromName($data->gender)->name,
+                    'dob' => $data->dob,
+                ]);
+            } else {
+                UserPersonalInfo::create([
+                    'user_id' => $user->id,
+                    'gender' => UserGender::tryFromName($data->gender)->name,
+                    'dob' => $data->dob,
+                ]);
+            }
+
             DB::commit();
 
-            return $user;
+            return User::with(['userPersonalInfo'])->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
