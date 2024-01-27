@@ -45,7 +45,7 @@ class UserService implements UserServiceInterface
             /** @var User $user */
             $user = User::findOrFail($data->id);
 
-            return User::with(['userPersonalInfo'])->find($user->id);
+            return User::with([])->find($user->id);
         } catch (Exception $exception) {
             Log::error('UserService::get: '.$exception->getMessage());
 
@@ -86,7 +86,7 @@ class UserService implements UserServiceInterface
 
             DB::commit();
 
-            return User::with(['userPersonalInfo'])->find($user->id);
+            return User::with([])->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
@@ -147,7 +147,7 @@ class UserService implements UserServiceInterface
 
             DB::commit();
 
-            return User::with(['userPersonalInfo'])->find($user->id);
+            return User::with([])->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 

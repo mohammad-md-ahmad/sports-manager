@@ -82,6 +82,8 @@ class User extends Authenticatable
 
     protected $appends = [
         'full_name',
+        'dob',
+        'gender',
     ];
 
     public function profilePicture(): Attribute
@@ -96,6 +98,24 @@ class User extends Authenticatable
         return Attribute::make(
             get: function () {
                 return $this->first_name.' '.$this->last_name;
+            }
+        );
+    }
+
+    public function dob(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->userPersonalInfo->dob;
+            }
+        );
+    }
+
+    public function gender(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return $this->userPersonalInfo->gender->name;
             }
         );
     }
