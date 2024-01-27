@@ -177,7 +177,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
                 foreach ($data->companyFacilityPhotos as $photo) {
                     $galleryData = [
                         'model_type' => CompanyFacility::class,
-                        'model_id' => (string) $companyFacility->id,
+                        'model_id' => (string) $data->facility->id,
                         'image' => $photo,
                     ];
 
@@ -218,7 +218,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     {
         try {
             DB::transaction(function () use ($facility) {
-                $facility->gallery->delete();
+                $facility->gallery()->delete();
             });
         } catch (Exception $exception) {
             throw $exception;

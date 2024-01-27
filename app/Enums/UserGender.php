@@ -19,4 +19,12 @@ enum UserGender
             self::Female => __('Female'),
         };
     }
+
+    public static function toArray()
+    {
+        return [
+            self::Male->name => __('Male'),
+            self::Female->name => __('Female'),
+        ];
+    }
 }

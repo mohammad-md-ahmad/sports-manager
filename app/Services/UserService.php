@@ -45,7 +45,7 @@ class UserService implements UserServiceInterface
             /** @var User $user */
             $user = User::findOrFail($data->id);
 
-            return User::with(['userPersonalInfo'])->find($user->id);
+            return User::with([])->find($user->id);
         } catch (Exception $exception) {
             Log::error('UserService::get: '.$exception->getMessage());
 
@@ -76,15 +76,17 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
+            $genderEnum = UserGender::tryFromName($data->gender);
+
             UserPersonalInfo::create([
                 'user_id' => $user->id,
-                'gender' => UserGender::tryFromName($data->gender)->name,
+                'gender' => $genderEnum ? $genderEnum->name : null,
                 'dob' => $data->dob,
             ]);
 
             DB::commit();
 
-            return User::with(['userPersonalInfo'])->find($user->id);
+            return User::with([])->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
@@ -128,23 +130,24 @@ class UserService implements UserServiceInterface
             }
 
             $userPersonalInfo = UserPersonalInfo::query()->where('user_id', $user->id)->first();
+            $genderEnum = UserGender::tryFromName($data->gender);
 
             if ($userPersonalInfo) {
                 $userPersonalInfo->update([
-                    'gender' => UserGender::tryFromName($data->gender)->name,
+                    'gender' => $genderEnum ? $genderEnum->name : null,
                     'dob' => $data->dob,
                 ]);
             } else {
                 UserPersonalInfo::create([
                     'user_id' => $user->id,
-                    'gender' => UserGender::tryFromName($data->gender)->name,
+                    'gender' => $genderEnum ? $genderEnum->name : null,
                     'dob' => $data->dob,
                 ]);
             }
 
             DB::commit();
 
-            return User::with(['userPersonalInfo'])->find($user->id);
+            return User::with([])->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
