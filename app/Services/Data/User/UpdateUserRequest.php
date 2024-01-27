@@ -31,7 +31,7 @@ class UpdateUserRequest extends Data
         #[Email]
         public string|Optional $email,
         public string|Optional $type,
-        public string|Optional $profile_picture,
+        public ?string $profile_picture = null,
         public ?string $gender = '',
         public ?string $dob = '',
     ) {
