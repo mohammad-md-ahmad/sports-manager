@@ -31,7 +31,7 @@ class MiscController extends Controller
                     'currency_iso_short_code' => $country->currency->iso_short_code,
                 ];
             });
-        $lists['user_gender'] = UserGender::toArray();
+        $lists['user_genders'] = UserGender::toArray();
         $lists['report_names'] = Report::toArray();
 
         return response()->json(['data' => $lists], Response::HTTP_OK);
