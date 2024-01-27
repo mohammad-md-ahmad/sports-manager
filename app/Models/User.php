@@ -106,7 +106,7 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: function () {
-                return $this->userPersonalInfo->dob;
+                return $this->userPersonalInfo->dob ?? null;
             }
         );
     }
@@ -115,7 +115,7 @@ class User extends Authenticatable
     {
         return Attribute::make(
             get: function () {
-                return $this->userPersonalInfo->gender->name;
+                return $this->userPersonalInfo->gender->name ?? null;
             }
         );
     }
