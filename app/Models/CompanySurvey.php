@@ -46,12 +46,12 @@ class CompanySurvey extends Model
      */
     protected $casts = [
         'uuid' => EfficientUuid::class,
+        'is_active' => 'boolean',
     ];
 
     protected $hidden = [
         'id',
         'company_id',
-        'created_at',
         'updated_at',
         'deleted_at',
     ];

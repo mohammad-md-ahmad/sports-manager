@@ -107,6 +107,10 @@ class CompanySurveyService implements CompanySurveyServiceInterface
             /** @var CompanySurvey $survey */
             $survey = CompanySurvey::findOrFail($data->id);
 
+            if ($data->is_active) {
+                CompanySurvey::query()->where('company_id', $survey->company_id)->update(['is_active' => false]);
+            }
+
             $survey->update($updateData);
 
             $questionsIds = [];
