@@ -50,18 +50,17 @@ class ReportService implements ReportServiceInterface
                   )) AS uuid"),
                 'u.first_name',
                 'u.last_name',
-            ])
-                ->join('bookings AS b', function (Builder $query) {
-                    $query->on('b.customer_user_id', '=', 'u.id');
-                })->join('schedule_details AS sd', function (Builder $query) {
-                    $query->on('b.schedule_details_id', '=', 'sd.id');
-                })->join('schedules AS s', function (Builder $query) {
-                    $query->on('sd.schedule_id', '=', 's.id');
-                })->join('company_facilities AS cf', function (Builder $query) {
-                    $query->on('s.company_facilitY_id', '=', 'cf.id');
-                })->join('companies AS c', function (Builder $query) {
-                    $query->on('cf.company_id', '=', 'c.id');
-                })->where('c.id', $this->company->id)
+            ])->join('bookings AS b', function (Builder $query) {
+                $query->on('b.customer_user_id', '=', 'u.id');
+            })->join('schedule_details AS sd', function (Builder $query) {
+                $query->on('b.schedule_details_id', '=', 'sd.id');
+            })->join('schedules AS s', function (Builder $query) {
+                $query->on('sd.schedule_id', '=', 's.id');
+            })->join('company_facilities AS cf', function (Builder $query) {
+                $query->on('s.company_facilitY_id', '=', 'cf.id');
+            })->join('companies AS c', function (Builder $query) {
+                $query->on('cf.company_id', '=', 'c.id');
+            })->where('c.id', $this->company->id)
                 ->groupBy(['u.uuid', 'u.first_name', 'u.last_name']);
 
             $results = $customers->get();

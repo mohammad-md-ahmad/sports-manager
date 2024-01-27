@@ -76,9 +76,11 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
+            $genderEnum = UserGender::tryFromName($data->gender);
+
             UserPersonalInfo::create([
                 'user_id' => $user->id,
-                'gender' => UserGender::tryFromName($data->gender)->name,
+                'gender' => $genderEnum ? $genderEnum->name : null,
                 'dob' => $data->dob,
             ]);
 
@@ -128,16 +130,17 @@ class UserService implements UserServiceInterface
             }
 
             $userPersonalInfo = UserPersonalInfo::query()->where('user_id', $user->id)->first();
+            $genderEnum = UserGender::tryFromName($data->gender);
 
             if ($userPersonalInfo) {
                 $userPersonalInfo->update([
-                    'gender' => UserGender::tryFromName($data->gender)->name,
+                    'gender' => $genderEnum ? $genderEnum->name : null,
                     'dob' => $data->dob,
                 ]);
             } else {
                 UserPersonalInfo::create([
                     'user_id' => $user->id,
-                    'gender' => UserGender::tryFromName($data->gender)->name,
+                    'gender' => $genderEnum ? $genderEnum->name : null,
                     'dob' => $data->dob,
                 ]);
             }

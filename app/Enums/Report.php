@@ -16,4 +16,11 @@ enum Report
             self::CustomerDemographics => __('Customer Demographics'),
         };
     }
+
+    public static function toArray()
+    {
+        return [
+            self::CustomerDemographics->name => __('Customer Demographics'),
+        ];
+    }
 }

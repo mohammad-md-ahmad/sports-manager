@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Enums\FacilityType;
+use App\Enums\Report;
+use App\Enums\UserGender;
 use App\Enums\UserType;
 use App\Models\Country;
 use Illuminate\Http\JsonResponse;
@@ -29,6 +31,8 @@ class MiscController extends Controller
                     'currency_iso_short_code' => $country->currency->iso_short_code,
                 ];
             });
+        $lists['user_gender'] = UserGender::toArray();
+        $lists['report_names'] = Report::toArray();
 
         return response()->json(['data' => $lists], Response::HTTP_OK);
     }
