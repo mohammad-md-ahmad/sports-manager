@@ -73,7 +73,7 @@ class ReportService implements ReportServiceInterface
     protected function getCompanyCustomersAgeDemographics(Company $company)
     {
         $ageRanges = [
-            'zeroToTwelve' => [0, 12],
+            'belowTwelve' => [0, 12],
             'twelveToEighteen' => [12, 18],
             'eighteenToTwentyFive' => [18, 25],
             'twentyfiveToForty' => [25, 40],
@@ -104,7 +104,7 @@ class ReportService implements ReportServiceInterface
             ->select(['age_ranges.company_id'])
             ->select(array_merge($this->getAgeRangeSelectExpressions($ageRanges)));
 
-        return $result->get();
+        return $result->get()->first();
     }
 
     // Helper function to get age range select expressions
