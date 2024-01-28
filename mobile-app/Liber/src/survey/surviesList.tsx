@@ -17,7 +17,6 @@ function SurviesList(): React.JSX.Element {
             companySurveyService.listByCompany()
                 .then((response) => {
                     setSurvies(response.data?.data?.data);
-                    //setUsers(temp);
                 }).catch((error) => {
                 });
         }, [])
