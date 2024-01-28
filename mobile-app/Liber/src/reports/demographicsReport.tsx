@@ -74,44 +74,46 @@ export default function DemographicsReport(): React.JSX.Element {
 
     return (
         <>
-            <View>
-                <Card containerStyle={styles.cardView}>
-                    <Card.Title>Genders Report</Card.Title>
-                    <PieChart
-                        data={genders}
-                        width={screenWidth}
-                        height={256}
-                        chartConfig={chartConfig}
-                        accessor={"count"}
-                        backgroundColor={"transparent"}
-                        paddingLeft={"25"}
-                        center={[0, 0]}
-                        absolute
-                    />
-                </Card>
-            </View>
-            <View>
-                <Card containerStyle={styles.cardView}>
-                    <Card.Title>Ages Report</Card.Title>
-                    <PieChart
-                        data={ages}
-                        width={screenWidth}
-                        height={256}
-                        chartConfig={chartConfig}
-                        accessor={"count"}
-                        backgroundColor={"transparent"}
-                        paddingLeft={"25"}
-                        center={[0, 0]}
-                        absolute
-                    />
-                </Card>
-            </View>
+            <Card containerStyle={styles.cardView}>
+                <Card.Title>Demographics</Card.Title>
+                <Card.Divider />
+                <Card.Title>Genders Report</Card.Title>
+                <PieChart
+                    data={genders}
+                    width={screenWidth}
+                    height={256}
+                    chartConfig={chartConfig}
+                    accessor={"count"}
+                    backgroundColor={"transparent"}
+                    paddingLeft={"25"}
+                    center={[0, 0]}
+                    absolute
+                />
+                <Card.Divider />
+                <Card.Title>Ages Report</Card.Title>
+                <PieChart
+                    data={ages}
+                    width={screenWidth}
+                    height={256}
+                    chartConfig={chartConfig}
+                    accessor={"count"}
+                    backgroundColor={"transparent"}
+                    paddingLeft={"25"}
+                    center={[0, 0]}
+                    absolute
+                />
+            </Card>
         </>
     );
 }
 
 const styles = StyleSheet.create({
-    cardView: {
+    masterCardView: {
+        borderColor: colors.PrimaryGreenLight,
+        marginTop: 0,
+        marginBottom: 0,
+        backgroundColor: colors.PrimaryGreenLight
+    }, cardView: {
         borderRadius: 10,
         borderColor: colors.PrimaryGreenLight,
         borderWidth: 0.5,

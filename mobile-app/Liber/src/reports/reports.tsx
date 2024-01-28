@@ -24,7 +24,7 @@ export default function Reports(): React.JSX.Element {
                 color: (opacity = 1) => `rgba(100, 100, 225, ${opacity})`, // optional
                 strokeWidth: 2 // optional
             }
-            ,{
+            , {
                 data: [17, 12, 58, 40, 35, 18],
                 color: (opacity = 0.5) => `rgba(100, 100, 225, ${opacity})`, // optional
                 strokeWidth: 2 // optional
@@ -85,9 +85,9 @@ export default function Reports(): React.JSX.Element {
     };
 
     return (
-        <ScrollView>
+        <ScrollView style={styles.scrollView}>
             <SafeAreaView style={styles.container}>
-               <DemographicsReport></DemographicsReport>
+                <DemographicsReport></DemographicsReport>
 
                 {/* <View >
                     <Card containerStyle={styles.cardView}>
@@ -122,6 +122,9 @@ export default function Reports(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+    scrollView: {
+        backgroundColor: colors.White,
+    },
     container: {
         ...globalStyles.containerView,
     },
