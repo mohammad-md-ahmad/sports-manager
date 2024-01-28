@@ -23,6 +23,7 @@ interface ScheduleFormData {
     date_from: string;
     date_to: string;
     slot: string;
+    price: string;
 }
 
 function ScheduleForm({ route }): React.JSX.Element {
@@ -40,7 +41,8 @@ function ScheduleForm({ route }): React.JSX.Element {
         time_to: '',
         date_from: '',
         date_to: '',
-        slot: ''
+        slot: '',
+        price: ''
     });
 
     const [currentInput, setCurrentInput] = useState('');
@@ -186,6 +188,17 @@ function ScheduleForm({ route }): React.JSX.Element {
                         onConfirm={handleTimeConfirm}
                         onCancel={hideTimePicker}
                     />
+
+                    <View>
+                        <TextInput
+                            placeholder="Price"
+                            placeholderTextColor={placeHolderTextColor}
+                            style={styles.formTextInput}
+                            value={formData.price}
+                            keyboardType="numeric"
+                            onChangeText={(text) => handleInputChange('price', text)}
+                        />
+                    </View>
 
                     <View style={styles.buttonContainer}>
                         <View style={styles.buttonWrapper}>

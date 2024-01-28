@@ -81,7 +81,7 @@ export default function DemographicsReport(): React.JSX.Element {
                 <PieChart
                     data={genders}
                     width={screenWidth}
-                    height={256}
+                    height={220}
                     chartConfig={chartConfig}
                     accessor={"count"}
                     backgroundColor={"transparent"}
@@ -94,7 +94,7 @@ export default function DemographicsReport(): React.JSX.Element {
                 <PieChart
                     data={ages}
                     width={screenWidth}
-                    height={256}
+                    height={220}
                     chartConfig={chartConfig}
                     accessor={"count"}
                     backgroundColor={"transparent"}
