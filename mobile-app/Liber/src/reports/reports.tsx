@@ -12,6 +12,7 @@ import globalStyles from "../../styles/styles";
 import { BarChart, LineChart, PieChart } from "react-native-chart-kit";
 import { Card } from "react-native-elements";
 import colors from "../../styles/colors";
+import DemographicsReport from "./demographicsReport";
 
 export default function Reports(): React.JSX.Element {
 
@@ -86,23 +87,9 @@ export default function Reports(): React.JSX.Element {
     return (
         <ScrollView>
             <SafeAreaView style={styles.container}>
-                <View>
-                    <Card containerStyle={styles.cardView}>
-                        <PieChart
-                            data={pieChartData}
-                            width={screenWidth}
-                            height={256}
-                            chartConfig={chartConfig}
-                            accessor={"population"}
-                            backgroundColor={"transparent"}
-                            paddingLeft={"15"}
-                            center={[0, 0]}
-                            absolute
-                        />
-                    </Card>
-                </View>
+               <DemographicsReport></DemographicsReport>
 
-                <View >
+                {/* <View >
                     <Card containerStyle={styles.cardView}>
                         <LineChart
                             data={data}
@@ -127,7 +114,7 @@ export default function Reports(): React.JSX.Element {
                             verticalLabelRotation={30}
                         />
                     </Card>
-                </View>
+                </View> */}
 
             </SafeAreaView >
         </ScrollView>

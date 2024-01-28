@@ -82,6 +82,26 @@ export enum GlobaSateKey {
     SetReportNames = "SET_REPORT_NAMES",
 }
 
+export enum ReportNames {
+    CustomerDemographics = "CustomerDemographics"
+}
+
+export enum AgeRanges {
+    belowTwelve = "(<12)",
+    twelveToEighteen = "(12 - 18)",
+    eighteenToTwentyFive = "(18 - 25)",
+    twentyfiveToForty = "(25 - 40)",
+    aboveForty = "(>40)",
+}
+
+export enum AgeRangesColors {
+    belowTwelve = "#6fe3d9",
+    twelveToEighteen = "#debc5f",
+    eighteenToTwentyFive = "#4393c4",
+    twentyfiveToForty = "#1f5401",
+    aboveForty = "#965311",
+}
+
 export enum EntityType {
     Company = 'App\\Models\\Company',
 }
