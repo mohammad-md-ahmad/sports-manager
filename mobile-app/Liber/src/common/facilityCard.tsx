@@ -5,6 +5,7 @@ import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Screens } from '../../helpers/constants';
 import fonts from '../../styles/fonts';
+import { useSelector } from 'react-redux';
 
 interface Facility {
     name: string;
@@ -26,6 +27,8 @@ const FacilityCard: React.FC<FacilityCardProps> = ({ facility }) => {
         navigation.navigate(Screens.FacilityView, { 'facility': facility });
     }
 
+    const facilityTypes = useSelector(state => state.facilityTypes);
+
     return (
         <TouchableOpacity onPress={handleFacilityClick} activeOpacity={0.8}>
             <Card containerStyle={styles.cardView}>
@@ -36,7 +39,7 @@ const FacilityCard: React.FC<FacilityCardProps> = ({ facility }) => {
                     />
                     <View style={styles.userInfo}>
                         <Text style={styles.name}>Name: {facility.name}</Text>
-                        <Text style={styles.subName}>Type: {facility.type}</Text>
+                        <Text style={styles.subName}>Type: {facilityTypes[facility.type]}</Text>
                         <Text style={styles.subName}>Length: {facility.details.length}</Text>
                         <Text style={styles.subName}>Width: {facility.details.width}</Text>
                     </View>

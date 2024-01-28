@@ -13,6 +13,8 @@ const initialState = {
   companiesList: null,
   facilityTypes: null,
   countries: null,
+  userGenders: null,
+  reportNames: null,
 
 };
 
@@ -80,6 +82,20 @@ const countriesReducer = (state = initialState.countries, action) => {
   return state;
 };
 
+const userGendersReducer = (state = initialState.userGenders, action) => {
+  if (action.type === GlobaSateKey.SetUserGenders) {
+    return action.payload;
+  }
+  return state;
+};
+
+const reportNamesReducer = (state = initialState.reportNames, action) => {
+  if (action.type === GlobaSateKey.SetReportNames) {
+    return action.payload;
+  }
+  return state;
+};
+
 // Combine reducers into a root reducer
 const rootReducer = combineReducers({
   loading: loadingReducer,
@@ -91,6 +107,8 @@ const rootReducer = combineReducers({
   companiesList: companiesListReducer,
   facilityTypes: facilityTypesReducer,
   countries: countriesReducer,
+  userGenders: userGendersReducer,
+  reportNames: reportNamesReducer,
 });
 
 // Create the Redux store

@@ -23,9 +23,6 @@ export default function CompanyDashboard(): React.JSX.Element {
 
     const companiesList = useSelector(state => state.companiesList);
 
-    const facilityTypes = useSelector(state => state.facilityTypes);
-    const countries = useSelector(state => state.countries);
-
     const dispatch = useDispatch();
 
     useFocusEffect(
@@ -42,17 +39,6 @@ export default function CompanyDashboard(): React.JSX.Element {
                         dispatch({ type: GlobaSateKey.SetCompaniesList, payload: response.data?.data?.data });
                     }).catch((error) => {
                     });
-            }
-
-            if (!facilityTypes || !countries) {
-                miscService.lists().then((response) => {
-                    storeFacilityTypes(response.data?.data?.facility_types);
-                    storeCountries(response.data?.data?.countries);
-
-                    dispatch({ type: GlobaSateKey.SetFacilityTypes, payload: response.data?.data?.facility_types });
-                    dispatch({ type: GlobaSateKey.SetCountries, payload: response.data?.data?.countries });
-                }).catch((error) => {
-                });
             }
 
         }, [])

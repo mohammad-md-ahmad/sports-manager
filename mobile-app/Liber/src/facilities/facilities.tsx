@@ -40,6 +40,7 @@ function Facilities(): React.JSX.Element {
                     .then((response) => {
                         setFacilities(response.data?.data);
                     }).catch((error) => {
+                        console.error(error)
                     });
             }
             else {
@@ -47,6 +48,7 @@ function Facilities(): React.JSX.Element {
                     .then((response) => {
                         setFacilities(response.data?.data);
                     }).catch((error) => {
+                        console.error(error)
                     });
             }
     }, [userData]);
