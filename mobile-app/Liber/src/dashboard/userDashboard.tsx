@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
     SafeAreaView,
@@ -8,8 +8,6 @@ import {
 import colors from "../../styles/colors";
 import { useFocusEffect } from "@react-navigation/native";
 import MiscService from "../../api/MiscService";
-import { storeCountries } from "../../helpers/countriesDataManage";
-import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import CompanyCard from "../common/companyCard";
 import CompanyService from "../../api/CompanyService";
 import { useDispatch, useSelector } from "react-redux";
@@ -32,6 +30,7 @@ export default function UserDashboard(): React.JSX.Element {
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
+
             if (companiesList) {
                 setCompanies(companiesList);
             } else {
@@ -42,17 +41,6 @@ export default function UserDashboard(): React.JSX.Element {
                     }).catch((error) => {
                     });
             }
-            if (!facilityTypes || !countries) {
-                miscService.lists().then((response) => {
-                    storeFacilityTypes(response.data?.data?.facility_types);
-                    storeCountries(response.data?.data?.countries);
-
-                    dispatch({ type: GlobaSateKey.SetFacilityTypes, payload: response.data?.data?.facility_types });
-                    dispatch({ type: GlobaSateKey.SetCountries, payload: response.data?.data?.countries });
-                }).catch((error) => {
-                });
-            }
-
         }, [])
     );
 
