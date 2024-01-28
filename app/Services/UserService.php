@@ -78,11 +78,15 @@ class UserService implements UserServiceInterface
 
             $genderEnum = UserGender::tryFromName($data->gender);
 
-            UserPersonalInfo::create([
+            $userPersonalInfoData = [
                 'user_id' => $user->id,
                 'gender' => $genderEnum ? $genderEnum->name : null,
-                'dob' => $data->dob,
-            ]);
+                'dob' => $data->dob ?? null,
+            ];
+
+            UserPersonalInfo::create(array_filter($userPersonalInfoData, function ($item) {
+                return $item != null;
+            }));
 
             DB::commit();
 
@@ -135,13 +139,13 @@ class UserService implements UserServiceInterface
             if ($userPersonalInfo) {
                 $userPersonalInfo->update([
                     'gender' => $genderEnum ? $genderEnum->name : null,
-                    'dob' => $data->dob,
+                    'dob' => $data->dob ?? null,
                 ]);
             } else {
                 UserPersonalInfo::create([
                     'user_id' => $user->id,
                     'gender' => $genderEnum ? $genderEnum->name : null,
-                    'dob' => $data->dob,
+                    'dob' => $data->dob ?? null,
                 ]);
             }
 

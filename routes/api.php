@@ -41,6 +41,8 @@ Route::prefix('app-info')->group(function () {
     Route::get('/', [AppInfoController::class, 'get'])->name('app-info.get');
 });
 
+Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
+
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -133,8 +135,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/{uuid}', [UserController::class, 'update'])->name('users.update');
         Route::delete('/{uuid}', [UserController::class, 'delete'])->name('users.delete');
     });
-
-    Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
 
     Route::prefix('push-notifications')->group(function () {
         Route::post('/send', [PushNotificationController::class, 'sendNotification'])->name('push-notifications.send');
