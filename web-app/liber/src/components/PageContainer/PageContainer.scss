@@ -1,0 +1,11 @@
+.page-container {
+    position: relative;
+    overflow-x: hidden;
+    padding: 20px 30px 30px 200px;
+    height: auto;
+    min-height: 100vh;
+
+    &.rtl{
+        padding: 20px 200px 30px 30px;
+    }
+}
