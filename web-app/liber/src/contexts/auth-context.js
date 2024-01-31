@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useReducer, useRef } from 'react';
 import PropTypes from 'prop-types';
+import AuthService from 'api/AuthService';
+import { useRouter } from 'next/navigation';
 
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
@@ -64,6 +66,9 @@ export const AuthProvider = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const initialized = useRef(false);
 
+  const authService = new AuthService();
+  const router = useRouter();
+
   const initialize = async () => {
     // Prevent from calling twice in development mode with React.StrictMode enabled
     if (initialized.current) {
@@ -81,12 +86,8 @@ export const AuthProvider = (props) => {
     }
 
     if (isAuthenticated) {
-      const user = {
-        id: '5e86809283e28b96d2d38537',
-        avatar: '/assets/avatars/avatar-anika-visser.png',
-        name: 'Anika Visser',
-        email: 'anika.visser@devias.io'
-      };
+      let stringifiedUser = window.sessionStorage.getItem('user');
+      const user = JSON.parse(stringifiedUser);
 
       dispatch({
         type: HANDLERS.INITIALIZE,
@@ -128,27 +129,36 @@ export const AuthProvider = (props) => {
   };
 
   const signIn = async (email, password) => {
-    if (email !== 'demo@devias.io' || password !== 'Password123!') {
-      throw new Error('Please check your email and password');
-    }
+    authService.login(email, password).then((response) => {
+      // Handle a successful API response
 
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
+      try {
+        window.sessionStorage.setItem('authenticated', 'true');
+      } catch (err) {
+        console.error(err);
+      }
 
-    const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
-    };
+      const user = response.data.data.user;
 
-    dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
+      window.sessionStorage.setItem('user', JSON.stringify(response.data.data.user));
+      dispatch({
+        type: HANDLERS.SIGN_IN,
+        payload: user
+      });
+
+      router.push('/');
+
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
     });
+
+    // if (email !== 'demo@devias.io' || password !== 'Password123!') {
+    //   throw new Error('Please check your email and password');
+    // }
+
   };
 
   const signUp = async (email, name, password) => {
@@ -156,6 +166,7 @@ export const AuthProvider = (props) => {
   };
 
   const signOut = () => {
+    window.sessionStorage.setItem('authenticated', 'false');
     dispatch({
       type: HANDLERS.SIGN_OUT
     });

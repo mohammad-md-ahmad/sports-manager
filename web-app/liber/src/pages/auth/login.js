@@ -1,6 +1,4 @@
-import { useCallback, useState } from 'react';
 import Head from 'next/head';
-import NextLink from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
@@ -8,11 +6,7 @@ import {
   Alert,
   Box,
   Button,
-  FormHelperText,
-  Link,
   Stack,
-  Tab,
-  Tabs,
   TextField,
   Typography
 } from '@mui/material';
@@ -20,29 +14,27 @@ import { useAuth } from 'src/hooks/use-auth';
 import { Layout as AuthLayout } from 'src/layouts/auth/layout';
 
 const Page = () => {
-  const router = useRouter();
   const auth = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: 'demo@devias.io',
+      username: 'demo@devias.io',
       password: 'Password123!',
       submit: null
     },
     validationSchema: Yup.object({
-      email: Yup
+      username: Yup
         .string()
-        .email('Must be a valid email')
         .max(255)
-        .required('Email is required'),
+        .required('Username is required'),
       password: Yup
         .string()
         .max(255)
         .required('Password is required')
     }),
     onSubmit: async (values, helpers) => {
+      console.log(values);
       try {
-        await auth.signIn(values.email, values.password);
-        router.push('/');
+        await auth.signIn(values.username, values.password);
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -108,15 +100,14 @@ const Page = () => {
             >
               <Stack spacing={3}>
                 <TextField
-                  error={!!(formik.touched.email && formik.errors.email)}
+                  error={!!(formik.touched.username && formik.errors.username)}
                   fullWidth
-                  helperText={formik.touched.email && formik.errors.email}
-                  label="Email Address"
-                  name="email"
+                  helperText={formik.touched.username && formik.errors.username}
+                  label="Username"
+                  name="username"
                   onBlur={formik.handleBlur}
                   onChange={formik.handleChange}
-                  type="email"
-                  value={formik.values.email}
+                  value={formik.values.username}
                 />
                 <TextField
                   error={!!(formik.touched.password && formik.errors.password)}

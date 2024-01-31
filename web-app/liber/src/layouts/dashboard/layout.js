@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import { withAuthGuard } from 'src/hocs/with-auth-guard';
 import { SideNav } from './side-nav';
 import { TopNav } from './top-nav';
+import { useAuth } from 'src/hooks/use-auth';
 
 const SIDE_NAV_WIDTH = 280;
 
@@ -28,6 +29,8 @@ export const Layout = withAuthGuard((props) => {
   const pathname = usePathname();
   const [openNav, setOpenNav] = useState(false);
 
+  const { user, logout } = useAuth();
+
   const handlePathnameChange = useCallback(
     () => {
       if (openNav) {
@@ -43,6 +46,14 @@ export const Layout = withAuthGuard((props) => {
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [pathname]
+  );
+
+  useEffect(
+    () => {
+      console.log("user", user)
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [user]
   );
 
   return (
