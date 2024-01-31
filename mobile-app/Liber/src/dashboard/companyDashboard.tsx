@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import {
     SafeAreaView,
@@ -6,7 +6,6 @@ import {
     VirtualizedList,
 } from "react-native";
 import colors from "../../styles/colors";
-import MiscService from "../../api/MiscService";
 import { useFocusEffect } from "@react-navigation/native";
 import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { storeCountries } from "../../helpers/countriesDataManage";
@@ -17,7 +16,6 @@ import { GlobaSateKey } from "../../helpers/constants";
 
 export default function CompanyDashboard(): React.JSX.Element {
     const companyService = new CompanyService();
-    const miscService = new MiscService();
 
     const [companies, setCompanies] = useState([]);
 

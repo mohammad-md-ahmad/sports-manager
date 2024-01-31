@@ -11,6 +11,7 @@ import { Screens } from '../../helpers/constants';
 interface Survey {
     uuid: string;
     name: string;
+    created_at: string;
     is_active: boolean;
 }
 
@@ -25,6 +26,12 @@ const SurveyCard: React.FC<SurveyCardProps> = ({ survey }) => {
         navigation.navigate(Screens.SurveyForm, { 'survey': survey });
     }
 
+    const formatDate = (date) => {
+        var yyyy = date.getFullYear();
+        var mm = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based, so we add 1
+        var dd = String(date.getDate()).padStart(2, '0');
+        return yyyy + '-' + mm + '-' + dd;
+    }
     return (
         <TouchableOpacity onPress={handleSurveyClick} activeOpacity={0.8}>
             <Card containerStyle={styles.cardView}>
@@ -33,11 +40,11 @@ const SurveyCard: React.FC<SurveyCardProps> = ({ survey }) => {
                     <View style={styles.surveyInfo}>
                         <View style={styles.row}>
                             {/* <Text style={styles.label}>Name:</Text> */}
-                            <Text style={styles.value}>{survey?.name}</Text>
+                            <Text style={styles.name}>{survey?.name}</Text>
                             <Text style={styles.rightValue}>{survey?.is_active ? "Active" : ""}</Text>
                         </View>
                         <View style={styles.row}>
-                            <Text style={styles.value}>Created On</Text>
+                            <Text style={styles.value}>{formatDate(new Date(survey?.created_at))}</Text>
                         </View>
                         <View style={styles.row}>
                             <Text style={styles.value}>Answers Count</Text>
@@ -57,7 +64,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: colors.PrimaryGreenLight,
         borderWidth: 0.5,
-        marginHorizontal: 15,
+        marginHorizontal: 10,
         marginTop: 7,
         marginBottom: 7
     },
@@ -81,6 +88,14 @@ const styles = StyleSheet.create({
         color: colors.PrimaryBlue,
         width: 70,
         paddingHorizontal: 0,
+    },
+    name: {
+        ...globalStyles.text,
+        fontSize: 18,
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.bold,
+        paddingHorizontal: 0,
+        textAlign: 'left',
     },
     value: {
         ...globalStyles.text,

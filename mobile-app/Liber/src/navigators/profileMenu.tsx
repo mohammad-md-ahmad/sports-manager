@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         borderColor: colors.PrimaryGreenLight,
         borderWidth: 0.5,
-        marginHorizontal: 15,
+        marginHorizontal: 10,
         marginTop: 7,
         marginBottom: 7
     },

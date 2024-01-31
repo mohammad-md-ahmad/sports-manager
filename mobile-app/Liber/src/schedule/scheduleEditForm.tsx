@@ -19,6 +19,7 @@ interface ScheduleFormData {
     schedule_details_uuid: string;
     date_time_from: string;
     date_time_to: string;
+    price: string;
 }
 
 function ScheduleEditForm({ route }): React.JSX.Element {
@@ -34,6 +35,7 @@ function ScheduleEditForm({ route }): React.JSX.Element {
         schedule_details_uuid: '',
         date_time_from: '',
         date_time_to: '',
+        price: '',
     });
 
     const [currentInput, setCurrentInput] = useState('');
@@ -94,6 +96,13 @@ function ScheduleEditForm({ route }): React.JSX.Element {
         navigator.navigate(Screens.Calendar);
     };
 
+    const handleInputChange = (key: string, value: any) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            [key]: value,
+        }));
+    }
+
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.formContainer}>
@@ -118,6 +127,17 @@ function ScheduleEditForm({ route }): React.JSX.Element {
                             style={styles.formTextInput}
                             value={formData.date_time_to}
                             onPressIn={() => showDatePicker('date_time_to')}
+                        />
+                    </View>
+
+                    <View>
+                        <TextInput
+                            placeholder="Price"
+                            placeholderTextColor={placeHolderTextColor}
+                            style={styles.formTextInput}
+                            value={formData.price}
+                            keyboardType="numeric"
+                            onChangeText={(text) => handleInputChange('price', text)}
                         />
                     </View>
 

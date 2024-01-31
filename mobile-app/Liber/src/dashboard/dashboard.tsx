@@ -41,7 +41,7 @@ export default function Dashboard(): React.JSX.Element {
         }, [])
     );
 
-    const [userData, setUserData] = useState({});
+    const [userData, setUserData] = useState(null);
 
     useEffect(() => {
         getUserData().then((data: string | null) => {
@@ -51,7 +51,7 @@ export default function Dashboard(): React.JSX.Element {
 
     return (
         <>
-            {userData?.type == UserType.CompanyUser ? <CompanyDashboard /> : <UserDashboard />}
+            {userData == null ? <></> : userData?.type == UserType.CompanyUser ? <CompanyDashboard /> : <UserDashboard />}
         </>
     );
 }
