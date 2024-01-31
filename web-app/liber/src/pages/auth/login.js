@@ -71,7 +71,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Login | Devias Kit
+          Login | Liber
         </title>
       </Head>
       <Box
@@ -99,7 +99,7 @@ const Page = () => {
               <Typography variant="h4">
                 Login
               </Typography>
-              <Typography
+              {/* <Typography
                 color="text.secondary"
                 variant="body2"
               >
@@ -113,104 +113,67 @@ const Page = () => {
                 >
                   Register
                 </Link>
-              </Typography>
+              </Typography> */}
             </Stack>
-            <Tabs
-              onChange={handleMethodChange}
-              sx={{ mb: 3 }}
-              value={method}
+
+
+            <form
+              noValidate
+              onSubmit={formik.handleSubmit}
             >
-              <Tab
-                label="Email"
-                value="email"
-              />
-              <Tab
-                label="Phone Number"
-                value="phoneNumber"
-              />
-            </Tabs>
-            {method === 'email' && (
-              <form
-                noValidate
-                onSubmit={formik.handleSubmit}
-              >
-                <Stack spacing={3}>
-                  <TextField
-                    error={!!(formik.touched.email && formik.errors.email)}
-                    fullWidth
-                    helperText={formik.touched.email && formik.errors.email}
-                    label="Email Address"
-                    name="email"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    type="email"
-                    value={formik.values.email}
-                  />
-                  <TextField
-                    error={!!(formik.touched.password && formik.errors.password)}
-                    fullWidth
-                    helperText={formik.touched.password && formik.errors.password}
-                    label="Password"
-                    name="password"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    type="password"
-                    value={formik.values.password}
-                  />
-                </Stack>
-                <FormHelperText sx={{ mt: 1 }}>
-                  Optionally you can skip.
-                </FormHelperText>
-                {formik.errors.submit && (
-                  <Typography
-                    color="error"
-                    sx={{ mt: 3 }}
-                    variant="body2"
-                  >
-                    {formik.errors.submit}
-                  </Typography>
-                )}
-                <Button
+              <Stack spacing={3}>
+                <TextField
+                  error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  type="submit"
-                  variant="contained"
-                >
-                  Continue
-                </Button>
-                <Button
+                  helperText={formik.touched.email && formik.errors.email}
+                  label="Email Address"
+                  name="email"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="email"
+                  value={formik.values.email}
+                />
+                <TextField
+                  error={!!(formik.touched.password && formik.errors.password)}
                   fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  onClick={handleSkip}
-                >
-                  Skip authentication
-                </Button>
-                <Alert
-                  color="primary"
-                  severity="info"
-                  sx={{ mt: 3 }}
-                >
-                  <div>
-                    You can use <b>demo@devias.io</b> and password <b>Password123!</b>
-                  </div>
-                </Alert>
-              </form>
-            )}
-            {method === 'phoneNumber' && (
-              <div>
+                  helperText={formik.touched.password && formik.errors.password}
+                  label="Password"
+                  name="password"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="password"
+                  value={formik.values.password}
+                />
+              </Stack>
+
+              {formik.errors.submit && (
                 <Typography
-                  sx={{ mb: 1 }}
-                  variant="h6"
+                  color="error"
+                  sx={{ mt: 3 }}
+                  variant="body2"
                 >
-                  Not available in the demo
+                  {formik.errors.submit}
                 </Typography>
-                <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the demo.
-                </Typography>
-              </div>
-            )}
+              )}
+              <Button
+                fullWidth
+                size="large"
+                sx={{ mt: 3 }}
+                type="submit"
+                variant="contained"
+              >
+                Continue
+              </Button>
+              <Alert
+                color="primary"
+                severity="info"
+                sx={{ mt: 3 }}
+              >
+                <div>
+                  You can use <b>demo@devias.io</b> and password <b>Password123!</b>
+                </div>
+              </Alert>
+            </form>
           </div>
         </Box>
       </Box>
