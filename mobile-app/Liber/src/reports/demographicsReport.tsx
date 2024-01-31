@@ -91,7 +91,6 @@ export default function DemographicsReport(): React.JSX.Element {
             // You can put the logic here that you want to run when the component should reload.
 
             reportsService.getReport(ReportNames.CustomerDemographics).then((response) => {
-                console.log("CustomerDemographics", response?.data?.data)
                 response?.data?.data?.genders.map(obj => {
                     obj.name = obj.gender;
                     obj.color = obj.gender == 'Male' ? colors.PrimaryBlue : colors.SecondaryPurple
