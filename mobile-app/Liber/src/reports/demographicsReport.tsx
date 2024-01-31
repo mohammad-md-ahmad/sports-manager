@@ -5,7 +5,7 @@ import {
     StyleSheet,
     View,
 } from "react-native";
-import { PieChart } from "react-native-chart-kit";
+import { BarChart, PieChart } from "react-native-chart-kit";
 import { Card } from "react-native-elements";
 import colors from "../../styles/colors";
 import { useFocusEffect } from "@react-navigation/native";
@@ -18,6 +18,7 @@ export default function DemographicsReport(): React.JSX.Element {
 
     const [genders, setGenders] = useState([]);
     const [ages, setAges] = useState([]);
+    const [usersPerMonth, setUsersPerMonth] = useState(null);
 
     const transformObjectToArray = (inputObject) => {
         return Object.entries(inputObject).map(([name, count]) => ({
@@ -36,6 +37,54 @@ export default function DemographicsReport(): React.JSX.Element {
         return color;
     };
 
+    const transformDataForChart = (data) => {
+        // Extracting unique months and their counts
+        const months = data.map((entry) => entry.month);
+        const uniqueMonths = [...new Set(months)];
+
+        // Creating datasets
+        const datasets = [
+            {
+                data: uniqueMonths.map((month) => {
+                    const entry = data.find((item) => item.month === month);
+                    return entry ? entry.count : 0;
+                }),
+                color: (opacity = 1) => `rgba(100, 100, 225, ${opacity})`,
+                strokeWidth: 2,
+            },
+        ];
+
+        // Creating labels
+        const labels = uniqueMonths.map((month) => {
+            // Assuming you want to use month names instead of numbers
+            const monthNames = [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May',
+                'Jun',
+                'Jul',
+                'Aug',
+                'Sep',
+                'Oct',
+                'Nov',
+                'Dec',
+            ];
+
+            return monthNames[month - 1]; // Adjusting for 0-based indexing of arrays
+        });
+
+        // Creating the final chart data object
+        const chartData = {
+            labels,
+            datasets,
+            legend: ['User Distribution'],
+        };
+
+        return chartData;
+    };
+
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
@@ -52,6 +101,8 @@ export default function DemographicsReport(): React.JSX.Element {
 
                 const resultArray = transformObjectToArray(response?.data?.data?.ages);
                 setAges(resultArray);
+
+                setUsersPerMonth(transformDataForChart(response?.data?.data?.users_per_month));
 
             }).catch((error) => {
             });
@@ -102,6 +153,20 @@ export default function DemographicsReport(): React.JSX.Element {
                     center={[0, 0]}
                     absolute
                 />
+                {usersPerMonth && <>
+                    <Card.Divider />
+                    <Card.Title>Users Per Month</Card.Title>
+                    <BarChart
+                        //style={graphStyle}
+                        data={usersPerMonth}
+                        width={screenWidth}
+                        height={250}
+                        yAxisLabel=""
+                        chartConfig={chartConfig}
+                        verticalLabelRotation={30}
+                    />
+                </>
+                }
             </Card>
         </>
     );
