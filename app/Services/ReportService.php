@@ -40,10 +40,12 @@ class ReportService implements ReportServiceInterface
         try {
             $genders = $this->getCompanyCustomersGenderDemograhpics($data->company);
             $ages = $this->getCompanyCustomersAgeDemographics($data->company);
+            $usersPerMonth = $this->getCompanyCustomersCountPerMonth($data->company);
 
             $results = [
                 'genders' => $genders,
                 'ages' => $ages,
+                'users_per_month' => $usersPerMonth,
             ];
 
             return collect($results);
@@ -117,5 +119,22 @@ class ReportService implements ReportServiceInterface
         }
 
         return $ageRangeExpressions;
+    }
+
+    protected function getCompanyCustomersCountPerMonth(Company $company)
+    {
+        $customersQuery = DB::table('users', 'u');
+
+        $customersQuery->select([
+            DB::raw('COUNT(DISTINCT cc.id) AS count'),
+            DB::raw('MONTH(cc.created_at) AS month'),
+            DB::raw('YEAR(cc.created_at) AS year'),
+        ])->join('companies AS c', function (Builder $query) {
+            $query->where('c.id', $this->company->id);
+        })->join('company_customers AS cc', function (Builder $query) {
+            $query->on('cc.company_id', '=', 'c.id');
+        })->groupBy(['year', 'month']);
+
+        return $customersQuery->get();
     }
 }
