@@ -11,6 +11,7 @@
         "laravel/framework": "^10.10",
         "laravel/sanctum": "*",
         "laravel/tinker": "^2.8",
+        "moneyphp/money": "^4.4",
         "spatie/laravel-data": "^3.9",
         "spatie/laravel-json-api-paginate": "^1.13",
         "staudenmeir/eloquent-has-many-deep": "^1.7"
