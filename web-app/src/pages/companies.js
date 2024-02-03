@@ -243,7 +243,7 @@ const Page = () => {
     {
       field: 'description',
       headerName: 'Description',
-      width: 500
+      flex: 1
     },
     //  {
     //   field: 'description',
@@ -306,7 +306,7 @@ const Page = () => {
               container
               spacing={3}
             >
-              <Card sx={{ p: 2 }} style={{ width: "100%" }}>
+              <Card style={{ width: "100%" }}>
                 <DataGrid
                   getRowId={(row) => row.uuid}
                   rows={companies}

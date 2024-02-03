@@ -296,6 +296,18 @@ export function createComponents(config) {
       defaultProps: {
         variant: 'filled'
       }
-    }
+    },
+    MuiDataGrid: {
+      styleOverrides: {
+        root: {
+          backgroundColor: palette.neutral[50], // Set your desired background color
+          border: '1px solid', // Set your desired border
+          borderColor: palette.neutral[100],
+        },
+        columnHeader: {
+          backgroundColor: palette.neutral[200], // Set your desired header background color
+        },
+      },
+    },
   };
 }
