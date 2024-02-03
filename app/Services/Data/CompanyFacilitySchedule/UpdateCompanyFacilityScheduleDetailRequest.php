@@ -18,6 +18,7 @@ class UpdateCompanyFacilityScheduleDetailRequest extends Data
         public string $id,
         public ?string $date_time_from = null,
         public ?string $date_time_to = null,
+        public ?float $price = null,
     ) {
     }
 }

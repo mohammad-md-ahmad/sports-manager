@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
 use App\Enums\ScheduleDetailsStatus;
 use App\Models\Company;
@@ -27,6 +28,11 @@ use stdClass;
 
 class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceInterface
 {
+    public function __construct(
+        protected DecimalMoneyParserInterface $decimalMoneyParser,
+    ) {
+    }
+
     /**
      * @throws Exception
      */
@@ -315,6 +321,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
             /** @var ScheduleDetails $companyFacilityScheduleDetails */
             $companyFacilityScheduleDetails = ScheduleDetails::create(array_merge($data->toArray(), [
                 'schedule_id' => $companyFacilitySchedule->id,
+                'price' => $this->decimalMoneyParser->parse((string) $data->price, $data->company_facility->currency->iso_short_code)->getAmount(),
             ]));
 
             DB::commit();
@@ -362,6 +369,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                         'schedule_id' => $companyFacilitySchedule->id,
                         'date_time_from' => $dateTimeFrom,
                         'date_time_to' => $dateTimeTo,
+                        'price' => $this->decimalMoneyParser->parse((string) $data->price, $data->company_facility->currency->iso_short_code)->getAmount(),
                     ]);
 
                     $currentTime = $dateTimeTo;
@@ -388,14 +396,16 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
     public function update(UpdateCompanyFacilityScheduleDetailRequest $data): ScheduleDetails
     {
         try {
-            DB::beginTransaction();
-
             /** @var ScheduleDetails $scheduleDetail */
             $scheduleDetail = ScheduleDetails::findOrFail($data->id);
 
-            $scheduleDetail->update(array_filter($data->toArray(), function ($value) {
+            DB::beginTransaction();
+
+            $scheduleDetail->update(array_merge(array_filter($data->toArray(), function ($value) {
                 return $value !== null;
-            }));
+            }), [
+                'price' => $this->decimalMoneyParser->parse((string) $data->price, $scheduleDetail->schedule->facility->currency->iso_short_code)->getAmount(),
+            ]));
 
             DB::commit();
 

@@ -15,6 +15,7 @@ class CreateCompanyFacilityScheduleRequest extends Data
         public CompanyFacility $company_facility,
         public string $date_time_from,
         public string $date_time_to,
+        public float $price,
     ) {
     }
 }

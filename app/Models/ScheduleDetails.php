@@ -3,10 +3,12 @@
 namespace App\Models;
 
 use App\Casts\MoneyValue;
+use App\Contracts\Formatters\Money\DecimalMoneyFormatterInterface;
 use App\Enums\ScheduleDetailsStatus;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,14 +59,19 @@ class ScheduleDetails extends Model
     protected $casts = [
         'uuid' => EfficientUuid::class,
         'status' => ScheduleDetailsStatus::class,
-        'price' => MoneyValue::class,
+        'price_money_value' => MoneyValue::class,
     ];
 
     protected $hidden = [
         'id',
+        'price',
         'created_at',
         'updated_at',
         'deleted_at',
+    ];
+
+    protected $appends = [
+        'decimal_price',
     ];
 
     public function schedule(): BelongsTo
@@ -80,5 +87,23 @@ class ScheduleDetails extends Model
     public function facility(): BelongsTo
     {
         return $this->schedule->facility();
+    }
+
+    public function priceMoneyValue(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return Money::{$this->schedule->facility->currency->iso_short_code}($this->attributes['price']);
+            }
+        );
+    }
+
+    public function decimalPrice(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                return app(DecimalMoneyFormatterInterface::class)->format($this->price_money_value);
+            }
+        );
     }
 }

@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Address $address
  * @property Gallery $gallery
  * @property Schedule $schedule
+ * @property Currency $currency
  */
 class CompanyFacility extends Model
 {
@@ -98,5 +99,10 @@ class CompanyFacility extends Model
     public function schedule(): HasOne
     {
         return $this->hasOne(Schedule::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->company->currency();
     }
 }

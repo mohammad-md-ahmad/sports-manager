@@ -8,6 +8,7 @@ use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -23,6 +24,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property CompanyUser $companyUser
  * @property Gallery $gallery
  * @property Address $address
+ * @property Currency $currency
  * @property Collection $bookings
  * @property Collection $customers
  */
@@ -118,5 +120,10 @@ class Company extends Model
     public function customers(): HasMany
     {
         return $this->hasMany(CompanyCustomer::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->address->country->currency();
     }
 }

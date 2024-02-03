@@ -18,6 +18,7 @@ class CreateCompanyFacilityScheduleBatchRequest extends Data
         public string $time_from,
         public string $time_to,
         public int $slot,
+        public float $price,
     ) {
     }
 }
