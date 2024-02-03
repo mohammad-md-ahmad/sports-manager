@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\MoneyValue;
 use App\Enums\ScheduleDetailsStatus;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
+use Money\Money;
 
 /**
  * @property string $id
@@ -23,6 +25,7 @@ use Illuminate\Support\Collection;
  * @property Collection $bookings
  * @property Schedule $schedule
  * @property CompanyFacility $facility
+ * @property Money $price
  */
 class ScheduleDetails extends Model
 {
@@ -43,6 +46,7 @@ class ScheduleDetails extends Model
         'date_time_from',
         'date_time_to',
         'status',
+        'price',
     ];
 
     /**
@@ -53,6 +57,7 @@ class ScheduleDetails extends Model
     protected $casts = [
         'uuid' => EfficientUuid::class,
         'status' => ScheduleDetailsStatus::class,
+        'price' => MoneyValue::class,
     ];
 
     protected $hidden = [
