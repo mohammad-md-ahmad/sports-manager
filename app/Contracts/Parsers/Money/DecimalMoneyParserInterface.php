@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Parsers;
+namespace App\Contracts\Parsers\Money;
 
 use Money\Money;
 use Money\Parser\DecimalMoneyParser;

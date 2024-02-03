@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Formatters;
+namespace App\Core\Formatters\Money;
 
 use App\Contracts\Formatters\Money\DecimalMoneyFormatterInterface;
-use App\Core\Parsers\DecimalMoneyParserInterface;
+use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use Money\Currencies\ISOCurrencies;
 use Money\Formatter\DecimalMoneyFormatter as BaseDecimalMoneyFormatter;
 use Money\Money;

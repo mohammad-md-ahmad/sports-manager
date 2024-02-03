@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Contracts\Formatters\Money\DecimalMoneyFormatterInterface;
+use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use App\Contracts\Services\AddressServiceInterface;
 use App\Contracts\Services\AppInfoServiceInterface;
 use App\Contracts\Services\AppListServiceInterface;
@@ -18,9 +19,8 @@ use App\Contracts\Services\NotificationServiceInterface;
 use App\Contracts\Services\RatingServiceInterface;
 use App\Contracts\Services\ReportServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
-use App\Core\Formatters\DecimalMoneyFormatter;
-use App\Core\Parsers\DecimalMoneyParser;
-use App\Core\Parsers\DecimalMoneyParserInterface;
+use App\Core\Formatters\Money\DecimalMoneyFormatter;
+use App\Core\Parsers\Money\DecimalMoneyParser;
 use App\Models\Company;
 use App\Models\CompanyFacility;
 use App\Services\AddressService;
@@ -49,6 +49,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->bind(DecimalMoneyFormatterInterface::class, DecimalMoneyFormatter::class);
+        $this->app->bind(DecimalMoneyParserInterface::class, DecimalMoneyParser::class);
         $this->app->bind(UserServiceInterface::class, UserService::class);
         $this->app->bind(CompanyServiceInterface::class, CompanyService::class);
         $this->app->bind(AddressServiceInterface::class, AddressService::class);
@@ -64,8 +66,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
         $this->app->bind(CompanySurveyServiceInterface::class, CompanySurveyService::class);
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
-        $this->app->bind(DecimalMoneyFormatterInterface::class, DecimalMoneyFormatter::class);
-        $this->app->bind(DecimalMoneyParserInterface::class, DecimalMoneyParser::class);
     }
 
     /**

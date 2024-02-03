@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Parsers;
+namespace App\Core\Parsers\Money;
 
+use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use Money\Currencies\ISOCurrencies;
 use Money\Currency;
 use Money\Money;
