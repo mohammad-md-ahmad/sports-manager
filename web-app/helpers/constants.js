@@ -1,5 +1,5 @@
 const Constants = {
-    apiUrl: 'http://localhost/api',
+    apiUrl: 'https://liber.quad-bh.com/api',
     assetsUrl: 'https://liber.quad-bh.com/storage',
     imagesUrl: 'https://liber.quad-bh.com/files/images',
     tokenKey: 'auth_token',
