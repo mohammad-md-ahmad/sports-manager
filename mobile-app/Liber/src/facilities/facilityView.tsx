@@ -51,11 +51,7 @@ function FacilityView({ route }): React.JSX.Element {
                         <Text style={styles.label}>Width:</Text>
                         <Text style={styles.value}>{facility?.details.width}</Text>
                     </View>
-
-
-
                 </View>
-
             </View>
         </View>
     );
