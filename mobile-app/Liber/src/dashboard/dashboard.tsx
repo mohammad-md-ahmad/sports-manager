@@ -25,7 +25,7 @@ export default function Dashboard(): React.JSX.Element {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            if (!facilityTypes || !countries || !userGenders || !reportNames) {
+            if (!facilityTypes) {
                 miscService.lists().then((response) => {
                     storeFacilityTypes(response.data?.data?.facility_types);
                     storeCountries(response.data?.data?.countries);
@@ -38,7 +38,7 @@ export default function Dashboard(): React.JSX.Element {
                 }).catch((error) => {
                 });
             }
-        }, [])
+        }, [facilityTypes])
     );
 
     const [userData, setUserData] = useState(null);
