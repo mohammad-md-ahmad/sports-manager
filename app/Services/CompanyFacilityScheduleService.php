@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use App\Contracts\Services\CompanyFacilityScheduleServiceInterface;
+use App\Core\Formatters\Money\DecimalMoneyFormatter;
 use App\Enums\ScheduleDetailsStatus;
 use App\Models\Company;
 use App\Models\CompanyFacility;
@@ -30,6 +31,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
 {
     public function __construct(
         protected DecimalMoneyParserInterface $decimalMoneyParser,
+        protected DecimalMoneyFormatter $decimalMoneyFormatter,
     ) {
     }
 
@@ -274,6 +276,7 @@ class CompanyFacilityScheduleService implements CompanyFacilityScheduleServiceIn
                         'slot_uuid' => $daySchedule->uuid,
                         'date_time_from' => $daySchedule->date_time_from,
                         'date_time_to' => $daySchedule->date_time_to,
+                        'price' => $this->decimalMoneyFormatter->format($daySchedule->price_money_value),
                         'status' => $daySchedule->status->name,
                         'bookings' => $daySchedule->bookings,
                         'facility' => array_merge(
