@@ -47,7 +47,7 @@ class Gallery extends Model
     ];
 
     protected $appends = [
-        'base64',
+        // 'base64',
     ];
 
     public function image(): Attribute
