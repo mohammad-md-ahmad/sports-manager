@@ -17,8 +17,8 @@ class CompanyService extends AxiosService {
         return this.post(`/company-list/${null}`, data);
     }
 
-    async getCompany() {
-        return this.get(`/companies/${null}`);
+    async getCompany(uuid) {
+        return this.get(`/companies/${uuid}`);
     }
 
     async create(data) {

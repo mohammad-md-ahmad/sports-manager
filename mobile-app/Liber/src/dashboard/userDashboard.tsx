@@ -7,22 +7,18 @@ import {
 } from "react-native";
 import colors from "../../styles/colors";
 import { useFocusEffect } from "@react-navigation/native";
-import MiscService from "../../api/MiscService";
 import CompanyCard from "../common/companyCard";
 import CompanyService from "../../api/CompanyService";
 import { useDispatch, useSelector } from "react-redux";
 import { GlobaSateKey } from "../../helpers/constants";
+import MasonryList from '@react-native-seoul/masonry-list';
 
 export default function UserDashboard(): React.JSX.Element {
     const companyService = new CompanyService();
-    const miscService = new MiscService();
 
     const [companies, setCompanies] = useState([]);
 
     const companiesList = useSelector(state => state.companiesList);
-
-    const facilityTypes = useSelector(state => state.facilityTypes);
-    const countries = useSelector(state => state.countries);
 
     const dispatch = useDispatch();
 
@@ -34,27 +30,38 @@ export default function UserDashboard(): React.JSX.Element {
             if (companiesList) {
                 setCompanies(companiesList);
             } else {
-                companyService.list({})
-                    .then((response) => {
-                        setCompanies(response.data?.data?.data);
-                        dispatch({ type: GlobaSateKey.SetCompaniesList, payload: response.data?.data?.data });
-                    }).catch((error) => {
-                    });
+                loadDate();
             }
-        }, [])
+        }, [companiesList])
     );
 
-    const getItem = (_data: unknown, index: number) => companies[index] ?? 0;
-    const getItemCount = (_data: unknown) => companies?.length ?? 0;
+    const loadDate = () => {
+        companyService.list({})
+            .then((response) => {
+                setCompanies(response.data?.data?.data);
+                dispatch({ type: GlobaSateKey.SetCompaniesList, payload: response.data?.data?.data });
+            }).catch((error) => {
+            });
+    }
+
+    // const getItem = (_data: unknown, index: number) => companies[index] ?? 0;
+    // const getItemCount = (_data: unknown) => companies?.length ?? 0;
 
     return (
         <SafeAreaView style={styles.container}>
-            <VirtualizedList
+            {/* <VirtualizedList
                 initialNumToRender={6}
                 renderItem={({ item }) => <CompanyCard company={item} />}
                 keyExtractor={item => item.uuid}
                 getItemCount={getItemCount}
                 getItem={getItem}
+            /> */}
+
+            <MasonryList
+                data={companies}
+                renderItem={({ item }) => <CompanyCard company={item} />}
+                numColumns={1}
+                onRefresh={loadDate}
             />
         </SafeAreaView>
     );

@@ -8,9 +8,6 @@ class AxiosService {
             baseURL,
             timeout: 10000, // 10 secs
             timeoutErrorMessage: 'API connection timeout',
-            headers: {
-                'Content-Type': 'application/json',
-            }
         });
 
         this.setupInterceptors();
@@ -36,12 +33,10 @@ class AxiosService {
     setupInterceptors() {
         this.instance.interceptors.request.use(
             async (config) => {
-                const token = ''; //await getToken();
+                const token = window.sessionStorage.getItem('token');
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
                 }
-
-                config.headers['Content-Type'] = 'application/json';
 
                 console.log('Request url:', config.url);
                 console.log('Request Body Data:', config.data);

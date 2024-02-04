@@ -116,10 +116,6 @@ export const AuthProvider = (props) => {
     }
 
     const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/assets/avatars/avatar-anika-visser.png',
-      name: 'Anika Visser',
-      email: 'anika.visser@devias.io'
     };
 
     dispatch({
@@ -134,6 +130,7 @@ export const AuthProvider = (props) => {
 
       try {
         window.sessionStorage.setItem('authenticated', 'true');
+        window.sessionStorage.setItem('token', response?.data?.data?.token);
       } catch (err) {
         console.error(err);
       }
