@@ -16,13 +16,15 @@ import {
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { CompanyCard } from 'src/sections/companies/company-card';
 import { CompaniesSearch } from 'src/sections/companies/companies-search';
-import { useEffect, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import CompanyService from 'api/CompanyService';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { useRouter } from 'next/router';
 
 const Page = () => {
   const companyService = new CompanyService();
   const [companies, setCompanies] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     setCompanies([
@@ -241,6 +243,19 @@ const Page = () => {
       width: 150,
     },
     {
+      field: 'address',
+      headerName: 'Address',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 250,
+      valueGetter: (params) =>
+        `${params.row.address ?
+          (params.row.address.country.name) +
+          (params.row.address.region ? ', ' + params.row.address.region : '') +
+          (params.row.address.city ? ', ' + params.row.address.city : '')
+          : ''}`,
+    },
+    {
       field: 'description',
       headerName: 'Description',
       flex: 1
@@ -255,6 +270,14 @@ const Page = () => {
     //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
     // },
   ];
+
+  const handleRowClick = (params) => {
+    // Handle the row click event
+    console.log('Row clicked:', params.row);
+    // You can perform actions based on the clicked row, such as navigating to a detail page
+
+    router.push('/company?id=' + params.row.uuid);
+  };
 
   return (
     <>
@@ -323,6 +346,9 @@ const Page = () => {
                     toolbar: {
                       showQuickFilter: true,
                     },
+                  }}
+                  onRowClick={(row) => {
+                    handleRowClick(row);
                   }}
                 />
               </Card>
