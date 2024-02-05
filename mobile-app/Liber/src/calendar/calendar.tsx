@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 import fonts from '../../styles/fonts';
 import { getCompanyData } from '../../helpers/companyDataManage';
 import DeleteConfirmation from '../common/deleteConfirmation';
+import CompanyService from '../../api/CompanyService';
 
 export default function AgendaScreen({ route }): React.JSX.Element {
     const { facility } = route?.params ?? { facility: null };
@@ -174,13 +175,38 @@ export default function AgendaScreen({ route }): React.JSX.Element {
             });
     }
 
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    let companyService = new CompanyService();
     const onBookPress = (reservation): void => {
 
-        bookingService.bookRequest({ schedule_details_uuid: reservation.slot_uuid })
+        toggleBookConfirmModal(reservation);
+
+        companyService.getCompanyList({
+            "key": "Payment_methods"
+        }, reservation?.company?.uuid).then((response) => {
+            setPaymentMethods(response.data?.data?.company_list?.Payment_methods);
+        }).catch((error) => {
+        });
+
+        console.log("reservation", reservation);
+
+        // bookingService.bookRequest({ schedule_details_uuid: reservation.slot_uuid })
+        //     .then((response) => {
+        //         loadData();
+        //     }).catch((error) => {
+        //     });
+    }
+
+    const onConfirmBookPress = (): void => {
+        bookingService.bookRequest({ schedule_details_uuid: currentSlot.slot_uuid })
             .then((response) => {
                 loadData();
             }).catch((error) => {
             });
+    }
+
+    const onCancelBookPress = (): void => {
+        closeBookConfirmModal();
     }
 
     const getStatusColor = (status: any): any => {
@@ -305,7 +331,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
             <TouchableOpacity
                 style={[styles.item, { height: reservation.height }]}
                 onPress={() => {
-                    navigator.navigate(Screens.FacilityView, { 'facility': reservation?.facility })
+                    navigator.navigate(Screens.FacilityView, { 'facility': reservation?.facility, 'company': reservation.company })
                 }}
             >
                 <View style={styles.row}>
@@ -390,6 +416,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
     }
 
     const [isModalVisible, setModalVisible] = useState(false);
+    const [isBookConfirmModalVisible, setBookConfirmModalVisible] = useState(false);
     const [currentSlot, setCurrentSlot] = useState({});
     const [currentBooking, setCurrentBooking] = useState({});
 
@@ -399,8 +426,18 @@ export default function AgendaScreen({ route }): React.JSX.Element {
         setModalVisible(!isModalVisible);
     };
 
+    const toggleBookConfirmModal = (slot = {}, booking = {}) => {
+        setCurrentSlot(slot);
+        setCurrentBooking(booking);
+        setBookConfirmModalVisible(!isBookConfirmModalVisible);
+    };
+
     const closeModal = () => {
         setModalVisible(false);
+    };
+
+    const closeBookConfirmModal = () => {
+        setBookConfirmModalVisible(false);
     };
 
     return (
@@ -473,6 +510,58 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                     </View>
                 </TouchableOpacity>
             </Modal>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={isBookConfirmModalVisible}
+                onRequestClose={toggleBookConfirmModal}
+            >
+                <TouchableOpacity
+                    style={styles.modalContainer}
+                    activeOpacity={1}
+                    onPressOut={closeBookConfirmModal}
+                >
+                    <View style={styles.bookingModalContent}>
+                        <View>
+                            <Text style={styles.sectionTitle}>{currentSlot?.company?.name}</Text>
+                            <Text style={styles.text}>{currentSlot?.facility?.name}</Text>
+
+                            <Text style={styles.text}>Date: {currentSlot?.date_time_from?.split(' ')[0]}</Text>
+                            <Text style={styles.text}>Time: {currentSlot?.date_time_from?.split(' ')[1] + " - " + currentSlot?.date_time_to?.split(' ')[1]}</Text>
+                            <Text style={styles.text}>price: {currentSlot?.price}</Text>
+
+                            <Text style={styles.sectionTitle}>
+                                Payment Methods
+                            </Text>
+                            {paymentMethods.map((value, index) => (
+                                <View key={index}>
+                                    <Text style={styles.text}>{value}</Text>
+                                </View>
+                            ))
+                            }
+                        </View>
+                        <View>
+                            <>
+
+                            </>
+                        </View>
+                        <View style={styles.buttonRow}>
+                            <Button
+                                onPress={() => onConfirmBookPress()}
+                                title="Confirm"
+                                buttonStyle={styles.approveButton}
+                            />
+                            <Button
+                                onPress={() => onCancelBookPress()}
+                                title="Cancel"
+                                buttonStyle={styles.rejectButton}
+                            />
+                        </View>
+
+                    </View>
+                </TouchableOpacity>
+            </Modal>
         </>
     );
 }
@@ -512,8 +601,8 @@ const styles = StyleSheet.create({
     rightContent: {
         flexDirection: 'row',
         alignItems: 'flex-end', // Move the circle to the right
-    },   
-     rightContentStack: {
+    },
+    rightContentStack: {
         //flexDirection: 'row',
         alignItems: 'flex-end', // Move the circle to the right
     },
@@ -571,6 +660,15 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 10,
     },
+    bookingModalContent: {
+        width: '80%',
+        height: '40%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+        padding: 20,
+        borderRadius: 10,
+    },
     slotTitle: {
         ...globalStyles.text,
         fontFamily: fonts.Poppins.regular,
@@ -583,4 +681,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: colors.Gray,
     },
+    sectionTitle: {
+        ...globalStyles.text,
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 10,
+        color: colors.PrimaryBlue,
+    }
 });

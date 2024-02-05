@@ -15,7 +15,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import CompanyService from "../../api/CompanyService";
 
 function FacilityView({ route }): React.JSX.Element {
-    const { facility } = route?.params ?? {};
+    const { facility, company } = route?.params ?? {};
 
     const facilityTypes = useSelector(state => state.facilityTypes);
     const [paymentMethods, setPaymentMethods] = useState([]);
@@ -27,7 +27,7 @@ function FacilityView({ route }): React.JSX.Element {
             // You can put the logic here that you want to run when the component should reload.
             companyService.getCompanyList({
                 "key": "Payment_methods"
-            }).then((response) => {
+            }, company?.uuid).then((response) => {
                 setPaymentMethods(response.data?.data?.company_list?.Payment_methods);
             }).catch((error) => {
             });
@@ -39,15 +39,6 @@ function FacilityView({ route }): React.JSX.Element {
     const togglePaymentMethods = () => {
         setIsPaymentMethodsOpen(!isPaymentMethodsOpen
         );
-    };
-
-
-    const renderPaymentMethods = () => {
-        return paymentMethods.map((value, index) => (
-            <View key={index}>
-                <Text style={styles.value}>{value}</Text>
-            </View>
-        ));
     };
 
     return (
@@ -96,7 +87,7 @@ function FacilityView({ route }): React.JSX.Element {
                         {isPaymentMethodsOpen && (
                             <>
                                 {paymentMethods.map((value, index) => (
-                                    <View key={index} style={styles.valueStyle}>
+                                    <View key={index}>
                                         <Text style={styles.value}>{value}</Text>
                                     </View>
                                 ))

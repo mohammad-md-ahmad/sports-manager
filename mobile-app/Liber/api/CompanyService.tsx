@@ -13,9 +13,9 @@ class CompanyService extends AxiosService {
         return this.get(`/companies?${this.objectToQueryParams(data)}`);
     }
 
-    async getCompanyList(data: Object) {
+    async getCompanyList(data: Object, company_uuid = null) {
         const companyData = await this.companyDataPromise;
-        return this.get(`/company-list/${companyData.uuid}?${this.objectToQueryParams(data)}`);
+        return this.get(`/company-list/${company_uuid ? company_uuid : companyData.uuid}?${this.objectToQueryParams(data)}`);
     }
 
     async postCompanyList(data: Object) {

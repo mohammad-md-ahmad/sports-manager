@@ -73,7 +73,7 @@ const AppNavigator = () => {
     }
 
     function onCalendarViewPress(): void {
-        let routes = navigator.getState().routes.state.routes;
+        let routes = navigator.getState().routes;
         let { facility } = routes[routes.length - 1].params;
 
         navigator.navigate(Screens.Calendar, { "facility": facility });
