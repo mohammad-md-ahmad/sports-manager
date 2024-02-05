@@ -8,6 +8,8 @@ import AuthService from '../../api/AuthService';
 import { useAuth } from '../../AuhtContext';
 import DeleteConfirmation from '../common/deleteConfirmation';
 import LogoutConfirmation from '../common/logoutConfirmation';
+import { useDispatch } from 'react-redux';
+import { GlobaSateKey } from '../../helpers/constants';
 
 interface MenuItem {
     title: string;
@@ -25,6 +27,8 @@ const MenuItemCard: React.FC<MenuItemProps> = ({ menuItem }) => {
     const authService = new AuthService();
     const { logout } = useAuth();
 
+    const dispatch = useDispatch();
+
     const handleMenuItemClick = () => {
         if (menuItem.navigateTo) {
             navigation.navigate(menuItem.navigateTo);
@@ -39,6 +43,8 @@ const MenuItemCard: React.FC<MenuItemProps> = ({ menuItem }) => {
     const handleLogout = () => {
         authService.logout().then((response) => {
             // Handle a successful API response
+            dispatch({ type: GlobaSateKey.ResetStore });
+
             logout();
 
         }).catch((error) => {

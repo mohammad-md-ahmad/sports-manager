@@ -1,20 +1,55 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
     Image,
     StyleSheet,
     Text,
+    TouchableOpacity,
     View,
 } from "react-native";
 import globalStyles from "../../styles/styles";
 import colors from "../../styles/colors";
 import Swiper from "react-native-swiper";
 import { useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
+import CompanyService from "../../api/CompanyService";
 
 function FacilityView({ route }): React.JSX.Element {
     const { facility } = route?.params ?? {};
 
     const facilityTypes = useSelector(state => state.facilityTypes);
+    const [paymentMethods, setPaymentMethods] = useState([]);
+    let companyService = new CompanyService();
+
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
+            companyService.getCompanyList({
+                "key": "Payment_methods"
+            }).then((response) => {
+                setPaymentMethods(response.data?.data?.company_list?.Payment_methods);
+            }).catch((error) => {
+            });
+
+        }, [])
+    );
+
+    const [isPaymentMethodsOpen, setIsPaymentMethodsOpen] = useState(false);
+    const togglePaymentMethods = () => {
+        setIsPaymentMethodsOpen(!isPaymentMethodsOpen
+        );
+    };
+
+
+    const renderPaymentMethods = () => {
+        return paymentMethods.map((value, index) => (
+            <View key={index}>
+                <Text style={styles.value}>{value}</Text>
+            </View>
+        ));
+    };
+
     return (
         <View style={styles.containerView}>
             <View style={styles.container}>
@@ -51,8 +86,28 @@ function FacilityView({ route }): React.JSX.Element {
                         <Text style={styles.label}>Width:</Text>
                         <Text style={styles.value}>{facility?.details.width}</Text>
                     </View>
+                    <View >
+                        {/* Address Section */}
+                        <TouchableOpacity style={styles.section} onPress={togglePaymentMethods}>
+                            <Text style={styles.sectionTitle}>
+                                {isPaymentMethodsOpen ? '▼' : '▶'} Payment Methods
+                            </Text>
+                        </TouchableOpacity>
+                        {isPaymentMethodsOpen && (
+                            <>
+                                {paymentMethods.map((value, index) => (
+                                    <View key={index} style={styles.valueStyle}>
+                                        <Text style={styles.value}>{value}</Text>
+                                    </View>
+                                ))
+                                }
+                            </>
+                        )}
+                    </View>
                 </View>
+
             </View>
+
         </View>
     );
 }
@@ -67,7 +122,7 @@ const styles = StyleSheet.create({
         //height: 100,
     },
     swiperContainer: {
-        height: '50%'
+        height: 250
     },
     wrapper: {
     },
@@ -98,6 +153,16 @@ const styles = StyleSheet.create({
     row: {
         flexDirection: 'row',
     },
+    section: {
+        borderBottomWidth: 1,
+        borderColor: 'lightgray',
+    },
+    sectionTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginTop: 10,
+        color: colors.PrimaryBlue,
+    }
 });
 
 export default FacilityView;

@@ -34,6 +34,9 @@ const currentScreenReducer = (state = initialState.currentScreen, action) => {
 };
 
 const companyDataReducer = (state = initialState.companyData, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.companyData;
+  }
   if (action.type === GlobaSateKey.SetCompanyData) {
     return action.payload;
   }
@@ -41,6 +44,9 @@ const companyDataReducer = (state = initialState.companyData, action) => {
 };
 
 const currentCompanyDataReducer = (state = initialState.currentCompanyData, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.currentCompanyData;
+  }
   if (action.type === GlobaSateKey.SetCurrentCompanyData) {
     return action.payload;
   }
@@ -48,6 +54,9 @@ const currentCompanyDataReducer = (state = initialState.currentCompanyData, acti
 };
 
 const userDataReducer = (state = initialState.userData, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.userData;
+  }
   if (action.type === GlobaSateKey.SetUserData) {
     return action.payload;
   }
@@ -55,6 +64,9 @@ const userDataReducer = (state = initialState.userData, action) => {
 };
 
 const currentUserDataReducer = (state = initialState.currentUserData, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.currentUserData;
+  }
   if (action.type === GlobaSateKey.SetCurrentUserData) {
     return action.payload;
   }
@@ -62,6 +74,9 @@ const currentUserDataReducer = (state = initialState.currentUserData, action) =>
 };
 
 const companiesListReducer = (state = initialState.companiesList, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.companiesList;
+  }
   if (action.type === GlobaSateKey.SetCompaniesList) {
     return action.payload;
   }
@@ -69,6 +84,9 @@ const companiesListReducer = (state = initialState.companiesList, action) => {
 };
 
 const facilityTypesReducer = (state = initialState.facilityTypes, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.facilityTypes;
+  }
   if (action.type === GlobaSateKey.SetFacilityTypes) {
     return action.payload;
   }
@@ -76,6 +94,9 @@ const facilityTypesReducer = (state = initialState.facilityTypes, action) => {
 };
 
 const countriesReducer = (state = initialState.countries, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.countries;
+  }
   if (action.type === GlobaSateKey.SetCountries) {
     return action.payload;
   }
@@ -83,6 +104,9 @@ const countriesReducer = (state = initialState.countries, action) => {
 };
 
 const userGendersReducer = (state = initialState.userGenders, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.userGenders;
+  }
   if (action.type === GlobaSateKey.SetUserGenders) {
     return action.payload;
   }
@@ -90,6 +114,9 @@ const userGendersReducer = (state = initialState.userGenders, action) => {
 };
 
 const reportNamesReducer = (state = initialState.reportNames, action) => {
+  if (action.type === GlobaSateKey.ResetStore) {
+    return initialState.reportNames;
+  }
   if (action.type === GlobaSateKey.SetReportNames) {
     return action.payload;
   }

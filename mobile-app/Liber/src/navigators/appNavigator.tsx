@@ -34,6 +34,7 @@ import UserBookingHistoryList from '../booking/userBookingHistoryList';
 import UserView from '../user/userView';
 import SurviesList from '../survey/surviesList';
 import SurveyForm from '../survey/surveyForm';
+import SurveyFillForm from '../survey/surveyFillForm';
 
 const Stack = createStackNavigator();
 
@@ -270,6 +271,7 @@ const AppNavigator = () => {
 
                     <Stack.Screen name={Screens.SurviesList} options={{ title: 'Survies List' }} component={SurviesList} />
                     <Stack.Screen name={Screens.SurveyForm} options={{ title: 'Survey Form' }} component={SurveyForm} />
+                    <Stack.Screen name={Screens.SurveyFillForm} options={{ title: 'Fill Survey Form' }} component={SurveyFillForm} />
 
 
                     <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />

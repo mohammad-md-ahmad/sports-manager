@@ -63,6 +63,7 @@ export default function CompanyDashboard(): React.JSX.Element {
             <MasonryList
                 data={companies}
                 renderItem={({ item }) => <CompanyCard company={item} />}
+                keyExtractor={item => item.uuid}
                 numColumns={1}
                 onRefresh={loadDate}
             />
