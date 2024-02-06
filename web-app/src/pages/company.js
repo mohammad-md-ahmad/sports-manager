@@ -28,13 +28,13 @@ import MiscService from 'api/MiscService';
 
 const Page = () => {
 
-  const { pageParams, user } = useAuthContext();
   const companyService = new CompanyService();
   const miscService = new MiscService();
 
   const router = useRouter();
 
-  const companyId = router.query.id;
+  const companyId = router?.query?.id ?? null;
+  const [user, setUser] = useState({});
   const [company, setCompany] = useState(
     {
       uuid: null,
@@ -69,16 +69,17 @@ const Page = () => {
     miscService.lists().then((response) => {
       setCountries(response.data?.data?.countries);
 
-      companyService.getCompany(companyId).then((response) => {
-        setCompany({ ...response.data.data, logo: null });
-        setLogo({ uri: response.data?.data?.logo });
-      }).catch((error) => {
-        // Handle API request errors here
-        console.error(error);
-        //throw new Error('Please check your email and password');
-        throw new Error(error.message);
-      });
-
+      if (companyId) {
+        companyService.getCompany(companyId).then((response) => {
+          setCompany({ ...response.data.data, logo: null });
+          setLogo({ uri: response.data?.data?.logo });
+        }).catch((error) => {
+          // Handle API request errors here
+          console.error(error);
+          //throw new Error('Please check your email and password');
+          throw new Error(error.message);
+        });
+      }
     }).catch((error) => {
       console.error(error);
     });
@@ -111,6 +112,10 @@ const Page = () => {
     }
   };
 
+  const handleUserInputChange = (field, value) => {
+    setUser({ ...user, [field]: value });
+  };
+
   const handleSelectChange = (field, fieldObject, value) => {
     console.log(value)
     if (field.startsWith('details.') || field.startsWith('address.')) {
@@ -134,14 +139,34 @@ const Page = () => {
   const submitForm = () => {
     console.log(company);
 
-    companyService.update(company).then((response) => {
+    if (companyId) {
+      companyService.update(company).then((response) => {
 
-    }).catch((error) => {
-      // Handle API request errors here
-      console.error(error);
-      //throw new Error('Please check your email and password');
-      throw new Error(error.message);
-    });
+      }).catch((error) => {
+        // Handle API request errors here
+        console.error(error);
+        //throw new Error('Please check your email and password');
+        throw new Error(error.message);
+      });
+    } else {
+
+      let formData = { ...company };
+      formData['createAddressRequest'] = formData['address']
+      formData['address'] = null;
+      formData['createUserRequest'] = user;
+
+      console.log(formData);
+
+      companyService.create(formData).then((response) => {
+
+      }).catch((error) => {
+        // Handle API request errors here
+        console.error(error);
+        //throw new Error('Please check your email and password');
+        throw new Error(error.message);
+      });
+    }
+
 
   }
 
@@ -195,7 +220,7 @@ const Page = () => {
                   <Stack spacing={3}>
                     <TextField
                       fullWidth
-                      label="Name"
+                      label="Company Name"
                       value={company.name}
                       onChange={(event) => handleInputChange('name', event.target.value)}
                     />
@@ -291,6 +316,75 @@ const Page = () => {
                     onChange={(event) => handleInputChange('description', event.target.value)}
                   />
                 </Grid>
+                {!companyId && <>
+                  <Grid
+                    xs={12}
+                    md={6}
+                    lg={6}
+                  >
+                    <Stack spacing={3}>
+                      <TextField
+                        fullWidth
+                        label="First Name"
+                        value={user.first_name}
+                        onChange={(event) => handleUserInputChange('first_name', event.target.value)}
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Username"
+                        name="username"
+                        value={user?.username}
+                        onChange={(event) => handleUserInputChange('username', event.target.value)}
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Password"
+                        name="password"
+                        value={user?.password}
+                        type='password'
+                        onChange={(event) => handleUserInputChange('password', event.target.value)}
+                      />
+
+                    </Stack>
+
+                  </Grid>
+                  <Grid
+                    xs={12}
+                    md={6}
+                    lg={6}
+                  >
+                    <Stack spacing={3}>
+                      <TextField
+                        fullWidth
+                        label="Last Name"
+                        type='last_name'
+                        value={user?.last_name}
+                        onChange={(event) => handleUserInputChange('last_name', event.target.value)}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Email"
+                        name="email"
+                        value={user?.email}
+                        type='email'
+                        onChange={(event) => handleUserInputChange('email', event.target.value)}
+                      />
+
+                      <TextField
+                        fullWidth
+                        label="Confirm Password"
+                        name="password_confirmation"
+                        value={user?.password_confirmation}
+                        type='password'
+                        onChange={(event) => handleUserInputChange('password_confirmation', event.target.value)}
+                      />
+
+                    </Stack>
+                  </Grid>
+                </>
+                }
                 <Button
                   startIcon={(
                     <SvgIcon fontSize="small">

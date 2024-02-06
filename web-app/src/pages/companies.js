@@ -333,6 +333,10 @@ const Page = () => {
     router.push('/company?id=' + params.row.uuid);
   };
 
+  const addCompany = () => {
+    router.push('/company');
+  }
+
   return (
     <>
       <Head>
@@ -373,6 +377,7 @@ const Page = () => {
                     </SvgIcon>
                   )}
                   variant="contained"
+                  onClick={addCompany}
                 >
                   Add
                 </Button>
