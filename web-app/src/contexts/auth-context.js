@@ -6,12 +6,14 @@ import { useRouter } from 'next/navigation';
 const HANDLERS = {
   INITIALIZE: 'INITIALIZE',
   SIGN_IN: 'SIGN_IN',
-  SIGN_OUT: 'SIGN_OUT'
+  SIGN_OUT: 'SIGN_OUT',
+  LOADING: 'LOADING'
 };
 
 const initialState = {
   isAuthenticated: false,
   isLoading: true,
+  showGlobalLoader: false,
   user: null
 };
 
@@ -50,7 +52,14 @@ const handlers = {
       isAuthenticated: false,
       user: null
     };
-  }
+  },
+  [HANDLERS.LOADING]: (state, action) => {
+    const showGlobalLoader = action.payload;
+    return {
+      ...state,
+      showGlobalLoader
+    };
+  },
 };
 
 const reducer = (state, action) => (
@@ -108,19 +117,10 @@ export const AuthProvider = (props) => {
     []
   );
 
-  const skip = () => {
-    try {
-      window.sessionStorage.setItem('authenticated', 'true');
-    } catch (err) {
-      console.error(err);
-    }
-
-    const user = {
-    };
-
+  const setLoading = (showGlobalLoader) => {
     dispatch({
-      type: HANDLERS.SIGN_IN,
-      payload: user
+      type: HANDLERS.LOADING,
+      payload: showGlobalLoader
     });
   };
 
@@ -173,7 +173,7 @@ export const AuthProvider = (props) => {
     <AuthContext.Provider
       value={{
         ...state,
-        skip,
+        setLoading,
         signIn,
         signUp,
         signOut

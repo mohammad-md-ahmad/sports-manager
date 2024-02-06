@@ -1,5 +1,9 @@
 import axios from 'axios';
 import Constants from 'helpers/constants';
+import { useReducer } from 'react';
+import toast from 'react-hot-toast';
+import { HANDLERS, initialState, reducer } from 'src/contexts/auth-context';
+import { useAuth } from 'src/hooks/use-auth';
 
 class AxiosService {
     constructor() {
@@ -31,8 +35,10 @@ class AxiosService {
     }
 
     setupInterceptors() {
+        const auth = useAuth();
         this.instance.interceptors.request.use(
             async (config) => {
+                auth.setLoading(true);
                 const token = window.sessionStorage.getItem('token');
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
@@ -45,6 +51,7 @@ class AxiosService {
                 return config;
             },
             (error) => {
+                auth.setLoading(false);
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 } else if (error.code === 'ECONNABORTED') {
@@ -61,20 +68,24 @@ class AxiosService {
 
         this.instance.interceptors.response.use(
             (response) => {
+                auth.setLoading(false);
                 const originalRequest = response.config;
                 if (originalRequest.method !== 'get') {
-                    // ToastHelper.successToast(response.data.message);
+                    toast.success(response.data.message);
                 }
 
                 return response;
             },
             (error) => {
+                auth.setLoading(false);
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 } else if (error.code === 'ECONNABORTED') {
                     console.error('Request timeout', error.message);
+                    toast.error('A connection to server couldn\'t be made. Please make you have internet access.');
                     return Promise.reject(error);
                 } else {
+                    toast.error(error.response.data.message);
                     console.error('Request failed', error);
                     return Promise.reject(error);
                 }

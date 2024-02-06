@@ -9,6 +9,8 @@ import { useNProgress } from 'src/hooks/use-nprogress';
 import { createTheme } from 'src/theme';
 import { createEmotionCache } from 'src/utils/create-emotion-cache';
 import 'simplebar-react/dist/simplebar.min.css';
+import GlobalLoader from 'src/components/globalLoader';
+import { Toaster } from 'react-hot-toast';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -36,6 +38,32 @@ const App = (props) => {
       </Head>
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <AuthProvider>
+          <GlobalLoader />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            gutter={8}
+            containerClassName=""
+            containerStyle={{}}
+            toastOptions={{
+              // Define default options
+              className: '',
+              duration: 5000,
+              style: {
+                background: '#363636',
+                color: '#fff',
+              },
+
+              // Default options for specific types
+              success: {
+                duration: 3000,
+                theme: {
+                  primary: 'green',
+                  secondary: 'black',
+                },
+              },
+            }}
+          />
           <ThemeProvider theme={theme}>
             <CssBaseline />
             <AuthConsumer>

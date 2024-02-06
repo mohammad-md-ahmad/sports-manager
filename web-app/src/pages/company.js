@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
-import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
+import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon';
 import {
   Box,
   Button,
@@ -12,7 +12,9 @@ import {
   Typography,
   Unstable_Grid2 as Grid,
   Card,
-  TextField
+  TextField,
+  Select,
+  Autocomplete
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { CompanyCard } from 'src/sections/companies/company-card';
@@ -22,23 +24,26 @@ import CompanyService from 'api/CompanyService';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
 import { useAuthContext } from 'src/contexts/auth-context';
 import { useRouter } from 'next/router';
+import MiscService from 'api/MiscService';
 
 const Page = () => {
 
-
   const { pageParams, user } = useAuthContext();
   const companyService = new CompanyService();
+  const miscService = new MiscService();
+
   const router = useRouter();
 
   const companyId = router.query.id;
   const [company, setCompany] = useState(
     {
-      uuid: "",
+      uuid: null,
       name: "",
       description: "",
-      logo: "",
+      logo: null,
       total_rating: 0,
       address: {
+        uuid: null,
         line_1: "",
         line_2: "",
         line_3: "",
@@ -55,15 +60,29 @@ const Page = () => {
       ]
     });
 
+  const [countries, setCountries] = useState([]);
+
+  const [logo, setLogo] = useState(null);
+
   useEffect(() => {
-    companyService.getCompany(companyId).then((response) => {
-      setCompany(response?.data?.data);
+
+    miscService.lists().then((response) => {
+      setCountries(response.data?.data?.countries);
+
+      companyService.getCompany(companyId).then((response) => {
+        setCompany({ ...response.data.data, logo: null });
+        setLogo({ uri: response.data?.data?.logo });
+      }).catch((error) => {
+        // Handle API request errors here
+        console.error(error);
+        //throw new Error('Please check your email and password');
+        throw new Error(error.message);
+      });
+
     }).catch((error) => {
-      // Handle API request errors here
       console.error(error);
-      //throw new Error('Please check your email and password');
-      throw new Error(error.message);
     });
+
   }, [])
 
   const handleChange = useCallback(
@@ -75,6 +94,56 @@ const Page = () => {
     },
     []
   );
+
+  const handleInputChange = (field, value) => {
+    if (field.startsWith('details.') || field.startsWith('address.')) {
+      // Handle nested objects
+      const [parentField, nestedField] = field.split('.');
+      setCompany({
+        ...company,
+        [parentField]: {
+          ...company[parentField],
+          [nestedField]: value,
+        },
+      });
+    } else {
+      setCompany({ ...company, [field]: value });
+    }
+  };
+
+  const handleSelectChange = (field, fieldObject, value) => {
+    console.log(value)
+    if (field.startsWith('details.') || field.startsWith('address.')) {
+      // Handle nested objects
+      const [parentFieldObject, nestedFieldObject] = fieldObject.split('.');
+      const [parentField, nestedField] = field.split('.');
+      setCompany({
+        ...company,
+        [parentField]: {
+          ...company[parentFieldObject],
+          ...company[parentField],
+          [nestedFieldObject]: value,
+          [nestedField]: value ? value[nestedField] : null,
+        },
+      });
+    } else {
+      setCompany({ ...company, [field]: value });
+    }
+  }
+
+  const submitForm = () => {
+    console.log(company);
+
+    companyService.update(company).then((response) => {
+
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+
+  }
 
   return (
     <>
@@ -118,7 +187,6 @@ const Page = () => {
                 container
                 spacing={3}
               >
-
                 <Grid
                   xs={12}
                   md={6}
@@ -128,35 +196,40 @@ const Page = () => {
                     <TextField
                       fullWidth
                       label="Name"
-                      name="name"
-                      disabled
                       value={company.name}
-                      onChange={handleChange}
+                      onChange={(event) => handleInputChange('name', event.target.value)}
                     />
-                    <TextField
-                      fullWidth
-                      label="Country"
-                      name="country"
-                      disabled
-                      value={company?.address?.country?.name}
-                      onChange={handleChange}
-                    />
+
+                    <Autocomplete
+                      options={countries}
+                      value={company?.address?.country}
+                      getOptionLabel={option => option['name'] ?? ''}
+                      onChange={(event, value) => handleSelectChange('address.country_uuid', 'address.country', value)}
+                      renderInput={
+                        params => (
+                          <TextField
+                            {...params}
+                            label="Country"
+                            fullWidth
+                          />
+                        )
+                      }
+                    ></Autocomplete>
+
                     <TextField
                       fullWidth
                       label="City"
                       name="city"
-                      disabled
                       value={company?.address?.city}
-                      onChange={handleChange}
+                      onChange={(event) => handleInputChange('address.city', event.target.value)}
                     />
 
                     <TextField
                       fullWidth
                       label="Line 2"
                       name="line_2"
-                      disabled
                       value={company?.address?.line_2}
-                      onChange={handleChange}
+                      onChange={(event) => handleInputChange('address.line_2', event.target.value)}
                     />
 
 
@@ -181,27 +254,24 @@ const Page = () => {
                       fullWidth
                       label="Region"
                       name="region"
-                      disabled
                       value={company?.address?.region}
-                      onChange={handleChange}
+                      onChange={(event) => handleInputChange('address.region', event.target.value)}
                     />
 
                     <TextField
                       fullWidth
                       label="Line 1"
                       name="line_1"
-                      disabled
                       value={company?.address?.line_1}
-                      onChange={handleChange}
+                      onChange={(event) => handleInputChange('address.line_1', event.target.value)}
                     />
 
                     <TextField
                       fullWidth
                       label="Line 3"
                       name="line_3"
-                      disabled
                       value={company?.address?.line_3}
-                      onChange={handleChange}
+                      onChange={(event) => handleInputChange('address.line_3', event.target.value)}
                     />
 
                   </Stack>
@@ -217,11 +287,21 @@ const Page = () => {
                     label="Description"
                     name="description"
                     multiline
-                    disabled
                     value={company.description}
-                    onChange={handleChange}
+                    onChange={(event) => handleInputChange('description', event.target.value)}
                   />
                 </Grid>
+                <Button
+                  startIcon={(
+                    <SvgIcon fontSize="small">
+                      <CheckCircleIcon />
+                    </SvgIcon>
+                  )}
+                  variant="contained"
+                  onClick={submitForm}
+                >
+                  Save
+                </Button>
               </Grid>
             </Card>
           </Stack>
