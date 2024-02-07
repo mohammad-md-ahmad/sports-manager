@@ -38,7 +38,8 @@ class AxiosService {
         const auth = useAuth();
         this.instance.interceptors.request.use(
             async (config) => {
-                auth.setLoading(true);
+                if (auth.setLoading)
+                    auth.setLoading(true);
                 const token = window.sessionStorage.getItem('token');
                 if (token) {
                     config.headers.Authorization = `Bearer ${token}`;
@@ -51,7 +52,8 @@ class AxiosService {
                 return config;
             },
             (error) => {
-                auth.setLoading(false);
+                if (auth.setLoading)
+                    auth.setLoading(false);
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 } else if (error.code === 'ECONNABORTED') {
@@ -68,7 +70,8 @@ class AxiosService {
 
         this.instance.interceptors.response.use(
             (response) => {
-                auth.setLoading(false);
+                if (auth.setLoading)
+                    auth.setLoading(false);
                 const originalRequest = response.config;
                 if (originalRequest.method !== 'get') {
                     toast.success(response.data.message);
@@ -77,7 +80,8 @@ class AxiosService {
                 return response;
             },
             (error) => {
-                auth.setLoading(false);
+                if (auth.setLoading)
+                    auth.setLoading(false);
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
                 } else if (error.code === 'ECONNABORTED') {
