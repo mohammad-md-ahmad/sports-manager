@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Gallery $gallery
  * @property Schedule $schedule
  * @property Currency $currency
+ * @property Sport $sport
  */
 class CompanyFacility extends Model
 {
@@ -43,6 +44,7 @@ class CompanyFacility extends Model
         'company_id',
         'type',
         'details',
+        'sport_id',
     ];
 
     /**
@@ -104,5 +106,10 @@ class CompanyFacility extends Model
     public function currency(): BelongsTo
     {
         return $this->company->currency();
+    }
+
+    public function sport(): BelongsTo
+    {
+        return $this->belongsTo(Sport::class);
     }
 }
