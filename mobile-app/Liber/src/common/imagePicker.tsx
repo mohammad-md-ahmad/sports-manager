@@ -44,6 +44,7 @@ const ImagePicker = (props) => {
 
         updatedImages.splice(index, 1);
         setSelectedImages(updatedImages);
+        props?.handleRemoveGalleryPhoto(updatedImages);
     };
 
     return (

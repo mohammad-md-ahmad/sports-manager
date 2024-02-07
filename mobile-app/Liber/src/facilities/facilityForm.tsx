@@ -12,7 +12,8 @@ import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { getCountries } from "../../helpers/countriesDataManage";
 import ImagePicker from "../common/imagePicker";
 import { Button } from "react-native-elements";
-import { Screens } from "../../helpers/constants";
+import { FormMode, Screens } from "../../helpers/constants";
+import { imageUrlToBase64 } from "../../helpers/functions";
 
 interface FormData {
     name: string;
@@ -21,7 +22,7 @@ interface FormData {
         length: string;
         width: string;
     };
-    createAddressRequest: {
+    address: {
         line_1: string;
         line_2: string;
         line_3: string;
@@ -37,22 +38,22 @@ interface FormData {
     companyFacilityPhotos: Array<string>;
 }
 
-export default function FacilityForm(): React.JSX.Element {
+export default function FacilityForm({ route, navigation }): React.JSX.Element {
     const navigator = useNavigation();
-
+    const { formModeParam, facilityParam } = route.params;
     const facilityService = new FacilityService();
 
     const formDataValidateSchema = yupObject().shape({
         name: string().required('Name is required'),
         type: string().required('Type is required'),
-        details: yupObject().shape({
-            length: string().required('Length is required'),
-            width: string().required('Width is required'),
-        }),
-        createAddressRequest: yupObject().shape({
+        // details: yupObject().shape({
+        //     length: string().required('Length is required'),
+        //     width: string().required('Width is required'),
+        // }),
+        address: yupObject().shape({
             line_1: string().required('Line 1 is required'),
-            line_2: string(),
-            line_3: string(),
+            // line_2: string(),
+            // line_3: string(),
             city: string().required('City is required'),
             region: string().required('Region is required'),
             postcode: string().required('Postcode is required'),
@@ -72,7 +73,7 @@ export default function FacilityForm(): React.JSX.Element {
             length: '',
             width: '',
         },
-        createAddressRequest: {
+        address: {
             line_1: '',
             line_2: '',
             line_3: '',
@@ -95,7 +96,7 @@ export default function FacilityForm(): React.JSX.Element {
             length: false,
             width: false,
         },
-        createAddressRequest: {
+        address: {
             line_1: false,
             line_2: false,
             line_3: false,
@@ -124,11 +125,28 @@ export default function FacilityForm(): React.JSX.Element {
     const [isFacilityDetailsOpen, setIsFacilityDetailsOpen] = useState(true);
     const [isAddressOpen, setIsAddressOpen] = useState(false);
 
+    const [formMode, setFormModeState] = useState(formModeParam ?? FormMode.Add);
+    const [facility, setFacility] = useState(facilityParam ?? null);
+    const [facilityLoaded, setFacilityLoaded] = useState(false);
+    const [facilityHasPhotos, setfacilityHasPhotos] = useState(false);
+
     const formik = useFormik({
         validationSchema: formDataValidateSchema,
         initialValues: initialFormDataValues,
         initialTouched: initialTouched,
-        onSubmit: (values) => handleSubmit(values)
+        onSubmit: async (values) => {
+            try {
+                console.log('validating');
+                // Validate the form values using the validation schema
+                await formDataValidateSchema.validate(values, { abortEarly: false });
+
+                // If validation succeeds, you can proceed with your submit logic
+                handleSubmit(values);
+            } catch (errors) {
+                // If validation fails, log the errors to the console
+                console.error('Form validation errors:', errors);
+            }
+        }
     });
 
     const toggleFacilityDetails = () => {
@@ -155,10 +173,8 @@ export default function FacilityForm(): React.JSX.Element {
 
                 setFacilityTypes(data);
             }
-        })
-    }, []);
+        });
 
-    useEffect(() => {
         getCountries().then((response) => {
             if (response) {
                 const json: any[] = JSON.parse(response);
@@ -174,16 +190,20 @@ export default function FacilityForm(): React.JSX.Element {
 
                 setCountries(data);
             }
-        })
-    }, []);
+        });
+
+        if (formMode == FormMode.Edit) {
+            loadFacilityData();
+        }
+    }, [formModeParam]);
 
     const handleDropdownChange = (field: keyof FormData, value: string) => {
         if (field === 'type') {
             setSelectedFacilityType(value);
             formik.setFieldValue('type', value());
-        } else if (field === 'createAddressRequest.country_uuid') {
+        } else if (field === 'address.country_uuid') {
             setSelectedCountry(value);
-            formik.setFieldValue('createAddressRequest.country_uuid', value());
+            formik.setFieldValue('address.country_uuid', value());
         }
     };
 
@@ -194,6 +214,35 @@ export default function FacilityForm(): React.JSX.Element {
 
     const handleCancel = () => {
         navigator.navigate(Screens.Facilities);
+    };
+
+    const loadFacilityData = async () => {
+        const data = facility;
+
+        mapObjects(initialFormDataValues, data);
+        formik.setValues(initialFormDataValues);
+        setSelectedFacilityType(data?.type);
+        setSelectedCountry(data?.address?.country?.uuid);
+
+        setfacilityHasPhotos(data?.gallery?.length > 0);
+        console.log('data', data);
+        console.log('data?.gallery?.length > 0 => ', data?.gallery?.length > 0);
+
+        let galleryBase64 = [];
+
+        await Promise.all(
+            data?.gallery.map(async function (item) {
+                console.log('item', item);
+                let imageBase64 = await imageUrlToBase64(item?.image);
+                console.log('imageBase64', imageBase64);
+                galleryBase64.push(imageBase64);
+            })
+        );
+
+        console.log('galleryBase64', galleryBase64);
+
+        setSelectedFacilityPhotosBase64(galleryBase64);
+        setSelectedFacilityPhotos(galleryBase64);
     };
 
     const sanitizeFormData = (data) => {
@@ -213,14 +262,47 @@ export default function FacilityForm(): React.JSX.Element {
         return sanitizedData;
     };
 
+    const createFacility = (data) => {
+        facilityService.create(data).then((response) => {
+            navigator.navigate(Screens.Facilities);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    const updateFacility = (data) => {
+        console.log('updating facility');
+        data.uuid = facility?.uuid;
+
+        facilityService.update(data).then((response) => {
+            navigator.navigate(Screens.Facilities);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
+    const mapObjects = (target, source) => {
+        for (let key in target) {
+            if (source.hasOwnProperty(key)) {
+                if (typeof target[key] === 'object' && typeof source[key] === 'object') {
+                    mapObjects(target[key], source[key]); // Recursively map nested objects
+                } else {
+                    target[key] = source[key];
+                }
+            }
+        }
+    }
+
     const handleSubmit = (data) => {
         let sanitizedFormData = data;
         sanitizedFormData.companyFacilityPhotos = selectedFacilityPhotosBase64;
 
-        facilityService.create(sanitizedFormData).then((response) => {
-            navigator.navigate(Screens.Facilities);
-        }).catch((error) => {
-        });
+        if (formMode == FormMode.Edit) {
+            console.log('formik errors', formik.errors);
+            updateFacility(sanitizedFormData);
+        } else {
+            createFacility(sanitizedFormData);
+        }
     };
 
     const [openDropdown, setOpenDropdown] = useState(null);
@@ -234,6 +316,20 @@ export default function FacilityForm(): React.JSX.Element {
         // Close the currently open dropdown
         setOpenDropdown(null);
     };
+
+    const handleRemoveGalleryPhoto = (remainingPhotos) => {
+        if (remainingPhotos?.length <= 0) {
+            setfacilityHasPhotos(false);
+        }
+    };
+
+    if (formMode == FormMode.Edit && (selectedFacilityPhotos.length <= 0 && facilityHasPhotos)) {
+        return (
+            <>
+                <Text>Loading gallery photos...</Text>
+            </>
+        );
+    }
 
     return (
         <ScrollView >
@@ -315,21 +411,21 @@ export default function FacilityForm(): React.JSX.Element {
                     <>
                         <View>
                             <TextInput
-                                value={formik.values.createAddressRequest.line_1}
-                                onChangeText={formik.handleChange('createAddressRequest.line_1')}
+                                value={formik.values.address.line_1}
+                                onChangeText={formik.handleChange('address.line_1')}
                                 placeholder="Line 1"
                                 placeholderTextColor={placeHolderTextColor}
                                 style={styles.input}
                             />
                         </View>
-                        {formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1 &&
-                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.line_1}</Text>
+                        {formik.touched.address?.line_1 && formik.errors.address?.line_1 &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.address.line_1}</Text>
                         }
 
                         <View>
                             <TextInput
-                                value={formik.values.createAddressRequest.line_2}
-                                onChangeText={formik.handleChange('createAddressRequest.line_2')}
+                                value={formik.values.address.line_2}
+                                onChangeText={formik.handleChange('address.line_2')}
                                 placeholder="Line 2"
                                 placeholderTextColor={placeHolderTextColor}
                                 style={styles.input}
@@ -338,8 +434,8 @@ export default function FacilityForm(): React.JSX.Element {
 
                         <View>
                             <TextInput
-                                value={formik.values.createAddressRequest.line_3}
-                                onChangeText={formik.handleChange('createAddressRequest.line_3')}
+                                value={formik.values.address.line_3}
+                                onChangeText={formik.handleChange('address.line_3')}
                                 placeholder="Line 3"
                                 placeholderTextColor={placeHolderTextColor}
                                 style={styles.input}
@@ -348,41 +444,41 @@ export default function FacilityForm(): React.JSX.Element {
 
                         <View>
                             <TextInput
-                                value={formik.values.createAddressRequest.city}
-                                onChangeText={formik.handleChange('createAddressRequest.city')}
+                                value={formik.values.address.city}
+                                onChangeText={formik.handleChange('address.city')}
                                 placeholder="City"
                                 placeholderTextColor={placeHolderTextColor}
                                 style={styles.input}
                             />
                         </View>
-                        {formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city &&
-                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.city}</Text>
+                        {formik.touched.address?.city && formik.errors.address?.city &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.address.city}</Text>
                         }
 
                         <View>
                             <TextInput
-                                value={formik.values.createAddressRequest.region}
-                                onChangeText={formik.handleChange('createAddressRequest.region')}
+                                value={formik.values.address.region}
+                                onChangeText={formik.handleChange('address.region')}
                                 placeholder="Region / State"
                                 placeholderTextColor={placeHolderTextColor}
                                 style={styles.input}
                             />
                         </View>
-                        {formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region &&
-                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.region}</Text>
+                        {formik.touched.address?.region && formik.errors.address?.region &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.address.region}</Text>
                         }
 
                         <View>
                             <TextInput
-                                value={formik.values.createAddressRequest.postcode}
-                                onChangeText={formik.handleChange('createAddressRequest.postcode')}
+                                value={formik.values.address.postcode}
+                                onChangeText={formik.handleChange('address.postcode')}
                                 placeholder="Post Code"
                                 placeholderTextColor={placeHolderTextColor}
                                 style={styles.input}
                             />
                         </View>
-                        {formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode &&
-                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.postcode}</Text>
+                        {formik.touched.address?.postcode && formik.errors.address?.postcode &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.address.postcode}</Text>
                         }
 
                         <View>
@@ -396,20 +492,22 @@ export default function FacilityForm(): React.JSX.Element {
                                 onPress={() => handleOpen("selectedCountry")}
                                 onClose={handleClose}
                                 setValue={(text: any) => {
-                                    handleDropdownChange('createAddressRequest.country_uuid', text)
+                                    handleDropdownChange('address.country_uuid', text)
                                 }}
                                 style={styles.dropDown}
                             />
                         </View>
-                        {formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid &&
-                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.createAddressRequest.country_uuid}</Text>
+                        {formik.touched.address?.country_uuid && formik.errors.address?.country_uuid &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.address.country_uuid}</Text>
                         }
                     </>)}
+
                 <ImagePicker
                     selectedImages={selectedFacilityPhotos}
                     setSelectedImages={setSelectedFacilityPhotos}
                     selectedImagesBase64={formik.values.companyFacilityPhotos}
                     setSelectedImagesBase64={(newPhotos) => handleImagesChange(newPhotos)}
+                    handleRemoveGalleryPhoto={handleRemoveGalleryPhoto}
                 />
 
                 <View style={styles.buttonContainer}>

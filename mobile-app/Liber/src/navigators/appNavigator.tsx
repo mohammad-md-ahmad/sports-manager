@@ -14,7 +14,7 @@ import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity, View } from 'react-native';
-import { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
+import { FormMode, GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
 import { getUserData } from '../../helpers/userDataManage';
@@ -58,7 +58,19 @@ const AppNavigator = () => {
     }
 
     function onAddFacilityPress(): void {
-        navigator.navigate(Screens.FacilityForm);
+        navigator.navigate(Screens.FacilityForm, {
+            'formModeParam': FormMode.Add,
+        });
+    }
+
+    function onEditFacilityPress(): void {
+        let routes = navigator.getState().routes;
+        let { facility } = routes[routes.length - 1].params;
+
+        navigator.navigate(Screens.FacilityForm, {
+            'formModeParam': FormMode.Edit,
+            'facilityParam': facility,
+        });
     }
 
     function onAddSurveyPress(): void {
@@ -86,8 +98,6 @@ const AppNavigator = () => {
     function onEditUserPress(): void {
         navigator.navigate(Screens.UserProfileForm);
     }
-
-
 
     useEffect(() => {
         const unsubscribe = navigator.addListener('state', () => {
@@ -167,7 +177,7 @@ const AppNavigator = () => {
                     case Screens.FacilityView:
                         setContent(
                             <TouchableOpacity
-                                onPress={() => onScheduleFormPress()}>
+                                onPress={() => onEditFacilityPress()}>
                                 <View style={{ margin: 15 }}>
                                     <Icon
                                         name="edit" // Replace with your desired icon name

@@ -96,7 +96,6 @@ function FacilityView({ route }): React.JSX.Element {
                         )}
                     </View>
                 </View>
-
             </View>
 
         </View>

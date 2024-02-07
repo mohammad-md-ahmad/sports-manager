@@ -63,7 +63,7 @@ export default function ProfileMenu() {
                             },
                             {
                                 title: "Facilities",
-                                icon: "scoreboard",
+                                icon: "stadium",
                                 navigateTo: Screens.Facilities
                             },
                             {

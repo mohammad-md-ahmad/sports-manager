@@ -105,3 +105,8 @@ export enum AgeRangesColors {
 export enum EntityType {
     Company = 'App\\Models\\Company',
 }
+
+export enum FormMode {
+    Add = 'add',
+    Edit = 'edit',
+}
