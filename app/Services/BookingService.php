@@ -97,6 +97,31 @@ class BookingService implements BookingServiceInterface
 
             DB::commit();
 
+            /** @var CompanyCustomer $companyCustomer */
+            $companyCustomer = CompanyCustomer::query()->where([
+                ['user_id', '=', $user->id],
+                ['company_id', '=', $scheduleDetails->schedule->facility->company->id],
+            ])->first();
+
+            if ($companyCustomer && $companyCustomer?->hasAutoApprove()) {
+                $approveRequest = ApproveBookingRequest::from([
+                    'uuid' => $booking->uuid,
+                ]);
+
+                $this->approve($approveRequest);
+
+                $this->pushNotificationService->createNotification(
+                    [$scheduleDetails->facility->company->companyUser()->user->uuid],
+                    __('User :user has booked your facility :facility_name on :date, and it was auto approved', [
+                        'user' => $user->full_name,
+                        'facility_name' => $scheduleDetails->facility->name,
+                        'date' => $scheduleDetails->date_time_from,
+                    ]),
+                );
+
+                return $booking;
+            }
+
             $this->pushNotificationService->createNotification(
                 [$scheduleDetails->facility->company->companyUser()->user->uuid],
                 __('User :user wants to book your facility :facility_name on :date', [

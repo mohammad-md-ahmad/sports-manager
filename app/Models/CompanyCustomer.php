@@ -63,4 +63,9 @@ class CompanyCustomer extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function hasAutoApprove(): bool
+    {
+        return $this->settings['auto_approve'];
+    }
 }
