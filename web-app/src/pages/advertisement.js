@@ -45,7 +45,7 @@ const Page = () => {
     title: "",
     description: "",
     url: "",
-    effective_from: "",
+    effective_from: null,
   }
 
   const formDataValidateSchema = yupObject().shape({
@@ -87,6 +87,8 @@ const Page = () => {
     if (adId) {
       adService.getAd(adId).then((response) => {
         let adData = { ...response.data.data };
+        let date = new Date(`${adData['effective_from'].replace(' ', 'T')}.000Z`);
+        adData['effective_from'] = date;//date.toISOString();
         formik.setValues(adData);
       }).catch((error) => {
         // Handle API request errors here
@@ -102,7 +104,7 @@ const Page = () => {
   const submitForm = (values) => {
     let data = { ...values }
     if (data['effective_from'])
-      data['effective_from'] = format(data['effective_from'], 'dd-MM-yyyy')
+      data['effective_from'] = format(data['effective_from'], 'yyyy-MM-dd HH:mm:ss')
     if (adId) {
       adService.update(data).then((response) => {
       }).catch((error) => {
@@ -124,7 +126,8 @@ const Page = () => {
   }
 
   const handleDateChange = (date) => {
-    // Update the effective_from field
+    // Update the effective_from field.
+    console.log(date);
     formik.setFieldValue('effective_from', date);
 
     // // Format the date and update the formatted_effective_from field
