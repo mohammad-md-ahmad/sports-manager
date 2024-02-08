@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\AppInfoController;
 use App\Http\Controllers\AppListController;
 use App\Http\Controllers\AuthController;
@@ -42,6 +43,10 @@ Route::prefix('app-info')->group(function () {
 });
 
 Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
+
+Route::prefix('advertisements')->group(function () {
+    Route::get('/all', [AdvertisementController::class, 'getAll'])->name('advertisements.get-all');
+});
 
 Route::middleware(['auth:sanctum'])->group(function () {
 
