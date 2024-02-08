@@ -30,6 +30,8 @@ import { string, array, object as yupObject } from "yup";
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import AdService from 'api/AdService';
+import { DatePicker } from '@mui/x-date-pickers';
+import { format } from 'date-fns';
 
 const Page = () => {
 
@@ -43,16 +45,19 @@ const Page = () => {
     title: "",
     description: "",
     url: "",
+    effective_from: "",
   }
 
   const formDataValidateSchema = yupObject().shape({
     title: string().required('Title is required'),
+    effective_from: string().required('Effective from is required'),
   });
 
   const initialTouched = {
     name: false,
     description: false,
     url: false,
+    effective_from: false,
   }
 
   const formik = useFormik({
@@ -96,6 +101,8 @@ const Page = () => {
 
   const submitForm = (values) => {
     let data = { ...values }
+    if (data['effective_from'])
+      data['effective_from'] = format(data['effective_from'], 'dd-MM-yyyy')
     if (adId) {
       adService.update(data).then((response) => {
       }).catch((error) => {
@@ -115,6 +122,17 @@ const Page = () => {
     }
 
   }
+
+  const handleDateChange = (date) => {
+    // Update the effective_from field
+    formik.setFieldValue('effective_from', date);
+
+    // // Format the date and update the formatted_effective_from field
+    // formik.setFieldValue(
+    //   'effective_from',
+    //   date ? format(date, 'dd-MM-yyyy') : ''
+    // );
+  };
 
   return (
     <>
@@ -179,6 +197,18 @@ const Page = () => {
                         helperText={formik.touched.title && formik.errors.title ? formik.errors.title : ""}
                       />
 
+                      <DatePicker
+                        fullWidth
+                        label="Effective From"
+                        name="effective_from"
+                        value={formik.values.effective_from}
+                        onBlur={formik.handleBlur}
+                        onChange={handleDateChange}
+                        error={!!(formik.touched.effective_from && formik.errors.effective_from)}
+                        helperText={formik.touched.effective_from && formik.errors.effective_from ? formik.errors.effective_from : ""}
+                        renderInput={(params) => <TextField {...params} />}
+                      />
+
                     </Stack>
 
                   </Grid>
@@ -219,7 +249,7 @@ const Page = () => {
                       error={!!(formik.touched.description && formik.errors.description)}
                       helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
                     />
-                   
+
                   </Grid>
                 </Grid>
                 <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
