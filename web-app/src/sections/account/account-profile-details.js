@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   Box,
   Button,
@@ -30,15 +30,8 @@ const states = [
   }
 ];
 
-export const AccountProfileDetails = () => {
-  const [values, setValues] = useState({
-    firstName: 'Anika',
-    lastName: 'Visser',
-    email: 'demo@devias.io',
-    phone: '',
-    state: 'los-angeles',
-    country: 'USA'
-  });
+export const AccountProfileDetails = ({ user }) => {
+  const [values, setValues] = useState(user);
 
   const handleChange = useCallback(
     (event) => {
@@ -82,10 +75,10 @@ export const AccountProfileDetails = () => {
                   fullWidth
                   helperText="Please specify the first name"
                   label="First name"
-                  name="firstName"
+                  name="first_name"
                   onChange={handleChange}
                   required
-                  value={values.firstName}
+                  value={values.first_name}
                 />
               </Grid>
               <Grid
@@ -95,10 +88,23 @@ export const AccountProfileDetails = () => {
                 <TextField
                   fullWidth
                   label="Last name"
-                  name="lastName"
+                  name="last_name"
                   onChange={handleChange}
                   required
-                  value={values.lastName}
+                  value={values.last_name}
+                />
+              </Grid>
+              <Grid
+                xs={12}
+                md={6}
+              >
+                <TextField
+                  fullWidth
+                  label="Username"
+                  name="username"
+                  onChange={handleChange}
+                  required
+                  value={values.username}
                 />
               </Grid>
               <Grid
@@ -112,19 +118,6 @@ export const AccountProfileDetails = () => {
                   onChange={handleChange}
                   required
                   value={values.email}
-                />
-              </Grid>
-              <Grid
-                xs={12}
-                md={6}
-              >
-                <TextField
-                  fullWidth
-                  label="Phone Number"
-                  name="phone"
-                  onChange={handleChange}
-                  type="number"
-                  value={values.phone}
                 />
               </Grid>
               <Grid

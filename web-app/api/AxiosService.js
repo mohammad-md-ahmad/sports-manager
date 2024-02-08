@@ -84,12 +84,12 @@ class AxiosService {
                     auth.setLoading(false);
                 if (axios.isCancel(error)) {
                     return Promise.reject(error);
-                } else if (error.code === 'ECONNABORTED') {
+                } else if (error.code === 'ECONNABORTED' || error.code === 'ERR_NETWORK') {
                     console.error('Request timeout', error.message);
                     toast.error('A connection to server couldn\'t be made. Please make you have internet access.');
                     return Promise.reject(error);
                 } else {
-                    toast.error(error.response.data.message);
+                    toast.error(error?.response?.data?.message);
                     console.error('Request failed', error);
                     return Promise.reject(error);
                 }
