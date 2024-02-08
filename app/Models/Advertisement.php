@@ -7,6 +7,7 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $effective_from
  * @property Carbon $effective_to
  * @property string $url
+ * @property Gallery $gallery
  */
 class Advertisement extends Model
 {
@@ -56,4 +58,9 @@ class Advertisement extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function gallery(): MorphMany
+    {
+        return $this->morphMany(Gallery::class, 'model');
+    }
 }

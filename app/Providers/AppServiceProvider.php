@@ -90,10 +90,6 @@ class AppServiceProvider extends ServiceProvider
                 return false; // Image size exceeds the limit
             }
 
-return [
-                $data->key => $appInfo->value,
-            ];
-
             // Detect the image format (JPEG, PNG)
             $imgFormat = finfo_buffer(finfo_open(), $decodedData, FILEINFO_MIME_TYPE);
             // Allowed extensions
