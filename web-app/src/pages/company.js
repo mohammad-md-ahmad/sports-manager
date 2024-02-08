@@ -346,6 +346,7 @@ const Page = () => {
                               {...params}
                               label="Country"
                               fullWidth
+                              error={!!(formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid)}
                             />
                           )
                         }
