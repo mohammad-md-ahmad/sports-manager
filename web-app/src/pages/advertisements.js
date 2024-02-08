@@ -14,10 +14,7 @@ import {
   Card
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { CompanyCard } from 'src/sections/companies/company-card';
-import { CompaniesSearch } from 'src/sections/companies/companies-search';
 import { useEffect, useReducer, useState } from 'react';
-import CompanyService from 'api/CompanyService';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 
@@ -27,10 +24,11 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
 import DeleteConfirmationDialog from 'src/components/deleteConfirmationDialog';
+import AdService from 'api/AdService';
 
 const Page = () => {
-  const companyService = new CompanyService();
-  const [companies, setCompanies] = useState([]);
+  const adService = new AdService();
+  const [ads, setAds] = useState([]);
   const router = useRouter();
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -43,7 +41,7 @@ const Page = () => {
   };
 
   const handleDeleteConfirm = () => {
-    companyService.deleteCompany({ uuid: idToBeDeleted }).then((response) => {
+    adService.deleteAd({ uuid: idToBeDeleted }).then((response) => {
       loadData();
     }).catch((error) => {
       // Handle API request errors here
@@ -61,13 +59,12 @@ const Page = () => {
   };
 
   useEffect(() => {
-    console.log("render")
     loadData();
   }, [])
 
   const loadData = () => {
-    companyService.list().then((response) => {
-      setCompanies(response?.data?.data?.data)
+    adService.list().then((response) => {
+      setAds(response?.data?.data?.data);
     }).catch((error) => {
       // Handle API request errors here
       console.error(error);
@@ -78,31 +75,18 @@ const Page = () => {
 
   const columns = [
     {
-      field: 'name',
-      headerName: 'Name',
+      field: 'title',
+      headerName: 'Title',
       width: 250
-    },
-    {
-      field: 'total_rating',
-      headerName: 'Total Rating',
-      width: 150,
-    },
-    {
-      field: 'address',
-      headerName: 'Address',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 250,
-      valueGetter: (params) =>
-        `${params.row.address ?
-          (params.row.address.country.name) +
-          (params.row.address.region ? ', ' + params.row.address.region : '') +
-          (params.row.address.city ? ', ' + params.row.address.city : '')
-          : ''}`,
     },
     {
       field: 'description',
       headerName: 'Description',
+      width: 150,
+    },
+    {
+      field: 'url',
+      headerName: 'Url',
       flex: 1
     },
     {
@@ -122,15 +106,6 @@ const Page = () => {
         ];
       }
     }
-    //  {
-    //   field: 'description',
-    //   headerName: 'Description',
-    //   description: 'This column has a value getter and is not sortable.',
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (params) =>
-    //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-    // },
   ];
 
   const handleRowClick = (params) => {
@@ -138,18 +113,18 @@ const Page = () => {
     console.log('Row clicked:', params.row);
     // You can perform actions based on the clicked row, such as navigating to a detail page
 
-    router.push('/company?id=' + params.row.uuid);
+    router.push('/advertisement?id=' + params.row.uuid);
   };
 
-  const addCompany = () => {
-    router.push('/company');
+  const addAdvertisement = () => {
+    router.push('/advertisement');
   }
 
   return (
     <>
       <Head>
         <title>
-          Companies | Liber
+          Ads | Liber
         </title>
       </Head>
       <Box
@@ -168,7 +143,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Companies
+                  Ads
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -185,13 +160,12 @@ const Page = () => {
                     </SvgIcon>
                   )}
                   variant="contained"
-                  onClick={addCompany}
+                  onClick={addAdvertisement}
                 >
                   Add
                 </Button>
               </div>
             </Stack>
-            {/* <CompaniesSearch /> */}
             <Grid
               container
               spacing={3}
@@ -199,7 +173,7 @@ const Page = () => {
               <Card style={{ width: "100%" }}>
                 <DataGrid
                   getRowId={(row) => row.uuid}
-                  rows={companies}
+                  rows={ads}
                   columns={columns}
                   initialState={{
                     pagination: {
