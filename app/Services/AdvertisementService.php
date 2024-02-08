@@ -8,15 +8,15 @@ use App\Contracts\Services\AdvertisementServiceInterface;
 use App\Models\Advertisement;
 use App\Services\Data\Advertisement\GetAllAdvertisementsRequest;
 use Exception;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
 class AdvertisementService implements AdvertisementServiceInterface
 {
-    public function getAll(GetAllAdvertisementsRequest $data): Collection
+    public function getAll(GetAllAdvertisementsRequest $data): LengthAwarePaginator
     {
         try {
-            $advertisements = Advertisement::query()->get();
+            $advertisements = Advertisement::query()->jsonPaginate();
 
             return $advertisements;
         } catch (Exception $exception) {

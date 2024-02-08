@@ -3,11 +3,11 @@
 namespace App\Contracts\Services;
 
 use App\Services\Data\Advertisement\GetAllAdvertisementsRequest;
-use Illuminate\Support\Collection;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface AdvertisementServiceInterface
 {
-    public function getAll(GetAllAdvertisementsRequest $data): Collection;
+    public function getAll(GetAllAdvertisementsRequest $data): LengthAwarePaginator;
 
     // public function store(CreateAddressRequest $data): Address;
 
