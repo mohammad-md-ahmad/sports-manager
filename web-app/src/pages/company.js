@@ -14,7 +14,8 @@ import {
   Card,
   TextField,
   Select,
-  Autocomplete
+  Autocomplete,
+  CardActions
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { CompanyCard } from 'src/sections/companies/company-card';
@@ -167,7 +168,7 @@ const Page = () => {
 
   const handleSelectChange = (field, value) => {
     setSelectCountry(value);
-    formik.setFieldValue(field, value['country_uuid']);
+    formik.setFieldValue(field, value ? value['country_uuid'] : null);
   }
 
   const submitForm = (values) => {
@@ -257,16 +258,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         error={!!(formik.touched.name && formik.errors.name)}
+                        helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
                       />
-                      {formik.touched.name && formik.errors.name &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.name}
-                        </Typography>
-                      }
 
                       <TextField
                         fullWidth
@@ -276,16 +269,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange('createAddressRequest.region')}
                         error={!!(formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region)}
+                        helperText={formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region ? formik.errors.createAddressRequest?.region : ""}
                       />
-                      {formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.createAddressRequest?.region}
-                        </Typography>
-                      }
 
                       <TextField
                         fullWidth
@@ -295,16 +280,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange('createAddressRequest.line_1')}
                         error={!!(formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1)}
+                        helperText={formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1 ? formik.errors.createAddressRequest?.line_1 : ""}
                       />
-                      {formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1 &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.createAddressRequest?.line_1}
-                        </Typography>
-                      }
 
                       <TextField
                         fullWidth
@@ -314,16 +291,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange('createAddressRequest.line_3')}
                         error={!!(formik.touched.createAddressRequest?.line_3 && formik.errors.createAddressRequest?.line_3)}
+                        helperText={formik.touched.createAddressRequest?.line_3 && formik.errors.createAddressRequest?.line_3 ? formik.errors.createAddressRequest?.line_3 : ""}
                       />
-                      {formik.touched.createAddressRequest?.line_3 && formik.errors.createAddressRequest?.line_3 &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.createAddressRequest?.line_3}
-                        </Typography>
-                      }
 
                     </Stack>
 
@@ -347,19 +316,11 @@ const Page = () => {
                               label="Country"
                               fullWidth
                               error={!!(formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid)}
+                              helperText={formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid ? formik.errors.createAddressRequest?.country_uuid : ""}
                             />
                           )
                         }
                       ></Autocomplete>
-                      {formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.createAddressRequest?.country_uuid}
-                        </Typography>
-                      }
 
                       <TextField
                         fullWidth
@@ -369,16 +330,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange('createAddressRequest.city')}
                         error={!!(formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city)}
+                        helperText={formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city ? formik.errors.createAddressRequest?.city : ""}
                       />
-                      {formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.createAddressRequest?.city}
-                        </Typography>
-                      }
 
                       <TextField
                         fullWidth
@@ -388,16 +341,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange('createAddressRequest.line_2')}
                         error={!!(formik.touched.createAddressRequest?.line_2 && formik.errors.createAddressRequest?.line_2)}
+                        helperText={formik.touched.createAddressRequest?.line_2 && formik.errors.createAddressRequest?.line_2 ? formik.errors.createAddressRequest?.line_2 : ""}
                       />
-                      {formik.touched.createAddressRequest?.line_2 && formik.errors.createAddressRequest?.line_2 &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.createAddressRequest?.line_2}
-                        </Typography>
-                      }
 
                       <TextField
                         fullWidth
@@ -407,16 +352,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange('createAddressRequest.postcode')}
                         error={!!(formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode)}
+                        helperText={formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode ? formik.errors.createAddressRequest?.postcode : ""}
                       />
-                      {formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.createAddressRequest?.postcode}
-                        </Typography>
-                      }
 
                     </Stack>
 
@@ -435,17 +372,8 @@ const Page = () => {
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange('description')}
                       error={!!(formik.touched.description && formik.errors.description)}
+                      helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
                     />
-
-                    {formik.touched.description && formik.errors.description &&
-                      <Typography
-                        color="error"
-                        sx={{ mt: 1 }}
-                        variant="body2"
-                      >
-                        {formik.errors.description}
-                      </Typography>
-                    }
 
                   </Grid>
                   {!companyId && <>
@@ -463,16 +391,8 @@ const Page = () => {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange('createUserRequest.first_name')}
                           error={!!(formik.touched.createUserRequest.first_name && formik.errors.createUserRequest?.first_name)}
+                          helperText={formik.touched.createUserRequest.first_name && formik.errors.createUserRequest?.first_name ? formik.errors.createUserRequest?.first_name : ""}
                         />
-                        {formik.touched.createUserRequest.first_name && formik.errors.createUserRequest?.first_name &&
-                          <Typography
-                            color="error"
-                            sx={{ mt: 1 }}
-                            variant="body2"
-                          >
-                            {formik.errors.createUserRequest?.first_name}
-                          </Typography>
-                        }
 
                         <TextField
                           fullWidth
@@ -482,16 +402,8 @@ const Page = () => {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange('createUserRequest.username')}
                           error={!!(formik.touched.createUserRequest.username && formik.errors.createUserRequest?.username)}
+                          helperText={formik.touched.createUserRequest.username && formik.errors.createUserRequest?.username ? formik.errors.createUserRequest?.username : ""}
                         />
-                        {formik.touched.createUserRequest.username && formik.errors.createUserRequest?.username &&
-                          <Typography
-                            color="error"
-                            sx={{ mt: 1 }}
-                            variant="body2"
-                          >
-                            {formik.errors.createUserRequest?.username}
-                          </Typography>
-                        }
 
                         <TextField
                           fullWidth
@@ -502,16 +414,8 @@ const Page = () => {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange('createUserRequest.password')}
                           error={!!(formik.touched.createUserRequest.password && formik.errors.createUserRequest?.password)}
+                          helperText={formik.touched.createUserRequest.password && formik.errors.createUserRequest?.password ? formik.errors.createUserRequest?.password : ""}
                         />
-                        {formik.touched.createUserRequest.password && formik.errors.createUserRequest?.password &&
-                          <Typography
-                            color="error"
-                            sx={{ mt: 1 }}
-                            variant="body2"
-                          >
-                            {formik.errors.createUserRequest?.password}
-                          </Typography>
-                        }
 
                       </Stack>
 
@@ -530,16 +434,8 @@ const Page = () => {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange('createUserRequest.last_name')}
                           error={!!(formik.touched.createUserRequest.last_name && formik.errors.createUserRequest?.last_name)}
+                          helperText={formik.touched.createUserRequest.last_name && formik.errors.createUserRequest?.last_name ? formik.errors.createUserRequest?.last_name : ""}
                         />
-                        {formik.touched.createUserRequest.last_name && formik.errors.createUserRequest?.last_name &&
-                          <Typography
-                            color="error"
-                            sx={{ mt: 1 }}
-                            variant="body2"
-                          >
-                            {formik.errors.createUserRequest?.last_name}
-                          </Typography>
-                        }
 
                         <TextField
                           fullWidth
@@ -550,16 +446,8 @@ const Page = () => {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange('createUserRequest.email')}
                           error={!!(formik.touched.createUserRequest.email && formik.errors.createUserRequest?.email)}
+                          helperText={formik.touched.createUserRequest.email && formik.errors.createUserRequest?.email ? formik.errors.createUserRequest?.email : ""}
                         />
-                        {formik.touched.createUserRequest.email && formik.errors.createUserRequest?.email &&
-                          <Typography
-                            color="error"
-                            sx={{ mt: 1 }}
-                            variant="body2"
-                          >
-                            {formik.errors.createUserRequest?.email}
-                          </Typography>
-                        }
 
                         <TextField
                           fullWidth
@@ -570,21 +458,15 @@ const Page = () => {
                           onBlur={formik.handleBlur}
                           onChange={formik.handleChange('createUserRequest.password_confirmation')}
                           error={!!(formik.touched.createUserRequest.password_confirmation && formik.errors.createUserRequest?.password_confirmation)}
+                          helperText={formik.touched.createUserRequest.password_confirmation && formik.errors.createUserRequest?.password_confirmation ? formik.errors.createUserRequest?.password_confirmation : ""}
                         />
-                        {formik.touched.createUserRequest.password_confirmation && formik.errors.createUserRequest?.password_confirmation &&
-                          <Typography
-                            color="error"
-                            sx={{ mt: 1 }}
-                            variant="body2"
-                          >
-                            {formik.errors.createUserRequest?.password_confirmation}
-                          </Typography>
-                        }
 
                       </Stack>
                     </Grid>
                   </>
                   }
+                </Grid>
+                <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
                   <Button
                     startIcon={(
                       <SvgIcon fontSize="small">
@@ -596,7 +478,7 @@ const Page = () => {
                   >
                     Save
                   </Button>
-                </Grid>
+                </CardActions>
               </Card>
             </Stack>
           </Container>

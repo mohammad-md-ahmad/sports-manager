@@ -14,7 +14,8 @@ import {
   Card,
   TextField,
   Select,
-  Autocomplete
+  Autocomplete,
+  CardActions
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { CompanyCard } from 'src/sections/companies/company-card';
@@ -175,17 +176,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
                         error={!!(formik.touched.title && formik.errors.title)}
+                        helperText={formik.touched.title && formik.errors.title ? formik.errors.title : ""}
                       />
-                      {formik.touched.title && formik.errors.title &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.title}
-                        </Typography>
-                      }
-
 
                     </Stack>
 
@@ -205,16 +197,8 @@ const Page = () => {
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange('url')}
                         error={!!(formik.touched.url && formik.errors.url)}
+                        helperText={formik.touched.url && formik.errors.url ? formik.errors.url : ""}
                       />
-                      {formik.touched.url && formik.errors.url &&
-                        <Typography
-                          color="error"
-                          sx={{ mt: 1 }}
-                          variant="body2"
-                        >
-                          {formik.errors.url}
-                        </Typography>
-                      }
 
                     </Stack>
 
@@ -233,19 +217,12 @@ const Page = () => {
                       onBlur={formik.handleBlur}
                       onChange={formik.handleChange('description')}
                       error={!!(formik.touched.description && formik.errors.description)}
+                      helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
                     />
-
-                    {formik.touched.description && formik.errors.description &&
-                      <Typography
-                        color="error"
-                        sx={{ mt: 1 }}
-                        variant="body2"
-                      >
-                        {formik.errors.description}
-                      </Typography>
-                    }
-
+                   
                   </Grid>
+                </Grid>
+                <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
                   <Button
                     startIcon={(
                       <SvgIcon fontSize="small">
@@ -257,7 +234,7 @@ const Page = () => {
                   >
                     Save
                   </Button>
-                </Grid>
+                </CardActions>
               </Card>
             </Stack>
           </Container>
