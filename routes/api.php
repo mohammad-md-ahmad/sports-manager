@@ -173,6 +173,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::get('/company/{company}', [ReportController::class, 'get'])->name('reports.get');
     });
+
+    Route::prefix('advertisements')->group(function () {
+        Route::get('/{uuid}', [AdvertisementController::class, 'get'])->name('advertisements.get');
+        Route::post('/', [AdvertisementController::class, 'store'])->name('advertisements.store');
+        Route::put('/{uuid}', [AdvertisementController::class, 'update'])->name('advertisements.update');
+        Route::delete('/{uuid}', [AdvertisementController::class, 'delete'])->name('advertisements.delete');
+    });
 });
 
 Route::get('/test', function () {
