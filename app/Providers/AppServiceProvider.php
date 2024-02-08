@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Contracts\Formatters\Money\DecimalMoneyFormatterInterface;
 use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use App\Contracts\Services\AddressServiceInterface;
+use App\Contracts\Services\AdvertisementServiceInterface;
 use App\Contracts\Services\AppInfoServiceInterface;
 use App\Contracts\Services\AppListServiceInterface;
 use App\Contracts\Services\BookingServiceInterface;
@@ -24,6 +25,7 @@ use App\Core\Parsers\Money\DecimalMoneyParser;
 use App\Models\Company;
 use App\Models\CompanyFacility;
 use App\Services\AddressService;
+use App\Services\AdvertisementService;
 use App\Services\AppInfoService;
 use App\Services\AppListService;
 use App\Services\BookingService;
@@ -66,6 +68,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(NotificationServiceInterface::class, NotificationService::class);
         $this->app->bind(CompanySurveyServiceInterface::class, CompanySurveyService::class);
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
+        $this->app->bind(AdvertisementServiceInterface::class, AdvertisementService::class);
     }
 
     /**
@@ -86,6 +89,10 @@ class AppServiceProvider extends ServiceProvider
             if (strlen($decodedData) > $maxSize) {
                 return false; // Image size exceeds the limit
             }
+
+return [
+                $data->key => $appInfo->value,
+            ];
 
             // Detect the image format (JPEG, PNG)
             $imgFormat = finfo_buffer(finfo_open(), $decodedData, FILEINFO_MIME_TYPE);
