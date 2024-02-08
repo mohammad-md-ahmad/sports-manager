@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\Formatters\Money\DecimalMoneyFormatterInterface;
 use App\Contracts\Services\ReportServiceInterface;
+use App\Enums\BookingStatus;
 use App\Enums\Report;
 use App\Models\Company;
 use App\Services\Data\Report\GetReportByKey;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Money\Currency;
+use Money\Money;
 
 class ReportService implements ReportServiceInterface
 {
@@ -41,11 +46,20 @@ class ReportService implements ReportServiceInterface
             $genders = $this->getCompanyCustomersGenderDemograhpics($data->company);
             $ages = $this->getCompanyCustomersAgeDemographics($data->company);
             $usersPerMonth = $this->getCompanyCustomersCountPerMonth($data->company);
+            $revenuePerYear = $this->getCompanyRevenuePerYear();
+
+            if (isset($revenuePerYear->amount)) {
+                $moneyAmount = new Money($revenuePerYear->amount, new Currency($this->company->currency->iso_short_code));
+                $revenuePerYear->amount = app(DecimalMoneyFormatterInterface::class)->format($moneyAmount);
+            }
+
+            $revenuePerYear->currency = $this->company->currency->iso_short_code;
 
             $results = [
                 'genders' => $genders,
                 'ages' => $ages,
                 'users_per_month' => $usersPerMonth,
+                'revenue_per_year' => $revenuePerYear,
             ];
 
             return collect($results);
@@ -121,7 +135,7 @@ class ReportService implements ReportServiceInterface
         return $ageRangeExpressions;
     }
 
-    protected function getCompanyCustomersCountPerMonth(Company $company)
+    protected function getCompanyCustomersCountPerMonth()
     {
         $customersQuery = DB::table('users', 'u');
 
@@ -136,5 +150,29 @@ class ReportService implements ReportServiceInterface
         })->groupBy(['year', 'month']);
 
         return $customersQuery->get();
+    }
+
+    public function getCompanyRevenuePerYear()
+    {
+        $currentDate = Carbon::now();
+
+        $bookingQuery = DB::table('bookings')
+            ->select([
+                DB::raw('SUM(sd.price) AS amount'),
+                DB::raw('MONTH(sd.date_time_from) AS month'),
+                DB::raw('YEAR(sd.date_time_from) AS year'),
+            ])
+            ->join('schedule_details AS sd', 'bookings.schedule_details_id', '=', 'sd.id')
+            ->join('schedules AS s', 'sd.schedule_id', '=', 's.id')
+            ->join('company_facilities AS cf', 's.company_facility_id', '=', 'cf.id')
+            ->join('companies AS c', 'cf.company_id', '=', 'c.id')
+            ->where([
+                ['bookings.status', '=', BookingStatus::Approved->name],
+                ['c.id', '=', $this->company->id],
+            ])
+            ->whereDate('sd.date_time_to', '<', $currentDate)
+            ->groupBy('year', 'month');
+
+        return $bookingQuery->first();
     }
 }
