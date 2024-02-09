@@ -8,6 +8,7 @@ import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
 import CreditCardIcon from '@heroicons/react/24/solid/CreditCardIcon';
 import MegaphoneIcon from '@heroicons/react/24/solid/MegaphoneIcon';
+import ChatBubbleOvalLeftEllipsisIcon from '@heroicons/react/24/solid/ChatBubbleOvalLeftEllipsisIcon';
 import { SvgIcon } from '@mui/material';
 
 export const items = [
@@ -53,6 +54,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <CreditCardIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Messaging Center',
+    path: '/messagingCenter',
+    icon: (
+      <SvgIcon fontSize="small">
+        <ChatBubbleOvalLeftEllipsisIcon />
       </SvgIcon>
     )
   },
