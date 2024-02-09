@@ -92,7 +92,7 @@ abstract class AxiosService {
 
                 const originalRequest = response.config;
                 if (originalRequest.method !== 'get') {
-                    ToastHelper.successToast(response.data.message);
+                    //ToastHelper.successToast(response.data.message);
                 }
 
                 return response;
@@ -111,7 +111,6 @@ abstract class AxiosService {
                 } else {
                     // Other errors
                     console.error('Request failed', error);
-                    //ToastHelper.errorToast('Request couldn\'t be made.');
                     ToastHelper.errorToast(error.response.data.message);
                     return Promise.reject(error);
                 }
