@@ -122,7 +122,6 @@ const Page = () => {
   ];
 
   const addPaymentMehod = () => {
-    // router.push('/paymentMethod');
     const newRow = { id: paymentMethods.length, name: '' };
     setPaymentMethods([...paymentMethods, newRow]);
   }

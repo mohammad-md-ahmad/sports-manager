@@ -6,6 +6,8 @@ import UserIcon from '@heroicons/react/24/solid/UserIcon';
 import UserPlusIcon from '@heroicons/react/24/solid/UserPlusIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
+import CreditCardIcon from '@heroicons/react/24/solid/CreditCardIcon';
+import MegaphoneIcon from '@heroicons/react/24/solid/MegaphoneIcon';
 import { SvgIcon } from '@mui/material';
 
 export const items = [
@@ -41,7 +43,7 @@ export const items = [
     path: '/advertisements',
     icon: (
       <SvgIcon fontSize="small">
-        <ShoppingBagIcon />
+        <MegaphoneIcon />
       </SvgIcon>
     )
   },
@@ -50,7 +52,7 @@ export const items = [
     path: '/paymentMethods',
     icon: (
       <SvgIcon fontSize="small">
-        <ShoppingBagIcon />
+        <CreditCardIcon />
       </SvgIcon>
     )
   },
