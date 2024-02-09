@@ -58,17 +58,27 @@ const Page = () => {
   };
 
   const handleDeleteConfirm = () => {
-    adService.deleteAd({ uuid: idToBeDeleted }).then((response) => {
-      loadData();
-    }).catch((error) => {
-      // Handle API request errors here
-      console.error(error);
-      //throw new Error('Please check your email and password');
-      throw new Error(error.message);
-    }).finally(() => {
-      setDeleteDialogOpen(false);
-      setIdToBeDeleted(null);
-    });
+
+    let tempPaymentMethods = [...paymentMethods];
+    tempPaymentMethods.splice(idToBeDeleted, 1);
+    setPaymentMethods(tempPaymentMethods);
+
+    //TODO submit the new payment methods
+
+    setDeleteDialogOpen(false);
+    setIdToBeDeleted(null);
+
+    // adService.deleteAd({ uuid: idToBeDeleted }).then((response) => {
+    //   loadData();
+    // }).catch((error) => {
+    //   // Handle API request errors here
+    //   console.error(error);
+    //   //throw new Error('Please check your email and password');
+    //   throw new Error(error.message);
+    // }).finally(() => {
+    //   setDeleteDialogOpen(false);
+    //   setIdToBeDeleted(null);
+    // });
   };
 
   const handleDeleteCancel = () => {
@@ -130,6 +140,9 @@ const Page = () => {
     let tempPaymentMethods = [...paymentMethods];
     tempPaymentMethods[updatedRow.id] = updatedRow;
     setPaymentMethods(tempPaymentMethods);
+
+    //TODO submit the new payment methods
+
     return tempPaymentMethods[updatedRow.id];
   });
 
