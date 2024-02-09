@@ -46,6 +46,15 @@ export const items = [
     )
   },
   {
+    title: 'Payment Methods',
+    path: '/paymentMethods',
+    icon: (
+      <SvgIcon fontSize="small">
+        <ShoppingBagIcon />
+      </SvgIcon>
+    )
+  },
+  {
     title: 'Account',
     path: '/account',
     icon: (
