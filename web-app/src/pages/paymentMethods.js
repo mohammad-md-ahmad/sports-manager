@@ -26,23 +26,6 @@ import CancelIcon from '@mui/icons-material/Close';
 import DeleteConfirmationDialog from 'src/components/deleteConfirmationDialog';
 import AppListService from 'api/AppListService';
 
-const useFakeMutation = () => {
-  return React.useCallback(
-    (paymentMethod) =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          if (paymentMethod.name?.trim() === '') {
-            reject(new Error("Error while saving user: name can't be empty."));
-          } else {
-            resolve({ ...paymentMethod, name: paymentMethod.name });
-          }
-        }, 200);
-      }),
-    [],
-  );
-};
-
-
 const Page = () => {
   const appListService = new AppListService();
   const [paymentMethods, setPaymentMethods] = useState([]);
@@ -146,10 +129,8 @@ const Page = () => {
     return tempPaymentMethods[updatedRow.id];
   });
 
-
   const handleProcessRowUpdateError = React.useCallback((error) => {
   }, []);
-
 
   return (
     <>
