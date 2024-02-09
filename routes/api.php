@@ -16,6 +16,7 @@ use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\SportController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,10 @@ Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
 
 Route::prefix('advertisements')->group(function () {
     Route::get('/all', [AdvertisementController::class, 'getAll'])->name('advertisements.get-all');
+});
+
+Route::prefix('sports')->group(function () {
+    Route::get('/all', [SportController::class, 'getAll'])->name('sports.get-all');
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
@@ -179,6 +184,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/', [AdvertisementController::class, 'store'])->name('advertisements.store');
         Route::put('/{uuid}', [AdvertisementController::class, 'update'])->name('advertisements.update');
         Route::delete('/{uuid}', [AdvertisementController::class, 'delete'])->name('advertisements.delete');
+    });
+
+    Route::prefix('sports')->group(function () {
+        //        Route::get('/{uuid}', [AdvertisementController::class, 'get'])->name('advertisements.get');
+        Route::post('/', [SportController::class, 'store'])->name('sports.store');
+        Route::put('/{uuid}', [SportController::class, 'update'])->name('sports.update');
+        //        Route::delete('/{uuid}', [AdvertisementController::class, 'delete'])->name('sports.delete');
     });
 });
 

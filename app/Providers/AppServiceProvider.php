@@ -19,6 +19,7 @@ use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\NotificationServiceInterface;
 use App\Contracts\Services\RatingServiceInterface;
 use App\Contracts\Services\ReportServiceInterface;
+use App\Contracts\Services\SportServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Core\Formatters\Money\DecimalMoneyFormatter;
 use App\Core\Parsers\Money\DecimalMoneyParser;
@@ -39,6 +40,7 @@ use App\Services\GalleryService;
 use App\Services\NotificationService;
 use App\Services\RatingService;
 use App\Services\ReportService;
+use App\Services\SportService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -69,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CompanySurveyServiceInterface::class, CompanySurveyService::class);
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
         $this->app->bind(AdvertisementServiceInterface::class, AdvertisementService::class);
+        $this->app->bind(SportServiceInterface::class, SportService::class);
     }
 
     /**
