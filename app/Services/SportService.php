@@ -7,10 +7,10 @@ namespace App\Services;
 use App\Contracts\Services\SportServiceInterface;
 use App\Models\Advertisement;
 use App\Models\Sport;
-use App\Services\Data\Advertisement\DeleteAdvertisementRequest;
-use App\Services\Data\Advertisement\GetAdvertisementsRequest;
 use App\Services\Data\Sport\CreateSportRequest;
+use App\Services\Data\Sport\DeleteSportRequest;
 use App\Services\Data\Sport\GetAllSportsRequest;
+use App\Services\Data\Sport\GetSportRequest;
 use App\Services\Data\Sport\UpdateSportRequest;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -35,19 +35,22 @@ class SportService implements SportServiceInterface
         }
     }
 
-    //    public function get(GetAdvertisementsRequest $data): Advertisement
-    //    {
-    //        try {
-    //            /** @var Advertisement $advertisement */
-    //            $advertisement = Advertisement::with(['gallery'])->findOrFail($data->id);
-    //
-    //            return $advertisement;
-    //        } catch (Exception $exception) {
-    //            Log::error('AdvertisementService::get: '.$exception->getMessage());
-    //
-    //            throw $exception;
-    //        }
-    //    }
+    /**
+     * @throws Exception
+     */
+    public function get(GetSportRequest $data): Sport
+    {
+        try {
+            /** @var Sport $sport */
+            $sport = Sport::findOrFail($data->id);
+
+            return $sport;
+        } catch (Exception $exception) {
+            Log::error('SportService::get: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
 
     /**
      * @throws Exception
@@ -101,22 +104,25 @@ class SportService implements SportServiceInterface
         }
     }
 
-    //    public function delete(DeleteAdvertisementRequest $data): bool
-    //    {
-    //        try {
-    //            /** @var Advertisement $advertisement */
-    //            $advertisement = Advertisement::findOrFail($data->id);
-    //
-    //            DB::transaction(function () use ($advertisement) {
-    //                $advertisement->gallery()->delete();
-    //                $advertisement->delete();
-    //            });
-    //
-    //            return true;
-    //        } catch (Exception $exception) {
-    //            Log::error('AdvertisementService::delete: '.$exception->getMessage());
-    //
-    //            throw $exception;
-    //        }
-    //    }
+    /**
+     * @throws Exception
+     */
+    public function delete(DeleteSportRequest $data): bool
+    {
+        try {
+            /** @var Sport $sport */
+            $sport = Sport::findOrFail($data->id);
+
+            DB::transaction(function () use ($sport) {
+                //                $advertisement->gallery()->delete();
+                $sport->delete();
+            });
+
+            return true;
+        } catch (Exception $exception) {
+            Log::error('SportService::delete: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
 }

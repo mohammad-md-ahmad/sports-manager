@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\SportServiceInterface;
-use App\Services\Data\Advertisement\DeleteAdvertisementRequest;
-use App\Services\Data\Advertisement\GetAdvertisementsRequest;
 use App\Services\Data\Sport\CreateSportRequest;
+use App\Services\Data\Sport\DeleteSportRequest;
 use App\Services\Data\Sport\GetAllSportsRequest;
+use App\Services\Data\Sport\GetSportRequest;
 use App\Services\Data\Sport\UpdateSportRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -41,24 +41,24 @@ class SportController extends Controller
         }
     }
 
-    //    public function get(GetAdvertisementsRequest $request): JsonResponse
-    //    {
-    //        try {
-    //            $data = $this->advertisementService->get($request);
-    //
-    //            return response()->json([
-    //                'message' => __('Adverstisement has been retrieved successfully!'),
-    //                'data' => $data,
-    //            ], Response::HTTP_OK);
-    //        } catch (Exception $exception) {
-    //            Log::error($exception->getMessage());
-    //
-    //            return response()->json([
-    //                'message' => __('Unable to retrieve Adverstisement!'),
-    //                'errors' => $exception->getMessage(),
-    //            ], Response::HTTP_BAD_REQUEST);
-    //        }
-    //    }
+    public function get(GetSportRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->sportService->get($request);
+
+            return response()->json([
+                'message' => __('Sport has been retrieved successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to retrieve Sport!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
 
     public function store(CreateSportRequest $request): JsonResponse
     {
@@ -92,18 +92,18 @@ class SportController extends Controller
         }
     }
 
-    //    public function delete(DeleteAdvertisementRequest $request): JsonResponse
-    //    {
-    //        try {
-    //            $this->advertisementService->delete($request);
-    //
-    //            return response()->json([
-    //                'message' => __('Adverstisement has been deleted successfully.'),
-    //            ], Response::HTTP_OK);
-    //        } catch (Exception $exception) {
-    //            Log::error('Unable to delete Adverstisement: '.$exception->getMessage());
-    //
-    //            return response()->json(['message' => __('Failed to delete Adverstisement.')], Response::HTTP_BAD_REQUEST);
-    //        }
-    //    }
+    public function delete(DeleteSportRequest $request): JsonResponse
+    {
+        try {
+            $this->sportService->delete($request);
+
+            return response()->json([
+                'message' => __('Sport has been deleted successfully.'),
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error('Unable to delete Sport: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to delete Sport.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
 }
