@@ -191,6 +191,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::post('/', [SportController::class, 'store'])->name('sports.store');
         Route::put('/{uuid}', [SportController::class, 'update'])->name('sports.update');
         Route::delete('/{uuid}', [SportController::class, 'delete'])->name('sports.delete');
+        Route::post('/{uuid}', [SportController::class, 'updateUserFavoriteSports'])->name('sports.update-user-favorite-sports');
     });
 });
 

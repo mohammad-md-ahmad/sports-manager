@@ -8,7 +8,9 @@ use App\Services\Data\Sport\DeleteSportRequest;
 use App\Services\Data\Sport\GetAllSportsRequest;
 use App\Services\Data\Sport\GetSportRequest;
 use App\Services\Data\Sport\UpdateSportRequest;
+use App\Services\Data\Sport\UpdateUserFavoriteSports;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 interface SportServiceInterface
 {
@@ -21,4 +23,6 @@ interface SportServiceInterface
     public function update(UpdateSportRequest $data): Sport;
 
     public function delete(DeleteSportRequest $data): bool;
+
+    public function updateUserFavoriteSports(UpdateUserFavoriteSports $data): Collection;
 }

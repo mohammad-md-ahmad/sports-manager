@@ -10,6 +10,7 @@ use App\Services\Data\Sport\DeleteSportRequest;
 use App\Services\Data\Sport\GetAllSportsRequest;
 use App\Services\Data\Sport\GetSportRequest;
 use App\Services\Data\Sport\UpdateSportRequest;
+use App\Services\Data\Sport\UpdateUserFavoriteSports;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -104,6 +105,25 @@ class SportController extends Controller
             Log::error('Unable to delete Sport: '.$exception->getMessage());
 
             return response()->json(['message' => __('Failed to delete Sport.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function updateUserFavoriteSports(UpdateUserFavoriteSports $request): JsonResponse
+    {
+        try {
+            $data = $this->sportService->updateUserFavoriteSports($request);
+
+            return response()->json([
+                'message' => __('User sports has been updated successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to update User sports!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
         }
     }
 }

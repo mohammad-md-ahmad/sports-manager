@@ -6,14 +6,17 @@ namespace App\Services;
 
 use App\Contracts\Services\SportServiceInterface;
 use App\Models\Sport;
+use App\Models\UserFavoriteSport;
 use App\Services\Data\Sport\CreateSportRequest;
 use App\Services\Data\Sport\DeleteSportRequest;
 use App\Services\Data\Sport\GetAllSportsRequest;
 use App\Services\Data\Sport\GetSportRequest;
 use App\Services\Data\Sport\UpdateSportRequest;
+use App\Services\Data\Sport\UpdateUserFavoriteSports;
 use App\Traits\ImageUpload;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -141,6 +144,30 @@ class SportService implements SportServiceInterface
             return true;
         } catch (Exception $exception) {
             Log::error('SportService::delete: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function updateUserFavoriteSports(UpdateUserFavoriteSports $data): Collection
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($data->sports as $sport) {
+                UserFavoriteSport::createOrUpdate([
+                    'user_id' => $data->user_id,
+                    'sport_id' => $sport,
+                ]);
+            }
+
+            DB::commit();
+
+            return UserFavoriteSport::query()->where('user_id', $data->user_id)->get();
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error('SportService::updateUserFavoriteSports: '.$exception->getMessage());
 
             throw $exception;
         }

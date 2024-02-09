@@ -22,6 +22,7 @@ class RegisterUserRequest extends Data
         public string $password,
         public string|Optional $profile_picture,
         public string|Optional|null $type = null,
+        public ?array $sports = [],
     ) {
         $this->type = UserType::CUSTOMER_USER->name;
     }
