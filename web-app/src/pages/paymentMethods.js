@@ -1,12 +1,9 @@
 import Head from 'next/head';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import {
   Box,
   Button,
   Container,
-  Pagination,
   Stack,
   SvgIcon,
   Typography,
@@ -16,26 +13,19 @@ import {
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import React, { useEffect, useReducer, useState } from 'react';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
-import { useRouter } from 'next/router';
 
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
-import SaveIcon from '@mui/icons-material/Save';
-import CancelIcon from '@mui/icons-material/Close';
 import DeleteConfirmationDialog from 'src/components/deleteConfirmationDialog';
 import AppListService from 'api/AppListService';
 
 const Page = () => {
   const appListService = new AppListService();
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const router = useRouter();
 
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [idToBeDeleted, setIdToBeDeleted] = useState();
 
   const handleDeleteClick = (id) => () => {
-    console.log(id);
     setDeleteDialogOpen(true);
     setIdToBeDeleted(id);
   };

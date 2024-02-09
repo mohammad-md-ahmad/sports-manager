@@ -1,29 +1,22 @@
 import Head from 'next/head';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon';
 import {
   Box,
   Button,
   Container,
-  Pagination,
   Stack,
   SvgIcon,
   Typography,
   Unstable_Grid2 as Grid,
   Card,
   TextField,
-  Select,
   Autocomplete,
   CardActions
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { CompanyCard } from 'src/sections/companies/company-card';
-import { CompaniesSearch } from 'src/sections/companies/companies-search';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CompanyService from 'api/CompanyService';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useAuthContext } from 'src/contexts/auth-context';
+
 import { useRouter } from 'next/router';
 import MiscService from 'api/MiscService';
 import { string, array, object as yupObject } from "yup";
