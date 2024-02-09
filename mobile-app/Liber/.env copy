@@ -1,0 +1,4 @@
+APP_NAME=Liber
+API_URL=https://liber.quad-bh.com/api
+ASSETS_URL=https://liber.quad-bh.com/storage
+IMAGES_URL=https://liber.quad-bh.com/files/images
