@@ -9,6 +9,7 @@ import XCircleIcon from '@heroicons/react/24/solid/XCircleIcon';
 import CreditCardIcon from '@heroicons/react/24/solid/CreditCardIcon';
 import MegaphoneIcon from '@heroicons/react/24/solid/MegaphoneIcon';
 import ChatBubbleOvalLeftEllipsisIcon from '@heroicons/react/24/solid/ChatBubbleOvalLeftEllipsisIcon';
+import PaperAirplaneIcon from '@heroicons/react/24/solid/PaperAirplaneIcon';
 import { SvgIcon } from '@mui/material';
 
 export const items = [
@@ -45,6 +46,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <MegaphoneIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Sports',
+    path: '/sports',
+    icon: (
+      <SvgIcon fontSize="small">
+        <PaperAirplaneIcon />
       </SvgIcon>
     )
   },

@@ -1,6 +1,4 @@
 import Head from 'next/head';
-import ArrowUpOnSquareIcon from '@heroicons/react/24/solid/ArrowUpOnSquareIcon';
-import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
 import CheckCircleIcon from '@heroicons/react/24/solid/CheckCircleIcon';
 import {
   Box,
@@ -18,16 +16,10 @@ import {
   CardActions
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { CompanyCard } from 'src/sections/companies/company-card';
-import { CompaniesSearch } from 'src/sections/companies/companies-search';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import CompanyService from 'api/CompanyService';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useAuthContext } from 'src/contexts/auth-context';
-import { useRouter } from 'next/router';
 import MiscService from 'api/MiscService';
 import { string, array, object as yupObject } from "yup";
-import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
 const Page = () => {
@@ -73,7 +65,6 @@ const Page = () => {
     }
   });
 
-
   const [countries, setCountries] = useState([]);
   const [userTypes, setUserTypes] = useState([]);
   const [companies, setCompanies] = useState([]);
@@ -89,7 +80,6 @@ const Page = () => {
 
       const outputArray = Object.entries(response.data?.data?.user_types).map(([id, label]) => ({ id, label }));
       setUserTypes(outputArray);
-
 
       companyService.list().then((response) => {
         setCompanies(response.data?.data?.data);

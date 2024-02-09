@@ -14,36 +14,31 @@ import {
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
-import { string, object as yupObject } from "yup";
-import { useFormik } from 'formik';
-import AdService from 'api/AdService';
-import { DatePicker } from '@mui/x-date-pickers';
-import { format } from 'date-fns';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { string, array, object as yupObject } from "yup";
+import { useFormik } from 'formik';
+import SportService from 'api/SportService';
+import { useEffect, useState } from 'react';
 
 const Page = () => {
+
+  const sportService = new SportService();
   const router = useRouter();
-  const adService = new AdService();
-  const adId = router?.query?.id ?? null;
+
+  const sportId = router?.query?.id ?? null;
 
   const initialFormDataValues = {
-    title: "",
+    name: "",
     description: "",
-    url: "",
-    effective_from: null,
   }
 
   const formDataValidateSchema = yupObject().shape({
-    title: string().required('Title is required'),
-    effective_from: string().required('Effective from is required'),
+    name: string().required('Name is required'),
   });
 
   const initialTouched = {
     name: false,
     description: false,
-    url: false,
-    effective_from: false,
   }
 
   const formik = useFormik({
@@ -66,14 +61,18 @@ const Page = () => {
     }
   });
 
+
+  const [logo, setLogo] = useState(null);
+
   useEffect(() => {
 
-    if (adId) {
-      adService.getAd(adId).then((response) => {
-        let adData = { ...response.data.data };
-        let date = new Date(`${adData['effective_from'].replace(' ', 'T')}.000Z`);
-        adData['effective_from'] = date;//date.toISOString();
-        formik.setValues(adData);
+    if (sportId) {
+      sportService.getSport(sportId).then((response) => {
+        setLogo({ uri: response.data?.data?.logo });
+
+        let sportData = { ...response.data.data, logo: null };
+
+        formik.setValues(sportData);
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);
@@ -84,13 +83,12 @@ const Page = () => {
 
   }, [])
 
-
   const submitForm = (values) => {
     let data = { ...values }
-    if (data['effective_from'])
-      data['effective_from'] = format(data['effective_from'], 'yyyy-MM-dd HH:mm:ss')
-    if (adId) {
-      adService.update(data).then((response) => {
+    if (sportId) {
+
+      sportService.update(data).then((response) => {
+
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);
@@ -98,7 +96,8 @@ const Page = () => {
         throw new Error(error.message);
       });
     } else {
-      adService.create(data).then((response) => {
+      sportService.create(data).then((response) => {
+
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);
@@ -109,23 +108,11 @@ const Page = () => {
 
   }
 
-  const handleDateChange = (date) => {
-    // Update the effective_from field.
-    console.log(date);
-    formik.setFieldValue('effective_from', date);
-
-    // // Format the date and update the formatted_effective_from field
-    // formik.setFieldValue(
-    //   'effective_from',
-    //   date ? format(date, 'dd-MM-yyyy') : ''
-    // );
-  };
-
   return (
     <>
       <Head>
         <title>
-          Ad| Liber
+          Spory | Liber
         </title>
       </Head>
       <Box
@@ -148,7 +135,7 @@ const Page = () => {
               >
                 <Stack spacing={1}>
                   <Typography variant="h4">
-                    Advertisement
+                    Sport
                   </Typography>
                   <Stack
                     alignItems="center"
@@ -175,26 +162,15 @@ const Page = () => {
                     <Stack spacing={3}>
                       <TextField
                         fullWidth
-                        label="Title"
-                        name="title"
-                        value={formik.values.title}
+                        label="Name"
+                        name="name"
+                        value={formik.values.name}
                         onBlur={formik.handleBlur}
                         onChange={formik.handleChange}
-                        error={!!(formik.touched.title && formik.errors.title)}
-                        helperText={formik.touched.title && formik.errors.title ? formik.errors.title : ""}
+                        error={!!(formik.touched.name && formik.errors.name)}
+                        helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
                       />
 
-                      <DatePicker
-                        fullWidth
-                        label="Effective From"
-                        name="effective_from"
-                        value={formik.values.effective_from}
-                        onBlur={formik.handleBlur}
-                        onChange={handleDateChange}
-                        error={!!(formik.touched.effective_from && formik.errors.effective_from)}
-                        helperText={formik.touched.effective_from && formik.errors.effective_from ? formik.errors.effective_from : ""}
-                        renderInput={(params) => <TextField {...params} />}
-                      />
 
                     </Stack>
 
@@ -208,15 +184,15 @@ const Page = () => {
 
                       <TextField
                         fullWidth
-                        label="Url"
-                        name="url"
-                        value={formik.values.url}
+                        label="Description"
+                        name="description"
+                        multiline
+                        value={formik.values.description}
                         onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('url')}
-                        error={!!(formik.touched.url && formik.errors.url)}
-                        helperText={formik.touched.url && formik.errors.url ? formik.errors.url : ""}
+                        onChange={formik.handleChange('description')}
+                        error={!!(formik.touched.description && formik.errors.description)}
+                        helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
                       />
-
                     </Stack>
 
                   </Grid>
@@ -225,17 +201,6 @@ const Page = () => {
                     md={12}
                     lg={12}
                   >
-                    <TextField
-                      fullWidth
-                      label="Description"
-                      name="description"
-                      multiline
-                      value={formik.values.description}
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange('description')}
-                      error={!!(formik.touched.description && formik.errors.description)}
-                      helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
-                    />
 
                   </Grid>
                 </Grid>
