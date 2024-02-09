@@ -10,7 +10,12 @@ import {
   Unstable_Grid2 as Grid,
   Card,
   TextField,
-  CardActions
+  CardActions,
+  Checkbox,
+  FormControl,
+  FormLabel,
+  FormGroup,
+  FormControlLabel
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
@@ -30,6 +35,7 @@ const Page = () => {
   const initialFormDataValues = {
     name: "",
     description: "",
+    is_enabled: false,
   }
 
   const formDataValidateSchema = yupObject().shape({
@@ -39,6 +45,7 @@ const Page = () => {
   const initialTouched = {
     name: false,
     description: false,
+    is_enabled: false
   }
 
   const formik = useFormik({
@@ -171,7 +178,20 @@ const Page = () => {
                         helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
                       />
 
-
+                      <FormControl component="fieldset">
+                        <FormGroup>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={formik.values.is_enabled}
+                                onChange={formik.handleChange}
+                                name="is_enabled"
+                              />
+                            }
+                            label="Is Enabled"
+                          />
+                        </FormGroup>
+                      </FormControl>
                     </Stack>
 
                   </Grid>
