@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
-
 import {
     Dimensions,
     StyleSheet,
 } from "react-native";
-import { BarChart, PieChart } from "react-native-chart-kit";
+import { BarChart } from "react-native-chart-kit";
 import { Card } from "react-native-elements";
 import colors from "../../styles/colors";
-import { AgeRanges, AgeRangesColors } from "../../helpers/constants";
 
 interface ReportsData {
     genders: [];
@@ -20,30 +18,13 @@ interface ReportsDataProps {
     reportsData: ReportsData;
 }
 
-const DemographicsReport: React.FC<ReportsDataProps> = ({ reportsData }) => {
 
-    const [genders, setGenders] = useState([]);
-    const [ages, setAges] = useState([]);
-    const [usersPerMonth, setUsersPerMonth] = useState(null);
+const RevenuePerYearReport: React.FC<ReportsDataProps> = ({ reportsData }) => {
 
-    const transformObjectToArray = (inputObject) => {
-        return Object.entries(inputObject).map(([name, count]) => ({
-            name: AgeRanges[name] ?? "()",
-            count: parseInt(count, 10),
-            color: AgeRangesColors[name] ?? getRandomColor()
-        }));
-    };
-
-    const getRandomColor = () => {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    };
+    const [revenuePerMonth, setRevenuePerMonth] = useState(null);
 
     const transformDataForChart = (data) => {
+        data = [{ ...data }] // to be removed
         // Extracting unique months and their counts
         const months = data.map((entry) => entry.month);
         const uniqueMonths = [...new Set(months)];
@@ -53,13 +34,14 @@ const DemographicsReport: React.FC<ReportsDataProps> = ({ reportsData }) => {
             {
                 data: uniqueMonths.map((month) => {
                     const entry = data.find((item) => item.month === month);
-                    return entry ? entry.count : 0;
+                    return entry ? entry.amount : 0;
                 }),
                 color: (opacity = 1) => `rgba(100, 100, 225, ${opacity})`,
                 strokeWidth: 2,
             },
         ];
 
+        console.log("datasets", datasets)
         // Creating labels
         const labels = uniqueMonths.map((month) => {
             // Assuming you want to use month names instead of numbers
@@ -85,29 +67,17 @@ const DemographicsReport: React.FC<ReportsDataProps> = ({ reportsData }) => {
         const chartData = {
             labels,
             datasets,
-            legend: ['User Distribution'],
+            legend: ['Revenue Distribution'],
         };
 
         return chartData;
     };
 
-
     useEffect(() => {
         if (reportsData) {
-            reportsData?.genders.map(obj => {
-                obj.name = obj.gender ?? "Not set";
-                obj.color = obj.gender == 'Male' ? colors.PrimaryBlue : colors.SecondaryPurple
-                return obj;
-            })
-            setGenders(reportsData?.genders);
-
-            const resultArray = transformObjectToArray(reportsData?.ages);
-            setAges(resultArray);
-
-            setUsersPerMonth(transformDataForChart(reportsData?.users_per_month));
+            setRevenuePerMonth(transformDataForChart(reportsData?.revenue_per_year));
         }
     }, [reportsData])
-
 
     const screenWidth = Dimensions.get("window").width - 50;
 
@@ -124,49 +94,23 @@ const DemographicsReport: React.FC<ReportsDataProps> = ({ reportsData }) => {
 
     return (
         <>
-            <Card containerStyle={styles.cardView}>
-                <Card.Title>Demographics</Card.Title>
-                <Card.Divider />
-                <Card.Title>Genders Report</Card.Title>
-                <PieChart
-                    data={genders}
-                    width={screenWidth}
-                    height={220}
-                    chartConfig={chartConfig}
-                    accessor={"count"}
-                    backgroundColor={"transparent"}
-                    paddingLeft={"25"}
-                    center={[0, 0]}
-                    absolute
-                />
-                <Card.Divider />
-                <Card.Title>Ages Report</Card.Title>
-                <PieChart
-                    data={ages}
-                    width={screenWidth}
-                    height={220}
-                    chartConfig={chartConfig}
-                    accessor={"count"}
-                    backgroundColor={"transparent"}
-                    paddingLeft={"25"}
-                    center={[0, 0]}
-                    absolute
-                />
-                {usersPerMonth && <>
+            {revenuePerMonth && <Card containerStyle={styles.cardView}>
+                <Card.Title>Revenue Per Year</Card.Title>
+                <>
                     <Card.Divider />
-                    <Card.Title>Users Per Month</Card.Title>
                     <BarChart
                         //style={graphStyle}
-                        data={usersPerMonth}
+                        data={revenuePerMonth}
                         width={screenWidth}
                         height={250}
-                        yAxisLabel=""
+                        yAxisLabel="LBP-"
                         chartConfig={chartConfig}
                         verticalLabelRotation={30}
                     />
                 </>
-                }
+
             </Card>
+            }
         </>
     );
 }
@@ -188,4 +132,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default DemographicsReport;
+export default RevenuePerYearReport;
