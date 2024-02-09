@@ -5,6 +5,7 @@ namespace App\Models;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -53,4 +54,11 @@ class Sport extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function icon(): Attribute
+    {
+        return Attribute::make(
+            get: fn ($value) => $value ? config('filesystems.images_url').'?path='.$value : null
+        );
+    }
 }

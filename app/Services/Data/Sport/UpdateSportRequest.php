@@ -31,7 +31,7 @@ class UpdateSportRequest extends Data
         $sport = Sport::query()->whereUuid($uuid)->first();
 
         return [
-            'title' => Rule::unique('sports')->ignore($sport->id, 'id'),
+            'name' => Rule::unique('sports')->ignore($sport->id, 'id'),
         ];
     }
 }

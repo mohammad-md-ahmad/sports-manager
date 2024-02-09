@@ -187,10 +187,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::prefix('sports')->group(function () {
-        //        Route::get('/{uuid}', [AdvertisementController::class, 'get'])->name('advertisements.get');
+        Route::get('/{uuid}', [SportController::class, 'get'])->name('sports.get');
         Route::post('/', [SportController::class, 'store'])->name('sports.store');
         Route::put('/{uuid}', [SportController::class, 'update'])->name('sports.update');
-        //        Route::delete('/{uuid}', [AdvertisementController::class, 'delete'])->name('sports.delete');
+        Route::delete('/{uuid}', [SportController::class, 'delete'])->name('sports.delete');
     });
 });
 
