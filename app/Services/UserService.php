@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserGender;
 use App\Models\User;
+use App\Models\UserFavoriteSport;
 use App\Models\UserPersonalInfo;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
@@ -76,6 +77,13 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
+            foreach ($data->favorite_sports as $sport) {
+                UserFavoriteSport::createOrUpdate([
+                    'user_id' => $user->user_id,
+                    'sport_id' => $sport,
+                ]);
+            }
+
             $genderEnum = UserGender::tryFromName($data->gender);
 
             $userPersonalInfoData = [
@@ -131,6 +139,13 @@ class UserService implements UserServiceInterface
                 $uploadedImg = $this->uploadImage($data->profile_picture, $user->id);
                 $user->profile_picture = $uploadedImg;
                 $user->save();
+            }
+
+            foreach ($data->favorite_sports as $sport) {
+                UserFavoriteSport::createOrUpdate([
+                    'user_id' => $user->user_id,
+                    'sport_id' => $sport,
+                ]);
             }
 
             $userPersonalInfo = UserPersonalInfo::query()->where('user_id', $user->id)->first();

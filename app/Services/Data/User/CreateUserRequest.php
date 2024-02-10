@@ -24,6 +24,7 @@ class CreateUserRequest extends Data
         public string|Optional $type,
         public ?string $gender = '',
         public ?string $dob = '',
+        public ?array $favorite_sports = [],
     ) {
     }
 

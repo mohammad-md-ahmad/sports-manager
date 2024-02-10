@@ -34,6 +34,7 @@ class UpdateUserRequest extends Data
         public ?string $profile_picture = null,
         public ?string $gender = '',
         public ?string $dob = '',
+        public ?array $favorite_sports = [],
     ) {
     }
 }
