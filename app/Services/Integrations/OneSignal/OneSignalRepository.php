@@ -2,9 +2,6 @@
 
 namespace App\Services\Integrations\OneSignal;
 
-//use App\Enums\PaymentInstrumentProviderConfigurationKeyEnum;
-//use App\Services\Integrations\B4B\ApiEventLogRepository;
-//use App\Services\Integrations\B4B\Data\B4BResponse;
 use App\Services\Integrations\HttpRequestTypesEnum;
 use App\Services\Integrations\HttpWrapper;
 use Exception;
@@ -34,7 +31,7 @@ class OneSignalRepository
             'include_aliases' => ['external_id' => $data['user_uuids']],
             'target_channel' => 'push',
             'contents' => ['en' => $data['message']],
-            'data' => ['screen' => 'calendar', 'user_uuids' => $data['user_uuids']],
+            'data' => ['screen' => 'calendar', 'user_uuids' => implode(',', $data['user_uuids'])],
         ];
 
         if (! empty($data['buttons'])) {
