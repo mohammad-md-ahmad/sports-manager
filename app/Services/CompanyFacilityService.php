@@ -41,7 +41,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
             /** @var CompanyFacility $companyFacility */
             $companyFacility = CompanyFacility::findOrFail($data->id);
 
-            return $companyFacility->with(['company', 'address.country', 'gallery'])->first();
+            return $companyFacility->with(['company', 'address.country', 'gallery', 'sport'])->first();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::get: '.$exception->getMessage());
 
@@ -77,7 +77,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
                 });
             });
 
-            return $facilitiesQuery->with(['company', 'address.country', 'gallery', 'schedule.bookings'])->jsonPaginate();
+            return $facilitiesQuery->with(['company', 'address.country', 'gallery', 'schedule.bookings', 'sport'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAll: '.$exception->getMessage());
 
@@ -91,7 +91,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
     public function getAllByCompany(GetCompanyFacilitiesRequest $data): Collection
     {
         try {
-            return $data->company->facilities()->with(['company', 'address.country', 'gallery'])->get();
+            return $data->company->facilities()->with(['company', 'address.country', 'gallery', 'sport'])->get();
         } catch (Exception $exception) {
             Log::error('CompanyFacilityService::getAllByCompany: '.$exception->getMessage());
 
@@ -131,7 +131,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
 
             DB::commit();
 
-            return $companyFacility;
+            return CompanyFacility::with(['address', 'sport'])->findOrFail($companyFacility->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
@@ -193,7 +193,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
 
             $data->facility->refresh();
 
-            return $data->facility;
+            return CompanyFacility::with(['address', 'sport'])->findOrFail($data->facility->id);
         } catch (Exception $exception) {
             DB::rollBack();
 

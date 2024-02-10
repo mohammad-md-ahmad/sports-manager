@@ -13,8 +13,6 @@ use Spatie\LaravelData\Data;
 class CreateAddressRequest extends Data
 {
     public function __construct(
-        public string $model_type,
-        public string $model_id,
         public string $line_1,
         public string $city,
         #[MapInputName('country_uuid')]
@@ -25,6 +23,8 @@ class CreateAddressRequest extends Data
         public ?string $region = null,
         public ?string $postcode = null,
         public ?array $geocode_data = null,
+        public ?string $model_type = null,
+        public ?string $model_id = null,
     ) {
     }
 }

@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Services\Data\CompanyFacility;
 
 use App\Models\Company;
+use App\Models\Sport;
 use App\Services\Data\Address\CreateAddressRequest;
+use App\Services\Data\Core\UuidToEntityCaster;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
+use Spatie\LaravelData\Attributes\MapInputName;
+use Spatie\LaravelData\Attributes\WithCast;
 use Spatie\LaravelData\Data;
 
 class CreateCompanyFacilityRequest extends Data
@@ -19,6 +23,9 @@ class CreateCompanyFacilityRequest extends Data
         public string $name,
         public string $type,
         public array $details,
+        #[MapInputName('sport_uuid')]
+        #[WithCast(UuidToEntityCaster::class, Sport::class)]
+        public string $sport_id,
         public CreateAddressRequest $createAddressRequest,
         public ?array $companyFacilityPhotos = null,
     ) {
