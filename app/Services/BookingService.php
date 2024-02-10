@@ -116,6 +116,20 @@ class BookingService implements BookingServiceInterface
                             'facility_name' => $scheduleDetails->facility->name,
                             'date' => $scheduleDetails->date_time_from,
                         ]),
+                        [
+                            [
+                                'id' => 'approve-booking-btn',
+                                'text' => __('Approve'),
+                            ],
+                            [
+                                'id' => 'decline-booking-btn',
+                                'text' => __('Decline'),
+                            ],
+                            [
+                                'id' => 'view-booking-btn',
+                                'text' => __('View'),
+                            ],
+                        ]
                     );
                 }
 
