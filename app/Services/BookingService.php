@@ -105,19 +105,19 @@ class BookingService implements BookingServiceInterface
 
             if ($companyCustomer && $companyCustomer?->hasAutoApprove()) {
                 $approveRequest = ApproveBookingRequest::from([
-                    'uuid' => $booking->uuid,
+                    'id' => $booking->id,
                 ]);
 
-                $this->approve($approveRequest);
-
-                $this->pushNotificationService->createNotification(
-                    [$scheduleDetails->facility->company->companyUser()->user->uuid],
-                    __('User :user has booked your facility :facility_name on :date, and it was auto approved', [
-                        'user' => $user->full_name,
-                        'facility_name' => $scheduleDetails->facility->name,
-                        'date' => $scheduleDetails->date_time_from,
-                    ]),
-                );
+                if ($this->approve($approveRequest)) {
+                    $this->pushNotificationService->createNotification(
+                        [$scheduleDetails->facility->company->companyUser()->user->uuid],
+                        __('User :user has booked your facility :facility_name on :date, and it was auto approved', [
+                            'user' => $user->full_name,
+                            'facility_name' => $scheduleDetails->facility->name,
+                            'date' => $scheduleDetails->date_time_from,
+                        ]),
+                    );
+                }
 
                 return $booking;
             }
