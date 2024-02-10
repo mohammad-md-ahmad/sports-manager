@@ -62,7 +62,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
     return (
         <View style={styles.containerView}>
             {notification.category == NotificationCategory.BookingRequest &&
-                <Card style={styles.card}>
+                <View style={styles.card}>
                     <View style={styles.container}>
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
@@ -85,11 +85,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
                         </>
                         }
                     </View>
-                </Card>
+                </View>
             }
 
             {notification.category == NotificationCategory.BookingResponse &&
-                <Card style={styles.card}>
+                <View style={styles.card}>
                     <View style={styles.container}>
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
@@ -97,11 +97,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
                             <Text style={styles.text}>{notification.notification}</Text>
                         </View>
                     </View>
-                </Card>
+                </View>
             }
 
             {notification.category == NotificationCategory.General &&
-                <Card style={styles.card}>
+                <View style={styles.card}>
                     <View style={styles.container}>
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
@@ -110,7 +110,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
                             <Text style={styles.text}>Status: {notification.status}</Text>
                         </View>
                     </View>
-                </Card>
+                </View>
             }
 
         </View>
@@ -119,6 +119,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
 
 const styles = StyleSheet.create({
     containerView: {
+        marginTop: 3,
         marginBottom: 3,
     },
     container: {
@@ -132,8 +133,9 @@ const styles = StyleSheet.create({
         borderColor: colors.PrimaryGreenLight,
         borderWidth: 0.5,
         marginHorizontal: 10,
-        marginTop: 1,
-        marginBottom: 1,
+        marginTop: 7,
+        marginBottom: 7,
+        backgroundColor: colors.White
     },
     title: {
         ...globalStyles.text,
