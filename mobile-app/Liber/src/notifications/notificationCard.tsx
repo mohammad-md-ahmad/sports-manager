@@ -127,7 +127,6 @@ const styles = StyleSheet.create({
         //height: 100,
     },
     card: {
-        flexDirection: 'row',
         padding: 15,
         borderRadius: 10,
         borderColor: colors.PrimaryGreenLight,
