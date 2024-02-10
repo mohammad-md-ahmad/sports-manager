@@ -19,10 +19,11 @@ interface Notification {
 
 interface NotificationCardProps {
     notification: Notification;
+    loadData: any;
 }
 
 
-const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => {
+const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadData }) => {
 
     let statusColor = determineStatusBarColor(notification.status);
 
@@ -46,6 +47,8 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
     const onApprovePress = (booking_uuid: string): void => {
         bookingService.bookApprove({ uuid: booking_uuid })
             .then((response) => {
+                if (loadData)
+                    loadData();
             }).catch((error) => {
             }).finally(() => {
             })
@@ -54,6 +57,8 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
     const onDeclinePress = (booking_uuid: string): void => {
         bookingService.bookDecline({ uuid: booking_uuid })
             .then((response) => {
+                if (loadData)
+                    loadData();
             }).catch((error) => {
             }).finally(() => {
             })
