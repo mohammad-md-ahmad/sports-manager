@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\NotificationServiceInterface;
-use App\Services\Data\Notification\GetUserNotificationsRequest;
+use App\Services\Data\Notification\GetReceiverNotificationsRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
@@ -16,7 +16,7 @@ class NotificationController extends Controller
     ) {
     }
 
-    public function getUserNotifications(GetUserNotificationsRequest $request): JsonResponse
+    public function getUserNotifications(GetReceiverNotificationsRequest $request): JsonResponse
     {
         try {
             $data = $this->notificationService->getUserNotifications($request);

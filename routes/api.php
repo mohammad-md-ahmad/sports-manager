@@ -171,7 +171,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('notifications')->group(function () {
 
-        Route::get('/user/{user_uuid}/get-all', [NotificationController::class, 'getUserNotifications'])->name('notifications.user.get-all');
+        Route::get('/receiver/{receiver_uuid}/get-all', [NotificationController::class, 'getUserNotifications'])->name('notifications.user.get-all');
     });
 
     Route::prefix('reports')->group(function () {

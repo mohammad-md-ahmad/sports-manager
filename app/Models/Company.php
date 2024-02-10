@@ -126,4 +126,9 @@ class Company extends Model
     {
         return $this->address->country->currency();
     }
+
+    public function notifications(): MorphMany
+    {
+        return $this->morphMany(Notification::class, 'receiver');
+    }
 }
