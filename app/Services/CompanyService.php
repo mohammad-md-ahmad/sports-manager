@@ -95,6 +95,12 @@ class CompanyService implements CompanyServiceInterface
                 });
             });
 
+            $companiesQuery->when($data->sport_id, function (Builder $query) use ($data) {
+                $query->whereHas('facilities', function (Builder $query) use ($data) {
+                    $query->where('sport_id', $data->sport_id);
+                });
+            });
+
             return $companiesQuery->with(['address', 'gallery', 'ratings'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('CompanyService::get: '.$exception->getMessage());

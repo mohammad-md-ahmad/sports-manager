@@ -6,6 +6,7 @@ namespace App\Services\Data\Company;
 
 use App\Enums\FacilityType;
 use App\Models\Country;
+use App\Models\Sport;
 use App\Services\Data\Core\UuidToEntityCaster;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\WithCast;
@@ -20,6 +21,9 @@ class SearchCompaniesRequest extends Data
         public ?string $country_id = null,
         public ?string $city = null,
         public ?string $type = null,
+        #[MapInputName('sport_uuid')]
+        #[WithCast(UuidToEntityCaster::class, Sport::class)]
+        public ?string $sport_id = null,
     ) {
     }
 
