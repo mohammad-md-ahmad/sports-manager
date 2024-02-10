@@ -72,12 +72,12 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
                     </View>
                     <View style={styles.buttonRow}>
                         <Button
-                            onPress={() => onApprovePress("")}
+                            onPress={() => onApprovePress(notification?.booking_notifications?.booking_uuid)}
                             title="Approve"
                             buttonStyle={styles.approveButton}
                         />
                         <Button
-                            onPress={() => onDeclinePress("")}
+                            onPress={() => onDeclinePress(notification?.booking_notifications?.booking_uuid)}
                             title="Reject"
                             buttonStyle={styles.rejectButton}
                         />
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginTop: 7,
         marginBottom: 7,
-        
+
     },
     title: {
         ...globalStyles.text,
