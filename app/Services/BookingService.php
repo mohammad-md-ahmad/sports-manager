@@ -7,8 +7,10 @@ namespace App\Services;
 use App\Contracts\Services\BookingServiceInterface;
 use App\Enums\BookingStatus;
 use App\Enums\MobileAppScreensEnum;
+use App\Enums\NotificationCategory;
+use App\Enums\NotificationStatus;
 use App\Enums\ScheduleDetailsStatus;
-use App\Events\BookingApproved;
+use App\Events\BookingEvent;
 use App\Models\Booking;
 use App\Models\Company;
 use App\Models\CompanyCustomer;
@@ -19,6 +21,7 @@ use App\Services\Data\Booking\CreateBookingRequest;
 use App\Services\Data\Booking\DeclineBookingRequest;
 use App\Services\Data\Booking\GetBookingsRequest;
 use App\Services\Data\Booking\GetCustomerBookingsRequest;
+use App\Services\Data\Notification\CreateNotificationRequest;
 use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -110,44 +113,46 @@ class BookingService implements BookingServiceInterface
                 ]);
 
                 if ($this->approve($approveRequest)) {
+                    $notificationText = __('User :user has booked your facility :facility_name on :date, and it was auto approved', [
+                        'user' => $user->full_name,
+                        'facility_name' => $scheduleDetails->facility->name,
+                        'date' => $scheduleDetails->date_time_from,
+                    ]);
+
                     $this->pushNotificationService->createNotification(
                         [$scheduleDetails->facility->company->companyUser()->user->uuid],
-                        __('User :user has booked your facility :facility_name on :date, and it was auto approved', [
-                            'user' => $user->full_name,
-                            'facility_name' => $scheduleDetails->facility->name,
-                            'date' => $scheduleDetails->date_time_from,
-                        ]),
-                        [
-                            [
-                                'id' => 'approve-booking-btn',
-                                'text' => __('Approve'),
-                            ],
-                            [
-                                'id' => 'decline-booking-btn',
-                                'text' => __('Decline'),
-                            ],
-                            [
-                                'id' => 'view-booking-btn',
-                                'text' => __('View'),
-                            ],
-                        ],
+                        $notificationText,
                         custom_data: [
-                            'screen' => MobileAppScreensEnum::Notifications->name,
+                            'screen' => MobileAppScreensEnum::ProgramManagmentTabs->name,
+                            'sub_screen' => MobileAppScreensEnum::Notifications->name,
                             'booking_uuid' => $booking->uuid,
                         ]
                     );
+
+                    $createNotificationRequest = CreateNotificationRequest::from([
+                        'receiver_type' => Company::class,
+                        'receiver_id' => $scheduleDetails->facility->company->id,
+                        'title' => 'Booking Request - Auto Approved',
+                        'notifi cation' => $notificationText,
+                        'status' => NotificationStatus::Sent,
+                        'category' => NotificationCategory::BookingRequest,
+                    ]);
+
+                    event(new BookingEvent($booking, $createNotificationRequest));
                 }
 
                 return $booking;
             }
 
+            $notificationText = __('User :user wants to book your facility :facility_name on :date', [
+                'user' => $user->full_name,
+                'facility_name' => $scheduleDetails->facility->name,
+                'date' => $scheduleDetails->date_time_from,
+            ]);
+
             $this->pushNotificationService->createNotification(
                 [$scheduleDetails->facility->company->companyUser()->user->uuid],
-                __('User :user wants to book your facility :facility_name on :date', [
-                    'user' => $user->full_name,
-                    'facility_name' => $scheduleDetails->facility->name,
-                    'date' => $scheduleDetails->date_time_from,
-                ]),
+                $notificationText,
                 [
                     [
                         'id' => 'approve-booking-btn',
@@ -161,8 +166,24 @@ class BookingService implements BookingServiceInterface
                         'id' => 'view-booking-btn',
                         'text' => __('View'),
                     ],
-                ]
+                ],
+                custom_data: [
+                    'screen' => MobileAppScreensEnum::ProgramManagmentTabs->name,
+                    'sub_screen' => MobileAppScreensEnum::Notifications->name,
+                    'booking_uuid' => $booking->uuid,
+                ],
             );
+
+            $createNotificationRequest = CreateNotificationRequest::from([
+                'receiver_type' => Company::class,
+                'receiver_id' => $scheduleDetails->facility->company->id,
+                'title' => 'Booking Request',
+                'notifi cation' => $notificationText,
+                'status' => NotificationStatus::Sent,
+                'category' => NotificationCategory::BookingRequest,
+            ]);
+
+            event(new BookingEvent($booking, $createNotificationRequest));
 
             return $booking;
         } catch (Exception $exception) {
@@ -207,15 +228,30 @@ class BookingService implements BookingServiceInterface
                 'status' => ScheduleDetailsStatus::Booked->name,
             ]);
 
+            $notificationText = __('Your booking request of facility :facility_name on :date has been approved', [
+                'facility_name' => $booking->scheduleDetails->facility->name,
+                'date' => $booking->scheduleDetails->date_time_from,
+            ]);
+
             $this->pushNotificationService->createNotification(
                 [$booking->customerUser->uuid],
-                __('Your booking request of facility :facility_name on :date has been approved', [
-                    'facility_name' => $booking->scheduleDetails->facility->name,
-                    'date' => $booking->scheduleDetails->date_time_from,
-                ])
+                $notificationText,
+                custom_data: [
+                    'screen' => MobileAppScreensEnum::Notifications->name,
+                    'booking_uuid' => $booking->uuid,
+                ]
             );
 
-            event(new BookingApproved($booking));
+            $createNotificationRequest = CreateNotificationRequest::from([
+                'receiver_type' => User::class,
+                'receiver_id' => $booking->user_id,
+                'title' => 'Booking Approved',
+                'notifi cation' => $notificationText,
+                'status' => NotificationStatus::Sent,
+                'category' => NotificationCategory::BookingResponse,
+            ]);
+
+            event(new BookingEvent($booking, $createNotificationRequest));
 
             DB::commit();
 
@@ -258,13 +294,30 @@ class BookingService implements BookingServiceInterface
 
             DB::commit();
 
+            $notificationText = __('Your booking request of facility :facility_name on :date has been declined', [
+                'facility_name' => $booking->scheduleDetails->facility->name,
+                'date' => $booking->scheduleDetails->date_time_from,
+            ]);
+
             $this->pushNotificationService->createNotification(
                 [$booking->customerUser->uuid],
-                __('Your booking request of facility :facility_name on :date has been declined', [
-                    'facility_name' => $booking->scheduleDetails->facility->name,
-                    'date' => $booking->scheduleDetails->date_time_from,
-                ])
+                $notificationText,
+                custom_data: [
+                    'screen' => MobileAppScreensEnum::Notifications->name,
+                    'booking_uuid' => $booking->uuid,
+                ]
             );
+
+            $createNotificationRequest = CreateNotificationRequest::from([
+                'receiver_type' => User::class,
+                'receiver_id' => $booking->user_id,
+                'title' => 'Booking Declined',
+                'notifi cation' => $notificationText,
+                'status' => NotificationStatus::Sent,
+                'category' => NotificationCategory::BookingResponse,
+            ]);
+
+            event(new BookingEvent($booking, $createNotificationRequest));
 
             return true;
         } catch (Exception $exception) {

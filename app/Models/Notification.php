@@ -9,7 +9,7 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
  * @property string $id
@@ -18,7 +18,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $notification
  * @property NotificationStatus $status
  * @property NotificationCategory $category
- * @property User $user
  */
 class Notification extends Model
 {
@@ -33,11 +32,13 @@ class Notification extends Model
      */
     protected $fillable = [
         'uuid',
-        'user_id',
+        'receiver_type',
+        'receiver_id',
         'title',
         'notification',
         'status',
         'category',
+        'opened_at',
     ];
 
     /**
@@ -49,10 +50,11 @@ class Notification extends Model
         'uuid' => EfficientUuid::class,
         'status' => NotificationStatus::class,
         'category' => NotificationCategory::class,
+        'opened_at' => 'datetime:Y-m-d H:i:s',
     ];
 
-    public function user(): BelongsTo
+    public function receiver(): MorphTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->morphTo();
     }
 }

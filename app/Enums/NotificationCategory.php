@@ -4,13 +4,15 @@ namespace App\Enums;
 
 enum NotificationCategory
 {
-    case Booking;
+    case BookingRequest;
+    case BookingResponse;
     case General;
 
     public function toString()
     {
         return match ($this) {
-            self::Booking => __('Booking'),
+            self::BookingRequest => __('Booking Request'),
+            self::BookingResponse => __('Booking Response'),
             self::General => __('General'),
         };
     }

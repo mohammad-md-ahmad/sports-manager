@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
-use App\Events\BookingApproved;
+use App\Events\BookingEvent;
 use App\Events\PasswordResetEvent;
 use App\Listeners\AddCompanyCustomer;
+use App\Listeners\InsertNotificationRecord;
 use App\Listeners\PasswordResetListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -24,7 +25,8 @@ class EventServiceProvider extends ServiceProvider
         PasswordResetEvent::class => [
             PasswordResetListener::class,
         ],
-        BookingApproved::class => [
+        BookingEvent::class => [
+            InsertNotificationRecord::class,
             AddCompanyCustomer::class,
         ],
     ];
