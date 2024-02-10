@@ -43,16 +43,16 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
     }
 
     const bookingService = new BookingService();
-    const onApprovePress = (reservation: AgendaEntry): void => {
-        bookingService.bookApprove({ uuid: reservation.uuid })
+    const onApprovePress = (booking_uuid: string): void => {
+        bookingService.bookApprove({ uuid: booking_uuid })
             .then((response) => {
             }).catch((error) => {
             }).finally(() => {
             })
     }
 
-    const onDeclinePress = (reservation: AgendaEntry): void => {
-        bookingService.bookDecline({ uuid: reservation.uuid })
+    const onDeclinePress = (booking_uuid: string): void => {
+        bookingService.bookDecline({ uuid: booking_uuid })
             .then((response) => {
             }).catch((error) => {
             }).finally(() => {
@@ -73,12 +73,12 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
                     <View style={styles.buttonRow}>
                         {notification?.booking_notification?.booking?.status == BookingStatus.Pending && <>
                             <Button
-                                onPress={() => onApprovePress(notification?.booking_notification?.booking)}
+                                onPress={() => onApprovePress(notification?.booking_notification?.booking?.uuid)}
                                 title="Approve"
                                 buttonStyle={styles.approveButton}
                             />
                             <Button
-                                onPress={() => onDeclinePress(notification?.booking_notification?.booking)}
+                                onPress={() => onDeclinePress(notification?.booking_notification?.booking?.uuid)}
                                 title="Reject"
                                 buttonStyle={styles.rejectButton}
                             />
