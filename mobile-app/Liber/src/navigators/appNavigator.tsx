@@ -72,17 +72,21 @@ const AppNavigator = () => {
                         declineBooking(event.notification?.additionalData?.booking_uuid)
                         break;
                     default:
-                        let screen = event.notification?.additionalData?.screen
-                        navigator.navigate(screen);
+                        let targetScreen = event.notification?.additionalData?.screen;
+                        let targetSubScreen = event.notification?.additionalData?.sub_screen;
+                        navigator.navigate(targetScreen, targetSubScreen ? { screen: targetSubScreen } : {});
                         break;
                 }
 
             } else if (event.notification?.additionalData) {
-                let screen = event.notification?.additionalData?.screen
-                navigator.navigate(screen);
+                let targetScreen = event.notification?.additionalData?.screen;
+                let targetSubScreen = event.notification?.additionalData?.sub_screen;
+                navigator.navigate(targetScreen, targetSubScreen ? { screen: targetSubScreen } : {});
             }
         }
     };
+
+
 
     const approveBooking = (bookingUuid: string): void => {
         bookingService.bookApprove({ uuid: bookingUuid })
