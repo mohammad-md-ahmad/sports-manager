@@ -112,3 +112,9 @@ export enum FormMode {
     Add = 'add',
     Edit = 'edit',
 }
+
+export enum NotificationActionButtons {
+    ApproveBookingBtn = 'approve-booking-btn',
+    DeclineBookingBtn = 'decline-booking-btn',
+    ViewBookingBtn = 'view-booking-btn'
+}
