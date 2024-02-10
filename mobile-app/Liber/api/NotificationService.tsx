@@ -16,11 +16,11 @@ class NotificationService extends AxiosService {
     async getUserNotifications() {
         const userData = await this.userDataPromise;
         if (userData?.type == UserType.CustomerUser) {
-            return this.get(`/notifications/reciever/${userData.uuid}/get-all?reciever-type=user`);
+            return this.get(`/notifications/receiver/${userData.uuid}/get-all?receiver_type=user`);
         }
         else {
             const companyData = await this.companyDataPromise;
-            return this.get(`/notifications/reciever/${companyData.uuid}/get-all?reciever-type=company`);
+            return this.get(`/notifications/receiver/${companyData.uuid}/get-all?receiver_type=company`);
         }
     }
 
