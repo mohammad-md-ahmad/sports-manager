@@ -199,20 +199,7 @@ export default function Search(): React.JSX.Element {
                 </TouchableOpacity>
                 {isFormOpen && (
                     <>
-                        <View>
-                            <DropDownPicker
-                                textStyle={{ color: colors.PrimaryBlue }}
-                                placeholder="Select Country"
-                                placeholderStyle={{ color: colors.PrimaryBlue }}
-                                open={openDropdown == "selectedCountry"}
-                                value={selectedCountry}
-                                items={countries}
-                                onPress={() => handleOpen("selectedCountry")}
-                                onClose={handleClose}
-                                setValue={(callback) => handleCountryDropdownChange(callback)}
-                                style={styles.dropDown}
-                            />
-                        </View>
+
 
                         <View>
                             <TextInput
@@ -224,35 +211,48 @@ export default function Search(): React.JSX.Element {
                             />
                         </View>
 
-                        <View>
-                            <DropDownPicker
-                                textStyle={{ color: colors.PrimaryBlue }}
-                                placeholder="Select Facility Type"
-                                placeholderStyle={{ color: colors.PrimaryBlue }}
-                                open={openDropdown == "selectedFacilityType"}
-                                value={selectedFacilityType}
-                                items={facilityTypes}
-                                onPress={() => handleOpen("selectedFacilityType")}
-                                onClose={handleClose}
-                                setValue={(callback) => handleFacilityTypeDropdownChange(callback)}
-                                style={styles.dropDown}
-                            />
-                        </View>
+                        <DropDownPicker
+                            textStyle={{ color: colors.PrimaryBlue }}
+                            placeholder="Select Country"
+                            placeholderStyle={{ color: colors.PrimaryBlue }}
+                            open={openDropdown == "selectedCountry"}
+                            value={selectedCountry}
+                            items={countries}
+                            onPress={() => handleOpen("selectedCountry")}
+                            onClose={handleClose}
+                            setValue={(callback) => handleCountryDropdownChange(callback)}
+                            style={styles.dropDown}
+                            dropDownDirection="AUTO"
+                        />
 
-                        <View>
-                            <DropDownPicker
-                                textStyle={{ color: colors.PrimaryBlue }}
-                                placeholder="Select Facility Sport"
-                                placeholderStyle={{ color: colors.PrimaryBlue }}
-                                open={openDropdown == "selectedSport"}
-                                value={selectedSport}
-                                items={sports}
-                                onPress={() => handleOpen("selectedSport")}
-                                onClose={handleClose}
-                                setValue={(callback) => handleSportDropdownChange(callback)}
-                                style={styles.dropDown}
-                            />
-                        </View>
+                        <DropDownPicker
+                            textStyle={{ color: colors.PrimaryBlue }}
+                            placeholder="Select Facility Sport"
+                            placeholderStyle={{ color: colors.PrimaryBlue }}
+                            open={openDropdown == "selectedSport"}
+                            value={selectedSport}
+                            items={sports}
+                            onPress={() => handleOpen("selectedSport")}
+                            onClose={handleClose}
+                            setValue={(callback) => handleSportDropdownChange(callback)}
+                            style={styles.dropDown}
+                            dropDownDirection="AUTO"
+                        />
+
+                        <DropDownPicker
+                            textStyle={{ color: colors.PrimaryBlue }}
+                            placeholder="Select Facility Type"
+                            placeholderStyle={{ color: colors.PrimaryBlue }}
+                            open={openDropdown == "selectedFacilityType"}
+                            value={selectedFacilityType}
+                            items={facilityTypes}
+                            onPress={() => handleOpen("selectedFacilityType")}
+                            onClose={handleClose}
+                            setValue={(callback) => handleFacilityTypeDropdownChange(callback)}
+                            style={styles.dropDown}
+                            dropDownDirection="AUTO"
+                        />
+
                     </>
                 )}
 
@@ -301,6 +301,7 @@ const styles = StyleSheet.create({
     dropDown: {
         ...globalStyles.inputText,
         marginBottom: 10,
+        zIndex: 10
     },
     section: {
         borderBottomWidth: 1,

@@ -394,6 +394,7 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
                                     handleDropdownChange('type', text)
                                 }}
                                 style={styles.dropDown}
+                                dropDownDirection="AUTO"
                             />
                         </View>
                         {formik.touched.type && formik.errors.type &&
@@ -414,6 +415,7 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
                                     handleDropdownChange('sport_uuid', text)
                                 }}
                                 style={styles.dropDown}
+                                dropDownDirection="AUTO"
                             />
                         </View>
 
@@ -537,6 +539,7 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
                                     handleDropdownChange('address.country_uuid', text)
                                 }}
                                 style={styles.dropDown}
+                                dropDownDirection="AUTO"
                             />
                         </View>
                         {formik.touched.address?.country_uuid && formik.errors.address?.country_uuid &&
@@ -581,6 +584,7 @@ const styles = StyleSheet.create({
     dropDown: {
         ...globalStyles.inputText,
         marginBottom: 10,
+        zIndex: 10
     },
     label: {
         ...globalStyles.inputTextLabel
