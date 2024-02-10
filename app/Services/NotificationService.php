@@ -11,6 +11,7 @@ use App\Services\Data\Notification\GetReceiverNotificationsRequest;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
+use LogicException;
 
 class NotificationService implements NotificationServiceInterface
 {
@@ -25,7 +26,11 @@ class NotificationService implements NotificationServiceInterface
                 $receiver = Company::query()->whereUuid($data->receiver_uuid)->first();
             }
 
-            return $receiver->notifications()->with(['bookingNotifications'])->jsonPaginate();
+            if (! $receiver) {
+                throw new LogicException(__('Receiver not found!'));
+            }
+
+            return $receiver->notifications()->with(['bookingNotifications.booking', 'bookingNotifications.notification'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('NotificationService::getUserNotifications: '.$exception->getMessage());
 

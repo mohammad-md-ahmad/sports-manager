@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $id
@@ -23,7 +24,19 @@ class BookingNotification extends Model
 
     protected $hidden = [
         'id',
+        'booking_id',
+        'notification_id',
         'created_at',
         'updated_at',
     ];
+
+    public function booking(): BelongsTo
+    {
+        return $this->belongsTo(Booking::class);
+    }
+
+    public function notification(): BelongsTo
+    {
+        return $this->belongsTo(Notification::class);
+    }
 }

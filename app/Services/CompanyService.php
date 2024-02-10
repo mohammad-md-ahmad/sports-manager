@@ -14,8 +14,8 @@ use App\Models\Company;
 use App\Models\Gallery;
 use App\Models\User;
 use App\Services\Data\Address\CreateAddressRequest;
-use App\Services\Data\Address\updateOrCreateAddressRequest;
 use App\Services\Data\Address\UpdateAddressRequest;
+use App\Services\Data\Address\UpdateOrCreateAddressRequest;
 use App\Services\Data\Company\CreateCompanyRequest;
 use App\Services\Data\Company\DeleteCompanyRequest;
 use App\Services\Data\Company\GetCompanyRequest;
@@ -185,7 +185,7 @@ class CompanyService implements CompanyServiceInterface
                 $this->userService->update($data->user);
             }
 
-            if ($data->address instanceof updateOrCreateAddressRequest) {
+            if ($data->address instanceof UpdateOrCreateAddressRequest) {
                 $data->address->model_type = Company::class;
                 $data->address->model_id = (string) $company->id;
 
