@@ -9,7 +9,7 @@ use App\Contracts\Services\CompanyFacilityServiceInterface;
 use App\Contracts\Services\GalleryServiceInterface;
 use App\Models\CompanyFacility;
 use App\Services\Data\Address\CreateAddressRequest;
-use App\Services\Data\Address\CreateOrUpdateAddressRequest;
+use App\Services\Data\Address\updateOrCreateAddressRequest;
 use App\Services\Data\Address\UpdateAddressRequest;
 use App\Services\Data\CompanyFacility\CreateCompanyFacilityRequest;
 use App\Services\Data\CompanyFacility\GetCompanyFacilitiesRequest;
@@ -148,7 +148,7 @@ class CompanyFacilityService implements CompanyFacilityServiceInterface
 
             $data->facility->update($data->toArray());
 
-            if ($data->address instanceof CreateOrUpdateAddressRequest) {
+            if ($data->address instanceof updateOrCreateAddressRequest) {
                 $data->address->model_type = CompanyFacility::class;
                 $data->address->model_id = (string) $data->facility->id;
 

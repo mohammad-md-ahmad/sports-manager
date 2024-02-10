@@ -6,7 +6,7 @@ namespace App\Services\Data\Address;
 
 use Spatie\LaravelData\Data;
 
-class CreateOrUpdateAddressRequest extends Data
+class updateOrCreateAddressRequest extends Data
 {
     public function __construct(
         public ?string $uuid = null,
