@@ -73,6 +73,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
+                            <Text style={styles.text}>Booking Status: {notification?.booking_notification?.booking?.status}</Text>
                         </View>
                     </View>
                     <View style={styles.buttonRow}>
@@ -112,7 +113,6 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
-                            <Text style={styles.text}>Status: {notification.status}</Text>
                         </View>
                     </View>
                 </View>
