@@ -105,7 +105,7 @@ class BookingService implements BookingServiceInterface
 
             if ($companyCustomer && $companyCustomer?->hasAutoApprove()) {
                 $approveRequest = ApproveBookingRequest::from([
-                    'uuid' => $booking->uuid,
+                    'id' => $booking->id,
                 ]);
 
                 $this->approve($approveRequest);
