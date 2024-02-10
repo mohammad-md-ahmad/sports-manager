@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -140,9 +141,9 @@ class User extends Authenticatable
         return $this->hasMany(Booking::class, 'customer_user_id');
     }
 
-    public function notifications(): HasMany
+    public function notifications(): MorphMany
     {
-        return $this->hasMany(Notification::class, 'user_id');
+        return $this->morphMany(Notification::class, 'receiver');
     }
 
     public function userPersonalInfo(): HasOne
