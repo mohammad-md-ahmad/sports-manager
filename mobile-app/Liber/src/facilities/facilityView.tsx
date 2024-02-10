@@ -67,7 +67,7 @@ function FacilityView({ route }): React.JSX.Element {
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Type:</Text>
-                        <Text style={styles.value}>{facilityTypes[facility?.type] + " - " + facility?.sport?.name}</Text>
+                        <Text style={styles.value}>{facilityTypes[facility?.type] + (facility?.sport?.name ? (" - " + facility?.sport?.name) : "")}</Text>
                     </View>
                     <View style={styles.row}>
                         <Text style={styles.label}>Length:</Text>
