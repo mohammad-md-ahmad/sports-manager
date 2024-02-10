@@ -78,7 +78,7 @@ class UserService implements UserServiceInterface
             }
 
             foreach ($data->favorite_sports as $sport) {
-                UserFavoriteSport::createOrUpdate([
+                UserFavoriteSport::updateOrCreate([
                     'user_id' => $user->user_id,
                     'sport_id' => $sport,
                 ]);
@@ -142,7 +142,7 @@ class UserService implements UserServiceInterface
             }
 
             foreach ($data->favorite_sports as $sport) {
-                UserFavoriteSport::createOrUpdate([
+                UserFavoriteSport::updateOrCreate([
                     'user_id' => $user->user_id,
                     'sport_id' => $sport,
                 ]);

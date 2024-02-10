@@ -34,7 +34,7 @@ class InsertNotificationRecord
             DB::transaction(function () use ($createNotificationRequest, $booking) {
                 $notification = Notification::create($createNotificationRequest->toArray());
 
-                BookingNotification::createOrUpdate([
+                BookingNotification::updateOrCreate([
                     'booking_id' => $booking->id,
                     'notification_id' => $notification->id,
                 ]);

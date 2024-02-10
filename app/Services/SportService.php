@@ -155,7 +155,7 @@ class SportService implements SportServiceInterface
             DB::beginTransaction();
 
             foreach ($data->sports as $sport) {
-                UserFavoriteSport::createOrUpdate([
+                UserFavoriteSport::updateOrCreate([
                     'user_id' => $data->user_id,
                     'sport_id' => $sport,
                 ]);

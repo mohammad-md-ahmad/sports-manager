@@ -7,7 +7,7 @@ namespace App\Services\Data\CompanyFacility;
 use App\Enums\FacilityType;
 use App\Models\CompanyFacility;
 use App\Models\Sport;
-use App\Services\Data\Address\CreateOrUpdateAddressRequest;
+use App\Services\Data\Address\updateOrCreateAddressRequest;
 use App\Services\Data\Core\UuidToEntityCaster;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Attributes\MapInputName;
@@ -25,7 +25,7 @@ class UpdateCompanyFacilityRequest extends Data
         #[MapInputName('sport_uuid')]
         #[WithCast(UuidToEntityCaster::class, Sport::class)]
         public ?string $sport_id = null,
-        public ?CreateOrUpdateAddressRequest $address = null,
+        public ?updateOrCreateAddressRequest $address = null,
         public ?array $companyFacilityPhotos = null,
     ) {
     }
