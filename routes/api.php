@@ -126,7 +126,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/company-schedule', [CompanyFacilityScheduleController::class, 'getCompanySchedule'])->name('schedules.company-schedule');
         Route::get('/facility-schedule', [CompanyFacilityScheduleController::class, 'getFacilitySchedule'])->name('schedules.facility-schedule');
         Route::put('/{uuid}', [CompanyFacilityScheduleController::class, 'update'])->name('schedules.update');
-        Route::delete('/{uuid}', [CompanyFacilityScheduleController::class, 'delete'])->name('schedules.update');
+        Route::delete('/{uuid}', [CompanyFacilityScheduleController::class, 'delete'])->name('schedules.delete');
     });
 
     Route::prefix('bookings')->group(function () {
@@ -159,7 +159,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::prefix('company-list')->group(function () {
 
         Route::get('/{company}', [AppListController::class, 'get'])->name('company-list.get');
-        Route::get('/get-all-app-lists', [AppListController::class, 'getAllAppLists'])->name('app-list.get-all');
+        Route::get('/get-all-app-lists', [AppListController::class, 'getAllAppLists'])->name('app-list.get-all-list');
         Route::post('/{company}', [AppListController::class, 'updateCompanyList'])->name('company-list.update');
     });
 
