@@ -9,6 +9,7 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -35,10 +36,11 @@ class Notification extends Model
         'receiver_type',
         'receiver_id',
         'title',
-        'notification',
+        'notification', 'datetime:Y-m-d H:i:s',
         'status',
         'category',
         'opened_at',
+        'action_taken_at',
     ];
 
     /**
@@ -51,10 +53,16 @@ class Notification extends Model
         'status' => NotificationStatus::class,
         'category' => NotificationCategory::class,
         'opened_at' => 'datetime:Y-m-d H:i:s',
+        'action_taken_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function receiver(): MorphTo
     {
         return $this->morphTo();
+    }
+
+    public function bookingNotifications(): HasMany
+    {
+        return $this->hasMany(BookingNotification::class);
     }
 }
