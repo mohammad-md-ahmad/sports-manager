@@ -9,7 +9,7 @@ use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -61,8 +61,8 @@ class Notification extends Model
         return $this->morphTo();
     }
 
-    public function bookingNotifications(): HasMany
+    public function bookingNotification(): HasOne
     {
-        return $this->hasMany(BookingNotification::class);
+        return $this->hasOne(BookingNotification::class);
     }
 }
