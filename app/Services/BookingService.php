@@ -134,8 +134,8 @@ class BookingService implements BookingServiceInterface
                         'receiver_id' => $scheduleDetails->facility->company->id,
                         'title' => 'Booking Request - Auto Approved',
                         'notification' => $notificationText,
-                        'status' => NotificationStatus::Sent,
-                        'category' => NotificationCategory::BookingRequest,
+                        'status' => NotificationStatus::Sent->name,
+                        'category' => NotificationCategory::BookingRequest->name,
                     ]);
 
                     event(new BookingEvent($booking, $createNotificationRequest));
@@ -179,8 +179,8 @@ class BookingService implements BookingServiceInterface
                 'receiver_id' => $scheduleDetails->facility->company->id,
                 'title' => 'Booking Request',
                 'notification' => $notificationText,
-                'status' => NotificationStatus::Sent,
-                'category' => NotificationCategory::BookingRequest,
+                'status' => NotificationStatus::Sent->name,
+                'category' => NotificationCategory::BookingRequest->name,
             ]);
 
             event(new BookingEvent($booking, $createNotificationRequest));
@@ -247,8 +247,8 @@ class BookingService implements BookingServiceInterface
                 'receiver_id' => $booking->customer_user_id,
                 'title' => 'Booking Approved',
                 'notification' => $notificationText,
-                'status' => NotificationStatus::Sent,
-                'category' => NotificationCategory::BookingResponse,
+                'status' => NotificationStatus::Sent->name,
+                'category' => NotificationCategory::BookingResponse->name,
             ]);
 
             event(new BookingEvent($booking, $createNotificationRequest));
@@ -313,8 +313,8 @@ class BookingService implements BookingServiceInterface
                 'receiver_id' => $booking->customer_user_id,
                 'title' => 'Booking Declined',
                 'notification' => $notificationText,
-                'status' => NotificationStatus::Sent,
-                'category' => NotificationCategory::BookingResponse,
+                'status' => NotificationStatus::Sent->name,
+                'category' => NotificationCategory::BookingResponse->name,
             ]);
 
             event(new BookingEvent($booking, $createNotificationRequest));
