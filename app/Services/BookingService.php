@@ -176,7 +176,7 @@ class BookingService implements BookingServiceInterface
 
     /**
      * @throws Exception
-     */addEventListener
+     */
     public function approve(ApproveBookingRequest $data): bool
     {
         try {
