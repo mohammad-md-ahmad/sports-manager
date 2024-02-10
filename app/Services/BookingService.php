@@ -133,7 +133,7 @@ class BookingService implements BookingServiceInterface
                         'receiver_type' => Company::class,
                         'receiver_id' => $scheduleDetails->facility->company->id,
                         'title' => 'Booking Request - Auto Approved',
-                        'notifi cation' => $notificationText,
+                        'notification' => $notificationText,
                         'status' => NotificationStatus::Sent,
                         'category' => NotificationCategory::BookingRequest,
                     ]);
@@ -178,7 +178,7 @@ class BookingService implements BookingServiceInterface
                 'receiver_type' => Company::class,
                 'receiver_id' => $scheduleDetails->facility->company->id,
                 'title' => 'Booking Request',
-                'notifi cation' => $notificationText,
+                'notification' => $notificationText,
                 'status' => NotificationStatus::Sent,
                 'category' => NotificationCategory::BookingRequest,
             ]);
@@ -246,7 +246,7 @@ class BookingService implements BookingServiceInterface
                 'receiver_type' => User::class,
                 'receiver_id' => $booking->user_id,
                 'title' => 'Booking Approved',
-                'notifi cation' => $notificationText,
+                'notification' => $notificationText,
                 'status' => NotificationStatus::Sent,
                 'category' => NotificationCategory::BookingResponse,
             ]);
@@ -312,7 +312,7 @@ class BookingService implements BookingServiceInterface
                 'receiver_type' => User::class,
                 'receiver_id' => $booking->user_id,
                 'title' => 'Booking Declined',
-                'notifi cation' => $notificationText,
+                'notification' => $notificationText,
                 'status' => NotificationStatus::Sent,
                 'category' => NotificationCategory::BookingResponse,
             ]);
