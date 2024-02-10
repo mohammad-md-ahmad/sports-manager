@@ -40,13 +40,7 @@ export const AccountProfile = ({ user }) => {
             color="text.secondary"
             variant="body2"
           >
-            {user.city} {user.username}
-          </Typography>
-          <Typography
-            color="text.secondary"
-            variant="body2"
-          >
-            {user.timezone}
+            {user.username}
           </Typography>
         </Box>
       </CardContent>
