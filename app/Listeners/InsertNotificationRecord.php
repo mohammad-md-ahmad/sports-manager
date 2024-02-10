@@ -2,6 +2,8 @@
 
 namespace App\Listeners;
 
+use App\Models\Booking;
+use App\Models\BookingNotification;
 use App\Models\Notification;
 use App\Services\Data\Notification\CreateNotificationRequest;
 use Exception;
@@ -23,14 +25,19 @@ class InsertNotificationRecord
      */
     public function handle(object $event): void
     {
-        $this->insertNotificationRecord($event->createNotificationRequest);
+        $this->insertNotificationRecord($event->createNotificationRequest, $event->booking);
     }
 
-    protected function insertNotificationRecord(CreateNotificationRequest $createNotificationRequest): bool
+    protected function insertNotificationRecord(CreateNotificationRequest $createNotificationRequest, Booking $booking): bool
     {
         try {
-            DB::transaction(function () use ($createNotificationRequest) {
-                Notification::create($createNotificationRequest->toArray());
+            DB::transaction(function () use ($createNotificationRequest, $booking) {
+                $notification = Notification::create($createNotificationRequest->toArray());
+
+                BookingNotification::createOrUpdate([
+                    'booking_id' => $booking->id,
+                    'notification_id' => $notification->id,
+                ]);
             });
 
             return true;

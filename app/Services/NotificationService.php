@@ -25,7 +25,7 @@ class NotificationService implements NotificationServiceInterface
                 $receiver = Company::query()->whereUuid($data->receiver_uuid)->first();
             }
 
-            return $receiver->notifications()->jsonPaginate();
+            return $receiver->notifications()->with(['bookingNotifications'])->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('NotificationService::getUserNotifications: '.$exception->getMessage());
 
