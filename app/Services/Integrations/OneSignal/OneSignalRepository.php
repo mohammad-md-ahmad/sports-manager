@@ -33,9 +33,8 @@ class OneSignalRepository
             'app_id' => self::APP_ID,
             'include_aliases' => ['external_id' => $data['user_uuids']],
             'target_channel' => 'push',
-            'data' => ['foo' => 'bar'],
             'contents' => ['en' => $data['message']],
-            'custom_data' => ['screen' => 'calendar', 'user_uuids' => $data['user_uuids']],
+            'data' => ['screen' => 'calendar', 'user_uuids' => $data['user_uuids']],
         ];
 
         if (! empty($data['buttons'])) {
