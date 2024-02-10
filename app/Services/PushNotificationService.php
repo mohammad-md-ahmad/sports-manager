@@ -16,7 +16,7 @@ class PushNotificationService
     /**
      * @throws Exception
      */
-    public function createNotification(array $user_uuids, string $message, array $buttons = []): bool
+    public function createNotification(array $user_uuids, string $message, array $buttons = [], array $custom_data = []): bool
     {
         try {
             $data['user_uuids'] = $user_uuids;
@@ -24,6 +24,10 @@ class PushNotificationService
 
             if ($buttons) {
                 $data['buttons'] = $buttons;
+            }
+
+            if ($custom_data) {
+                $data['custom_data'] = $custom_data;
             }
 
             $this->oneSignalRepository->createNotification($data);

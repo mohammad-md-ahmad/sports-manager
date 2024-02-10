@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Contracts\Services\BookingServiceInterface;
 use App\Enums\BookingStatus;
+use App\Enums\MobileAppScreensEnum;
 use App\Enums\ScheduleDetailsStatus;
 use App\Events\BookingApproved;
 use App\Models\Booking;
@@ -129,6 +130,10 @@ class BookingService implements BookingServiceInterface
                                 'id' => 'view-booking-btn',
                                 'text' => __('View'),
                             ],
+                        ],
+                        custom_data: [
+                            'screen' => MobileAppScreensEnum::Notifications->name,
+                            'booking_uuid' => $booking->uuid,
                         ]
                     );
                 }
@@ -171,7 +176,7 @@ class BookingService implements BookingServiceInterface
 
     /**
      * @throws Exception
-     */
+     */addEventListener
     public function approve(ApproveBookingRequest $data): bool
     {
         try {
