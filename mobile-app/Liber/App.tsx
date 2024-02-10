@@ -26,11 +26,6 @@ function App(): JSX.Element {
     // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
     OneSignal.Notifications.requestPermission(true);
 
-    // Method for listening for notification clicks
-    OneSignal.Notifications.addEventListener('click', (event) => {
-        console.log('OneSignal: notification clicked:', event);
-    });
-
     return (
         <Provider store={store}>
             <AuthProvider>

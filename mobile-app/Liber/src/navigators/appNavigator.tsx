@@ -13,7 +13,7 @@ import FacilityForm from '../facilities/facilityForm';
 import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
-import { TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { FormMode, GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
@@ -43,6 +43,14 @@ const AppNavigator = () => {
     const navigator = useNavigation();
     const dispatch = useDispatch();
     const currentScreen = useSelector(state => state.currentScreen);
+
+    // Method for listening for notification clicks
+    OneSignal.Notifications.addEventListener('click', (event) => {
+        console.log('OneSignal: notification clicked:', event);
+        if (navigator) {
+            navigator.navigate(Screens.Calendar);
+        }
+    });
 
     const toggleDrawer = () => {
         navigator.toggleDrawer();
@@ -138,7 +146,6 @@ const AppNavigator = () => {
                                         name="edit" // Replace with your desired icon name
                                         type="material"
                                         size={25}
-
                                     />
                                 </View>
                             </TouchableOpacity>
@@ -153,7 +160,6 @@ const AppNavigator = () => {
                                         name="add" // Replace with your desired icon name
                                         type="material"
                                         size={25}
-
                                     />
                                 </View>
                             </TouchableOpacity>
@@ -168,7 +174,6 @@ const AppNavigator = () => {
                                         name="add" // Replace with your desired icon name
                                         type="material"
                                         size={25}
-
                                     />
                                 </View>
                             </TouchableOpacity>
@@ -176,17 +181,29 @@ const AppNavigator = () => {
                         break;
                     case Screens.FacilityView:
                         setContent(
-                            <TouchableOpacity
-                                onPress={() => onEditFacilityPress()}>
-                                <View style={{ margin: 15 }}>
-                                    <Icon
-                                        name="edit" // Replace with your desired icon name
-                                        type="material"
-                                        size={25}
+                            <View style={styles.buttonRow}>
+                                <TouchableOpacity
+                                    onPress={() => onScheduleFormPress()}>
+                                    <View style={{ margin: 15 }}>
+                                        <Icon
+                                            name="edit-calendar" // Replace with your desired icon name
+                                            type="material"
+                                            size={25}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
 
-                                    />
-                                </View>
-                            </TouchableOpacity>
+                                <TouchableOpacity
+                                    onPress={() => onEditFacilityPress()}>
+                                    <View style={{ margin: 15 }}>
+                                        <Icon
+                                            name="edit" // Replace with your desired icon name
+                                            type="material"
+                                            size={25}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
                         )
                         break;
                     default:
@@ -203,7 +220,6 @@ const AppNavigator = () => {
                                         name="edit" // Replace with your desired icon name
                                         type="material"
                                         size={25}
-
                                     />
                                 </View>
                             </TouchableOpacity>
@@ -218,7 +234,6 @@ const AppNavigator = () => {
                                         name="calendar-month" // Replace with your desired icon name
                                         type="material"
                                         size={25}
-
                                     />
                                 </View>
                             </TouchableOpacity>
@@ -291,6 +306,14 @@ const AppNavigator = () => {
         </BaseComponent>
     );
 };
+
+const styles = StyleSheet.create({
+    buttonRow: {
+        flexDirection: 'row',
+        justifyContent: 'center', // Adjust this to control the spacing between buttons
+        alignItems: 'center',
+    },
+})
 
 export default AppNavigator;
 

@@ -202,6 +202,8 @@ export default function AgendaScreen({ route }): React.JSX.Element {
             .then((response) => {
                 loadData();
             }).catch((error) => {
+            }).finally(() => {
+                closeBookConfirmModal();
             });
     }
 
@@ -662,7 +664,7 @@ const styles = StyleSheet.create({
     },
     bookingModalContent: {
         width: '80%',
-        height: '40%',
+        height: '50%',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
