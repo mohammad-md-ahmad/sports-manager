@@ -238,6 +238,7 @@ class BookingService implements BookingServiceInterface
                 $notificationText,
                 custom_data: [
                     'screen' => MobileAppScreensEnum::UserProfile->name,
+                    'sub_screen' => MobileAppScreensEnum::Notifications->name,
                     'booking_uuid' => $booking->uuid,
                 ]
             );
@@ -304,6 +305,7 @@ class BookingService implements BookingServiceInterface
                 $notificationText,
                 custom_data: [
                     'screen' => MobileAppScreensEnum::UserProfile->name,
+                    'sub_screen' => MobileAppScreensEnum::Notifications->name,
                     'booking_uuid' => $booking->uuid,
                 ]
             );
