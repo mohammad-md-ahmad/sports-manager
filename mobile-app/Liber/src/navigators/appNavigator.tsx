@@ -14,7 +14,7 @@ import colors from '../../styles/colors';
 import { useNavigation } from '@react-navigation/native';
 import { Icon } from 'react-native-elements';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { FormMode, GlobaSateKey, Screens, UserType } from '../../helpers/constants';
+import { FormMode, GlobaSateKey, NotificationActionButtons, Screens, UserType } from '../../helpers/constants';
 import { useDispatch, useSelector } from 'react-redux';
 import FacilityView from '../facilities/facilityView';
 import { getUserData } from '../../helpers/userDataManage';
@@ -35,6 +35,7 @@ import UserView from '../user/userView';
 import SurviesList from '../survey/surviesList';
 import SurveyForm from '../survey/surveyForm';
 import SurveyFillForm from '../survey/surveyFillForm';
+import BookingService from '../../api/BookingService';
 
 const Stack = createStackNavigator();
 
@@ -43,6 +44,8 @@ const AppNavigator = () => {
     const navigator = useNavigation();
     const dispatch = useDispatch();
     const currentScreen = useSelector(state => state.currentScreen);
+
+    const bookingService = new BookingService();
 
     useEffect(() => {
         // Method for listening for notification clicks
@@ -56,10 +59,50 @@ const AppNavigator = () => {
 
     const pushNotificationClicked = (event) => {
         console.log('OneSignal: notification clicked:', event);
-        if (navigator) {
-            navigator.navigate(Screens.Calendar);
+
+        if (event.result) {
+            if (event.result?.actionId) {
+                let actionId = event.result?.actionId;
+
+                switch (actionId) {
+                    case NotificationActionButtons.ApproveBookingBtn:
+                        approveBooking(event.notification?.additionalData?.booking_uuid);
+                        break;
+                    case NotificationActionButtons.DeclineBookingBtn:
+                        declineBooking(event.notification?.additionalData?.booking_uuid)
+                        break;
+                    default:
+                        let targetScreen = event.notification?.additionalData?.screen;
+                        let targetSubScreen = event.notification?.additionalData?.sub_screen;
+                        navigator.navigate(targetScreen, targetSubScreen ? { screen: targetSubScreen } : {});
+                        break;
+                }
+
+            } else if (event.notification?.additionalData) {
+                let targetScreen = event.notification?.additionalData?.screen;
+                let targetSubScreen = event.notification?.additionalData?.sub_screen;
+                navigator.navigate(targetScreen, targetSubScreen ? { screen: targetSubScreen } : {});
+            }
         }
     };
+
+
+
+    const approveBooking = (bookingUuid: string): void => {
+        bookingService.bookApprove({ uuid: bookingUuid })
+            .then((response) => {
+            }).catch((error) => {
+            }).finally(() => {
+            })
+    }
+
+    const declineBooking = (bookingUuid: string): void => {
+        bookingService.bookDecline({ uuid: bookingUuid })
+            .then((response) => {
+            }).catch((error) => {
+            }).finally(() => {
+            })
+    }
 
     const toggleDrawer = () => {
         navigator.toggleDrawer();
