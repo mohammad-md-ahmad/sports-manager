@@ -17,6 +17,7 @@ import { getCountries } from "../../helpers/countriesDataManage";
 import { getFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import CompanyCard from "../common/companyCard";
 import CompanyService from "../../api/CompanyService";
+import { getSports } from "../../helpers/sportsDataManage";
 
 export default function Search(): React.JSX.Element {
     const companyService = new CompanyService();
@@ -25,7 +26,8 @@ export default function Search(): React.JSX.Element {
         name: null,
         city: null,
         country_uuid: null,
-        type: null
+        type: null,
+        sport_uuid: null,
     });
 
     const handleInputChange = (field: string, value: string) => {
@@ -35,9 +37,11 @@ export default function Search(): React.JSX.Element {
     const [facilityTypes, setFacilityTypes] = useState([]);
 
     const [countries, setCountries] = useState([]);
+    const [sports, setSports] = useState([]);
 
     const [selectedFacilityType, setSelectedFacilityType] = useState<string>('');
     const [selectedCountry, setSelectedCountry] = useState<string>('');
+    const [selectedSport, setSelectedSport] = useState<string>('');
 
     const [facilities, setFacilities] = useState([]);
 
@@ -52,6 +56,15 @@ export default function Search(): React.JSX.Element {
         setFormData({
             ...formData,
             type: callback(formData.type),
+        });
+    };
+
+    const handleSportDropdownChange = (callback) => {
+        setSelectedSport(callback(selectedSport));
+
+        setFormData({
+            ...formData,
+            sport_uuid: callback(formData.sport_uuid),
         });
     };
 
@@ -125,6 +138,25 @@ export default function Search(): React.JSX.Element {
                 });
 
                 setCountries(data);
+            }
+        })
+    }, []);
+
+    useEffect(() => {
+        getSports().then((response) => {
+            if (response) {
+                const json: any[] = JSON.parse(response);
+
+                let data = [];
+
+                json.forEach((item) => {
+                    data.push({
+                        label: item?.name,
+                        value: item?.uuid,
+                    });
+                });
+
+                setSports(data);
             }
         })
     }, []);
@@ -203,6 +235,21 @@ export default function Search(): React.JSX.Element {
                                 onPress={() => handleOpen("selectedFacilityType")}
                                 onClose={handleClose}
                                 setValue={(callback) => handleFacilityTypeDropdownChange(callback)}
+                                style={styles.dropDown}
+                            />
+                        </View>
+
+                        <View>
+                            <DropDownPicker
+                                textStyle={{ color: colors.PrimaryBlue }}
+                                placeholder="Select Facility Sport"
+                                placeholderStyle={{ color: colors.PrimaryBlue }}
+                                open={openDropdown == "selectedSport"}
+                                value={selectedSport}
+                                items={sports}
+                                onPress={() => handleOpen("selectedSport")}
+                                onClose={handleClose}
+                                setValue={(callback) => handleSportDropdownChange(callback)}
                                 style={styles.dropDown}
                             />
                         </View>
