@@ -9,6 +9,7 @@ use App\Enums\Report;
 use App\Enums\UserGender;
 use App\Enums\UserType;
 use App\Models\Country;
+use App\Models\Sport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
@@ -31,6 +32,7 @@ class MiscController extends Controller
                     'currency_iso_short_code' => $country->currency->iso_short_code,
                 ];
             });
+        $lists['sports'] = Sport::all();
         $lists['user_genders'] = UserGender::toArray();
         $lists['report_names'] = Report::toArray();
 
