@@ -71,14 +71,14 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
                         </View>
                     </View>
                     <View style={styles.buttonRow}>
-                        {notification?.booking_notifications?.booking?.status == BookingStatus.Pending && <>
+                        {notification?.booking_notification?.booking?.status == BookingStatus.Pending && <>
                             <Button
-                                onPress={() => onApprovePress(notification?.booking_notifications?.booking?.uuid)}
+                                onPress={() => onApprovePress(notification?.booking_notification?.booking?.uuid)}
                                 title="Approve"
                                 buttonStyle={styles.approveButton}
                             />
                             <Button
-                                onPress={() => onDeclinePress(notification?.booking_notifications?.booking?.uuid)}
+                                onPress={() => onDeclinePress(notification?.booking_notification?.booking?.uuid)}
                                 title="Reject"
                                 buttonStyle={styles.rejectButton}
                             />
