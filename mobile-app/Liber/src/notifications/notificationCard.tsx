@@ -119,11 +119,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
 
 const styles = StyleSheet.create({
     containerView: {
+        marginBottom: 3,
     },
     container: {
         flexDirection: 'row',
         //height: 100,
-
     },
     card: {
         flexDirection: 'row',
@@ -132,9 +132,8 @@ const styles = StyleSheet.create({
         borderColor: colors.PrimaryGreenLight,
         borderWidth: 0.5,
         marginHorizontal: 10,
-        marginTop: 7,
-        marginBottom: 7,
-
+        marginTop: 1,
+        marginBottom: 1,
     },
     title: {
         ...globalStyles.text,
