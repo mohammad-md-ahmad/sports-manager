@@ -9,6 +9,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { storeCountries } from "../../helpers/countriesDataManage";
 import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
 import { useDispatch, useSelector } from "react-redux";
+import { storeSports } from "../../helpers/sportsDataManage";
 
 export default function Dashboard(): React.JSX.Element {
     const miscService = new MiscService();
@@ -29,9 +30,11 @@ export default function Dashboard(): React.JSX.Element {
                 miscService.lists().then((response) => {
                     storeFacilityTypes(response.data?.data?.facility_types);
                     storeCountries(response.data?.data?.countries);
+                    storeSports(response.data?.data?.sports);
 
                     dispatch({ type: GlobaSateKey.SetFacilityTypes, payload: response.data?.data?.facility_types });
                     dispatch({ type: GlobaSateKey.SetCountries, payload: response.data?.data?.countries });
+                    dispatch({ type: GlobaSateKey.SetSports, payload: response.data?.data?.sports });
                     dispatch({ type: GlobaSateKey.SetUserGenders, payload: response.data?.data?.user_genders });
                     dispatch({ type: GlobaSateKey.SetReportNames, payload: response.data?.data?.report_names });
 

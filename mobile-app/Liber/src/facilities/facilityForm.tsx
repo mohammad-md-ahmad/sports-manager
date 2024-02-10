@@ -14,6 +14,7 @@ import ImagePicker from "../common/imagePicker";
 import { Button } from "react-native-elements";
 import { FormMode, Screens } from "../../helpers/constants";
 import { imageUrlToBase64 } from "../../helpers/functions";
+import { getSports } from "../../helpers/sportsDataManage";
 
 interface FormData {
     name: string;
@@ -69,6 +70,7 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
     const initialFormDataValues = {
         name: '',
         type: '',
+        sport_uuid: '',
         details: {
             length: '',
             width: '',
@@ -92,6 +94,7 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
     const initialTouched = {
         name: false,
         type: false,
+        sport_uuid: false,
         details: {
             length: false,
             width: false,
@@ -115,9 +118,11 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
     const [facilityTypes, setFacilityTypes] = useState([]);
 
     const [countries, setCountries] = useState([]);
+    const [sports, setSports] = useState([]);
 
     const [selectedFacilityType, setSelectedFacilityType] = useState<string>('');
     const [selectedCountry, setSelectedCountry] = useState<string>('');
+    const [selectedSport, setSelectedSport] = useState<string>('');
 
     const [selectedFacilityPhotos, setSelectedFacilityPhotos] = useState<Array<string>>([]);
     const [selectedFacilityPhotosBase64, setSelectedFacilityPhotosBase64] = useState<Array<string>>([]);
@@ -192,6 +197,23 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
             }
         });
 
+        getSports().then((response) => {
+            if (response) {
+                const json: any[] = JSON.parse(response);
+
+                let data = [];
+
+                json.forEach((item) => {
+                    data.push({
+                        label: item?.name,
+                        value: item?.uuid,
+                    });
+                });
+
+                setSports(data);
+            }
+        });
+
         if (formMode == FormMode.Edit) {
             loadFacilityData();
         }
@@ -204,6 +226,9 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
         } else if (field === 'address.country_uuid') {
             setSelectedCountry(value);
             formik.setFieldValue('address.country_uuid', value());
+        } else if (field === 'sport_uuid') {
+            setSelectedSport(value);
+            formik.setFieldValue('sport_uuid', value());
         }
     };
 
@@ -374,6 +399,23 @@ export default function FacilityForm({ route, navigation }): React.JSX.Element {
                         {formik.touched.type && formik.errors.type &&
                             <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.type}</Text>
                         }
+
+                        <View>
+                            <DropDownPicker
+                                textStyle={{ color: colors.PrimaryBlue }}
+                                placeholder="Select Sport"
+                                placeholderStyle={{ color: colors.PrimaryBlue }}
+                                open={openDropdown == "selectedSport"}
+                                value={selectedSport}
+                                items={sports}
+                                onPress={() => handleOpen("selectedSport")}
+                                onClose={handleClose}
+                                setValue={(text: any) => {
+                                    handleDropdownChange('sport_uuid', text)
+                                }}
+                                style={styles.dropDown}
+                            />
+                        </View>
 
                         <View>
                             <TextInput

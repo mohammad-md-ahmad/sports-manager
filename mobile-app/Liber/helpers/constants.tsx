@@ -9,6 +9,7 @@ const Constants = {
     companyDataKey: 'company_data',
     facilityTypesKey: 'facility_types',
     countriesKey: 'countries',
+    sportsKey: 'sports',
     oneSignalAppID: 'c9163259-17f6-4cd0-b6c6-6d3a9241f1b4',
 };
 
@@ -78,6 +79,7 @@ export enum GlobaSateKey {
     SetCompaniesList = "SET_COMPANIES_LIST",
     SetFacilityTypes = "SET_FACILITY_TYPES",
     SetCountries = "SET_COUNTRIES",
+    SetSports = "SET_SPORTS",
     SetUserGenders = "SET_USER_GENDERS",
     SetReportNames = "SET_REPORT_NAMES",
 }
