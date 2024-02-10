@@ -5,7 +5,8 @@ import colors from '../../styles/colors';
 import globalStyles from '../../styles/styles';
 import RatingControl from '../common/ratingControl';
 import RatingService from '../../api/RatingService';
-import { EntityType } from '../../helpers/constants';
+import { EntityType, UserType } from '../../helpers/constants';
+import { useSelector } from 'react-redux';
 
 interface Booking {
     uuid: string;
@@ -41,7 +42,7 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking, user_uuid, callback 
     let statusColor = determineStatusBarColor(booking.status);
 
     // Determine the background color based on the booking status
-    function determineStatusBarColor (status: string) {
+    function determineStatusBarColor(status: string) {
         let statusColor;
 
         switch (booking.status) {
@@ -62,7 +63,7 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking, user_uuid, callback 
         return statusColor;
     }
 
-    function setRatingValue (value: number) {
+    function setRatingValue(value: number) {
         setRatingData({
             ...ratingData,
             rating: value
@@ -93,13 +94,15 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking, user_uuid, callback 
         });
     }
 
+    const user = useSelector(state => state.currentUserData);
+
     return (
         <View style={styles.cardContainer}>
             <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
             {showRatingInput ? (
                 <View style={styles.ratingInputContainerFull}>
                     <View>
-                        <RatingControl ratingData={{ ratingNumber: 0, disabled: false }} callback={setRatingValue}/>
+                        <RatingControl ratingData={{ ratingNumber: 0, disabled: false }} callback={setRatingValue} />
                     </View>
 
                     <TextInput
@@ -147,11 +150,11 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking, user_uuid, callback 
                     </View>
 
                     <View style={styles.rateItButtonContainer}>
-                        {booking.is_ratable ? (
+                        {booking.is_ratable && user.type == UserType.CustomerUser ? (
                             <Button
                                 onPress={() => onShowRateBtnPress(true)}
                                 title="Rate It"
-                                titleStyle={{...styles.ratingButtonText, textDecorationLine: 'none'}}
+                                titleStyle={{ ...styles.ratingButtonText, textDecorationLine: 'none' }}
                                 buttonStyle={{
                                     ...styles.rateItButton,
                                     alignSelf: 'flex-end',

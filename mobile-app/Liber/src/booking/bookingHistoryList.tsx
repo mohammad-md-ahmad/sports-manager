@@ -20,7 +20,7 @@ export default function BookingHistoryList(): React.JSX.Element {
 
     useFocusEffect(
         React.useCallback(() => {
-            if (!userData || !companyData) {
+            if (userData || companyData) {
                 getBookingHistoryList();
             }
         }, [userData, companyData])

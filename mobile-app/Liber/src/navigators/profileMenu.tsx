@@ -67,9 +67,14 @@ export default function ProfileMenu() {
                                 navigateTo: Screens.Facilities
                             },
                             {
-                                title: "Survies List",
-                                icon: "payments",
+                                title: "Survey's List",
+                                icon: "poll",
                                 navigateTo: Screens.SurviesList
+                            },
+                            {
+                                title: "Booking History",
+                                icon: "history",
+                                navigateTo: Screens.BookingHistoryList
                             },
                         ], 1)
 

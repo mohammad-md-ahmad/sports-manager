@@ -346,7 +346,7 @@ const AppNavigator = () => {
 
                     <Stack.Screen name={Screens.ProgramManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
 
-                    <Stack.Screen name={Screens.SurviesList} options={{ title: 'Survies List' }} component={SurviesList} />
+                    <Stack.Screen name={Screens.SurviesList} options={{ title: 'Survey\'s List' }} component={SurviesList} />
                     <Stack.Screen name={Screens.SurveyForm} options={{ title: 'Survey Form' }} component={SurveyForm} />
                     {/*<Stack.Screen name={Screens.SurveyFillForm} options={{ title: 'Fill Survey Form' }} component={SurveyFillForm} />*/}
 

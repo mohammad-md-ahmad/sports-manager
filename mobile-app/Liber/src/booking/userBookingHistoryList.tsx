@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
     SafeAreaView,
+    Text,
     VirtualizedList,
 } from "react-native";
 import { useFocusEffect } from "@react-navigation/native";
@@ -11,6 +12,8 @@ import { UserType } from "../../helpers/constants";
 import BookingCard from "./bookingCard";
 import { StyleSheet } from "react-native";
 import { useSelector } from "react-redux";
+import globalStyles from "../../styles/styles";
+import colors from "../../styles/colors";
 
 export default function UserBookingHistoryList(): React.JSX.Element {
     const bookingService = new BookingService();
@@ -46,6 +49,7 @@ export default function UserBookingHistoryList(): React.JSX.Element {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Text style={styles.text}>{userData?.first_name + ' ' + userData?.last_name}</Text>
             <VirtualizedList
                 initialNumToRender={6}
                 renderItem={({ item }) => <BookingCard booking={item} user_uuid={userData?.uuid} callback={getBookingHistoryList} />}
@@ -62,4 +66,10 @@ const styles = StyleSheet.create({
         flex: 1,
         marginVertical: 0,
     },
+    text: {
+        ...globalStyles.text,
+        fontSize: 20,
+        color: colors.PrimaryBlue,
+        margin: 10,
+    }
 });
