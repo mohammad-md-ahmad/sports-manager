@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Button, Card } from 'react-native-elements';
-import { NotificationCategory } from '../../helpers/constants';
+import { BookingStatus, NotificationCategory } from '../../helpers/constants';
 import BookingService from '../../api/BookingService';
 import globalStyles from '../../styles/styles';
 import colors from '../../styles/colors';
@@ -71,16 +71,19 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification }) => 
                         </View>
                     </View>
                     <View style={styles.buttonRow}>
-                        <Button
-                            onPress={() => onApprovePress(notification?.booking_notifications?.booking?.uuid)}
-                            title="Approve"
-                            buttonStyle={styles.approveButton}
-                        />
-                        <Button
-                            onPress={() => onDeclinePress(notification?.booking_notifications?.booking?.uuid)}
-                            title="Reject"
-                            buttonStyle={styles.rejectButton}
-                        />
+                        {notification?.booking_notifications?.booking?.status == BookingStatus.Pending && <>
+                            <Button
+                                onPress={() => onApprovePress(notification?.booking_notifications?.booking?.uuid)}
+                                title="Approve"
+                                buttonStyle={styles.approveButton}
+                            />
+                            <Button
+                                onPress={() => onDeclinePress(notification?.booking_notifications?.booking?.uuid)}
+                                title="Reject"
+                                buttonStyle={styles.rejectButton}
+                            />
+                        </>
+                        }
                     </View>
                 </Card>
             }
