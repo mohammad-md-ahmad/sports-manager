@@ -118,3 +118,15 @@ export enum NotificationActionButtons {
     DeclineBookingBtn = 'decline-booking-btn',
     ViewBookingBtn = 'view-booking-btn'
 }
+
+export enum NotificationCategory {
+    BookingRequest = 'BookingRequest',
+    BookingResponse = 'BookingResponse',
+    General = 'General'
+}
+
+export enum NotificationStatus {
+    Pending = 'Pending',
+    Sent = 'Sent',
+    Opened = 'Opened'
+}
