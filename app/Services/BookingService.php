@@ -244,7 +244,7 @@ class BookingService implements BookingServiceInterface
 
             $createNotificationRequest = CreateNotificationRequest::from([
                 'receiver_type' => User::class,
-                'receiver_id' => $booking->user_id,
+                'receiver_id' => $booking->customer_user_id,
                 'title' => 'Booking Approved',
                 'notification' => $notificationText,
                 'status' => NotificationStatus::Sent,
@@ -310,7 +310,7 @@ class BookingService implements BookingServiceInterface
 
             $createNotificationRequest = CreateNotificationRequest::from([
                 'receiver_type' => User::class,
-                'receiver_id' => $booking->user_id,
+                'receiver_id' => $booking->customer_user_id,
                 'title' => 'Booking Declined',
                 'notification' => $notificationText,
                 'status' => NotificationStatus::Sent,
