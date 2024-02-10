@@ -44,13 +44,22 @@ const AppNavigator = () => {
     const dispatch = useDispatch();
     const currentScreen = useSelector(state => state.currentScreen);
 
-    // Method for listening for notification clicks
-    OneSignal.Notifications.addEventListener('click', (event) => {
+    useEffect(() => {
+        // Method for listening for notification clicks
+        OneSignal.Notifications.addEventListener('click', pushNotificationClicked);
+
+        // Clean up event listener when component unmounts
+        return () => {
+            OneSignal.Notifications.removeEventListener('click', pushNotificationClicked);
+        };
+    }, []);
+
+    const pushNotificationClicked = (event) => {
         console.log('OneSignal: notification clicked:', event);
         if (navigator) {
             navigator.navigate(Screens.Calendar);
         }
-    });
+    };
 
     const toggleDrawer = () => {
         navigator.toggleDrawer();
