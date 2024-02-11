@@ -83,6 +83,7 @@ export enum GlobaSateKey {
     SetSports = "SET_SPORTS",
     SetUserGenders = "SET_USER_GENDERS",
     SetReportNames = "SET_REPORT_NAMES",
+    ResetStore = "ResetStore"
 }
 
 export enum ReportNames {
