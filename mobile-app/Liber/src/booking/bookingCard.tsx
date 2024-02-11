@@ -94,7 +94,7 @@ const BookingCard: React.FC<BookingCardProps> = ({ booking, user_uuid, callback 
         });
     }
 
-    const user = useSelector(state => state.currentUserData);
+    const user = useSelector(state => state.authUserData);
 
     return (
         <View style={styles.cardContainer}>

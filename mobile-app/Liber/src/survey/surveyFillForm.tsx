@@ -16,7 +16,7 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
     const { survey } = route?.params ?? {};
 
     const [survey1, setSurvey] = useState([]);
-    const user = useSelector(state => state.currentUserData);
+    const user = useSelector(state => state.authUserData);
 
     const navigator = useNavigation();
     const companySurveyService = new CompanySurveyService();

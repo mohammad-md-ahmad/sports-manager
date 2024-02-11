@@ -24,7 +24,7 @@ export default function CompanyProfile() {
     const navigator = useNavigation();
     const dispatch = useDispatch();
 
-    const companyCachedData = useSelector(state => state.currentCompanyData);
+    const companyCachedData = useSelector(state => state.authCompanyData);
 
     const [companyData, setCompanyData] = useState({
         name: '',
@@ -49,7 +49,7 @@ export default function CompanyProfile() {
             else {
                 companyService.getCompany().then((response) => {
                     setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-                    dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...response?.data?.data, logo: { uri: response?.data?.data?.logo } } });
+                    dispatch({ type: GlobaSateKey.SetAuthCompanyData, payload: { ...response?.data?.data, logo: { uri: response?.data?.data?.logo } } });
                 }).catch((error) => {
                 });
             }
