@@ -107,7 +107,7 @@ export default function CompanyProfileForm(): React.JSX.Element {
     function onSubmitPress(): void {
         companyService.update(formData).then((response) => {
             // Handle a successful API response
-            dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
+            dispatch({ type: GlobaSateKey.SetAuthCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
 
             navigator.navigate(Screens.CompanyProfile);
         }).catch((error) => {

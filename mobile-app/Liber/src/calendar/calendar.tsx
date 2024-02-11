@@ -133,7 +133,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
 
     const companyData = useSelector(state => state.companyData);
 
-    const [currentCompanyData, setCurrentCompanyData] = useState({});
+    const [authCompanyData, setCurrentCompanyData] = useState({});
     useEffect(() => {
         getCompanyData().then((data: string | null) => {
             setCurrentCompanyData(data === null ? null : JSON.parse(data));
@@ -340,7 +340,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                     <Text style={styles.slotTitle}>{reservation?.company?.name}</Text>
                     <View style={styles.rightContent}>
                         {
-                            (userData?.type == UserType.CompanyUser && currentCompanyData?.uuid == companyData?.uuid && reservation.status == SlotStatus.Available) ?
+                            (userData?.type == UserType.CompanyUser && authCompanyData?.uuid == companyData?.uuid && reservation.status == SlotStatus.Available) ?
                                 <>
                                     <TouchableOpacity
                                         onPress={() => onEditSlotPress(reservation)}>
@@ -390,7 +390,7 @@ export default function AgendaScreen({ route }): React.JSX.Element {
                                 title="Book"
                                 buttonStyle={styles.button}
                             /> : <></> :
-                                (reservation?.bookings?.length > 0 && currentCompanyData?.uuid == companyData?.uuid) ?
+                                (reservation?.bookings?.length > 0 && authCompanyData?.uuid == companyData?.uuid) ?
                                     buildBookingBtns(reservation) : <></>
                         }
                     </View>

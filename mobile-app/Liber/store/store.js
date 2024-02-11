@@ -7,9 +7,9 @@ const initialState = {
   loading: false,
   currentScreen: 'Dashboard',
   companyData: null,
-  currentCompanyData: null,
+  authCompanyData: null,
   userData: null,
-  currentUserData: null,
+  authUserData: null,
   companiesList: null,
   facilityTypes: null,
   countries: null,
@@ -43,11 +43,11 @@ const companyDataReducer = (state = initialState.companyData, action) => {
   return state;
 };
 
-const currentCompanyDataReducer = (state = initialState.currentCompanyData, action) => {
+const currentCompanyDataReducer = (state = initialState.authCompanyData, action) => {
   if (action.type === GlobaSateKey.ResetStore) {
-    return initialState.currentCompanyData;
+    return initialState.authCompanyData;
   }
-  if (action.type === GlobaSateKey.SetCurrentCompanyData) {
+  if (action.type === GlobaSateKey.SetAuthCompanyData) {
     return action.payload;
   }
   return state;
@@ -63,11 +63,11 @@ const userDataReducer = (state = initialState.userData, action) => {
   return state;
 };
 
-const currentUserDataReducer = (state = initialState.currentUserData, action) => {
+const currentUserDataReducer = (state = initialState.authUserData, action) => {
   if (action.type === GlobaSateKey.ResetStore) {
-    return initialState.currentUserData;
+    return initialState.authUserData;
   }
-  if (action.type === GlobaSateKey.SetCurrentUserData) {
+  if (action.type === GlobaSateKey.SetAuthUserData) {
     return action.payload;
   }
   return state;
@@ -128,9 +128,9 @@ const rootReducer = combineReducers({
   loading: loadingReducer,
   currentScreen: currentScreenReducer,
   companyData: companyDataReducer,
-  currentCompanyData: currentCompanyDataReducer,
+  authCompanyData: currentCompanyDataReducer,
   userData: userDataReducer,
-  currentUserData: currentUserDataReducer,
+  authUserData: currentUserDataReducer,
   companiesList: companiesListReducer,
   facilityTypes: facilityTypesReducer,
   countries: countriesReducer,
