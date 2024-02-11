@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 import { Formik, useFormik } from "formik";
-import { ScrollView, TextInput, StyleSheet, View, Text, TouchableOpacity, Switch } from "react-native";
+import { ScrollView, TextInput, StyleSheet, View, Text, TouchableOpacity, Switch, FlatList } from "react-native";
 import { string, array, object as yupObject } from "yup";
 import globalStyles, { placeHolderTextColor } from "../../styles/styles";
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
 import { Screens } from "../../helpers/constants";
 import CompanySurveyService from "../../api/CompanySurveyService";
+import fonts from "../../styles/fonts";
+import MasonryList from '@react-native-seoul/masonry-list';
 
 interface FormData {
     uuid: string;
@@ -22,11 +24,21 @@ export default function SurveyForm({ route }): React.JSX.Element {
     const navigator = useNavigation();
 
     const [textInputValues, setTextInputValues] = useState([]); // Initial array of empty strings
+    const [surveyData, setSurveyData] = useState(); // Initial array of empty strings
 
     useEffect(() => {
         if (survey) {
-            setTextInputValues(survey?.questions);
-            formik.setFieldValue('is_active', survey?.is_active)
+            companySurveyService.getSurvey({ uuid: survey.uuid })
+                .then((response) => {
+                    console.log(response?.data?.data)
+                    console.log('anwsers', response?.data?.data?.responses)
+
+                    setSurveyData(response?.data?.data)
+                    setTextInputValues(response?.data?.data?.questions);
+                    formik.setFieldValue('is_active', response?.data?.data?.is_active)
+                }).catch((error) => {
+                });
+
         }
     }, [survey])
 
@@ -158,56 +170,101 @@ export default function SurveyForm({ route }): React.JSX.Element {
         }
     };
 
-    return (
-        <ScrollView >
-            <View style={styles.container}>
-                {/* Facility Details Section */}
+    const renderAnswerItem = ({ item }) => {
+        let answers = item.answers.map((answer, index) => (
+            <View style={styles.card}>
                 <View>
-                    <TextInput
-                        value={formik.values.name}
-                        onChangeText={formik.handleChange('name')}
-                        placeholder="Name"
-                        placeholderTextColor={placeHolderTextColor}
-                        style={styles.input}
-                    />
-                </View>
-                {formik.touched.name && formik.errors.name &&
-                    <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.name}</Text>
-                }
-
-                {/* Question Section */}
-                <TouchableOpacity style={styles.section} onPress={toggleQestions}>
-                    <Text style={styles.sectionTitle}>
-                        {isQuestionsOpen ? '▼' : '▶'} Questions
-                    </Text>
-                </TouchableOpacity>
-                {isQuestionsOpen && (
-                    <>
-                        {renderTextInputArray()}
-                        <Button title="Add" onPress={handleAddInput} buttonStyle={styles.addButton} />
-                    </>)}
-
-
-                <View style={styles.switchContainer}>
-                    <Text style={styles.label}>Is Active</Text>
-                    <Switch
-                        value={formik.values.is_active}
-                        onValueChange={() => { formik.setFieldValue('is_active', !formik.values.is_active) }}
-                        trackColor={{ false: colors.PrimaryBlueLight, true: colors.PrimaryBlueLight }}
-                        thumbColor={formik.values.is_active ? colors.PrimaryBlue : colors.OffWhite}
-                    />
-                </View>
-
-                <View style={styles.buttonContainer}>
-                    <View style={styles.buttonWrapper}>
-                        <Button onPress={handleCancel} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
-                    </View>
-                    <View style={styles.buttonWrapper}>
-                        <Button onPress={formik.handleSubmit} title="Submit" buttonStyle={styles.submitButton} />
-                    </View>
+                    <Text style={styles.text}>Question: {answer.question.question}</Text>
+                    <Text style={styles.text}>Answer: {answer.answer}</Text>
+                    {/* You can add additional styling or components as needed */}
                 </View>
             </View>
-        </ScrollView>
+        ))
+        return (
+            <View style={styles.containerView}>
+                <Text style={styles.text}>{'User: ali'}</Text>
+                {answers}
+            </View>
+        )
+    }
+
+    return (
+        <>
+            {(!surveyData?.responses || surveyData?.responses.length == 0) &&
+                <ScrollView >
+
+                    <View style={styles.container}>
+                        {/* Facility Details Section */}
+                        <View>
+                            <TextInput
+                                value={formik.values.name}
+                                onChangeText={formik.handleChange('name')}
+                                placeholder="Name"
+                                placeholderTextColor={placeHolderTextColor}
+                                style={styles.input}
+                            />
+                        </View>
+                        {formik.touched.name && formik.errors.name &&
+                            <Text style={{ fontSize: 14, color: 'red' }}>{formik.errors.name}</Text>
+                        }
+
+                        {/* Question Section */}
+                        <TouchableOpacity style={styles.section} onPress={toggleQestions}>
+                            <Text style={styles.sectionTitle}>
+                                {isQuestionsOpen ? '▼' : '▶'} Questions
+                            </Text>
+                        </TouchableOpacity>
+                        {isQuestionsOpen && (
+                            <>
+                                {renderTextInputArray()}
+                                <Button title="Add" onPress={handleAddInput} buttonStyle={styles.addButton} />
+                            </>)}
+
+                        <View style={styles.switchContainer}>
+                            <Text style={styles.label}>Is Active</Text>
+                            <Switch
+                                value={formik.values.is_active}
+                                onValueChange={() => { formik.setFieldValue('is_active', !formik.values.is_active) }}
+                                trackColor={{ false: colors.PrimaryBlueLight, true: colors.PrimaryBlueLight }}
+                                thumbColor={formik.values.is_active ? colors.PrimaryBlue : colors.OffWhite}
+                            />
+                        </View>
+
+                        <View style={styles.buttonContainer}>
+                            <View style={styles.buttonWrapper}>
+                                <Button onPress={handleCancel} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
+                            </View>
+                            <View style={styles.buttonWrapper}>
+                                <Button onPress={formik.handleSubmit} title="Submit" buttonStyle={styles.submitButton} />
+                            </View>
+                        </View>
+
+                    </View>
+                </ScrollView>
+            }
+            {
+                surveyData?.responses?.length > 0 &&
+                <View style={styles.container}>
+                    <View>
+                        <Text style={styles.title}>{surveyData?.name}</Text>
+                    </View>
+                    {/* 
+                    <MasonryList
+                        data={surveyData?.responses}
+                        renderItem={renderAnswerItem}
+                         keyExtractor={(item, index) => `${item.uuid}_${index}`}
+                        numColumns={1}
+                    /> */}
+
+                    <FlatList
+                        data={surveyData?.responses}
+                        keyExtractor={(item, index) => `${item.uuid}_${index}`}
+                        renderItem={renderAnswerItem}
+                    />
+                </View>
+
+            }
+        </>
     );
 }
 
@@ -275,5 +332,37 @@ const styles = StyleSheet.create({
         marginTop: 10,
         flexDirection: 'row',
         alignItems: 'center',
-    }
+    },
+    title: {
+        ...globalStyles.text,
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.bold,
+        fontSize: 18,
+    },
+    text: {
+        ...globalStyles.text,
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.regular,
+        fontSize: 16,
+    },
+    containerView: {
+        padding: 15,
+        borderRadius: 10,
+        borderColor: colors.PrimaryGreenLight,
+        borderWidth: 0.5,
+        marginHorizontal: 5,
+        marginTop: 7,
+        marginBottom: 7,
+        backgroundColor: colors.White
+    },
+    card: {
+        padding: 15,
+        borderRadius: 10,
+        borderColor: colors.PrimaryGreenLight,
+        borderWidth: 0.5,
+        marginHorizontal: 10,
+        marginTop: 7,
+        marginBottom: 7,
+        backgroundColor: colors.White
+    },
 });
