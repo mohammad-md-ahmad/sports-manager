@@ -131,4 +131,9 @@ class Company extends Model
     {
         return $this->morphMany(Notification::class, 'receiver');
     }
+
+    public function latestActiveSurvey(): ?CompanySurvey
+    {
+        return $this->hasMany(CompanySurvey::class)->where('is_active', true)->latest()->first();
+    }
 }

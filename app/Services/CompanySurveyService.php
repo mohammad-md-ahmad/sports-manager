@@ -5,24 +5,38 @@ declare(strict_types=1);
 namespace App\Services;
 
 use App\Contracts\Services\CompanySurveyServiceInterface;
+use App\Enums\MobileAppScreensEnum;
+use App\Enums\NotificationCategory;
+use App\Enums\NotificationStatus;
 use App\Models\CompanySurvey;
 use App\Models\CompanySurveyAnswer;
 use App\Models\CompanySurveyQuestion;
 use App\Models\CompanySurveyUserResponse;
+use App\Models\Notification;
+use App\Models\SurveyNotification;
+use App\Models\User;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyQuestionRequest;
 use App\Services\Data\CompanySurvey\CreateCompanySurveyRequest;
 use App\Services\Data\CompanySurvey\CreateSurveyAnswerRequest;
 use App\Services\Data\CompanySurvey\CreateUserResponseRequest;
 use App\Services\Data\CompanySurvey\GetAllCompanySurveysRequest;
 use App\Services\Data\CompanySurvey\GetCompanySurveyRequest;
+use App\Services\Data\CompanySurvey\SendCompanyLatestSurveyRequest;
 use App\Services\Data\CompanySurvey\UpdateCompanySurveyRequest;
+use App\Services\Data\Notification\CreateNotificationRequest;
 use Exception;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use LogicException;
 
 class CompanySurveyService implements CompanySurveyServiceInterface
 {
+    public function __construct(
+        protected PushNotificationService $pushNotificationService,
+    ) {
+    }
+
     /**
      * @throws Exception
      */
@@ -157,6 +171,62 @@ class CompanySurveyService implements CompanySurveyServiceInterface
             DB::rollBack();
 
             Log::error('CompanySurveyService::update: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function sendSurvey(SendCompanyLatestSurveyRequest $data): bool
+    {
+        try {
+            $companyLatestActiveSurvey = $data->company->latestActiveSurvey();
+
+            if (! $companyLatestActiveSurvey) {
+                throw new LogicException(__('Company has no active survey!'));
+            }
+
+            $companyCustomersUuids = $data->company->customers->map(function ($customerUser) {
+                return $customerUser->customer->uuid;
+            });
+
+            $notificationText = __('Company :company has sent you a survey. Click here to see it.', [
+                'company' => $data->company->name,
+            ]);
+
+            $this->pushNotificationService->createNotification(
+                $companyCustomersUuids->toArray(),
+                $notificationText,
+                custom_data: [
+                    'screen' => MobileAppScreensEnum::SurveyFillForm->name,
+                    'survey_uuid' => $companyLatestActiveSurvey->uuid,
+                ]
+            );
+
+            $companyCustomersUuids->each(function ($item) use ($notificationText, $companyLatestActiveSurvey) {
+                $user = User::query()->whereUuid($item)->first();
+
+                $createNotificationRequest = CreateNotificationRequest::from([
+                    'receiver_type' => User::class,
+                    'receiver_id' => $user->id,
+                    'title' => 'Survey Request',
+                    'notification' => $notificationText,
+                    'status' => NotificationStatus::Sent->name,
+                    'category' => NotificationCategory::SurveyRequest->name,
+                ]);
+
+                DB::transaction(function () use ($createNotificationRequest, $companyLatestActiveSurvey) {
+                    $notification = Notification::create($createNotificationRequest->toArray());
+
+                    SurveyNotification::updateOrCreate([
+                        'company_survey_id' => $companyLatestActiveSurvey->id,
+                        'notification_id' => $notification->id,
+                    ]);
+                });
+            });
+
+            return true;
+        } catch (Exception $exception) {
+            Log::error('CompanySurveyService::sendSurvey: '.$exception->getMessage());
 
             throw $exception;
         }

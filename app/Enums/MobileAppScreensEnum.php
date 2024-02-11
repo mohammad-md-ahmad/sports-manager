@@ -40,4 +40,5 @@ enum MobileAppScreensEnum
     case PaymentMethodsForm;
     case SurviesList;
     case SurveyForm;
+    case SurveyFillForm;
 }
