@@ -18,17 +18,6 @@ export default function CompanyPhotos(): React.JSX.Element {
     const companyData = useSelector(state => state.companyData);
 
 
-    const onLoadEnd = () => {
-    };
-
-    const onError = () => {
-        // Handle error if the image fails to load
-    };
-
-    useEffect(() => {
-
-    }, [companyData])
-
     const renderItem = (item) => {
         return <CompanyImageCard companyImage={item.item} />
     }
