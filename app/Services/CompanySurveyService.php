@@ -44,7 +44,7 @@ class CompanySurveyService implements CompanySurveyServiceInterface
     {
         try {
             /** @var CompanySurvey $survey */
-            $survey = CompanySurvey::with(['questions', 'company', 'responses.answers.question'])
+            $survey = CompanySurvey::with(['questions', 'company', 'responses.answers.question', 'responses.user'])
                 ->findOrFail($data->id);
 
             return $survey;
