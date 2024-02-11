@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { Formik, useFormik } from "formik";
-import { ScrollView, TextInput, StyleSheet, View, Text, TouchableOpacity, Switch } from "react-native";
-import { string, array, object as yupObject } from "yup";
-import globalStyles, { placeHolderTextColor } from "../../styles/styles";
+import { useFormik } from "formik";
+import { ScrollView, TextInput, StyleSheet, View, Text } from "react-native";
+import { object as yupObject } from "yup";
+import globalStyles from "../../styles/styles";
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
 import { Screens } from "../../helpers/constants";
@@ -13,9 +13,9 @@ import { useSelector } from "react-redux";
 import fonts from "../../styles/fonts";
 
 export default function SurveyFillForm({ route }): React.JSX.Element {
-    const { survey } = route?.params ?? {};
+    const { surveyUuid } = route?.params ?? {};
 
-    const [survey1, setSurvey] = useState([]);
+    const [survey, setSurvey] = useState([]);
     const user = useSelector(state => state.authUserData);
 
     const navigator = useNavigation();
@@ -27,7 +27,7 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
-            companySurveyService.getSurvey(survey)
+            companySurveyService.getSurvey({ uuid: surveyUuid })
                 .then((response) => {
                     setSurvey(response.data?.data);
                 }).catch((error) => {

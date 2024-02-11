@@ -55,6 +55,7 @@ export enum Screens {
     PaymentMethodsForm = "PaymentMethodsForm",
     SurviesList = "SurviesList",
     SurveyForm = "SurveyForm",
+    SurveyFillForm = "SurveyFillForm",
 }
 
 export enum SlotStatus {
@@ -116,12 +117,14 @@ export enum FormMode {
 export enum NotificationActionButtons {
     ApproveBookingBtn = 'approve-booking-btn',
     DeclineBookingBtn = 'decline-booking-btn',
+    FillSurveyBtn = 'decline-booking-btn',
     ViewBookingBtn = 'view-booking-btn'
 }
 
 export enum NotificationCategory {
     BookingRequest = 'BookingRequest',
     BookingResponse = 'BookingResponse',
+    FillSurveyRequest = 'BookingResponse',
     General = 'General'
 }
 
