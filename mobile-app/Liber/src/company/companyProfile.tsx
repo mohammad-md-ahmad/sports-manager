@@ -20,11 +20,9 @@ const Tab = createMaterialTopTabNavigator();
 export default function CompanyProfile() {
     // Extract user information from the route parameters
 
-    const navigator = useNavigation();
     const dispatch = useDispatch();
 
     const authCompanyData = useSelector(state => state.authCompanyData);
-    const authUserData = useSelector(state => state.authUserData);
 
     const [companyData, setCompanyData] = useState({
         name: '',
@@ -45,14 +43,14 @@ export default function CompanyProfile() {
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
-
-            if (authCompanyData) {
+            if (authCompanyData && authCompanyData.gallery) {
                 setCompanyData(authCompanyData);
+                dispatch({ type: GlobaSateKey.SetCompanyData, payload: authCompanyData });
             }
             else {
                 companyService.getCompany().then((response) => {
                     setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-                    dispatch({ type: GlobaSateKey.SetAuthCompanyData, payload: { ...response?.data?.data, logo: { uri: response?.data?.data?.logo } } });
+                    dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...response?.data?.data, logo: { uri: response?.data?.data?.logo } } });
                 }).catch((error) => {
                 });
             }

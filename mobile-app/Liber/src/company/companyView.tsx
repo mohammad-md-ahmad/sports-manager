@@ -29,7 +29,7 @@ export default function CompanyView() {
     return (
         <>
             <View style={styles.container}>
-                <Image source={{ uri: companyData?.logo }} style={styles.logo} />
+                <Image source={companyData?.logo} style={styles.logo} />
                 <Text style={styles.name}>{companyData.name}</Text>
                 <RatingRowWithNumber ratingData={{ ratingNumber: companyData?.total_rating }} />
                 {
