@@ -54,6 +54,7 @@ class Notification extends Model
         'category' => NotificationCategory::class,
         'opened_at' => 'datetime:Y-m-d H:i:s',
         'action_taken_at' => 'datetime:Y-m-d H:i:s',
+        'created_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function receiver(): MorphTo
