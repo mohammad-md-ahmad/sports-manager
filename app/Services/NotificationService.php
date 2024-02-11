@@ -30,7 +30,7 @@ class NotificationService implements NotificationServiceInterface
                 throw new LogicException(__('Receiver not found!'));
             }
 
-            return $receiver->notifications()->with(['bookingNotification.booking', 'bookingNotification.notification', 'surveyNotification.notification'])->orderBy('notifications.created_at', 'DESC')->jsonPaginate();
+            return $receiver->notifications()->with(['bookingNotification.booking', 'bookingNotification.notification', 'surveyNotification.companySurvey'])->orderBy('notifications.created_at', 'DESC')->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('NotificationService::getUserNotifications: '.$exception->getMessage());
 
