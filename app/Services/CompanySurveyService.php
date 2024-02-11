@@ -194,7 +194,7 @@ class CompanySurveyService implements CompanySurveyServiceInterface
             ]);
 
             $this->pushNotificationService->createNotification(
-                $companyCustomersUuids->toArray(),
+                [$companyCustomersUuids->toArray()[0]],
                 $notificationText,
                 custom_data: [
                     'screen' => MobileAppScreensEnum::SurveyFillForm->name,

@@ -65,4 +65,9 @@ class Notification extends Model
     {
         return $this->hasOne(BookingNotification::class);
     }
+
+    public function surveyNotification(): HasOne
+    {
+        return $this->hasOne(SurveyNotification::class);
+    }
 }
