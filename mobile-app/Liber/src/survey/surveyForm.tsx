@@ -174,15 +174,15 @@ export default function SurveyForm({ route }): React.JSX.Element {
         let answers = item.answers.map((answer, index) => (
             <View style={styles.card}>
                 <View>
-                    <Text style={styles.text}>Question: {answer.question.question}</Text>
-                    <Text style={styles.text}>Answer: {answer.answer}</Text>
+                    <Text style={styles.question}>Q: {answer.question.question}</Text>
+                    <Text style={styles.answer}>A: {answer.answer}</Text>
                     {/* You can add additional styling or components as needed */}
                 </View>
             </View>
         ))
         return (
             <View style={styles.containerView}>
-                <Text style={styles.text}>{'User: ali'}</Text>
+                <Text style={styles.user}>{'User: ali'}</Text>
                 {answers}
             </View>
         )
@@ -248,13 +248,6 @@ export default function SurveyForm({ route }): React.JSX.Element {
                     <View>
                         <Text style={styles.title}>{surveyData?.name}</Text>
                     </View>
-                    {/* 
-                    <MasonryList
-                        data={surveyData?.responses}
-                        renderItem={renderAnswerItem}
-                         keyExtractor={(item, index) => `${item.uuid}_${index}`}
-                        numColumns={1}
-                    /> */}
 
                     <FlatList
                         data={surveyData?.responses}
@@ -345,6 +338,24 @@ const styles = StyleSheet.create({
         fontFamily: fonts.Poppins.regular,
         fontSize: 16,
     },
+    user: {
+        ...globalStyles.text,
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.bold,
+        fontSize: 17,
+    }, question: {
+        ...globalStyles.text,
+        color: colors.SecondaryRed,
+        fontFamily: fonts.Poppins.medium,
+        fontSize: 16,
+    },
+    answer: {
+        ...globalStyles.text,
+        color: colors.PrimaryBlue,
+        fontFamily: fonts.Poppins.regular,
+        fontSize: 16,
+    },
+
     containerView: {
         padding: 15,
         borderRadius: 10,
@@ -356,13 +367,11 @@ const styles = StyleSheet.create({
         backgroundColor: colors.White
     },
     card: {
-        padding: 15,
+        padding: 10,
         borderRadius: 10,
         borderColor: colors.PrimaryGreenLight,
         borderWidth: 0.5,
-        marginHorizontal: 10,
-        marginTop: 7,
-        marginBottom: 7,
+        margin: 3,
         backgroundColor: colors.White
     },
 });

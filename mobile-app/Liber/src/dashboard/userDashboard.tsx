@@ -7,14 +7,15 @@ import {
 } from "react-native";
 import colors from "../../styles/colors";
 import { useFocusEffect } from "@react-navigation/native";
-import CompanyCard from "../common/companyCard";
 import CompanyService from "../../api/CompanyService";
+import CompanyCard from "../common/companyCard";
 import { useDispatch, useSelector } from "react-redux";
-import { GlobaSateKey } from "../../helpers/constants";
+import { DashboardCardType, GlobaSateKey } from "../../helpers/constants";
 import MasonryList from '@react-native-seoul/masonry-list';
 import AdService from "../../api/AdService";
+import AdCard from "../common/adCard";
 
-export default function UserDashboard(): React.JSX.Element {
+export default function CompanyDashboard(): React.JSX.Element {
     const companyService = new CompanyService();
     const adService = new AdService();
 
@@ -78,26 +79,19 @@ export default function UserDashboard(): React.JSX.Element {
         setCombinedData(combinedArray);
     }
 
-
-    // const getItem = (_data: unknown, index: number) => companies[index] ?? 0;
-    // const getItemCount = (_data: unknown) => companies?.length ?? 0;
-
     return (
         <SafeAreaView style={styles.container}>
-            {/* <VirtualizedList
-                initialNumToRender={6}
-                renderItem={({ item }) => <CompanyCard company={item} />}
-                keyExtractor={item => item.uuid}
-                getItemCount={getItemCount}
-                getItem={getItem}
-            /> */}
 
             <MasonryList
-                data={companies}
-                renderItem={({ item }) => <CompanyCard company={item} />}
+                data={combinedData}
+                renderItem={({ item }) =>
+                    item.cardType == DashboardCardType.Company ?
+                        <CompanyCard company={item} /> :
+                        <AdCard ad={item} />
+                }
                 keyExtractor={item => item.uuid}
                 numColumns={1}
-                onRefresh={loadDate}
+                onRefresh={loadData}
             />
         </SafeAreaView>
     );

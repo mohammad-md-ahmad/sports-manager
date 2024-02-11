@@ -81,13 +81,6 @@ export default function CompanyDashboard(): React.JSX.Element {
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <VirtualizedList
-                initialNumToRender={6}
-                renderItem={({ item }) => <CompanyCard company={item} />}
-                keyExtractor={item => item.uuid}
-                getItemCount={getItemCount}
-                getItem={getItem}
-            /> */}
 
             <MasonryList
                 data={combinedData}
