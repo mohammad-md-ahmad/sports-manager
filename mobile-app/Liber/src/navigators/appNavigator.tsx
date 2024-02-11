@@ -85,7 +85,11 @@ const AppNavigator = () => {
             } else if (event.notification?.additionalData) {
                 let targetScreen = event.notification?.additionalData?.screen;
                 let targetSubScreen = event.notification?.additionalData?.sub_screen;
-                navigator.navigate(targetScreen, targetSubScreen ? { screen: targetSubScreen } : {});
+
+                let surveyUuid = event.notification?.additionalData?.survey_uuid
+                navigator.navigate(targetScreen, targetSubScreen ?
+                    { screen: targetSubScreen, surveyUuid: surveyUuid } :
+                    { surveyUuid: surveyUuid });
             }
         }
     };

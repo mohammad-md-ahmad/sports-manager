@@ -12,6 +12,7 @@ interface Notification {
     uuid: string;
     user_id: string;
     title: string;
+    created_at: string;
     notification: string;
     status: string;
     category: string;
@@ -78,6 +79,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
+                            <Text style={styles.text}>{notification.created_at}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
                             <Text style={styles.text}>Booking Status: {notification?.booking_notification?.booking?.status}</Text>
                         </View>
@@ -106,6 +108,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
+                            <Text style={styles.text}>{notification.created_at}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
                         </View>
                     </View>
@@ -119,6 +122,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                             <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                             <View>
                                 <Text style={styles.title}>{notification.title}</Text>
+                                <Text style={styles.text}>{notification.created_at}</Text>
                                 <Text style={styles.text}>{notification.notification}</Text>
                             </View>
                         </View>
@@ -132,6 +136,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
+                            <Text style={styles.text}>{notification.created_at}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
                         </View>
                     </View>
