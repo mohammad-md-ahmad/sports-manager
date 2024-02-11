@@ -89,7 +89,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('surveys')->group(function () {
 
                 Route::post('/', [CompanySurveyController::class, 'store'])->name('company-surveys.create');
-                Route::post('/send-survey', [CompanySurveyController::class, 'sendSurvey'])->name('company-surveys.send');
+                Route::post('/send', [CompanySurveyController::class, 'sendSurvey'])->name('company-surveys.send');
             });
         });
     });
