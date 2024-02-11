@@ -182,7 +182,7 @@ export default function SurveyForm({ route }): React.JSX.Element {
         ))
         return (
             <View style={styles.containerView}>
-                <Text style={styles.user}>{'User: ali'}</Text>
+                <Text style={styles.user}>{'User: ' + item?.user.full_name}</Text>
                 {answers}
             </View>
         )
