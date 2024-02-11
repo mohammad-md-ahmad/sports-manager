@@ -133,3 +133,8 @@ export enum NotificationStatus {
     Sent = 'Sent',
     Opened = 'Opened'
 }
+
+export enum DashboardCardType {
+    Company = 'Company',
+    Ad = 'Ad'
+}
