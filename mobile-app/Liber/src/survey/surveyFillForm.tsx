@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from "react";
 
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { useFormik } from "formik";
 import { ScrollView, TextInput, StyleSheet, View, Text } from "react-native";
-import { object as yupObject } from "yup";
 import globalStyles from "../../styles/styles";
 import colors from "../../styles/colors";
 import { Button } from "react-native-elements";
-import { Screens } from "../../helpers/constants";
+import { Screens, UserType } from "../../helpers/constants";
 import CompanySurveyService from "../../api/CompanySurveyService";
 import { useSelector } from "react-redux";
 import fonts from "../../styles/fonts";
+import SurveyConfirmation from "../common/surveyConfirmation";
 
 export default function SurveyFillForm({ route }): React.JSX.Element {
-    const { surveyUuid } = route?.params ?? {};
+    const { surveyUuid } = route?.params ?? null;
 
-    const [survey, setSurvey] = useState([]);
+    const [survey, setSurvey] = useState(null);
     const user = useSelector(state => state.authUserData);
 
     const navigator = useNavigation();
@@ -27,17 +26,19 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
-            companySurveyService.getSurvey({ uuid: surveyUuid })
-                .then((response) => {
-                    setSurvey(response.data?.data);
-                }).catch((error) => {
-                });
-        }, [])
+            if (surveyUuid)
+                companySurveyService.getSurvey({ uuid: surveyUuid })
+                    .then((response) => {
+                        setSurvey(response.data?.data);
+                    }).catch((error) => {
+                    });
+        }, [surveyUuid])
     );
 
 
     useEffect(() => {
         if (survey) {
+            console.log('survey', survey)
             survey?.questions.map((value, index) => {
                 value['company_survey_question_id'] = value['uuid'];
                 value['answer'] = '';
@@ -49,31 +50,13 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
     }, [survey])
 
 
-    const formDataValidateSchema = yupObject().shape({
-    });
-
-    const initialFormDataValues = {
-        uuid: survey?.uuid,
-        user_id: user?.uuid,
-        answers: survey?.questions ?? [],
-    };
-
-    const initialTouched = {
-        uuid: survey?.uuid,
-        user_id: user?.uuid,
-        answers: survey?.questions ?? [],
-    };
-
-    const formik = useFormik({
-        validationSchema: formDataValidateSchema,
-        initialValues: initialFormDataValues,
-        initialTouched: initialTouched,
-        onSubmit: (values) => handleSubmit(values)
-    });
-
-
     const handleCancel = () => {
-        navigator.navigate(Screens.SurviesList);
+        if (user.type == UserType.CompanyUser) {
+            navigator.navigate(Screens.SurviesList);
+        }
+        else {
+            navigator.navigate(Screens.UserProfile);
+        }
     };
 
     const sanitizeFormData = (data) => {
@@ -93,13 +76,14 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
         return sanitizedData;
     };
 
-    const handleSubmit = (data) => {
-        let sanitizedFormData = data;
+    const handleSubmit = () => {
+        let sanitizedFormData = survey;
+        sanitizedFormData.user_id = user?.uuid;
         sanitizedFormData['answers'] = textInputValues;
 
         console.log(sanitizedFormData);
         companySurveyService.userResponse(sanitizedFormData).then((response) => {
-            navigator.navigate(Screens.SurviesList);
+            setIsConfrimationVisible(true);
         }).catch((error) => {
             console.log()
         });
@@ -112,6 +96,17 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
 
         setTextInputValues(newValues);
     };
+
+    const [isConfrimationVisible, setIsConfrimationVisible] = useState(false);
+    const confirmSurvey = () => {
+        setIsConfrimationVisible(false);
+        if (user.type == UserType.CompanyUser) {
+            navigator.navigate(Screens.SurviesList);
+        }
+        else {
+            navigator.navigate(Screens.UserProfile);
+        }
+    }
 
     const renderTextInputArray = () => {
         return textInputValues.map((value, index) => (
@@ -136,7 +131,7 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
             <View style={styles.container}>
                 {/* Facility Details Section */}
                 <View>
-                    <Text style={styles.title}>{survey.name}</Text>
+                    <Text style={styles.title}>{survey?.name}</Text>
                 </View>
                 <>
                     {renderTextInputArray()}
@@ -146,10 +141,11 @@ export default function SurveyFillForm({ route }): React.JSX.Element {
                         <Button onPress={handleCancel} title="Cancel" titleStyle={{ color: 'red' }} buttonStyle={styles.cancelButton} />
                     </View>
                     <View style={styles.buttonWrapper}>
-                        <Button onPress={formik.handleSubmit} title="Submit" buttonStyle={styles.submitButton} />
+                        <Button onPress={handleSubmit} title="Submit" buttonStyle={styles.submitButton} />
                     </View>
                 </View>
             </View>
+            <SurveyConfirmation isVisible={isConfrimationVisible} onConfirm={confirmSurvey}></SurveyConfirmation>
         </ScrollView>
     );
 }

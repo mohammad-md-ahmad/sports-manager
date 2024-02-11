@@ -67,7 +67,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
 
     const navigator = useNavigation();
     const handleSurveyCardClick = () => {
-        navigator.navigate(Screens.SurveyFillForm, { surveyUuid: notification?.survey_notification?.survey?.uuid });
+        navigator.navigate(Screens.SurveyFillForm, { surveyUuid: notification?.survey_notification?.company_survey?.uuid });
     }
 
     return (
