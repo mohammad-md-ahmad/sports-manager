@@ -36,7 +36,7 @@ class Notification extends Model
         'receiver_type',
         'receiver_id',
         'title',
-        'notification', 'datetime:Y-m-d H:i:s',
+        'notification',
         'status',
         'category',
         'opened_at',
