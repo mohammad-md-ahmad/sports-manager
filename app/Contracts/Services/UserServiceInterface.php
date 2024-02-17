@@ -5,13 +5,14 @@ namespace App\Contracts\Services;
 use App\Models\User;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
+use App\Services\Data\User\GetAllUsersRequest;
 use App\Services\Data\User\GetUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface UserServiceInterface
 {
-    public function getAll(): LengthAwarePaginator;
+    public function getAll(GetAllUsersRequest $data): LengthAwarePaginator;
 
     public function get(GetUserRequest $data): User;
 

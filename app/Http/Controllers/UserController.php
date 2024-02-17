@@ -8,6 +8,7 @@ use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserType;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
+use App\Services\Data\User\GetAllUsersRequest;
 use App\Services\Data\User\GetUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use Exception;
@@ -23,7 +24,7 @@ class UserController extends Controller
     ) {
     }
 
-    public function getAll(Request $request): JsonResponse
+    public function getAll(GetAllUsersRequest $request): JsonResponse
     {
         try {
             $data = $this->userService->getAll($request);

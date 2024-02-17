@@ -45,6 +45,13 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\AcceptJSON::class,
         ],
+
+        'web-api' => [
+            \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Illuminate\Routing\Middleware\ThrottleRequests::class.':web-api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\AcceptJSON::class,
+        ],
     ];
 
     /**

@@ -2,8 +2,12 @@
 
 namespace App\Enums;
 
+use App\Traits\EnumFromName;
+
 enum UserType
 {
+    use EnumFromName;
+
     case ADMIN;
     case COMPANY_USER;
     case CUSTOMER_USER;

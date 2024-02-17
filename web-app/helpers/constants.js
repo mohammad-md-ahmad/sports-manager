@@ -1,5 +1,5 @@
 const Constants = {
-    apiUrl: 'https://liber.quad-bh.com/api',
+    apiUrl: 'https://liber.quad-bh.com/web-api',
     assetsUrl: 'https://liber.quad-bh.com/storage',
     imagesUrl: 'https://liber.quad-bh.com/files/images',
     tokenKey: 'auth_token',
@@ -11,3 +11,8 @@ const Constants = {
 };
 
 export default Constants;
+
+export const UserType = {
+    CompanyUser: "COMPANY_USER",
+    CustomerUser: "CUSTOMER_USER",
+};
