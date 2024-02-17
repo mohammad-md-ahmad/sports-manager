@@ -13,7 +13,6 @@ use App\Services\Data\User\GetUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -64,7 +63,12 @@ class UserController extends Controller
         try {
             $request->type = UserType::ADMIN->name;
 
-            return $this->store($request);
+            $user = $this->userService->store($request);
+
+            return response()->json([
+                'message' => __('Admin has been created successfully.'),
+                'data' => $user,
+            ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error('Unable to store Admin: '.$exception->getMessage());
 

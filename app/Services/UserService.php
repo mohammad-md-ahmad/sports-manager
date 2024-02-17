@@ -19,6 +19,7 @@ use App\Traits\ImageUpload;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -70,14 +71,10 @@ class UserService implements UserServiceInterface
 
             $data->password = Hash::make($data->password);
 
-            $userData = $data->toArray();
-            unset($userData['gender']);
-            unset($userData['dob']);
-
             DB::beginTransaction();
 
             /** @var User $user */
-            $user = User::create($userData);
+            $user = User::create(Arr::except($data->toArray(), ['gender', 'dob']));
 
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {
