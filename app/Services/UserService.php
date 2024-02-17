@@ -6,15 +6,18 @@ namespace App\Services;
 
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserGender;
+use App\Enums\UserType;
 use App\Models\User;
 use App\Models\UserFavoriteSport;
 use App\Models\UserPersonalInfo;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
+use App\Services\Data\User\GetAllUsersRequest;
 use App\Services\Data\User\GetUserRequest;
 use App\Services\Data\User\UpdateUserRequest;
 use App\Traits\ImageUpload;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -29,10 +32,16 @@ class UserService implements UserServiceInterface
     /**
      * @throws Exception
      */
-    public function getAll(): LengthAwarePaginator
+    public function getAll(GetAllUsersRequest $data): LengthAwarePaginator
     {
         try {
-            return User::jsonPaginate();
+            $usersQuery = User::query();
+
+            $usersQuery->when($data->type, function (Builder $query) use ($data) {
+                $query->where('type', '=', UserType::tryFromName($data->type)->name);
+            });
+
+            return $usersQuery->jsonPaginate();
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
 
