@@ -63,7 +63,7 @@ const AppNavigator = () => {
         if (event.result) {
             if (event.result?.actionId) {
                 let actionId = event.result?.actionId;
-
+                let targetScreen = Screens.Dashboard;
                 switch (actionId) {
                     case NotificationActionButtons.ApproveBookingBtn:
                         approveBooking(event.notification?.additionalData?.booking_uuid);
@@ -71,8 +71,12 @@ const AppNavigator = () => {
                     case NotificationActionButtons.DeclineBookingBtn:
                         declineBooking(event.notification?.additionalData?.booking_uuid)
                         break;
+                    case NotificationActionButtons.FillSurveyBtn:
+                        targetScreen = event.notification?.additionalData?.screen;
+                        fillSurvey(targetScreen, event.notification?.additionalData?.survey_uuid)
+                        break;
                     default:
-                        let targetScreen = event.notification?.additionalData?.screen;
+                        targetScreen = event.notification?.additionalData?.screen;
                         let targetSubScreen = event.notification?.additionalData?.sub_screen;
                         navigator.navigate(targetScreen, targetSubScreen ? { screen: targetSubScreen } : {});
                         break;
@@ -81,12 +85,14 @@ const AppNavigator = () => {
             } else if (event.notification?.additionalData) {
                 let targetScreen = event.notification?.additionalData?.screen;
                 let targetSubScreen = event.notification?.additionalData?.sub_screen;
-                navigator.navigate(targetScreen, targetSubScreen ? { screen: targetSubScreen } : {});
+
+                let surveyUuid = event.notification?.additionalData?.survey_uuid
+                navigator.navigate(targetScreen, targetSubScreen ?
+                    { screen: targetSubScreen, surveyUuid: surveyUuid } :
+                    { surveyUuid: surveyUuid });
             }
         }
     };
-
-
 
     const approveBooking = (bookingUuid: string): void => {
         bookingService.bookApprove({ uuid: bookingUuid })
@@ -104,12 +110,15 @@ const AppNavigator = () => {
             })
     }
 
+    const fillSurvey = (targetScreen: string, surveyUuid: string): void => {
+        navigator.navigate(targetScreen, { surveyUuid: surveyUuid });
+    }
+
     const toggleDrawer = () => {
         navigator.toggleDrawer();
     }
 
     const toggleBack = () => {
-
         navigator.goBack();
     }
 
@@ -346,9 +355,9 @@ const AppNavigator = () => {
 
                     <Stack.Screen name={Screens.ProgramManagmentTabs} options={{ title: 'Program Managment' }} component={programManagmentTabs} />
 
-                    <Stack.Screen name={Screens.SurviesList} options={{ title: 'Survies List' }} component={SurviesList} />
+                    <Stack.Screen name={Screens.SurviesList} options={{ title: 'Survey\'s List' }} component={SurviesList} />
                     <Stack.Screen name={Screens.SurveyForm} options={{ title: 'Survey Form' }} component={SurveyForm} />
-                    {/*<Stack.Screen name={Screens.SurveyFillForm} options={{ title: 'Fill Survey Form' }} component={SurveyFillForm} />*/}
+                    <Stack.Screen name={Screens.SurveyFillForm} options={{ title: 'Fill Survey Form' }} component={SurveyFillForm} />
 
 
                     <Stack.Screen name={Screens.About} options={{ title: 'About' }} component={About} />

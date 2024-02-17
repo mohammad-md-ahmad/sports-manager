@@ -30,6 +30,11 @@ class CompanySurveyService extends AxiosService {
         const companyData = await this.companyDataPromise;
         return this.get(`/surveys/get-all/company/${companyData.uuid}`);
     }
+
+    async sendSurveyToUsers(){
+        const companyData = await this.companyDataPromise;
+        return this.post(`/companies/${companyData.uuid}/surveys/send`, {});
+    }
 }
 
 export default CompanySurveyService;

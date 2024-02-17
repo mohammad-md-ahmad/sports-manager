@@ -7,6 +7,7 @@ use App\Services\Data\CompanySurvey\CreateCompanySurveyRequest;
 use App\Services\Data\CompanySurvey\CreateUserResponseRequest;
 use App\Services\Data\CompanySurvey\GetAllCompanySurveysRequest;
 use App\Services\Data\CompanySurvey\GetCompanySurveyRequest;
+use App\Services\Data\CompanySurvey\SendCompanyLatestSurveyRequest;
 use App\Services\Data\CompanySurvey\UpdateCompanySurveyRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -17,14 +18,14 @@ use Illuminate\Validation\ValidationException;
 class CompanySurveyController extends Controller
 {
     public function __construct(
-        protected CompanySurveyServiceInterface $companySurvey
+        protected CompanySurveyServiceInterface $companySurveyService
     ) {
     }
 
     public function get(GetCompanySurveyRequest $request): JsonResponse
     {
         try {
-            $data = $this->companySurvey->get($request);
+            $data = $this->companySurveyService->get($request);
 
             return response()->json([
                 'message' => __('Company Survey has been retreived successfully.'),
@@ -44,7 +45,7 @@ class CompanySurveyController extends Controller
     public function getAllByCompany(GetAllCompanySurveysRequest $request): JsonResponse
     {
         try {
-            $data = $this->companySurvey->getAllByCompany($request);
+            $data = $this->companySurveyService->getAllByCompany($request);
 
             return response()->json([
                 'message' => __('Company Surveys has been retreived successfully.'),
@@ -64,7 +65,7 @@ class CompanySurveyController extends Controller
     public function store(CreateCompanySurveyRequest $request): JsonResponse
     {
         try {
-            $data = $this->companySurvey->store($request);
+            $data = $this->companySurveyService->store($request);
 
             return response()->json([
                 'message' => __('Company Survey has been created successfully.'),
@@ -84,7 +85,7 @@ class CompanySurveyController extends Controller
     public function update(UpdateCompanySurveyRequest $request): JsonResponse
     {
         try {
-            $data = $this->companySurvey->update($request);
+            $data = $this->companySurveyService->update($request);
 
             return response()->json([
                 'message' => __('Company Survey has been updated successfully.'),
@@ -101,10 +102,21 @@ class CompanySurveyController extends Controller
         }
     }
 
+    public function sendSurvey(SendCompanyLatestSurveyRequest $request)
+    {
+        try {
+            $this->companySurveyService->sendSurvey($request);
+        } catch (Exception $exception) {
+            Log::error('Unable to send the survey to the company customers: '.$exception->getMessage());
+
+            return response()->json(['message' => __('Failed to send the survey to the company customers.')], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function userResponse(CreateUserResponseRequest $request)
     {
         try {
-            $this->companySurvey->userResponse($request);
+            $this->companySurveyService->userResponse($request);
 
             return response()->json(['message' => __('User Response has been submitted successfully!')], Response::HTTP_OK);
         } catch (ValidationException $exception) {

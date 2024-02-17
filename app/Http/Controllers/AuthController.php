@@ -41,7 +41,7 @@ class AuthController extends Controller
             ];
 
             if ($user->type->name === UserType::COMPANY_USER->name) {
-                $data['company'] = $user->company()->load('address')->toArray();
+                $data['company'] = $user->company()->load(['address', 'gallery', 'ratings'])->toArray();
             }
 
             return response()->json([

@@ -33,8 +33,8 @@ export default function ProfileMenu() {
         profile_picture: require('./../../assets/images/liber_logo.png')
     });
 
-    const companyCachedData = useSelector(state => state.currentCompanyData);
-    const userCachedData = useSelector(state => state.currentUserData);
+    const authCompanyData = useSelector(state => state.authCompanyData);
+    const authUserData = useSelector(state => state.authUserData);
 
     const userService = new UserService();
     const companyService = new CompanyService();
@@ -67,30 +67,35 @@ export default function ProfileMenu() {
                                 navigateTo: Screens.Facilities
                             },
                             {
-                                title: "Survies List",
-                                icon: "payments",
+                                title: "Survey's List",
+                                icon: "poll",
                                 navigateTo: Screens.SurviesList
                             },
+                            {
+                                title: "Booking History",
+                                icon: "history",
+                                navigateTo: Screens.BookingHistoryList
+                            },
                         ], 1)
-
-                        if (companyCachedData) {
-                            setCompanyData(companyCachedData);
+                        if (authCompanyData && authCompanyData.gallery) {
+                            setCompanyData(authCompanyData);
+                            dispatch({ type: GlobaSateKey.SetCompanyData, payload: authCompanyData });
                         } else {
                             companyService.getCompany().then((response) => {
                                 setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-                                dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
+                                dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...response.data.data, logo: { uri: response.data?.data?.logo } } });
                             }).catch((error) => {
                                 console.error('company error', error)
                             });
                         }
                     } else {
 
-                        if (userCachedData) {
-                            setUserData(userCachedData);
+                        if (authUserData) {
+                            setUserData(authUserData);
                         } else {
                             userService.getUser().then((response) => {
                                 setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
-                                dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } } });
+                                dispatch({ type: GlobaSateKey.SetAuthUserData, payload: { ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } } });
 
                             }).catch((error) => {
                                 console.error('user error', error)

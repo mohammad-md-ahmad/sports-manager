@@ -36,7 +36,7 @@ class Notification extends Model
         'receiver_type',
         'receiver_id',
         'title',
-        'notification', 'datetime:Y-m-d H:i:s',
+        'notification',
         'status',
         'category',
         'opened_at',
@@ -54,6 +54,7 @@ class Notification extends Model
         'category' => NotificationCategory::class,
         'opened_at' => 'datetime:Y-m-d H:i:s',
         'action_taken_at' => 'datetime:Y-m-d H:i:s',
+        'created_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function receiver(): MorphTo
@@ -64,5 +65,10 @@ class Notification extends Model
     public function bookingNotification(): HasOne
     {
         return $this->hasOne(BookingNotification::class);
+    }
+
+    public function surveyNotification(): HasOne
+    {
+        return $this->hasOne(SurveyNotification::class);
     }
 }

@@ -1,16 +1,18 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Button, Card } from 'react-native-elements';
-import { BookingStatus, NotificationCategory } from '../../helpers/constants';
+import { BookingStatus, NotificationCategory, Screens } from '../../helpers/constants';
 import BookingService from '../../api/BookingService';
 import globalStyles from '../../styles/styles';
 import colors from '../../styles/colors';
 import fonts from '../../styles/fonts';
+import { useNavigation } from '@react-navigation/native';
 
 interface Notification {
     uuid: string;
     user_id: string;
     title: string;
+    created_at: string;
     notification: string;
     status: string;
     category: string;
@@ -64,6 +66,11 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
             })
     }
 
+    const navigator = useNavigation();
+    const handleSurveyCardClick = () => {
+        navigator.navigate(Screens.SurveyFillForm, { surveyUuid: notification?.survey_notification?.company_survey?.uuid });
+    }
+
     return (
         <View style={styles.containerView}>
             {notification.category == NotificationCategory.BookingRequest &&
@@ -72,7 +79,9 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
+                            <Text style={styles.text}>{notification.created_at}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
+                            <Text style={styles.text}>Booking Status: {notification?.booking_notification?.booking?.status}</Text>
                         </View>
                     </View>
                     <View style={styles.buttonRow}>
@@ -99,10 +108,26 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
+                            <Text style={styles.text}>{notification.created_at}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
                         </View>
                     </View>
                 </View>
+            }
+
+            {notification.category == NotificationCategory.FillSurveyRequest &&
+                <TouchableOpacity onPress={handleSurveyCardClick} activeOpacity={0.8}>
+                    <View style={styles.card}>
+                        <View style={styles.container}>
+                            <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
+                            <View>
+                                <Text style={styles.title}>{notification.title}</Text>
+                                <Text style={styles.text}>{notification.created_at}</Text>
+                                <Text style={styles.text}>{notification.notification}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </TouchableOpacity>
             }
 
             {notification.category == NotificationCategory.General &&
@@ -111,8 +136,8 @@ const NotificationCard: React.FC<NotificationCardProps> = ({ notification, loadD
                         <View style={[styles.statusLine, { backgroundColor: statusColor }]} />
                         <View>
                             <Text style={styles.title}>{notification.title}</Text>
+                            <Text style={styles.text}>{notification.created_at}</Text>
                             <Text style={styles.text}>{notification.notification}</Text>
-                            <Text style={styles.text}>Status: {notification.status}</Text>
                         </View>
                     </View>
                 </View>

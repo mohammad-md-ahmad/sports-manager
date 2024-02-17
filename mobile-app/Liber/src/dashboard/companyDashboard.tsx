@@ -7,18 +7,20 @@ import {
 } from "react-native";
 import colors from "../../styles/colors";
 import { useFocusEffect } from "@react-navigation/native";
-import { storeFacilityTypes } from "../../helpers/facilityTypesDataManage";
-import { storeCountries } from "../../helpers/countriesDataManage";
 import CompanyService from "../../api/CompanyService";
 import CompanyCard from "../common/companyCard";
 import { useDispatch, useSelector } from "react-redux";
-import { GlobaSateKey } from "../../helpers/constants";
+import { DashboardCardType, GlobaSateKey } from "../../helpers/constants";
 import MasonryList from '@react-native-seoul/masonry-list';
+import AdService from "../../api/AdService";
+import AdCard from "../common/adCard";
 
 export default function CompanyDashboard(): React.JSX.Element {
     const companyService = new CompanyService();
+    const adService = new AdService();
 
     const [companies, setCompanies] = useState([]);
+    const [combinedData, setCombinedData] = useState([]);
 
     const companiesList = useSelector(state => state.companiesList);
 
@@ -29,43 +31,67 @@ export default function CompanyDashboard(): React.JSX.Element {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
 
-            if (companiesList) {
-                setCompanies(companiesList);
-            } else {
-                loadDate();
-            }
-
-        }, [companiesList])
+            loadData();
+        }, [])
     );
 
-    const loadDate = () => {
-        companyService.list({})
-            .then((response) => {
-                setCompanies(response.data?.data?.data);
-                dispatch({ type: GlobaSateKey.SetCompaniesList, payload: response.data?.data?.data });
-            }).catch((error) => {
+    const loadData = () => {
+        let companiesData = [];
+        let adsData = [];
+
+        adService.list({})
+            .then((adsResponse) => {
+                adsData = adsResponse.data?.data?.data;
+
+                if (companiesList) {
+                    companiesData = companiesRespones.data?.data?.data;
+                    buildCombinedData(companiesData, adsData);
+                }
+                else {
+                    companyService.list({}).then((companiesRespones) => {
+                        companiesData = companiesRespones.data?.data?.data;
+
+                        buildCombinedData(companiesData, adsData);
+                        dispatch({ type: GlobaSateKey.SetCompaniesList, payload: companiesRespones.data?.data?.data });
+                    }).catch((error) => {
+                    })
+                }
+
+            })
+            .catch((error) => {
             });
     }
 
-    // const getItem = (_data: unknown, index: number) => companies[index] ?? 0;
-    // const getItemCount = (_data: unknown) => companies?.length ?? 0;
+    const buildCombinedData = (companiesData, adsData) => {
+        let combinedArray = [];
+        let adsCounter = 0;
+        for (let i = 0; i < companiesData.length; i++) {
+            if (i % 3 == 0 && i != 0) {
+                if (adsData[adsCounter]) {
+                    adsData[i].cardType = DashboardCardType.Ad;
+                    combinedArray.push(adsData[adsCounter]);
+                    adsCounter++;
+                }
+            }
+            companiesData[i].cardType = DashboardCardType.Company;
+            combinedArray.push(companiesData[i]);
+        }
+        setCombinedData(combinedArray);
+    }
 
     return (
         <SafeAreaView style={styles.container}>
-            {/* <VirtualizedList
-                initialNumToRender={6}
-                renderItem={({ item }) => <CompanyCard company={item} />}
-                keyExtractor={item => item.uuid}
-                getItemCount={getItemCount}
-                getItem={getItem}
-            /> */}
 
             <MasonryList
-                data={companies}
-                renderItem={({ item }) => <CompanyCard company={item} />}
+                data={combinedData}
+                renderItem={({ item }) =>
+                    item.cardType == DashboardCardType.Company ?
+                        <CompanyCard company={item} /> :
+                        <AdCard ad={item} />
+                }
                 keyExtractor={item => item.uuid}
                 numColumns={1}
-                onRefresh={loadDate}
+                onRefresh={loadData}
             />
         </SafeAreaView>
     );

@@ -58,4 +58,9 @@ class CompanySurveyUserResponse extends Model
     {
         return $this->hasMany(CompanySurveyAnswer::class);
     }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

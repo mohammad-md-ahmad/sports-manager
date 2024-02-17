@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
@@ -6,25 +6,23 @@ import { Button } from 'react-native-elements';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
 import CompanyService from '../../api/CompanyService';
-import Constants, { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
+import { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Rating from '../rating/companyRating';
 import CompanyDetails from './companyDetails';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserData } from '../../helpers/userDataManage';
 import CompanyPhotos from './companyPhotos';
-import RatingControl from '../common/ratingControl';
 import RatingRowWithNumber from '../common/ratingRowWithNumber';
+import CompanySurveyService from '../../api/CompanySurveyService';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function CompanyProfile() {
     // Extract user information from the route parameters
 
-    const navigator = useNavigation();
     const dispatch = useDispatch();
 
-    const companyCachedData = useSelector(state => state.currentCompanyData);
+    const authCompanyData = useSelector(state => state.authCompanyData);
 
     const [companyData, setCompanyData] = useState({
         name: '',
@@ -32,8 +30,11 @@ export default function CompanyProfile() {
         logo: require('./../../assets/images/liber_logo.png')
     });
 
-    function onBookingPress(): void {
-        navigator.navigate(Screens.Calendar)
+    const companySurveyService = new CompanySurveyService();
+    function onSendSurveyPress(): void {
+        companySurveyService.sendSurveyToUsers()
+            .then(() => { })
+            .catch(() => { })
     }
 
     const companyService = new CompanyService();
@@ -42,14 +43,14 @@ export default function CompanyProfile() {
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
             // You can put the logic here that you want to run when the component should reload.
-
-            if (companyCachedData) {
-                setCompanyData(companyCachedData);
+            if (authCompanyData && authCompanyData.gallery) {
+                setCompanyData(authCompanyData);
+                dispatch({ type: GlobaSateKey.SetCompanyData, payload: authCompanyData });
             }
             else {
                 companyService.getCompany().then((response) => {
                     setCompanyData({ ...response.data.data, logo: { uri: response.data?.data?.logo } });
-                    dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...response?.data?.data, logo: { uri: response?.data?.data?.logo } } });
+                    dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...response?.data?.data, logo: { uri: response?.data?.data?.logo } } });
                 }).catch((error) => {
                 });
             }
@@ -63,8 +64,8 @@ export default function CompanyProfile() {
                 <Text style={styles.name}>{companyData.name}</Text>
                 <RatingRowWithNumber ratingData={{ ratingNumber: companyData?.total_rating }} />
                 <Button
-                    onPress={() => onBookingPress()}
-                    title="Book Now!"
+                    onPress={() => onSendSurveyPress()}
+                    title="Send Survey"
                     buttonStyle={styles.button}
                 />
             </View >

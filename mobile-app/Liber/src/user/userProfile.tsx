@@ -18,7 +18,7 @@ export default function UserProfile() {
 
     const navigator = useNavigation();
 
-    const userCachedData = useSelector(state => state.currentUserData);
+    const userCachedData = useSelector(state => state.authUserData);
 
     const [userData, setUserData] = useState({
         name: '',
@@ -43,7 +43,7 @@ export default function UserProfile() {
             } else {
                 userService.getUser().then((response) => {
                     setUserData({ ...response.data.data, profile_picture: { uri: response.data?.data?.profile_picture } });
-                    dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...response?.data?.data, profile_picture: { uri: response?.data?.data?.profile_picture } } });
+                    dispatch({ type: GlobaSateKey.SetAuthUserData, payload: { ...response?.data?.data, profile_picture: { uri: response?.data?.data?.profile_picture } } });
 
                 }).catch((error) => {
                     console.error('user error', error)

@@ -22,8 +22,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [userData, setUserData] = useState({});
 
     const dispatch = useDispatch();
-    const companyCachedData = useSelector(state => state.companyData);
-    const userCachedData = useSelector(state => state.currentUserData);
+    const companyCachedData = useSelector(state => state.authCompanyData);
+    const userCachedData = useSelector(state => state.authUserData);
 
     useEffect(() => {
         // Check AsyncStorage for a token when the app initializes
@@ -34,14 +34,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     getUserData().then((data: string | null) => {
                         let user = JSON.parse(data);
                         if (!userCachedData)
-                            dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...user, profile_picture: { uri: user?.profile_picture } } });
+                            dispatch({ type: GlobaSateKey.SetAuthUserData, payload: { ...user, profile_picture: { uri: user?.profile_picture } } });
                         OneSignal.login(user?.uuid);
                     });
 
                     if (!companyCachedData)
                         getCompanyData().then((data: string | null) => {
                             let company = JSON.parse(data);
-                            dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...company, logo: { uri: company?.logo } } });
+                            dispatch({ type: GlobaSateKey.SetAuthCompanyData, payload: { ...company, logo: { uri: company?.logo } } });
                         });
 
                     setIsAuthenticated(true);
@@ -60,11 +60,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (data.token) {
             OneSignal.login(data?.user?.uuid);
             await storeUserData(data.user);
-            dispatch({ type: GlobaSateKey.SetCurrentUserData, payload: { ...data?.user, profile_picture: { uri: data?.user?.profile_picture } } });
+            dispatch({ type: GlobaSateKey.SetAuthUserData, payload: { ...data?.user, profile_picture: { uri: data?.user?.profile_picture } } });
 
             if (data.company) {
                 await storeCompanyData(data.company);
-                dispatch({ type: GlobaSateKey.SetCurrentCompanyData, payload: { ...data?.company, logo: { uri: data?.company?.logo } } });
+                dispatch({ type: GlobaSateKey.SetAuthCompanyData, payload: { ...data?.company, logo: { uri: data?.company?.logo } } });
             }
 
             await storeToken(data.token);

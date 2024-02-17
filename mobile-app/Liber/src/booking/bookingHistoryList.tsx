@@ -10,31 +10,35 @@ import { getUserData } from "../../helpers/userDataManage";
 import { UserType } from "../../helpers/constants";
 import BookingCard from "./bookingCard";
 import { StyleSheet } from "react-native";
+import { useSelector } from "react-redux";
 
 export default function BookingHistoryList(): React.JSX.Element {
     const bookingService = new BookingService();
 
-    const [userData, setUserData] = useState({});
-    const [companyData, setCompanyData] = useState({});
+    // const [userData, setUserData] = useState({});
+    // const [companyData, setCompanyData] = useState({});
+
+    const userData = useSelector(state => state.authUserData);
+    const companyData = useSelector(state => state.authCompanyData);
     const [bookingHistory, setBookingHistory] = useState([]);
 
     useFocusEffect(
         React.useCallback(() => {
-            if (!userData || !companyData) {
+            if (userData || companyData) {
                 getBookingHistoryList();
             }
         }, [userData, companyData])
     );
 
-    useEffect(() => {
-        getUserData().then((data: string | null) => {
-            setUserData(data === null ? null : JSON.parse(data));
-        });
+    // useEffect(() => {
+    //     getUserData().then((data: string | null) => {
+    //         setUserData(data === null ? null : JSON.parse(data));
+    //     });
 
-        getCompanyData().then((data: string | null) => {
-            setCompanyData(data === null ? null : JSON.parse(data));
-        });
-    }, []);
+    //     getCompanyData().then((data: string | null) => {
+    //         setCompanyData(data === null ? null : JSON.parse(data));
+    //     });
+    // }, []);
 
     function getBookingHistoryList() {
         let filter = {

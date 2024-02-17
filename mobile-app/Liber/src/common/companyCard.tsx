@@ -27,7 +27,7 @@ const CompanyCard: React.FC<CompanyCardProps> = ({ company }) => {
     const dispatch = useDispatch();
 
     const handleCompanyClick = () => {
-        dispatch({ type: GlobaSateKey.SetCompanyData, payload: company });
+        dispatch({ type: GlobaSateKey.SetCompanyData, payload: { ...company, logo: { uri: company?.logo } } });
         navigator.navigate(Screens.CompanyView);
     }
 

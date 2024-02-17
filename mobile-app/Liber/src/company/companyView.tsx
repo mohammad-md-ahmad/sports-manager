@@ -1,19 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
 import globalStyles from '../../styles/styles';
 import fonts from '../../styles/fonts';
 import { Button } from 'react-native-elements';
-import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import colors from '../../styles/colors';
-import CompanyService from '../../api/CompanyService';
-import Constants, { GlobaSateKey, Screens, UserType } from '../../helpers/constants';
+import { Screens, UserType } from '../../helpers/constants';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Rating from '../rating/companyRating';
 import CompanyDetails from './companyDetails';
-import { useDispatch, useSelector } from 'react-redux';
-import { getUserData } from '../../helpers/userDataManage';
+import { useSelector } from 'react-redux';
 import CompanyPhotos from './companyPhotos';
-import RatingControl from '../common/ratingControl';
 import RatingRowWithNumber from '../common/ratingRowWithNumber';
 
 const Tab = createMaterialTopTabNavigator();
@@ -27,17 +24,22 @@ export default function CompanyView() {
         navigator.navigate(Screens.Calendar)
     }
 
+    const authUserData = useSelector(state => state.authUserData);
+
     return (
         <>
             <View style={styles.container}>
-                <Image source={{ uri: companyData?.logo }} style={styles.logo} />
+                <Image source={companyData?.logo} style={styles.logo} />
                 <Text style={styles.name}>{companyData.name}</Text>
                 <RatingRowWithNumber ratingData={{ ratingNumber: companyData?.total_rating }} />
-                <Button
-                    onPress={() => onBookingPress()}
-                    title="Booking"
-                    buttonStyle={styles.button}
-                />
+                {
+                    authUserData.type == UserType.CustomerUser &&
+                    <Button
+                        onPress={() => onBookingPress()}
+                        title="Book Now!"
+                        buttonStyle={styles.button}
+                    />
+                }
             </View >
             <Tab.Navigator
                 screenOptions={{

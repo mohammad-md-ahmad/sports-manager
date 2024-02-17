@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
     SafeAreaView,
     StyleSheet,
@@ -8,6 +8,7 @@ import RatingService from "../../api/RatingService";
 import colors from "../../styles/colors";
 import RatingItem from "./ratingItem";
 import { useSelector } from "react-redux";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function CompanyRating(): React.JSX.Element {
     const ratingService = new RatingService();
@@ -15,10 +16,14 @@ export default function CompanyRating(): React.JSX.Element {
 
     const [companyRatingList, setCompanyRatingList] = useState([]);
 
-    useEffect(() => {
-        if (companyData?.uuid)
-            loadCompanyRatingList();
-    }, [companyData]);
+    useFocusEffect(
+        React.useCallback(() => {
+            // This code will execute when the component gains focus (navigated to).
+            // You can put the logic here that you want to run when the component should reload.
+            if (companyData?.uuid)
+                loadCompanyRatingList();
+        }, [companyData])
+    );
 
     const loadCompanyRatingList = () => {
         ratingService.companyRatingList({ uuid: companyData?.uuid }).then((response) => {

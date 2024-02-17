@@ -55,6 +55,7 @@ export enum Screens {
     PaymentMethodsForm = "PaymentMethodsForm",
     SurviesList = "SurviesList",
     SurveyForm = "SurveyForm",
+    SurveyFillForm = "SurveyFillForm",
 }
 
 export enum SlotStatus {
@@ -73,15 +74,16 @@ export enum GlobaSateKey {
     SetLoading = "SET_LOADING",
     SetCurrentScreen = "SET_CURRENT_SCREEN",
     SetCompanyData = "SET_COMPANY_DATA",
-    SetCurrentCompanyData = "SET_CURRENT_COMPANY_DATA",
+    SetAuthCompanyData = "SET_CURRENT_COMPANY_DATA",
     SetUserData = "SET_USER_DATA",
-    SetCurrentUserData = "SET_CURRENT_USER_DATA",
+    SetAuthUserData = "SET_CURRENT_USER_DATA",
     SetCompaniesList = "SET_COMPANIES_LIST",
     SetFacilityTypes = "SET_FACILITY_TYPES",
     SetCountries = "SET_COUNTRIES",
     SetSports = "SET_SPORTS",
     SetUserGenders = "SET_USER_GENDERS",
     SetReportNames = "SET_REPORT_NAMES",
+    ResetStore = "ResetStore"
 }
 
 export enum ReportNames {
@@ -116,12 +118,14 @@ export enum FormMode {
 export enum NotificationActionButtons {
     ApproveBookingBtn = 'approve-booking-btn',
     DeclineBookingBtn = 'decline-booking-btn',
+    FillSurveyBtn = 'fill-survey-btn',
     ViewBookingBtn = 'view-booking-btn'
 }
 
 export enum NotificationCategory {
     BookingRequest = 'BookingRequest',
     BookingResponse = 'BookingResponse',
+    FillSurveyRequest = 'SurveyRequest',
     General = 'General'
 }
 
@@ -129,4 +133,9 @@ export enum NotificationStatus {
     Pending = 'Pending',
     Sent = 'Sent',
     Opened = 'Opened'
+}
+
+export enum DashboardCardType {
+    Company = 'Company',
+    Ad = 'Ad'
 }
