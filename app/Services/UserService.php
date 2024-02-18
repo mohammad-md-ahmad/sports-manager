@@ -101,11 +101,13 @@ class UserService implements UserServiceInterface
                 $this->addressService->store($data->address);
             }
 
-            foreach ($data->favorite_sports as $sport) {
-                UserFavoriteSport::updateOrCreate([
-                    'user_id' => $user->user_id,
-                    'sport_id' => $sport,
-                ]);
+            if ($data->favorite_sports && is_array($data->favorite_sports)) {
+                foreach ($data->favorite_sports as $sport) {
+                    UserFavoriteSport::updateOrCreate([
+                        'user_id' => $user->user_id,
+                        'sport_id' => $sport,
+                    ]);
+                }
             }
 
             $genderEnum = UserGender::tryFromName($data->gender);
@@ -184,11 +186,13 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
-            foreach ($data->favorite_sports as $sport) {
-                UserFavoriteSport::updateOrCreate([
-                    'user_id' => $user->user_id,
-                    'sport_id' => $sport,
-                ]);
+            if ($data->favorite_sports && is_array($data->favorite_sports)) {
+                foreach ($data->favorite_sports as $sport) {
+                    UserFavoriteSport::updateOrCreate([
+                        'user_id' => $user->user_id,
+                        'sport_id' => $sport,
+                    ]);
+                }
             }
 
             $userPersonalInfo = UserPersonalInfo::query()->where('user_id', $user->id)->first();
