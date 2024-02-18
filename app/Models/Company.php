@@ -136,4 +136,9 @@ class Company extends Model
     {
         return $this->hasMany(CompanySurvey::class)->where('is_active', true)->latest()->first();
     }
+
+    public function paymentMethods()
+    {
+        return $this->morphMany(EntityPaymentMethod::class, 'entity');
+    }
 }
