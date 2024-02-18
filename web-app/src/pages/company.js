@@ -11,10 +11,13 @@ import {
   Card,
   TextField,
   Autocomplete,
-  CardActions
+  CardActions,
+  CardContent,
+  Avatar,
+  Divider
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CompanyService from 'api/CompanyService';
 
 import { useRouter } from 'next/router';
@@ -129,7 +132,6 @@ const Page = () => {
 
   const [countries, setCountries] = useState([]);
   const [selectCountry, setSelectCountry] = useState([]);
-  const [logo, setLogo] = useState(null);
 
   useEffect(() => {
     miscService.lists().then((response) => {
@@ -137,9 +139,8 @@ const Page = () => {
 
       if (companyId) {
         companyService.getCompany(companyId).then((response) => {
-          setLogo({ uri: response.data?.data?.logo });
 
-          let companyData = { ...response.data.data, logo: null };
+          let companyData = { ...response.data.data };
           companyData['createAddressRequest'] = companyData['address'];
 
           delete companyData['address'];
@@ -191,6 +192,33 @@ const Page = () => {
 
   }
 
+  const fileInputRef = useRef(null);
+
+  const handleButtonClick = () => {
+    // Trigger the file input dialog
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    // Handle the selected file
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      console.log('Selected file:', selectedFile);
+      // Add your logic to handle the selected file
+
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        //setPreviewImage(reader.result);
+        formik.setFieldValue('logo', reader.result);
+
+        console.log(reader.result);
+      };
+
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
   return (
     <>
       <Head>
@@ -228,251 +256,307 @@ const Page = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <Card style={{ width: "100%" }}
-                sx={{
-                  px: 3,
-                  py: 3,
-                }}>
+
+              <Grid
+                container
+                spacing={3}
+              >
                 <Grid
-                  container
-                  spacing={3}
+                  xs={12}
+                  md={6}
+                  lg={4}
                 >
-                  <Grid
-                    xs={12}
-                    md={6}
-                    lg={6}
-                  >
-                    <Stack spacing={3}>
-                      <TextField
-                        fullWidth
-                        label="Company Name"
-                        name="name"
-                        value={formik.values.name}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        error={!!(formik.touched.name && formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Region"
-                        name="region"
-                        value={formik.values.createAddressRequest.region}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('createAddressRequest.region')}
-                        error={!!(formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region)}
-                        helperText={formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region ? formik.errors.createAddressRequest?.region : ""}
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Line 1"
-                        name="line_1"
-                        value={formik.values.createAddressRequest.line_1}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('createAddressRequest.line_1')}
-                        error={!!(formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1)}
-                        helperText={formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1 ? formik.errors.createAddressRequest?.line_1 : ""}
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Line 3"
-                        name="line_3"
-                        value={formik.values.createAddressRequest.line_3}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('createAddressRequest.line_3')}
-                        error={!!(formik.touched.createAddressRequest?.line_3 && formik.errors.createAddressRequest?.line_3)}
-                        helperText={formik.touched.createAddressRequest?.line_3 && formik.errors.createAddressRequest?.line_3 ? formik.errors.createAddressRequest?.line_3 : ""}
-                      />
-
-                    </Stack>
-
-                  </Grid>
-                  <Grid
-                    xs={12}
-                    md={6}
-                    lg={6}
-                  >
-                    <Stack spacing={3}>
-
-                      <Autocomplete
-                        options={countries}
-                        value={selectCountry}
-                        getOptionLabel={option => option['name'] ?? ''}
-                        onChange={(event, value) => handleSelectChange('createAddressRequest.country_uuid', value)}
-                        renderInput={
-                          params => (
-                            <TextField
-                              {...params}
-                              label="Country"
-                              fullWidth
-                              error={!!(formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid)}
-                              helperText={formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid ? formik.errors.createAddressRequest?.country_uuid : ""}
-                            />
-                          )
-                        }
-                      ></Autocomplete>
-
-                      <TextField
-                        fullWidth
-                        label="City"
-                        name="city"
-                        value={formik.values.createAddressRequest.city}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('createAddressRequest.city')}
-                        error={!!(formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city)}
-                        helperText={formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city ? formik.errors.createAddressRequest?.city : ""}
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Line 2"
-                        name="line_2"
-                        value={formik.values.createAddressRequest.line_2}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('createAddressRequest.line_2')}
-                        error={!!(formik.touched.createAddressRequest?.line_2 && formik.errors.createAddressRequest?.line_2)}
-                        helperText={formik.touched.createAddressRequest?.line_2 && formik.errors.createAddressRequest?.line_2 ? formik.errors.createAddressRequest?.line_2 : ""}
-                      />
-
-                      <TextField
-                        fullWidth
-                        label="Postcode"
-                        type='postcode'
-                        value={formik.values.createAddressRequest.postcode}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('createAddressRequest.postcode')}
-                        error={!!(formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode)}
-                        helperText={formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode ? formik.errors.createAddressRequest?.postcode : ""}
-                      />
-
-                    </Stack>
-
-                  </Grid>
-                  <Grid
-                    xs={12}
-                    md={12}
-                    lg={12}
-                  >
-                    <TextField
-                      fullWidth
-                      label="Description"
-                      name="description"
-                      multiline
-                      value={formik.values.description}
-                      onBlur={formik.handleBlur}
-                      onChange={formik.handleChange('description')}
-                      error={!!(formik.touched.description && formik.errors.description)}
-                      helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
-                    />
-
-                  </Grid>
-                  {!companyId && <>
-                    <Grid
-                      xs={12}
-                      md={6}
-                      lg={6}
-                    >
-                      <Stack spacing={3}>
-                        <TextField
-                          fullWidth
-                          label="First Name"
-                          name="first_name"
-                          value={formik.values.createUserRequest.first_name}
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange('createUserRequest.first_name')}
-                          error={!!(formik.touched.createUserRequest.first_name && formik.errors.createUserRequest?.first_name)}
-                          helperText={formik.touched.createUserRequest.first_name && formik.errors.createUserRequest?.first_name ? formik.errors.createUserRequest?.first_name : ""}
+                  <Card>
+                    <CardContent>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                          flexDirection: 'column'
+                        }}
+                      >
+                        <Avatar
+                          src={formik.values.logo}
+                          sx={{
+                            height: 120,
+                            width: 120
+                          }}
                         />
-
-                        <TextField
-                          fullWidth
-                          label="Username"
-                          name="username"
-                          value={formik.values.createUserRequest.username}
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange('createUserRequest.username')}
-                          error={!!(formik.touched.createUserRequest.username && formik.errors.createUserRequest?.username)}
-                          helperText={formik.touched.createUserRequest.username && formik.errors.createUserRequest?.username ? formik.errors.createUserRequest?.username : ""}
-                        />
-
-                        <TextField
-                          fullWidth
-                          label="Password"
-                          name="password"
-                          type='password'
-                          value={formik.values.createUserRequest.password}
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange('createUserRequest.password')}
-                          error={!!(formik.touched.createUserRequest.password && formik.errors.createUserRequest?.password)}
-                          helperText={formik.touched.createUserRequest.password && formik.errors.createUserRequest?.password ? formik.errors.createUserRequest?.password : ""}
-                        />
-
-                      </Stack>
-
-                    </Grid>
-                    <Grid
-                      xs={12}
-                      md={6}
-                      lg={6}
-                    >
-                      <Stack spacing={3}>
-                        <TextField
-                          fullWidth
-                          label="Last Name"
-                          type='last_name'
-                          value={formik.values.createUserRequest.last_name}
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange('createUserRequest.last_name')}
-                          error={!!(formik.touched.createUserRequest.last_name && formik.errors.createUserRequest?.last_name)}
-                          helperText={formik.touched.createUserRequest.last_name && formik.errors.createUserRequest?.last_name ? formik.errors.createUserRequest?.last_name : ""}
-                        />
-
-                        <TextField
-                          fullWidth
-                          label="Email"
-                          name="email"
-                          type='email'
-                          value={formik.values.createUserRequest.email}
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange('createUserRequest.email')}
-                          error={!!(formik.touched.createUserRequest.email && formik.errors.createUserRequest?.email)}
-                          helperText={formik.touched.createUserRequest.email && formik.errors.createUserRequest?.email ? formik.errors.createUserRequest?.email : ""}
-                        />
-
-                        <TextField
-                          fullWidth
-                          label="Confirm Password"
-                          name="password_confirmation"
-                          type='password'
-                          value={formik.values.createUserRequest.password_confirmation}
-                          onBlur={formik.handleBlur}
-                          onChange={formik.handleChange('createUserRequest.password_confirmation')}
-                          error={!!(formik.touched.createUserRequest.password_confirmation && formik.errors.createUserRequest?.password_confirmation)}
-                          helperText={formik.touched.createUserRequest.password_confirmation && formik.errors.createUserRequest?.password_confirmation ? formik.errors.createUserRequest?.password_confirmation : ""}
-                        />
-
-                      </Stack>
-                    </Grid>
-                  </>
-                  }
+                      </Box>
+                    </CardContent>
+                    <Divider />
+                    <CardActions>
+                      <input
+                        type="file"
+                        accept="image/*" // Specify accepted file types (images in this case)
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                      />
+                      <Button
+                        fullWidth
+                        variant="text"
+                        onClick={handleButtonClick}
+                      >
+                        Select Picture
+                      </Button>
+                    </CardActions>
+                  </Card>
                 </Grid>
-                <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
-                  <Button
-                    startIcon={(
-                      <SvgIcon fontSize="small">
-                        <CheckCircleIcon />
-                      </SvgIcon>
-                    )}
-                    variant="contained"
-                    type="submit"
-                  >
-                    Save
-                  </Button>
-                </CardActions>
-              </Card>
+                <Grid
+                  xs={12}
+                  md={6}
+                  lg={8}
+                >
+                  <Card style={{ width: "100%" }}
+                    sx={{
+                      px: 3,
+                      py: 3,
+                    }}>
+                    <Grid
+                      container
+                      spacing={3}
+                    >
+                      <Grid
+                        xs={12}
+                        md={6}
+                        lg={6}
+                      >
+                        <Stack spacing={3}>
+                          <TextField
+                            fullWidth
+                            label="Company Name"
+                            name="name"
+                            value={formik.values.name}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            error={!!(formik.touched.name && formik.errors.name)}
+                            helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Region"
+                            name="region"
+                            value={formik.values.createAddressRequest.region}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange('createAddressRequest.region')}
+                            error={!!(formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region)}
+                            helperText={formik.touched.createAddressRequest?.region && formik.errors.createAddressRequest?.region ? formik.errors.createAddressRequest?.region : ""}
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Line 1"
+                            name="line_1"
+                            value={formik.values.createAddressRequest.line_1}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange('createAddressRequest.line_1')}
+                            error={!!(formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1)}
+                            helperText={formik.touched.createAddressRequest?.line_1 && formik.errors.createAddressRequest?.line_1 ? formik.errors.createAddressRequest?.line_1 : ""}
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Line 3"
+                            name="line_3"
+                            value={formik.values.createAddressRequest.line_3}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange('createAddressRequest.line_3')}
+                            error={!!(formik.touched.createAddressRequest?.line_3 && formik.errors.createAddressRequest?.line_3)}
+                            helperText={formik.touched.createAddressRequest?.line_3 && formik.errors.createAddressRequest?.line_3 ? formik.errors.createAddressRequest?.line_3 : ""}
+                          />
+
+                        </Stack>
+
+                      </Grid>
+                      <Grid
+                        xs={12}
+                        md={6}
+                        lg={6}
+                      >
+                        <Stack spacing={3}>
+
+                          <Autocomplete
+                            options={countries}
+                            value={selectCountry}
+                            getOptionLabel={option => option['name'] ?? ''}
+                            onChange={(event, value) => handleSelectChange('createAddressRequest.country_uuid', value)}
+                            renderInput={
+                              params => (
+                                <TextField
+                                  {...params}
+                                  label="Country"
+                                  fullWidth
+                                  error={!!(formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid)}
+                                  helperText={formik.touched.createAddressRequest?.country_uuid && formik.errors.createAddressRequest?.country_uuid ? formik.errors.createAddressRequest?.country_uuid : ""}
+                                />
+                              )
+                            }
+                          ></Autocomplete>
+
+                          <TextField
+                            fullWidth
+                            label="City"
+                            name="city"
+                            value={formik.values.createAddressRequest.city}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange('createAddressRequest.city')}
+                            error={!!(formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city)}
+                            helperText={formik.touched.createAddressRequest?.city && formik.errors.createAddressRequest?.city ? formik.errors.createAddressRequest?.city : ""}
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Line 2"
+                            name="line_2"
+                            value={formik.values.createAddressRequest.line_2}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange('createAddressRequest.line_2')}
+                            error={!!(formik.touched.createAddressRequest?.line_2 && formik.errors.createAddressRequest?.line_2)}
+                            helperText={formik.touched.createAddressRequest?.line_2 && formik.errors.createAddressRequest?.line_2 ? formik.errors.createAddressRequest?.line_2 : ""}
+                          />
+
+                          <TextField
+                            fullWidth
+                            label="Postcode"
+                            type='postcode'
+                            value={formik.values.createAddressRequest.postcode}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange('createAddressRequest.postcode')}
+                            error={!!(formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode)}
+                            helperText={formik.touched.createAddressRequest?.postcode && formik.errors.createAddressRequest?.postcode ? formik.errors.createAddressRequest?.postcode : ""}
+                          />
+
+                        </Stack>
+
+                      </Grid>
+                      <Grid
+                        xs={12}
+                        md={12}
+                        lg={12}
+                      >
+                        <TextField
+                          fullWidth
+                          label="Description"
+                          name="description"
+                          multiline
+                          value={formik.values.description}
+                          onBlur={formik.handleBlur}
+                          onChange={formik.handleChange('description')}
+                          error={!!(formik.touched.description && formik.errors.description)}
+                          helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
+                        />
+
+                      </Grid>
+                      {!companyId && <>
+                        <Grid
+                          xs={12}
+                          md={6}
+                          lg={6}
+                        >
+                          <Stack spacing={3}>
+                            <TextField
+                              fullWidth
+                              label="First Name"
+                              name="first_name"
+                              value={formik.values.createUserRequest.first_name}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange('createUserRequest.first_name')}
+                              error={!!(formik.touched.createUserRequest.first_name && formik.errors.createUserRequest?.first_name)}
+                              helperText={formik.touched.createUserRequest.first_name && formik.errors.createUserRequest?.first_name ? formik.errors.createUserRequest?.first_name : ""}
+                            />
+
+                            <TextField
+                              fullWidth
+                              label="Username"
+                              name="username"
+                              value={formik.values.createUserRequest.username}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange('createUserRequest.username')}
+                              error={!!(formik.touched.createUserRequest.username && formik.errors.createUserRequest?.username)}
+                              helperText={formik.touched.createUserRequest.username && formik.errors.createUserRequest?.username ? formik.errors.createUserRequest?.username : ""}
+                            />
+
+                            <TextField
+                              fullWidth
+                              label="Password"
+                              name="password"
+                              type='password'
+                              value={formik.values.createUserRequest.password}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange('createUserRequest.password')}
+                              error={!!(formik.touched.createUserRequest.password && formik.errors.createUserRequest?.password)}
+                              helperText={formik.touched.createUserRequest.password && formik.errors.createUserRequest?.password ? formik.errors.createUserRequest?.password : ""}
+                            />
+
+                          </Stack>
+
+                        </Grid>
+                        <Grid
+                          xs={12}
+                          md={6}
+                          lg={6}
+                        >
+                          <Stack spacing={3}>
+                            <TextField
+                              fullWidth
+                              label="Last Name"
+                              type='last_name'
+                              value={formik.values.createUserRequest.last_name}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange('createUserRequest.last_name')}
+                              error={!!(formik.touched.createUserRequest.last_name && formik.errors.createUserRequest?.last_name)}
+                              helperText={formik.touched.createUserRequest.last_name && formik.errors.createUserRequest?.last_name ? formik.errors.createUserRequest?.last_name : ""}
+                            />
+
+                            <TextField
+                              fullWidth
+                              label="Email"
+                              name="email"
+                              type='email'
+                              value={formik.values.createUserRequest.email}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange('createUserRequest.email')}
+                              error={!!(formik.touched.createUserRequest.email && formik.errors.createUserRequest?.email)}
+                              helperText={formik.touched.createUserRequest.email && formik.errors.createUserRequest?.email ? formik.errors.createUserRequest?.email : ""}
+                            />
+
+                            <TextField
+                              fullWidth
+                              label="Confirm Password"
+                              name="password_confirmation"
+                              type='password'
+                              value={formik.values.createUserRequest.password_confirmation}
+                              onBlur={formik.handleBlur}
+                              onChange={formik.handleChange('createUserRequest.password_confirmation')}
+                              error={!!(formik.touched.createUserRequest.password_confirmation && formik.errors.createUserRequest?.password_confirmation)}
+                              helperText={formik.touched.createUserRequest.password_confirmation && formik.errors.createUserRequest?.password_confirmation ? formik.errors.createUserRequest?.password_confirmation : ""}
+                            />
+
+                          </Stack>
+                        </Grid>
+                      </>
+                      }
+                    </Grid>
+                    <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
+                      <Button
+                        startIcon={(
+                          <SvgIcon fontSize="small">
+                            <CheckCircleIcon />
+                          </SvgIcon>
+                        )}
+                        variant="contained"
+                        type="submit"
+                      >
+                        Save
+                      </Button>
+                    </CardActions>
+                  </Card>
+
+                </Grid>
+              </Grid>
+
             </Stack>
           </Container>
         </form>
