@@ -152,7 +152,7 @@ const Page = () => {
       setGenders(outputArray);
 
       if (customerId) {
-        userService.getUser(customerId).then(async (response) => {
+        userService.getCustomer(customerId).then(async (response) => {
 
           let customerData = { ...response.data.data };
           customerData['createAddressRequest'] = customerData['address'];
@@ -292,6 +292,19 @@ const Page = () => {
                   >
                   </Stack>
                 </Stack>
+                <div>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <CheckCircleIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
               </Stack>
 
               <Grid
@@ -363,6 +376,7 @@ const Page = () => {
                         <Stack spacing={3}>
                           <TextField
                             fullWidth
+                            required
                             label="First Name"
                             name="first_name"
                             value={formik.values.first_name}
@@ -374,6 +388,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Username"
                             name="username"
                             value={formik.values.username}
@@ -396,6 +411,7 @@ const Page = () => {
                           />
 
                           <Autocomplete
+
                             options={countries}
                             value={selectCountry}
                             getOptionLabel={option => option['name'] ?? ''}
@@ -403,6 +419,7 @@ const Page = () => {
                             renderInput={
                               params => (
                                 <TextField
+                                  required
                                   {...params}
                                   label="Country"
                                   fullWidth
@@ -415,6 +432,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="City"
                             name="city"
                             value={formik.values.createAddressRequest?.city}
@@ -437,6 +455,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Postcode"
                             type='postcode'
                             value={formik.values.createAddressRequest?.postcode}
@@ -459,6 +478,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Last Name"
                             type='last_name'
                             value={formik.values.last_name}
@@ -470,6 +490,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Email"
                             name="email"
                             type='email'
@@ -500,6 +521,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Region"
                             name="region"
                             value={formik.values.createAddressRequest?.region}
@@ -511,6 +533,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Line 1"
                             name="line_1"
                             value={formik.values.createAddressRequest?.line_1}

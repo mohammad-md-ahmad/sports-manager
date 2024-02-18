@@ -62,6 +62,7 @@ const Page = () => {
 
   const formDataValidateSchema = yupObject().shape({
     name: string().required('Name is required'),
+    description: string().required('Description is required'),
 
     createAddressRequest: yupObject().shape({
       line_1: string().required('Line 1 is required'),
@@ -302,17 +303,19 @@ const Page = () => {
 
                   </Stack>
                 </Stack>
-                <Button
-                  startIcon={(
-                    <SvgIcon fontSize="small">
-                      <CheckCircleIcon />
-                    </SvgIcon>
-                  )}
-                  variant="contained"
-                  type="submit"
-                >
-                  Save
-                </Button>
+                <div>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <CheckCircleIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
               </Stack>
 
               <Grid
@@ -383,6 +386,7 @@ const Page = () => {
                         <Stack spacing={3}>
                           <TextField
                             fullWidth
+                            required
                             label="Company Name"
                             name="name"
                             value={formik.values.name}
@@ -394,6 +398,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Region"
                             name="region"
                             value={formik.values.createAddressRequest.region}
@@ -405,6 +410,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Line 1"
                             name="line_1"
                             value={formik.values.createAddressRequest.line_1}
@@ -443,6 +449,7 @@ const Page = () => {
                             renderInput={
                               params => (
                                 <TextField
+                                  required
                                   {...params}
                                   label="Country"
                                   fullWidth
@@ -455,6 +462,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="City"
                             name="city"
                             value={formik.values.createAddressRequest.city}
@@ -477,6 +485,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Postcode"
                             type='postcode'
                             value={formik.values.createAddressRequest.postcode}
@@ -496,6 +505,7 @@ const Page = () => {
                       >
                         <TextField
                           fullWidth
+                          required
                           label="Description"
                           name="description"
                           multiline
@@ -516,6 +526,7 @@ const Page = () => {
                           <Stack spacing={3}>
                             <TextField
                               fullWidth
+                              required
                               label="First Name"
                               name="first_name"
                               value={formik.values.createUserRequest.first_name}
@@ -527,6 +538,7 @@ const Page = () => {
 
                             <TextField
                               fullWidth
+                              required
                               label="Username"
                               name="username"
                               value={formik.values.createUserRequest.username}
@@ -538,6 +550,7 @@ const Page = () => {
 
                             <TextField
                               fullWidth
+                              required
                               label="Password"
                               name="password"
                               type='password'
@@ -559,6 +572,7 @@ const Page = () => {
                           <Stack spacing={3}>
                             <TextField
                               fullWidth
+                              required
                               label="Last Name"
                               type='last_name'
                               value={formik.values.createUserRequest.last_name}
@@ -570,6 +584,7 @@ const Page = () => {
 
                             <TextField
                               fullWidth
+                              required
                               label="Email"
                               name="email"
                               type='email'
@@ -582,6 +597,7 @@ const Page = () => {
 
                             <TextField
                               fullWidth
+                              required
                               label="Confirm Password"
                               name="password_confirmation"
                               type='password'

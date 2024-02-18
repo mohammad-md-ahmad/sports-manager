@@ -13,7 +13,8 @@ import {
   TextField,
   Select,
   Autocomplete,
-  CardActions
+  CardActions,
+  CardHeader
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useEffect, useState } from 'react';
@@ -169,8 +170,11 @@ const Page = () => {
               <Card style={{ width: "100%" }}
                 sx={{
                   px: 3,
-                  py: 3,
+                  pb: 3
                 }}>
+                <CardHeader
+                  subheader="Filters are optional; if none are selected, the notification will be sent to all users and companies."
+                />
                 <Grid
                   container
                   spacing={3}
@@ -255,6 +259,7 @@ const Page = () => {
                   >
                     <TextField
                       fullWidth
+                      required
                       label="Message"
                       name="message"
                       multiline

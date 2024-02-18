@@ -177,6 +177,19 @@ const Page = () => {
                   >
                   </Stack>
                 </Stack>
+                <div>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <CheckCircleIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
               </Stack>
 
               <Grid
@@ -247,6 +260,7 @@ const Page = () => {
                         <Stack spacing={3}>
                           <TextField
                             fullWidth
+                            required
                             label="Name"
                             name="name"
                             value={formik.values.name}

@@ -39,6 +39,7 @@ const Page = () => {
 
   const formDataValidateSchema = yupObject().shape({
     title: string().required('Title is required'),
+    url: string().required('URL from is required'),
     effective_from: string().required('Effective from is required'),
   });
 
@@ -199,6 +200,19 @@ const Page = () => {
                   >
                   </Stack>
                 </Stack>
+                <div>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <CheckCircleIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
               </Stack>
               <Card style={{ width: "100%" }}
                 sx={{
@@ -217,6 +231,8 @@ const Page = () => {
                     <Stack spacing={3}>
                       <TextField
                         fullWidth
+                        required
+                        description
                         label="Title"
                         name="title"
                         value={formik.values.title}
@@ -228,6 +244,7 @@ const Page = () => {
 
                       <DatePicker
                         fullWidth
+                        required
                         label="Effective From"
                         name="effective_from"
                         value={formik.values.effective_from}
@@ -235,7 +252,7 @@ const Page = () => {
                         onChange={handleDateChange}
                         error={!!(formik.touched.effective_from && formik.errors.effective_from)}
                         helperText={formik.touched.effective_from && formik.errors.effective_from ? formik.errors.effective_from : ""}
-                        renderInput={(params) => <TextField {...params} />}
+                        renderInput={(params) => <TextField required {...params} />}
                       />
 
                     </Stack>
@@ -250,6 +267,7 @@ const Page = () => {
 
                       <TextField
                         fullWidth
+                        required
                         label="Url"
                         name="url"
                         value={formik.values.url}
