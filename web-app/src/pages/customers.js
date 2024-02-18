@@ -8,7 +8,8 @@ import {
   SvgIcon,
   Typography,
   Unstable_Grid2 as Grid,
-  Card
+  Card,
+  Avatar
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useEffect, useState } from 'react';
@@ -65,7 +66,25 @@ const Page = () => {
     });
   }
 
+  function ImageCell(params) {
+    return (
+      <Avatar
+        src={params.row.profile_picture}
+        sx={{
+          height: 40,
+          width: 40
+        }}
+      />
+    );
+  }
+
   const columns = [
+    {
+      field: 'profile_picture',
+      headerName: 'Photo',
+      width: 150,
+      renderCell: ImageCell
+    },
     {
       field: 'full_name',
       headerName: 'Name',
@@ -156,7 +175,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                Customers
+                  Customers
                 </Typography>
                 <Stack
                   alignItems="center"

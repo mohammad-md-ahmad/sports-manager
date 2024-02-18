@@ -15,7 +15,10 @@ import {
   FormControl,
   FormLabel,
   FormGroup,
-  FormControlLabel
+  FormControlLabel,
+  CardContent,
+  Avatar,
+  Divider
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
@@ -23,7 +26,7 @@ import { useRouter } from 'next/router';
 import { string, array, object as yupObject } from "yup";
 import { useFormik } from 'formik';
 import SportService from 'api/SportService';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const Page = () => {
 
@@ -68,16 +71,12 @@ const Page = () => {
     }
   });
 
-
-  const [logo, setLogo] = useState(null);
-
   useEffect(() => {
 
     if (sportId) {
       sportService.getSport(sportId).then((response) => {
-        setLogo({ uri: response.data?.data?.logo });
 
-        let sportData = { ...response.data.data, logo: null };
+        let sportData = { ...response.data.data };
 
         formik.setValues(sportData);
       }).catch((error) => {
@@ -104,7 +103,7 @@ const Page = () => {
       });
     } else {
       sportService.create(data).then((response) => {
-
+        router.push('/sports');
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);
@@ -114,6 +113,33 @@ const Page = () => {
     }
 
   }
+
+  const fileInputRef = useRef(null);
+
+  const handleButtonClick = () => {
+    // Trigger the file input dialog
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (event) => {
+    // Handle the selected file
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      console.log('Selected file:', selectedFile);
+      // Add your logic to handle the selected file
+
+      const reader = new FileReader();
+
+      reader.onloadend = () => {
+        //setPreviewImage(reader.result);
+        formik.setFieldValue('icon', reader.result);
+
+        console.log(reader.result);
+      };
+
+      reader.readAsDataURL(selectedFile);
+    }
+  };
 
   return (
     <>
@@ -152,92 +178,147 @@ const Page = () => {
                   </Stack>
                 </Stack>
               </Stack>
-              <Card style={{ width: "100%" }}
-                sx={{
-                  px: 3,
-                  py: 3,
-                }}>
+
+              <Grid
+                container
+                spacing={3}
+              >
                 <Grid
-                  container
-                  spacing={3}
+                  xs={12}
+                  md={6}
+                  lg={4}
                 >
-                  <Grid
-                    xs={12}
-                    md={6}
-                    lg={6}
-                  >
-                    <Stack spacing={3}>
-                      <TextField
-                        fullWidth
-                        label="Name"
-                        name="name"
-                        value={formik.values.name}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange}
-                        error={!!(formik.touched.name && formik.errors.name)}
-                        helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
+                  <Card>
+                    <CardContent>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                          flexDirection: 'column'
+                        }}
+                      >
+                        <Avatar
+                          src={formik.values.icon}
+                          sx={{
+                            height: 143,
+                            width: 143
+                          }}
+                        />
+                      </Box>
+                    </CardContent>
+                    <Divider />
+                    <CardActions>
+                      <input
+                        type="file"
+                        accept="image/*" // Specify accepted file types (images in this case)
+                        style={{ display: 'none' }}
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
                       />
-
-                      <FormControl component="fieldset">
-                        <FormGroup>
-                          <FormControlLabel
-                            control={
-                              <Checkbox
-                                checked={formik.values.is_enabled}
-                                onChange={formik.handleChange}
-                                name="is_enabled"
-                              />
-                            }
-                            label="Is Enabled"
-                          />
-                        </FormGroup>
-                      </FormControl>
-                    </Stack>
-
-                  </Grid>
-                  <Grid
-                    xs={12}
-                    md={6}
-                    lg={6}
-                  >
-                    <Stack spacing={3}>
-
-                      <TextField
+                      <Button
                         fullWidth
-                        label="Description"
-                        name="description"
-                        multiline
-                        value={formik.values.description}
-                        onBlur={formik.handleBlur}
-                        onChange={formik.handleChange('description')}
-                        error={!!(formik.touched.description && formik.errors.description)}
-                        helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
-                      />
-                    </Stack>
-
-                  </Grid>
-                  <Grid
-                    xs={12}
-                    md={12}
-                    lg={12}
-                  >
-
-                  </Grid>
+                        variant="text"
+                        onClick={handleButtonClick}
+                      >
+                        Select Picture
+                      </Button>
+                    </CardActions>
+                  </Card>
                 </Grid>
-                <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
-                  <Button
-                    startIcon={(
-                      <SvgIcon fontSize="small">
-                        <CheckCircleIcon />
-                      </SvgIcon>
-                    )}
-                    variant="contained"
-                    type="submit"
-                  >
-                    Save
-                  </Button>
-                </CardActions>
-              </Card>
+                <Grid
+                  xs={12}
+                  md={6}
+                  lg={8}
+                >
+                  <Card style={{ width: "100%" }}
+                    sx={{
+                      px: 3,
+                      py: 3,
+                    }}>
+                    <Grid
+                      container
+                      spacing={3}
+                    >
+                      <Grid
+                        xs={12}
+                        md={6}
+                        lg={6}
+                      >
+                        <Stack spacing={3}>
+                          <TextField
+                            fullWidth
+                            label="Name"
+                            name="name"
+                            value={formik.values.name}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange}
+                            error={!!(formik.touched.name && formik.errors.name)}
+                            helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
+                          />
+
+                          <FormControl component="fieldset">
+                            <FormGroup>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={formik.values.is_enabled}
+                                    onChange={formik.handleChange}
+                                    name="is_enabled"
+                                  />
+                                }
+                                label="Is Enabled"
+                              />
+                            </FormGroup>
+                          </FormControl>
+                        </Stack>
+
+                      </Grid>
+                      <Grid
+                        xs={12}
+                        md={6}
+                        lg={6}
+                      >
+                        <Stack spacing={3}>
+
+                          <TextField
+                            fullWidth
+                            label="Description"
+                            name="description"
+                            multiline
+                            value={formik.values.description}
+                            onBlur={formik.handleBlur}
+                            onChange={formik.handleChange('description')}
+                            error={!!(formik.touched.description && formik.errors.description)}
+                            helperText={formik.touched.description && formik.errors.description ? formik.errors.description : ""}
+                          />
+                        </Stack>
+
+                      </Grid>
+                      <Grid
+                        xs={12}
+                        md={12}
+                        lg={12}
+                      >
+
+                      </Grid>
+                    </Grid>
+                    <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
+                      <Button
+                        startIcon={(
+                          <SvgIcon fontSize="small">
+                            <CheckCircleIcon />
+                          </SvgIcon>
+                        )}
+                        variant="contained"
+                        type="submit"
+                      >
+                        Save
+                      </Button>
+                    </CardActions>
+                  </Card>
+                </Grid>
+              </Grid>
+
             </Stack>
           </Container>
         </form>
