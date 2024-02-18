@@ -25,6 +25,7 @@ import MiscService from 'api/MiscService';
 import { string, array, object as yupObject } from "yup";
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { imageUrlToBase64 } from 'helpers/functions';
 
 const Page = () => {
 
@@ -138,13 +139,18 @@ const Page = () => {
       setCountries(response.data?.data?.countries);
 
       if (companyId) {
-        companyService.getCompany(companyId).then((response) => {
+        companyService.getCompany(companyId).then(async (response) => {
 
           let companyData = { ...response.data.data };
           companyData['createAddressRequest'] = companyData['address'];
 
           delete companyData['address'];
           setSelectCountry(companyData?.createAddressRequest?.country);
+
+          if (companyData.logo) {
+            companyData.logo =  await imageUrlToBase64(companyData.logo);
+            console.log(companyData);
+          }
 
           formik.setValues(companyData);
         }).catch((error) => {
