@@ -123,6 +123,7 @@ const Page = () => {
       });
     } else {
       adService.create(data).then((response) => {
+        router.push('/advertisements');
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);
