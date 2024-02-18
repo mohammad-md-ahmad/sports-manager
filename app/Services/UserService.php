@@ -34,7 +34,7 @@ class UserService implements UserServiceInterface
 {
     use ImageUpload;
 
-    protected array $relationships = ['userPersonalInfo', 'address'];
+    protected array $relationships = ['userPersonalInfo', 'address.country'];
 
     public function __construct(
         protected AddressServiceInterface $addressService,
