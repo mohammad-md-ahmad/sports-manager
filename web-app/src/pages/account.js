@@ -41,7 +41,7 @@ const Page = () => {
   const miscService = new MiscService();
   const router = useRouter();
 
-  const userId = user.uuid ?? null;
+  const userId = user?.uuid ?? null;
 
   const initialFormDataValues = {
 

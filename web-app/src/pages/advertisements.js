@@ -74,7 +74,7 @@ const Page = () => {
     {
       field: 'description',
       headerName: 'Description',
-      width: 150,
+      width: 250,
     },
     {
       field: 'url',
