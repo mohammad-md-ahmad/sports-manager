@@ -29,6 +29,7 @@ import { UserType } from 'helpers/constants';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 import { AccountProfile } from 'src/sections/account/account-profile';
+import { imageUrlToBase64 } from 'helpers/functions';
 
 const Page = () => {
   const customerService = new CustomerService();
@@ -155,7 +156,7 @@ const Page = () => {
       setGenders(outputArray);
 
       if (customerId) {
-        customerService.getCustomer(customerId).then((response) => {
+        customerService.getCustomer(customerId).then(async (response) => {
           setLogo({ uri: response.data?.data?.logo });
 
           let customerData = { ...response.data.data };
@@ -167,8 +168,12 @@ const Page = () => {
           setSelectedGender({ id: customerData?.gender, label: customerData?.gender });
 
           if (customerData['dob']) {
-            let date = new Date(`${customerData['dob'].replace(' ', 'T')}.000Z`);
+            let date = new Date(`${customerData['dob']}`);
             customerData['dob'] = date;
+          }
+
+          if (customerData.profile_picture) {
+            customerData.profile_picture = await imageUrlToBase64(customerData.profile_picture);
           }
 
           formik.setValues(customerData);
@@ -192,8 +197,6 @@ const Page = () => {
   }
 
   const handleGenderSelectChange = (field, value) => {
-    console.log(field)
-    console.log(value)
     setSelectedGender(value);
     formik.setFieldValue(field, value ? value['id'] : null);
   }
@@ -201,8 +204,6 @@ const Page = () => {
   const submitForm = (values) => {
     let data = { ...values }
     data['type'] = UserType.CustomerUser;
-
-    console.log('dob', data)
 
     if (data['dob'])
       data['dob'] = format(data['dob'], 'yyyy-MM-dd HH:mm:ss')
@@ -220,8 +221,6 @@ const Page = () => {
         throw new Error(error.message);
       });
     } else {
-      console.log(data)
-      return;
       customerService.create(data).then((response) => {
         router.push('/customers');
       }).catch((error) => {
@@ -249,7 +248,6 @@ const Page = () => {
     // Handle the selected file
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      console.log('Selected file:', selectedFile);
       // Add your logic to handle the selected file
 
       const reader = new FileReader();
@@ -257,8 +255,6 @@ const Page = () => {
       reader.onloadend = () => {
         //setPreviewImage(reader.result);
         formik.setFieldValue('profile_picture', reader.result);
-
-        console.log(reader.result);
       };
 
       reader.readAsDataURL(selectedFile);

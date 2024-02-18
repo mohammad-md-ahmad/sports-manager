@@ -27,6 +27,7 @@ import { string, array, object as yupObject } from "yup";
 import { useFormik } from 'formik';
 import SportService from 'api/SportService';
 import { useEffect, useRef, useState } from 'react';
+import { imageUrlToBase64 } from 'helpers/functions';
 
 const Page = () => {
 
@@ -74,9 +75,13 @@ const Page = () => {
   useEffect(() => {
 
     if (sportId) {
-      sportService.getSport(sportId).then((response) => {
+      sportService.getSport(sportId).then(async (response) => {
 
         let sportData = { ...response.data.data };
+
+        if (sportData.icon) {
+          sportData.icon = await imageUrlToBase64(sportData.icon);
+        }
 
         formik.setValues(sportData);
       }).catch((error) => {
