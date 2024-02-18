@@ -223,7 +223,7 @@ const Page = () => {
       console.log(data)
       return;
       customerService.create(data).then((response) => {
-
+        router.push('/customers');
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);

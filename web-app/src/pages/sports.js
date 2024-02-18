@@ -8,7 +8,8 @@ import {
   SvgIcon,
   Typography,
   Unstable_Grid2 as Grid,
-  Card
+  Card,
+  Avatar
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useEffect, useState } from 'react';
@@ -65,7 +66,25 @@ const Page = () => {
     });
   }
 
+  function ImageCell(params) {
+    return (
+      <Avatar
+        src={params.row.icon}
+        sx={{
+          height: 40,
+          width: 40
+        }}
+      />
+    );
+  }
+
   const columns = [
+    {
+      field: 'icon',
+      headerName: 'icon',
+      width: 150,
+      renderCell: ImageCell
+    },
     {
       field: 'name',
       headerName: 'Name',

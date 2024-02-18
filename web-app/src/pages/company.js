@@ -181,7 +181,7 @@ const Page = () => {
       });
     } else {
       companyService.create(data).then((response) => {
-
+        router.push('/companies');
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);
