@@ -29,6 +29,8 @@ class UserService implements UserServiceInterface
 {
     use ImageUpload;
 
+    protected array $relationships = ['userPersonalInfo', 'address'];
+
     /**
      * @throws Exception
      */
@@ -41,7 +43,7 @@ class UserService implements UserServiceInterface
                 $query->where('type', '=', UserType::tryFromName($data->type)->name);
             });
 
-            return $usersQuery->jsonPaginate();
+            return $usersQuery->with($this->relationships)->jsonPaginate();
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
 
@@ -55,7 +57,7 @@ class UserService implements UserServiceInterface
             /** @var User $user */
             $user = User::findOrFail($data->id);
 
-            return User::with([])->find($user->id);
+            return User::with($this->relationships)->find($user->id);
         } catch (Exception $exception) {
             Log::error('UserService::get: '.$exception->getMessage());
 
@@ -107,7 +109,7 @@ class UserService implements UserServiceInterface
 
             DB::commit();
 
-            return User::with([])->find($user->id);
+            return User::with($this->relationships)->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
@@ -175,7 +177,7 @@ class UserService implements UserServiceInterface
 
             DB::commit();
 
-            return User::with([])->find($user->id);
+            return User::with($this->relationships)->find($user->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
