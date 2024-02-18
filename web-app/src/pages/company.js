@@ -190,12 +190,11 @@ const Page = () => {
 
   const submitForm = (values) => {
     let data = { ...values }
+    data['companyPhotos'] = base64Images;
 
     if (companyId) {
       data['address'] = data['createAddressRequest'];
       delete data['createAddressRequest'];
-
-      data['companyPhotos'] = base64Images;
 
       companyService.update(data).then((response) => {
 
@@ -206,7 +205,6 @@ const Page = () => {
         throw new Error(error.message);
       });
     } else {
-      data['gallery'] = base64Images;
       companyService.create(data).then((response) => {
         router.push('/companies');
       }).catch((error) => {

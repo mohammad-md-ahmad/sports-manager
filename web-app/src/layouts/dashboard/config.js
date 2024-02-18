@@ -68,8 +68,8 @@ export const items = [
     )
   },
   {
-    title: 'Messaging Center',
-    path: '/messagingCenter',
+    title: 'Send Notification ',
+    path: '/sendNotification',
     icon: (
       <SvgIcon fontSize="small">
         <ChatBubbleOvalLeftEllipsisIcon />

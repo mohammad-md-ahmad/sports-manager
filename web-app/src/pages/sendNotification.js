@@ -133,7 +133,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Messaging Center | Liber
+          Send Notification | Liber
         </title>
       </Head>
       <Box
@@ -156,7 +156,7 @@ const Page = () => {
               >
                 <Stack spacing={1}>
                   <Typography variant="h4">
-                    Messaging Center
+                    Send Notification
                   </Typography>
                   <Stack
                     alignItems="center"
