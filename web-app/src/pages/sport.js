@@ -58,8 +58,6 @@ const Page = () => {
     initialTouched: initialTouched,
     onSubmit: async (values) => {
       try {
-        console.log('validating');
-        console.log(values);
         // Validate the form values using the validation schema
         await formDataValidateSchema.validate(values, { abortEarly: false });
 
@@ -130,7 +128,6 @@ const Page = () => {
     // Handle the selected file
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      console.log('Selected file:', selectedFile);
       // Add your logic to handle the selected file
 
       const reader = new FileReader();
@@ -138,8 +135,6 @@ const Page = () => {
       reader.onloadend = () => {
         //setPreviewImage(reader.result);
         formik.setFieldValue('icon', reader.result);
-
-        console.log(reader.result);
       };
 
       reader.readAsDataURL(selectedFile);

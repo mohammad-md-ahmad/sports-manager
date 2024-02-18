@@ -125,8 +125,6 @@ const Page = () => {
     initialTouched: initialTouched,
     onSubmit: async (values) => {
       try {
-        console.log('validating');
-        console.log(values);
         // Validate the form values using the validation schema
         await formDataValidateSchema.validate(values, { abortEarly: false });
 
