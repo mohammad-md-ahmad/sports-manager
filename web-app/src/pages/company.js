@@ -149,7 +149,6 @@ const Page = () => {
 
           if (companyData.logo) {
             companyData.logo =  await imageUrlToBase64(companyData.logo);
-            console.log(companyData);
           }
 
           formik.setValues(companyData);
@@ -209,7 +208,6 @@ const Page = () => {
     // Handle the selected file
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      console.log('Selected file:', selectedFile);
       // Add your logic to handle the selected file
 
       const reader = new FileReader();
@@ -217,8 +215,6 @@ const Page = () => {
       reader.onloadend = () => {
         //setPreviewImage(reader.result);
         formik.setFieldValue('logo', reader.result);
-
-        console.log(reader.result);
       };
 
       reader.readAsDataURL(selectedFile);
