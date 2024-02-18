@@ -26,6 +26,7 @@ import { string, array, object as yupObject } from "yup";
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { imageUrlToBase64 } from 'helpers/functions';
+import { useAuth } from 'src/hooks/use-auth';
 
 const Page = () => {
 
@@ -148,8 +149,10 @@ const Page = () => {
           setSelectCountry(companyData?.createAddressRequest?.country);
 
           if (companyData.logo) {
-            companyData.logo =  await imageUrlToBase64(companyData.logo);
+            companyData.logo = await imageUrlToBase64(companyData.logo);
           }
+
+          loadImageData(companyData);
 
           formik.setValues(companyData);
         }).catch((error) => {
@@ -164,6 +167,21 @@ const Page = () => {
     });
 
   }, [])
+  const auth = useAuth();
+  
+  const loadImageData = async (companyData) => {
+    auth.setLoading(true);
+    try {
+      const base64Array = await Promise.all(
+        companyData.gallery.map(async item => await imageUrlToBase64(item.image))
+      );
+      setBase64Images(base64Array);
+    } catch (error) {
+      console.error('Error loading image data:', error);
+    } finally {
+      auth.setLoading(false); // Set loading to false regardless of success or failure
+    }
+  };
 
   const handleSelectChange = (field, value) => {
     setSelectCountry(value);
@@ -172,6 +190,9 @@ const Page = () => {
 
   const submitForm = (values) => {
     let data = { ...values }
+
+    data['companyPhotos'] = base64Images;
+
     if (companyId) {
       data['address'] = data['createAddressRequest'];
       delete data['createAddressRequest'];
@@ -221,6 +242,30 @@ const Page = () => {
     }
   };
 
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [base64Images, setBase64Images] = useState([]);
+
+  const handleFilesChange = (event) => {
+    const files = Array.from(event.target.files);
+
+    // Update selectedImages state
+    setSelectedImages(files);
+
+    // Convert each image to base64 and update base64Images state
+    Promise.all(files.map(file => convertFileToBase64(file)))
+      .then(base64Array => setBase64Images(base64Array))
+      .catch(error => console.error('Error converting images to base64:', error));
+  };
+
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   return (
     <>
       <Head>
@@ -255,8 +300,20 @@ const Page = () => {
                     direction="row"
                     spacing={1}
                   >
+
                   </Stack>
                 </Stack>
+                <Button
+                  startIcon={(
+                    <SvgIcon fontSize="small">
+                      <CheckCircleIcon />
+                    </SvgIcon>
+                  )}
+                  variant="contained"
+                  type="submit"
+                >
+                  Save
+                </Button>
               </Stack>
 
               <Grid
@@ -541,6 +598,57 @@ const Page = () => {
                       </>
                       }
                     </Grid>
+
+                  </Card>
+
+                </Grid>
+
+                <Grid
+                  xs={12}
+                  md={12}
+                  lg={12}
+                >
+                  <Card style={{ width: "100%" }}
+                    sx={{
+                      px: 3,
+                    }}>
+                    <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
+                      <label htmlFor="image-upload-input">
+                        <Button variant="contained" component="span">
+                          Upload Images
+                        </Button>
+                      </label>
+                    </CardActions>
+                    <CardContent>
+                      <Stack spacing={3}>
+                        <div>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            style={{ display: 'none' }}
+                            multiple
+                            onChange={handleFilesChange}
+                            id="image-upload-input"
+                          />
+                          <Grid container spacing={3}>
+                            {base64Images.map((image, index) => (
+                              <Grid item key={index} xs={4}>
+                                <Card>
+                                  <CardContent>
+                                    <img
+                                      src={base64Images[index]}
+                                      alt={`Image ${index + 1}`}
+                                      style={{ maxWidth: '100%', maxHeight: '150px' }}
+                                    />
+                                  </CardContent>
+
+                                </Card>
+                              </Grid>
+                            ))}
+                          </Grid>
+                        </div>
+                      </Stack>
+                    </CardContent>
                     <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
                       <Button
                         startIcon={(
@@ -555,7 +663,6 @@ const Page = () => {
                       </Button>
                     </CardActions>
                   </Card>
-
                 </Grid>
               </Grid>
 
