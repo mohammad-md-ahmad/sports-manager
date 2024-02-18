@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useEffect, useRef, useState } from 'react';
-import CustomerService from 'api/CustomerService';
+import UserService from 'api/UserService';
 
 import { useRouter } from 'next/router';
 import MiscService from 'api/MiscService';
@@ -32,7 +32,7 @@ import { AccountProfile } from 'src/sections/account/account-profile';
 import { imageUrlToBase64 } from 'helpers/functions';
 
 const Page = () => {
-  const customerService = new CustomerService();
+  const userService = new UserService();
   const miscService = new MiscService();
   const router = useRouter();
 
@@ -144,8 +144,6 @@ const Page = () => {
   const [genders, setGenders] = useState([]);
   const [selectedGender, setSelectedGender] = useState({});
 
-  const [logo, setLogo] = useState(null);
-
   useEffect(() => {
     miscService.lists().then((response) => {
       setCountries(response.data?.data?.countries);
@@ -154,8 +152,7 @@ const Page = () => {
       setGenders(outputArray);
 
       if (customerId) {
-        customerService.getCustomer(customerId).then(async (response) => {
-          setLogo({ uri: response.data?.data?.logo });
+        userService.getUser(customerId).then(async (response) => {
 
           let customerData = { ...response.data.data };
           customerData['createAddressRequest'] = customerData['address'];
@@ -210,7 +207,7 @@ const Page = () => {
       data['address'] = data['createAddressRequest'];
       delete data['createAddressRequest'];
 
-      customerService.update(data).then((response) => {
+      userService.update(data).then((response) => {
 
       }).catch((error) => {
         // Handle API request errors here
@@ -219,7 +216,7 @@ const Page = () => {
         throw new Error(error.message);
       });
     } else {
-      customerService.create(data).then((response) => {
+      userService.create(data).then((response) => {
         router.push('/customers');
       }).catch((error) => {
         // Handle API request errors here

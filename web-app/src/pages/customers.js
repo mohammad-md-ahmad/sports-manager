@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useEffect, useState } from 'react';
-import CustomerService from 'api/CustomerService';
+import UserService from 'api/UserService';
 import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
@@ -21,7 +21,7 @@ import DeleteConfirmationDialog from 'src/components/deleteConfirmationDialog';
 import { UserType } from 'helpers/constants';
 
 const Page = () => {
-  const customerService = new CustomerService();
+  const userService = new UserService();
   const [customers, setCustomer] = useState([]);
   const router = useRouter();
 
@@ -34,7 +34,7 @@ const Page = () => {
   };
 
   const handleDeleteConfirm = () => {
-    customerService.deleteCustomer({ uuid: idToBeDeleted }).then((response) => {
+    userService.deleteUser({ uuid: idToBeDeleted }).then((response) => {
       loadData();
     }).catch((error) => {
       // Handle API request errors here
@@ -56,7 +56,7 @@ const Page = () => {
   }, [])
 
   const loadData = () => {
-    customerService.list({ type: UserType.CustomerUser }).then((response) => {
+    userService.list({ type: UserType.CustomerUser }).then((response) => {
       setCustomer(response?.data?.data?.data)
     }).catch((error) => {
       // Handle API request errors here
@@ -209,7 +209,7 @@ const Page = () => {
                   columns={columns}
                   initialState={{
                     pagination: {
-                      paginationModel: { page: 0, pageSize: 5 },
+                      paginationModel: { page: 0, pageSize: 10 },
                     },
                   }}
                   pageSizeOptions={[5, 10]}
