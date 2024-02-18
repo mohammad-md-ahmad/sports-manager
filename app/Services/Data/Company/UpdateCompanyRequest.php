@@ -22,6 +22,7 @@ class UpdateCompanyRequest extends Data
         public string|Optional|null $name,
         public string|Optional|null $description,
         public string|Optional|null $logo,
+        public ?string $status = null,
         public ?UpdateUserRequest $user = null,
         public ?UpdateOrCreateAddressRequest $address = null,
         public ?array $companyPhotos = [],

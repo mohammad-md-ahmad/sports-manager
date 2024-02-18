@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\CompanyStatus;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -21,6 +22,7 @@ use Staudenmeir\EloquentHasManyDeep\HasRelationships;
  * @property string $id
  * @property string $uuid
  * @property string $logo
+ * @property CompanyStatus $status
  * @property CompanyUser $companyUser
  * @property Gallery $gallery
  * @property Address $address
@@ -45,6 +47,7 @@ class Company extends Model
         'uuid',
         'name',
         'description',
+        'status',
     ];
 
     /**
@@ -54,6 +57,7 @@ class Company extends Model
      */
     protected $casts = [
         'uuid' => EfficientUuid::class,
+        'status' => CompanyStatus::class,
     ];
 
     protected $hidden = [

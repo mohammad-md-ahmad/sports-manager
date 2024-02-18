@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\CompanyStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,6 +20,7 @@ class CompanyFactory extends Factory
         return [
             'name' => fake()->name(),
             'description' => fake()->text(),
+            'status' => CompanyStatus::Active->name,
         ];
     }
 }
