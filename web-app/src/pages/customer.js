@@ -161,7 +161,7 @@ const Page = () => {
           customerData['createAddressRequest'] = customerData['address'];
 
           delete customerData['address'];
-          setSelectCountry(customerData?.country);
+          setSelectCountry(customerData?.createAddressRequest?.country);
 
           setSelectedGender({ id: customerData?.gender, label: customerData?.gender });
 
