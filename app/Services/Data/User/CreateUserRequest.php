@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Data\User;
 
+use App\Services\Data\Address\CreateAddressRequest;
 use Illuminate\Validation\Rules\Password;
 use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\Unique;
@@ -21,10 +22,11 @@ class CreateUserRequest extends Data
         public string $email,
         public string $password,
         public string|Optional $profile_picture,
-        public string|Optional $type,
+        public ?string $type = null,
         public ?string $gender = '',
         public ?string $dob = '',
         public ?array $favorite_sports = [],
+        public ?CreateAddressRequest $address = null,
     ) {
     }
 

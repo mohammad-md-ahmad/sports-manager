@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\Services\AddressServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserGender;
 use App\Enums\UserType;
 use App\Models\User;
 use App\Models\UserFavoriteSport;
 use App\Models\UserPersonalInfo;
+use App\Services\Data\Address\CreateAddressRequest;
+use App\Services\Data\Address\UpdateAddressRequest;
+use App\Services\Data\Address\UpdateOrCreateAddressRequest;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
 use App\Services\Data\User\GetAllUsersRequest;
@@ -19,6 +23,7 @@ use App\Traits\ImageUpload;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -30,6 +35,11 @@ class UserService implements UserServiceInterface
     use ImageUpload;
 
     protected array $relationships = ['userPersonalInfo', 'address'];
+
+    public function __construct(
+        protected AddressServiceInterface $addressService,
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -72,20 +82,23 @@ class UserService implements UserServiceInterface
 
             $data->password = Hash::make($data->password);
 
-            $userData = $data->toArray();
-            unset($userData['gender']);
-            unset($userData['dob']);
-
             DB::beginTransaction();
 
             /** @var User $user */
-            $user = User::create($userData);
+            $user = User::create(Arr::except($data->toArray(), ['gender', 'dob']));
 
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {
                 $uploadedImg = $this->uploadImage($data->profile_picture, $user->id);
                 $user->profile_picture = $uploadedImg;
                 $user->save();
+            }
+
+            if ($data->address instanceof CreateAddressRequest) {
+                $data->address->model_type = User::class;
+                $data->address->model_id = (string) $user->id;
+
+                $this->addressService->store($data->address);
             }
 
             foreach ($data->favorite_sports as $sport) {
@@ -139,11 +152,30 @@ class UserService implements UserServiceInterface
 
             DB::beginTransaction();
 
-            $userData = $data->toArray();
-            unset($userData['gender']);
-            unset($userData['dob']);
+            $user->update(Arr::except($data->toArray(), ['gender', 'dob']));
 
-            $user->update($userData);
+            if ($data->address instanceof UpdateOrCreateAddressRequest) {
+                $data->address->model_type = User::class;
+                $data->address->model_id = (string) $user->id;
+
+                if ($user->address) {
+                    $updateAddressRequestData = array_merge($data->address->toArray(), [
+                        'uuid' => $user->address->uuid,
+                    ]);
+
+                    UpdateAddressRequest::validate($updateAddressRequestData);
+
+                    $updateAddressRequest = UpdateAddressRequest::from($updateAddressRequestData);
+
+                    $this->addressService->update($updateAddressRequest);
+                } else {
+                    CreateAddressRequest::validate($data->address->toArray());
+
+                    $createAddressRequest = CreateAddressRequest::from($data->address->toArray());
+
+                    $this->addressService->store($createAddressRequest);
+                }
+            }
 
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {

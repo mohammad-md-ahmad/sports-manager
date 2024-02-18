@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Data\User;
 
 use App\Models\User;
+use App\Services\Data\Address\UpdateOrCreateAddressRequest;
 use App\Services\Data\Core\UuidToEntityCaster;
 use Spatie\LaravelData\Attributes\FromRouteParameter;
 use Spatie\LaravelData\Attributes\MapInputName;
@@ -32,9 +33,10 @@ class UpdateUserRequest extends Data
         public string|Optional $email,
         public string|Optional $type,
         public ?string $profile_picture = null,
-        public ?string $gender = '',
-        public ?string $dob = '',
-        public ?array $favorite_sports = [],
+        public ?string $gender = null,
+        public ?string $dob = null,
+        public ?array $favorite_sports = null,
+        public ?UpdateOrCreateAddressRequest $address = null,
     ) {
     }
 }
