@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Services\Data\PushNotification\SendPushNotificationRequest;
 use App\Services\PushNotificationService;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -18,15 +18,13 @@ class PushNotificationController extends Controller
     ) {
     }
 
-    public function sendNotification(Request $request): JsonResponse
+    public function sendPushNotification(SendPushNotificationRequest $request): JsonResponse
     {
         try {
-            $this->pushNotificationService->createNotification([
-                $request->get('user_uuid'),
-            ], $request->get('message'), $request->get('buttons'));
+            $this->pushNotificationService->sendPushNotification($request);
 
             return response()->json([
-                'message' => __('Notification has been retrieved successfully.'),
+                'message' => __('Notification has been sent successfully.'),
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error('Unable to send Notification: '.$exception->getMessage());

@@ -17,6 +17,7 @@ use App\Contracts\Services\CompanySurveyServiceInterface;
 use App\Contracts\Services\CompanyUserServiceInterface;
 use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\NotificationServiceInterface;
+use App\Contracts\Services\PushNotificationServiceInterface;
 use App\Contracts\Services\RatingServiceInterface;
 use App\Contracts\Services\ReportServiceInterface;
 use App\Contracts\Services\SportServiceInterface;
@@ -38,6 +39,7 @@ use App\Services\CompanySurveyService;
 use App\Services\CompanyUserService;
 use App\Services\GalleryService;
 use App\Services\NotificationService;
+use App\Services\PushNotificationService;
 use App\Services\RatingService;
 use App\Services\ReportService;
 use App\Services\SportService;
@@ -72,6 +74,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ReportServiceInterface::class, ReportService::class);
         $this->app->bind(AdvertisementServiceInterface::class, AdvertisementService::class);
         $this->app->bind(SportServiceInterface::class, SportService::class);
+        $this->app->bind(PushNotificationServiceInterface::class, PushNotificationService::class);
     }
 
     /**

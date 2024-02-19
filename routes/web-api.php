@@ -148,7 +148,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     });
 
     Route::prefix('push-notifications')->group(function () {
-        Route::post('/send', [PushNotificationController::class, 'sendNotification'])->name('push-notifications.send');
+
+        Route::post('/send', [PushNotificationController::class, 'sendPushNotification'])->name('push-notifications.send');
     });
 
     Route::prefix('ratings')->group(function () {
