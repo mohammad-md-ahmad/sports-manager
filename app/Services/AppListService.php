@@ -9,6 +9,7 @@ use App\Models\AppList;
 use App\Models\CompanyList;
 use App\Services\Data\AppList\GetCompanyListByKeyRequest;
 use App\Services\Data\AppList\UpdateCompanyListRequest;
+use App\Services\Data\AppList\UpdateListRequest;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -55,6 +56,9 @@ class AppListService implements AppListServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAllAppListKeys(): Collection
     {
         try {
@@ -68,6 +72,35 @@ class AppListService implements AppListServiceInterface
         }
     }
 
+    /**
+     * @throws Exception
+     */
+    public function update(UpdateListRequest $data): AppList
+    {
+        try {
+            DB::beginTransaction();
+
+            $list = AppList::updateOrCreate([
+                'key' => $data->key,
+            ], [
+                'value' => $data->value,
+            ]);
+
+            DB::commit();
+
+            return $list;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error('AppListService::updateList: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
     public function updateCompanyList(UpdateCompanyListRequest $data): bool
     {
         try {

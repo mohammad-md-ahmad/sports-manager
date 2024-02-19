@@ -168,6 +168,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
         Route::get('/get-all', [AppListController::class, 'getAllAppLists'])->name('app-list.get-all');
         Route::get('/get-all/keys', [AppListController::class, 'getAllAppListKeys'])->name('app-list.get-all-keys');
+        Route::post('/', [AppListController::class, 'update'])->name('app-list.update');
     });
 
     Route::prefix('notifications')->group(function () {
@@ -193,6 +194,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/{uuid}', [SportController::class, 'update'])->name('sports.update');
         Route::delete('/{uuid}', [SportController::class, 'delete'])->name('sports.delete');
         Route::post('/{uuid}', [SportController::class, 'updateUserFavoriteSports'])->name('sports.update-user-favorite-sports');
+    });
+
+    Route::prefix('app-info')->group(function () {
+
+        Route::get('/get-all', [AppInfoController::class, 'getAllAppInfos'])->name('app-info.get-all');
+        Route::get('/get-all/keys', [AppInfoController::class, 'getAllAppInfoKeys'])->name('app-info.get-all-keys');
+        Route::post('/', [AppInfoController::class, 'update'])->name('app-info.update');
     });
 });
 
