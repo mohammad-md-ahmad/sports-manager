@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Services\AppListServiceInterface;
 use App\Services\Data\AppList\GetCompanyListByKeyRequest;
 use App\Services\Data\AppList\UpdateCompanyListRequest;
+use App\Services\Data\AppList\UpdateListRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -72,6 +73,25 @@ class AppListController extends Controller
 
             return response()->json([
                 'message' => __('Unable to retrieve App List Keys!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function update(UpdateListRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->AppListService->update($request);
+
+            return response()->json([
+                'message' => __('List has been updated successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to update List!'),
                 'errors' => $exception->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }
