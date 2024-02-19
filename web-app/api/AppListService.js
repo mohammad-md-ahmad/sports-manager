@@ -9,6 +9,10 @@ class AppListService extends AxiosService {
         return this.get(`/app-list/get-all`);
     }
 
+    async save(data) {
+        return this.post(`/app-list`, data);
+    }
+
 }
 
 export default AppListService;
