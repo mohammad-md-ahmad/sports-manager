@@ -9,6 +9,8 @@ import { useAuth } from 'src/hooks/use-auth';
 const SIDE_NAV_WIDTH = 280;
 
 const LayoutRoot = styled('div')(({ theme }) => ({
+  top:'-50px',
+  position:'relative',
   display: 'flex',
   flex: '1 1 auto',
   maxWidth: '100%',

@@ -27,6 +27,7 @@ import { string, array, object as yupObject } from "yup";
 import { useFormik } from 'formik';
 import SportService from 'api/SportService';
 import { useEffect, useRef, useState } from 'react';
+import { imageUrlToBase64 } from 'helpers/functions';
 
 const Page = () => {
 
@@ -57,8 +58,6 @@ const Page = () => {
     initialTouched: initialTouched,
     onSubmit: async (values) => {
       try {
-        console.log('validating');
-        console.log(values);
         // Validate the form values using the validation schema
         await formDataValidateSchema.validate(values, { abortEarly: false });
 
@@ -74,9 +73,13 @@ const Page = () => {
   useEffect(() => {
 
     if (sportId) {
-      sportService.getSport(sportId).then((response) => {
+      sportService.getSport(sportId).then(async (response) => {
 
         let sportData = { ...response.data.data };
+
+        if (sportData.icon) {
+          sportData.icon = await imageUrlToBase64(sportData.icon);
+        }
 
         formik.setValues(sportData);
       }).catch((error) => {
@@ -125,7 +128,6 @@ const Page = () => {
     // Handle the selected file
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      console.log('Selected file:', selectedFile);
       // Add your logic to handle the selected file
 
       const reader = new FileReader();
@@ -133,8 +135,6 @@ const Page = () => {
       reader.onloadend = () => {
         //setPreviewImage(reader.result);
         formik.setFieldValue('icon', reader.result);
-
-        console.log(reader.result);
       };
 
       reader.readAsDataURL(selectedFile);
@@ -177,6 +177,19 @@ const Page = () => {
                   >
                   </Stack>
                 </Stack>
+                <div>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <CheckCircleIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
               </Stack>
 
               <Grid
@@ -247,6 +260,7 @@ const Page = () => {
                         <Stack spacing={3}>
                           <TextField
                             fullWidth
+                            required
                             label="Name"
                             name="name"
                             value={formik.values.name}

@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\Services\AddressServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserGender;
 use App\Enums\UserType;
 use App\Models\User;
 use App\Models\UserFavoriteSport;
 use App\Models\UserPersonalInfo;
+use App\Services\Data\Address\CreateAddressRequest;
+use App\Services\Data\Address\UpdateAddressRequest;
+use App\Services\Data\Address\UpdateOrCreateAddressRequest;
 use App\Services\Data\User\CreateUserRequest;
 use App\Services\Data\User\DeleteUserRequest;
 use App\Services\Data\User\GetAllUsersRequest;
@@ -30,7 +34,12 @@ class UserService implements UserServiceInterface
 {
     use ImageUpload;
 
-    protected array $relationships = ['userPersonalInfo', 'address'];
+    protected array $relationships = ['userPersonalInfo', 'address.country'];
+
+    public function __construct(
+        protected AddressServiceInterface $addressService,
+    ) {
+    }
 
     /**
      * @throws Exception
@@ -85,11 +94,20 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
-            foreach ($data->favorite_sports as $sport) {
-                UserFavoriteSport::updateOrCreate([
-                    'user_id' => $user->user_id,
-                    'sport_id' => $sport,
-                ]);
+            if ($data->address instanceof CreateAddressRequest) {
+                $data->address->model_type = User::class;
+                $data->address->model_id = (string) $user->id;
+
+                $this->addressService->store($data->address);
+            }
+
+            if ($data->favorite_sports && is_array($data->favorite_sports)) {
+                foreach ($data->favorite_sports as $sport) {
+                    UserFavoriteSport::updateOrCreate([
+                        'user_id' => $user->user_id,
+                        'sport_id' => $sport,
+                    ]);
+                }
             }
 
             $genderEnum = UserGender::tryFromName($data->gender);
@@ -136,11 +154,30 @@ class UserService implements UserServiceInterface
 
             DB::beginTransaction();
 
-            $userData = $data->toArray();
-            unset($userData['gender']);
-            unset($userData['dob']);
+            $user->update(Arr::except($data->toArray(), ['gender', 'dob']));
 
-            $user->update($userData);
+            if ($data->address instanceof UpdateOrCreateAddressRequest) {
+                $data->address->model_type = User::class;
+                $data->address->model_id = (string) $user->id;
+
+                if ($user->address) {
+                    $updateAddressRequestData = array_merge($data->address->toArray(), [
+                        'uuid' => $user->address->uuid,
+                    ]);
+
+                    UpdateAddressRequest::validate($updateAddressRequestData);
+
+                    $updateAddressRequest = UpdateAddressRequest::from($updateAddressRequestData);
+
+                    $this->addressService->update($updateAddressRequest);
+                } else {
+                    CreateAddressRequest::validate($data->address->toArray());
+
+                    $createAddressRequest = CreateAddressRequest::from($data->address->toArray());
+
+                    $this->addressService->store($createAddressRequest);
+                }
+            }
 
             // after company got updated successfully, upload and update the logo
             if ($data->profile_picture && is_string($data->profile_picture)) {
@@ -149,11 +186,13 @@ class UserService implements UserServiceInterface
                 $user->save();
             }
 
-            foreach ($data->favorite_sports as $sport) {
-                UserFavoriteSport::updateOrCreate([
-                    'user_id' => $user->user_id,
-                    'sport_id' => $sport,
-                ]);
+            if ($data->favorite_sports && is_array($data->favorite_sports)) {
+                foreach ($data->favorite_sports as $sport) {
+                    UserFavoriteSport::updateOrCreate([
+                        'user_id' => $user->user_id,
+                        'sport_id' => $sport,
+                    ]);
+                }
             }
 
             $userPersonalInfo = UserPersonalInfo::query()->where('user_id', $user->id)->first();

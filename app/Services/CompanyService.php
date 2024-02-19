@@ -11,6 +11,7 @@ use App\Contracts\Services\GalleryServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Enums\UserType;
 use App\Models\Company;
+use App\Models\EntityPaymentMethod;
 use App\Models\Gallery;
 use App\Models\User;
 use App\Services\Data\Address\CreateAddressRequest;
@@ -36,6 +37,8 @@ class CompanyService implements CompanyServiceInterface
 {
     use ImageUpload;
 
+    private array $relationships = ['address', 'gallery', 'ratings', 'paymentMethods'];
+
     public function __construct(
         protected UserServiceInterface $userService,
         protected CompanyUserServiceInterface $companyUserService,
@@ -53,7 +56,7 @@ class CompanyService implements CompanyServiceInterface
             /** @var Company $company */
             $company = Company::query()
                 ->where('id', $data->id)
-                ->with(['address', 'gallery', 'ratings'])
+                ->with($this->relationships)
                 ->get()
                 ->first();
 
@@ -101,7 +104,7 @@ class CompanyService implements CompanyServiceInterface
                 });
             });
 
-            return $companiesQuery->with(['address', 'gallery', 'ratings'])->jsonPaginate();
+            return $companiesQuery->with($this->relationships)->jsonPaginate();
         } catch (Exception $exception) {
             Log::error('CompanyService::get: '.$exception->getMessage());
 
@@ -145,11 +148,37 @@ class CompanyService implements CompanyServiceInterface
                 $company->save();
             }
 
+            if ($data->companyPhotos && count($data->companyPhotos) > 0) {
+                $this->deleteOldGallery($company);
+
+                foreach ($data->companyPhotos as $photo) {
+                    $galleryData = [
+                        'model_type' => Company::class,
+                        'model_id' => (string) $company->id,
+                        'image' => $photo,
+                    ];
+
+                    CreateGalleryRequest::validate($galleryData);
+                    $createGalleryRequest = CreateGalleryRequest::from($galleryData);
+
+                    $this->galleryService->store($createGalleryRequest);
+                }
+            }
+
+            if ($data->payment_methods && count($data->payment_methods) > 0) {
+                EntityPaymentMethod::updateOrCreate([
+                    'entity_id' => $company->id,
+                    'entity_type' => Company::class,
+                ], [
+                    'payment_methods' => $data->payment_methods,
+                ]);
+            }
+
             DB::commit();
 
             $company->refresh();
 
-            return $company;
+            return Company::with($this->relationships)->findOrFail($company->id);
         } catch (Exception $exception) {
             DB::rollBack();
 
@@ -214,7 +243,14 @@ class CompanyService implements CompanyServiceInterface
                 $company->logo = $uploadedImg;
                 $company->save();
             }
-
+            if ($data->payment_methods && count($data->payment_methods) > 0) {
+                EntityPaymentMethod::updateOrCreate([
+                    'entity_id' => $company->id,
+                    'entity_type' => Company::class,
+                ], [
+                    'payment_methods' => $data->payment_methods,
+                ]);
+            }
             if ($data->companyPhotos && count($data->companyPhotos) > 0) {
                 $this->deleteOldGallery($company);
 
@@ -236,7 +272,7 @@ class CompanyService implements CompanyServiceInterface
 
             $company->refresh();
 
-            return $company;
+            return Company::with($this->relationships)->findOrFail($company->id);
         } catch (Exception $exception) {
             DB::rollBack();
 

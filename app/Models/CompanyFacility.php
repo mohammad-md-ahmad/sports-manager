@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\JsonCast;
+use App\Enums\CompanyFacilityStatus;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -19,6 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string $id
  * @property string $uuid
  * @property string $name
+ * @property CompanyFacilityStatus $status
  * @property Company $company
  * @property Address $address
  * @property Gallery $gallery
@@ -45,6 +47,7 @@ class CompanyFacility extends Model
         'type',
         'details',
         'sport_id',
+        'status',
     ];
 
     /**
@@ -55,6 +58,7 @@ class CompanyFacility extends Model
     protected $casts = [
         'uuid' => EfficientUuid::class,
         'details' => JsonCast::class,
+        'status' => CompanyFacilityStatus::class,
     ];
 
     protected $hidden = [

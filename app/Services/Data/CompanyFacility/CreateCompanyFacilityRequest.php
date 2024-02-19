@@ -26,7 +26,8 @@ class CreateCompanyFacilityRequest extends Data
         #[MapInputName('sport_uuid')]
         #[WithCast(UuidToEntityCaster::class, Sport::class)]
         public string $sport_id,
-        public CreateAddressRequest $createAddressRequest,
+        public ?string $status = null,
+        public ?CreateAddressRequest $createAddressRequest = null,
         public ?array $companyFacilityPhotos = null,
     ) {
     }

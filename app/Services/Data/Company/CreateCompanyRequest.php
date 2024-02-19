@@ -15,8 +15,11 @@ class CreateCompanyRequest extends Data
         public string $name,
         public string|Optional $description,
         public string|Optional $logo,
+        public ?string $status,
         public CreateAddressRequest|Optional $createAddressRequest,
         public CreateUserRequest|Optional $createUserRequest,
+        public ?array $companyPhotos = [],
+        public ?array $payment_methods = [],
     ) {
     }
 }

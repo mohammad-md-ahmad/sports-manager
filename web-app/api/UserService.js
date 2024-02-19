@@ -6,8 +6,12 @@ class UserService extends AxiosService {
         super();
     }
 
-    async getUser(user = null) {
-        return this.get(`/users/${user ? user.uuid : null}`);
+    async list(data) {
+        return this.get(`/users?${this.objectToQueryParams(data)}`);
+    }
+
+    async getUser(uuid) {
+        return this.get(`/users/${uuid}`);
     }
 
     async create(data) {
@@ -16,6 +20,10 @@ class UserService extends AxiosService {
 
     async update(data) {
         return this.put('/users/' + data.uuid, data);
+    }
+
+    async deleteUser(data) {
+        return this.delete('/users/' + data.uuid);
     }
 }
 

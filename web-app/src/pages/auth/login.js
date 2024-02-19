@@ -17,8 +17,8 @@ const Page = () => {
   const auth = useAuth();
   const formik = useFormik({
     initialValues: {
-      username: 'demo@devias.io',
-      password: 'Password123!',
+      username: '',
+      password: '',
       submit: null
     },
     validationSchema: Yup.object({
@@ -76,23 +76,7 @@ const Page = () => {
               <Typography variant="h4">
                 Login
               </Typography>
-              {/* <Typography
-                color="text.secondary"
-                variant="body2"
-              >
-                Don&apos;t have an account?
-                &nbsp;
-                <Link
-                  component={NextLink}
-                  href="/auth/register"
-                  underline="hover"
-                  variant="subtitle2"
-                >
-                  Register
-                </Link>
-              </Typography> */}
             </Stack>
-
 
             <form
               noValidate
@@ -140,15 +124,6 @@ const Page = () => {
               >
                 Continue
               </Button>
-              <Alert
-                color="primary"
-                severity="info"
-                sx={{ mt: 3 }}
-              >
-                <div>
-                  You can use <b>demo@devias.io</b> and password <b>Password123!</b>
-                </div>
-              </Alert>
             </form>
           </div>
         </Box>

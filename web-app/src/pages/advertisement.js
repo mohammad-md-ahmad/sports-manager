@@ -10,7 +10,8 @@ import {
   Unstable_Grid2 as Grid,
   Card,
   TextField,
-  CardActions
+  CardActions,
+  CardContent
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 
@@ -20,7 +21,9 @@ import AdService from 'api/AdService';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useAuth } from 'src/hooks/use-auth';
+import { imageUrlToBase64 } from 'helpers/functions';
 
 const Page = () => {
   const router = useRouter();
@@ -36,6 +39,7 @@ const Page = () => {
 
   const formDataValidateSchema = yupObject().shape({
     title: string().required('Title is required'),
+    url: string().required('URL from is required'),
     effective_from: string().required('Effective from is required'),
   });
 
@@ -73,6 +77,9 @@ const Page = () => {
         let adData = { ...response.data.data };
         let date = new Date(`${adData['effective_from'].replace(' ', 'T')}.000Z`);
         adData['effective_from'] = date;//date.toISOString();
+
+        loadImageData(adData);
+
         formik.setValues(adData);
       }).catch((error) => {
         // Handle API request errors here
@@ -82,13 +89,31 @@ const Page = () => {
       });
     }
 
-  }, [])
+  }, []);
 
+
+  const auth = useAuth();
+  const loadImageData = async (adData) => {
+    auth.setLoading(true);
+    try {
+      const base64Array = await Promise.all(
+        adData.gallery.map(async item => await imageUrlToBase64(item.image))
+      );
+      setBase64Images(base64Array);
+    } catch (error) {
+      console.error('Error loading image data:', error);
+    } finally {
+      auth.setLoading(false); // Set loading to false regardless of success or failure
+    }
+  };
 
   const submitForm = (values) => {
     let data = { ...values }
     if (data['effective_from'])
       data['effective_from'] = format(data['effective_from'], 'yyyy-MM-dd HH:mm:ss')
+
+    data['photos'] = base64Images;
+
     if (adId) {
       adService.update(data).then((response) => {
       }).catch((error) => {
@@ -99,6 +124,7 @@ const Page = () => {
       });
     } else {
       adService.create(data).then((response) => {
+        router.push('/advertisements');
       }).catch((error) => {
         // Handle API request errors here
         console.error(error);
@@ -110,15 +136,32 @@ const Page = () => {
   }
 
   const handleDateChange = (date) => {
-    // Update the effective_from field.
-    console.log(date);
     formik.setFieldValue('effective_from', date);
+  };
 
-    // // Format the date and update the formatted_effective_from field
-    // formik.setFieldValue(
-    //   'effective_from',
-    //   date ? format(date, 'dd-MM-yyyy') : ''
-    // );
+
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [base64Images, setBase64Images] = useState([]);
+
+  const handleFileChange = (event) => {
+    const files = Array.from(event.target.files);
+
+    // Update selectedImages state
+    setSelectedImages(files);
+
+    // Convert each image to base64 and update base64Images state
+    Promise.all(files.map(file => convertFileToBase64(file)))
+      .then(base64Array => setBase64Images(base64Array))
+      .catch(error => console.error('Error converting images to base64:', error));
+  };
+
+  const convertFileToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
 
   return (
@@ -157,6 +200,19 @@ const Page = () => {
                   >
                   </Stack>
                 </Stack>
+                <div>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <CheckCircleIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
               </Stack>
               <Card style={{ width: "100%" }}
                 sx={{
@@ -175,6 +231,8 @@ const Page = () => {
                     <Stack spacing={3}>
                       <TextField
                         fullWidth
+                        required
+                        description
                         label="Title"
                         name="title"
                         value={formik.values.title}
@@ -186,6 +244,7 @@ const Page = () => {
 
                       <DatePicker
                         fullWidth
+                        required
                         label="Effective From"
                         name="effective_from"
                         value={formik.values.effective_from}
@@ -193,7 +252,7 @@ const Page = () => {
                         onChange={handleDateChange}
                         error={!!(formik.touched.effective_from && formik.errors.effective_from)}
                         helperText={formik.touched.effective_from && formik.errors.effective_from ? formik.errors.effective_from : ""}
-                        renderInput={(params) => <TextField {...params} />}
+                        renderInput={(params) => <TextField required {...params} />}
                       />
 
                     </Stack>
@@ -208,6 +267,7 @@ const Page = () => {
 
                       <TextField
                         fullWidth
+                        required
                         label="Url"
                         name="url"
                         value={formik.values.url}
@@ -238,6 +298,48 @@ const Page = () => {
                     />
 
                   </Grid>
+
+                  <Grid
+                    xs={12}
+                    md={12}
+                    lg={12}
+                  >
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        style={{ display: 'none' }}
+                        multiple
+                        onChange={handleFileChange}
+                        id="image-upload-input"
+                      />
+
+                      <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
+                        <label htmlFor="image-upload-input">
+                          <Button variant="contained" component="span">
+                            Upload Images
+                          </Button>
+                        </label>
+                      </CardActions>
+
+                      <Grid container spacing={2}>
+                        {base64Images.map((image, index) => (
+                          <Grid item key={index} xs={4}>
+                            <Card>
+                              <CardContent>
+                                <img
+                                  src={base64Images[index]}
+                                  alt={`Image ${index + 1}`}
+                                  style={{ maxWidth: '100%', maxHeight: '150px' }}
+                                />
+                              </CardContent>
+                            </Card>
+                          </Grid>
+                        ))}
+                      </Grid>
+                    </div>
+                  </Grid>
+
                 </Grid>
                 <CardActions sx={{ justifyContent: 'flex-end', mt: 2 }}>
                   <Button

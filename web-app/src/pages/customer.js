@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useEffect, useRef, useState } from 'react';
-import CustomerService from 'api/CustomerService';
+import UserService from 'api/UserService';
 
 import { useRouter } from 'next/router';
 import MiscService from 'api/MiscService';
@@ -29,9 +29,10 @@ import { UserType } from 'helpers/constants';
 import { DatePicker } from '@mui/x-date-pickers';
 import { format } from 'date-fns';
 import { AccountProfile } from 'src/sections/account/account-profile';
+import { imageUrlToBase64 } from 'helpers/functions';
 
 const Page = () => {
-  const customerService = new CustomerService();
+  const userService = new UserService();
   const miscService = new MiscService();
   const router = useRouter();
 
@@ -124,8 +125,6 @@ const Page = () => {
     initialTouched: initialTouched,
     onSubmit: async (values) => {
       try {
-        console.log('validating');
-        console.log(values);
         // Validate the form values using the validation schema
         await formDataValidateSchema.validate(values, { abortEarly: false });
 
@@ -145,8 +144,6 @@ const Page = () => {
   const [genders, setGenders] = useState([]);
   const [selectedGender, setSelectedGender] = useState({});
 
-  const [logo, setLogo] = useState(null);
-
   useEffect(() => {
     miscService.lists().then((response) => {
       setCountries(response.data?.data?.countries);
@@ -155,20 +152,23 @@ const Page = () => {
       setGenders(outputArray);
 
       if (customerId) {
-        customerService.getCustomer(customerId).then((response) => {
-          setLogo({ uri: response.data?.data?.logo });
+        userService.getCustomer(customerId).then(async (response) => {
 
           let customerData = { ...response.data.data };
           customerData['createAddressRequest'] = customerData['address'];
 
           delete customerData['address'];
-          setSelectCountry(customerData?.country);
+          setSelectCountry(customerData?.createAddressRequest?.country);
 
           setSelectedGender({ id: customerData?.gender, label: customerData?.gender });
 
           if (customerData['dob']) {
-            let date = new Date(`${customerData['dob'].replace(' ', 'T')}.000Z`);
+            let date = new Date(`${customerData['dob']}`);
             customerData['dob'] = date;
+          }
+
+          if (customerData.profile_picture) {
+            customerData.profile_picture = await imageUrlToBase64(customerData.profile_picture);
           }
 
           formik.setValues(customerData);
@@ -192,8 +192,6 @@ const Page = () => {
   }
 
   const handleGenderSelectChange = (field, value) => {
-    console.log(field)
-    console.log(value)
     setSelectedGender(value);
     formik.setFieldValue(field, value ? value['id'] : null);
   }
@@ -202,8 +200,6 @@ const Page = () => {
     let data = { ...values }
     data['type'] = UserType.CustomerUser;
 
-    console.log('dob', data)
-
     if (data['dob'])
       data['dob'] = format(data['dob'], 'yyyy-MM-dd HH:mm:ss')
 
@@ -211,7 +207,7 @@ const Page = () => {
       data['address'] = data['createAddressRequest'];
       delete data['createAddressRequest'];
 
-      customerService.update(data).then((response) => {
+      userService.update(data).then((response) => {
 
       }).catch((error) => {
         // Handle API request errors here
@@ -220,9 +216,7 @@ const Page = () => {
         throw new Error(error.message);
       });
     } else {
-      console.log(data)
-      return;
-      customerService.create(data).then((response) => {
+      userService.create(data).then((response) => {
         router.push('/customers');
       }).catch((error) => {
         // Handle API request errors here
@@ -249,7 +243,6 @@ const Page = () => {
     // Handle the selected file
     const selectedFile = event.target.files[0];
     if (selectedFile) {
-      console.log('Selected file:', selectedFile);
       // Add your logic to handle the selected file
 
       const reader = new FileReader();
@@ -257,8 +250,6 @@ const Page = () => {
       reader.onloadend = () => {
         //setPreviewImage(reader.result);
         formik.setFieldValue('profile_picture', reader.result);
-
-        console.log(reader.result);
       };
 
       reader.readAsDataURL(selectedFile);
@@ -301,6 +292,19 @@ const Page = () => {
                   >
                   </Stack>
                 </Stack>
+                <div>
+                  <Button
+                    startIcon={(
+                      <SvgIcon fontSize="small">
+                        <CheckCircleIcon />
+                      </SvgIcon>
+                    )}
+                    variant="contained"
+                    type="submit"
+                  >
+                    Save
+                  </Button>
+                </div>
               </Stack>
 
               <Grid
@@ -372,6 +376,7 @@ const Page = () => {
                         <Stack spacing={3}>
                           <TextField
                             fullWidth
+                            required
                             label="First Name"
                             name="first_name"
                             value={formik.values.first_name}
@@ -383,6 +388,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Username"
                             name="username"
                             value={formik.values.username}
@@ -405,6 +411,7 @@ const Page = () => {
                           />
 
                           <Autocomplete
+
                             options={countries}
                             value={selectCountry}
                             getOptionLabel={option => option['name'] ?? ''}
@@ -412,6 +419,7 @@ const Page = () => {
                             renderInput={
                               params => (
                                 <TextField
+                                  required
                                   {...params}
                                   label="Country"
                                   fullWidth
@@ -424,6 +432,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="City"
                             name="city"
                             value={formik.values.createAddressRequest?.city}
@@ -446,6 +455,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Postcode"
                             type='postcode'
                             value={formik.values.createAddressRequest?.postcode}
@@ -468,6 +478,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Last Name"
                             type='last_name'
                             value={formik.values.last_name}
@@ -479,6 +490,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Email"
                             name="email"
                             type='email'
@@ -509,6 +521,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Region"
                             name="region"
                             value={formik.values.createAddressRequest?.region}
@@ -520,6 +533,7 @@ const Page = () => {
 
                           <TextField
                             fullWidth
+                            required
                             label="Line 1"
                             name="line_1"
                             value={formik.values.createAddressRequest?.line_1}
