@@ -31,27 +31,15 @@ const Page = () => {
   };
 
   const handleDeleteConfirm = () => {
-
     let tempPaymentMethods = [...paymentMethods];
     tempPaymentMethods.splice(idToBeDeleted, 1);
     setPaymentMethods(tempPaymentMethods);
 
-    //TODO submit the new payment methods
+    updateData(tempPaymentMethods);
 
     setDeleteDialogOpen(false);
     setIdToBeDeleted(null);
-
-    // adService.deleteAd({ uuid: idToBeDeleted }).then((response) => {
-    //   loadData();
-    // }).catch((error) => {
-    //   // Handle API request errors here
-    //   console.error(error);
-    //   //throw new Error('Please check your email and password');
-    //   throw new Error(error.message);
-    // }).finally(() => {
-    //   setDeleteDialogOpen(false);
-    //   setIdToBeDeleted(null);
-    // });
+    
   };
 
   const handleDeleteCancel = () => {
@@ -109,15 +97,36 @@ const Page = () => {
     setPaymentMethods([...paymentMethods, newRow]);
   }
 
-  const mySaveOnServerFunction = React.useCallback((updatedRow, originalRow) => {
-    let tempPaymentMethods = [...paymentMethods];
-    tempPaymentMethods[updatedRow.id] = updatedRow;
-    setPaymentMethods(tempPaymentMethods);
+  const mySaveOnServerFunction = React.useCallback(async (updatedRow, originalRow) => {
+    try {
+      let tempPaymentMethods = [...paymentMethods];
+      tempPaymentMethods[updatedRow.id] = updatedRow;
+      setPaymentMethods(tempPaymentMethods);
 
-    //TODO submit the new payment methods
+      updateData(tempPaymentMethods);
 
-    return tempPaymentMethods[updatedRow.id];
+      return tempPaymentMethods[updatedRow.id];
+    } catch (error) {
+      console.error('Error updating data:', error);
+      // Handle the error as needed, e.g., show a user-friendly message
+    }
   });
+
+  const updateData = (data) => {
+    return appListService.save({
+      key: 'Payment_methods',
+      value: data.map((item, index) => item.name)
+    }).then((response) => {
+
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+
+  }
+
 
   const handleProcessRowUpdateError = React.useCallback((error) => {
   }, []);
