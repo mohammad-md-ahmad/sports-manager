@@ -73,7 +73,7 @@ const Facilities = ({ companyUuid }) => {
     );
   }
 
-  const approveCompany = (uuid) => {
+  const approveFacility = (uuid) => {
     facilityService.update({ uuid, companyUuid, status: CompanyFacilityStatus.Active }).then((response) => {
       loadData();
     }).catch((error) => {
@@ -142,7 +142,7 @@ const Facilities = ({ companyUuid }) => {
       getActions: (params) => {
         return [
           params?.row?.status == CompanyFacilityStatus.PendingApproval ?
-            <IconButton color="success" onClick={() => approveCompany(params?.row?.uuid)}>
+            <IconButton color="success" onClick={() => approveFacility(params?.row?.uuid)}>
               <CheckIcon />
             </IconButton>
             :
