@@ -16,6 +16,11 @@ class FacilityService extends AxiosService {
     async listByCompany(companyUuid) {
         return this.get(`/companies/${companyUuid}/facilities`);
     }
+
+    async update(data) {
+        return this.put(`/companies/${data.companyUuid}/facilities/${data.uuid}`, data);
+    }
+
 }
 
 export default FacilityService;

@@ -9,7 +9,9 @@ import {
   Typography,
   Unstable_Grid2 as Grid,
   Card,
-  Avatar
+  Avatar,
+  Switch,
+  IconButton
 } from '@mui/material';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { useEffect, useState } from 'react';
@@ -18,6 +20,9 @@ import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import DeleteConfirmationDialog from 'src/components/deleteConfirmationDialog';
+import { CompanyStatus } from 'helpers/constants';
+import CheckIcon from '@mui/icons-material/Check';
+
 
 const Page = () => {
   const companyService = new CompanyService();
@@ -77,6 +82,31 @@ const Page = () => {
     );
   }
 
+  const approveCompany = (uuid) => {
+    companyService.update({ uuid, status: CompanyStatus.Active }).then((response) => {
+      loadData();
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+  }
+
+  const handleToggleStatus = (uuid, status) => {
+    // Implement the logic to toggle the status based on the itemId
+    status = status == CompanyStatus.PendingApproval || status == CompanyStatus.Disabled ? CompanyStatus.Active : CompanyStatus.Disabled;
+    companyService.update({ uuid, status: status }).then((response) => {
+      loadData();
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+
+  };
+
   const columns = [
     {
       field: 'logo',
@@ -113,31 +143,42 @@ const Page = () => {
       flex: 1
     },
     {
+      field: 'status',
+      type: 'actions',
+      headerName: 'status',
+      width: 140,
+      cellClassName: 'status',
+      getActions: (params) => {
+        return [
+          params?.row?.status == CompanyStatus.PendingApproval ?
+            <IconButton color="success" onClick={() => approveCompany(params?.row?.uuid)}>
+              <CheckIcon />
+            </IconButton>
+            :
+            <Switch
+              checked={params?.row?.status === CompanyStatus.Active}
+              onChange={() => handleToggleStatus(params?.row?.uuid, params?.row?.status)}
+            />
+        ];
+      }
+    },
+    {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: 140,
       cellClassName: 'actions',
-      getActions: ({ id }) => {
+      getActions: (params) => {
         return [
           <GridActionsCellItem
             icon={<DeleteIcon />}
             label="Delete"
-            onClick={handleDeleteClick(id)}
+            onClick={() => handleDeleteClick(params?.row?.uuid)}
             color="inherit"
           />,
         ];
       }
     }
-    //  {
-    //   field: 'description',
-    //   headerName: 'Description',
-    //   description: 'This column has a value getter and is not sortable.',
-    //   sortable: false,
-    //   width: 160,
-    //   valueGetter: (params) =>
-    //     `${params.row.firstName || ''} ${params.row.lastName || ''}`,
-    // },
   ];
 
   const handleRowClick = (params) => {

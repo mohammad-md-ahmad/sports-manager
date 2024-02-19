@@ -16,3 +16,17 @@ export const UserType = {
     CompanyUser: "COMPANY_USER",
     CustomerUser: "CUSTOMER_USER",
 };
+
+export const CompanyStatus = {
+    PendingApproval: "PendingApproval",
+    Active: "Active",
+    Disabled: "Disabled"
+
+}
+
+export const CompanyFacilityStatus = {
+    PendingApproval: "PendingApproval",
+    Active: "Active",
+    Disabled: "Disabled"
+
+}
