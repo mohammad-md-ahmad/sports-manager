@@ -102,7 +102,7 @@ class AppInfoService implements AppInfoServiceInterface
         try {
             DB::beginTransaction();
 
-            foreach ($data->app_infos as $appInfo) {
+            foreach ($data->app_info as $appInfo) {
                 $info = AppInfo::updateOrCreate([
                     'key' => $appInfo['key'],
                 ], [

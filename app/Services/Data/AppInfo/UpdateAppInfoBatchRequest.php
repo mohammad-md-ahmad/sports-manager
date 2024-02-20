@@ -9,7 +9,7 @@ use Spatie\LaravelData\Data;
 class UpdateAppInfoBatchRequest extends Data
 {
     public function __construct(
-        public array $app_infos,
+        public array $app_info,
     ) {
     }
 }
