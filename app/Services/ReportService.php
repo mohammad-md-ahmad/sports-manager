@@ -8,7 +8,10 @@ use App\Contracts\Formatters\Money\DecimalMoneyFormatterInterface;
 use App\Contracts\Services\ReportServiceInterface;
 use App\Enums\BookingStatus;
 use App\Enums\Report;
+use App\Enums\UserType;
+use App\Models\Booking;
 use App\Models\Company;
+use App\Models\User;
 use App\Services\Data\Report\GetReportByKey;
 use Carbon\Carbon;
 use Exception;
@@ -30,11 +33,29 @@ class ReportService implements ReportServiceInterface
 
             $data = match ($data->key) {
                 Report::CustomerDemographics->name => $this->getCompanyCustomersDemograhpicsReport($data),
+                Report::SystemMetrics->name => $this->getSystemMetrics(),
             };
 
             return $data;
         } catch (Exception $exception) {
             Log::error('ReportService::get: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function getSystemMetrics(): Collection
+    {
+        try {
+            $results = [];
+
+            $results['total_companies'] = Company::query()->get()->count();
+            $results['total_customers'] = User::query()->where('type', UserType::CUSTOMER_USER->name)->get()->count();
+            $results['total_booking_requests'] = Booking::query()->get()->count();
+
+            return collect($results);
+        } catch (Exception $exception) {
+            Log::error('Report::getSystemMetrics: '.$exception->getMessage());
 
             throw $exception;
         }
@@ -64,6 +85,8 @@ class ReportService implements ReportServiceInterface
 
             return collect($results);
         } catch (Exception $exception) {
+            Log::error('Report::getCompanyCustomersDemograhpicsReport: '.$exception->getMessage());
+
             throw $exception;
         }
     }
