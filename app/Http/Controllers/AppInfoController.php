@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use App\Contracts\Services\AppInfoServiceInterface;
 use App\Services\Data\AppInfo\GetAppInfoByKey;
+use App\Services\Data\AppInfo\UpdateAppInfoBatchRequest;
 use App\Services\Data\AppInfo\UpdateAppInfoRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -85,6 +86,24 @@ class AppInfoController extends Controller
             return response()->json([
                 'message' => __('Info has been updated successfully!'),
                 'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to update Info!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function batchUpdate(UpdateAppInfoBatchRequest $request): JsonResponse
+    {
+        try {
+            $this->appInfoService->batchUpdate($request);
+
+            return response()->json([
+                'message' => __('Info has been updated successfully!'),
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());

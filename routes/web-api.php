@@ -202,6 +202,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/get-all', [AppInfoController::class, 'getAllAppInfos'])->name('app-info.get-all');
         Route::get('/get-all/keys', [AppInfoController::class, 'getAllAppInfoKeys'])->name('app-info.get-all-keys');
         Route::post('/', [AppInfoController::class, 'update'])->name('app-info.update');
+        Route::post('/batch', [AppInfoController::class, 'batchUpdate'])->name('app-info.batch-update');
     });
 });
 

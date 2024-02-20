@@ -8,6 +8,7 @@ use App\Contracts\Services\AppInfoServiceInterface;
 use App\Models\AppInfo;
 use App\Models\AppList;
 use App\Services\Data\AppInfo\GetAppInfoByKey;
+use App\Services\Data\AppInfo\UpdateAppInfoBatchRequest;
 use App\Services\Data\AppInfo\UpdateAppInfoRequest;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -88,6 +89,34 @@ class AppInfoService implements AppInfoServiceInterface
             DB::rollBack();
 
             Log::error('AppInfoService::update: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function batchUpdate(UpdateAppInfoBatchRequest $data): bool
+    {
+        try {
+            DB::beginTransaction();
+
+            foreach ($data->app_info as $appInfo) {
+                $info = AppInfo::updateOrCreate([
+                    'key' => $appInfo['key'],
+                ], [
+                    'value' => $appInfo['value'],
+                ]);
+            }
+
+            DB::commit();
+
+            return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error('AppInfoService::batchUpdate: '.$exception->getMessage());
 
             throw $exception;
         }
