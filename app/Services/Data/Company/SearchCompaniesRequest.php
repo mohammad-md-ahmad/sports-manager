@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Data\Company;
 
+use App\Enums\CompanyStatus;
 use App\Enums\FacilityType;
 use App\Models\Country;
 use App\Models\Sport;
@@ -24,6 +25,7 @@ class SearchCompaniesRequest extends Data
         #[MapInputName('sport_uuid')]
         #[WithCast(UuidToEntityCaster::class, Sport::class)]
         public ?string $sport_id = null,
+        public ?string $status = null,
     ) {
     }
 
@@ -31,6 +33,7 @@ class SearchCompaniesRequest extends Data
     {
         return [
             'type' => ['nullable', 'string', 'in:'.implode(',', array_column(FacilityType::cases(), 'name'))],
+            'status' => ['nullable', 'string', 'in:'.implode(',', array_column(CompanyStatus::cases(), 'name'))],
         ];
     }
 }

@@ -179,7 +179,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('reports')->group(function () {
 
-        Route::get('/company/{company}', [ReportController::class, 'get'])->name('reports.get');
+        Route::get('/', [ReportController::class, 'get'])->name('reports.get');
+        Route::get('/company/{company}', [ReportController::class, 'getByCompany'])->name('reports.get-by-company');
     });
 
     Route::prefix('advertisements')->group(function () {

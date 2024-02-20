@@ -80,6 +80,10 @@ class CompanyService implements CompanyServiceInterface
                 $query->where('name', 'LIKE', '%'.$data->name.'%');
             });
 
+            $companiesQuery->when($data->status, function (Builder $query) use ($data) {
+                $query->where('status', '=', $data->status);
+            });
+
             $companiesQuery->when($data->type, function (Builder $query) use ($data) {
                 $query->whereHas('facilities', function (Builder $query) use ($data) {
                     $query->where('type', $data->type);
