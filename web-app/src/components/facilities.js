@@ -186,11 +186,11 @@ const Facilities = ({ companyUuid }) => {
     console.log('Row clicked:', params?.row);
     // You can perform actions based on the clicked row, such as navigating to a detail page
 
-    router.push('/company?id=' + params?.row?.uuid);
+    router.push('/facility?id=' + params?.row?.uuid + '&companyId=' + companyUuid);
   };
 
   const addCompany = () => {
-    router.push('/company');
+    router.push('/facility');
   }
 
   return (
