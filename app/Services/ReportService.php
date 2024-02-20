@@ -12,6 +12,7 @@ use App\Enums\UserType;
 use App\Models\Booking;
 use App\Models\Company;
 use App\Models\User;
+use App\Services\Data\Report\GetCompanyReportByKey;
 use App\Services\Data\Report\GetReportByKey;
 use Carbon\Carbon;
 use Exception;
@@ -29,16 +30,30 @@ class ReportService implements ReportServiceInterface
     public function get(GetReportByKey $data): Collection
     {
         try {
-            $this->company = $data->company;
-
             $data = match ($data->key) {
-                Report::CustomerDemographics->name => $this->getCompanyCustomersDemograhpicsReport($data),
                 Report::SystemMetrics->name => $this->getSystemMetrics(),
             };
 
             return $data;
         } catch (Exception $exception) {
             Log::error('ReportService::get: '.$exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function getByCompany(GetCompanyReportByKey $data): Collection
+    {
+        try {
+            $this->company = $data->company;
+
+            $data = match ($data->key) {
+                Report::CustomerDemographics->name => $this->getCompanyCustomersDemograhpicsReport($data),
+            };
+
+            return $data;
+        } catch (Exception $exception) {
+            Log::error('ReportService::getByCompany: '.$exception->getMessage());
 
             throw $exception;
         }
@@ -61,7 +76,7 @@ class ReportService implements ReportServiceInterface
         }
     }
 
-    public function getCompanyCustomersDemograhpicsReport(GetReportByKey $data)
+    public function getCompanyCustomersDemograhpicsReport(GetCompanyReportByKey $data)
     {
         try {
             $genders = $this->getCompanyCustomersGenderDemograhpics($data->company);
