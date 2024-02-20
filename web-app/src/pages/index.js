@@ -10,11 +10,47 @@ import { OverviewTasksProgress } from 'src/sections/overview/overview-tasks-prog
 import { OverviewTotalCustomers } from 'src/sections/overview/overview-total-customers';
 import { OverviewTotalProfit } from 'src/sections/overview/overview-total-profit';
 import { OverviewTraffic } from 'src/sections/overview/overview-traffic';
+import { OverviewTotalCompanies } from 'src/sections/overview/overview-total-companies';
+import { OverviewTotalBookingRequests } from 'src/sections/overview/overview-total-booking-requests';
+import ReportsService from 'api/ReportsService';
+import { useEffect, useState } from 'react';
+import { OverviewPendingCompanies } from 'src/sections/overview/overview-pending-companies';
+import CompanyService from 'api/CompanyService';
+import { CompanyStatus } from 'helpers/constants';
 
 const now = new Date();
 
-const Page = () => (
-  <>
+const Page = () => {
+  const reportsService = new ReportsService();
+  const companyService = new CompanyService();
+  const [systemMetrics, setSystemMetrics] = useState({});
+  const [pendingApproval, setPendingApproval] = useState([]);
+
+  useEffect(() => {
+    reportsService.getReport({ key: 'SystemMetrics' }).then((response) => {
+      setSystemMetrics(response.data?.data);
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+
+    companyService.list({ status: CompanyStatus.PendingApproval }).then((response) => {
+      setPendingApproval(response.data?.data?.data);
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+
+
+
+  }, [])
+
+
+  return (<>
     <Head>
       <title>
         Overview | Liber
@@ -37,11 +73,34 @@ const Page = () => (
             sm={6}
             lg={3}
           >
-            <OverviewBudget
-              difference={12}
-              positive
+            <OverviewTotalCompanies
+              //difference={16}
+              //positive={true}
               sx={{ height: '100%' }}
-              value="$24k"
+              value={systemMetrics.total_companies}
+            />
+          </Grid>
+          <Grid
+            xs={12}
+            sm={6}
+            lg={3}
+          >
+            <OverviewPendingCompanies
+              //difference={16}
+              //positive={true}
+              sx={{ height: '100%' }}
+              value={pendingApproval?.length}
+            />
+
+          </Grid>
+          <Grid
+            xs={12}
+            sm={6}
+            lg={3}
+          >
+            <OverviewTotalBookingRequests
+              sx={{ height: '100%' }}
+              value={systemMetrics.total_booking_requests}
             />
           </Grid>
           <Grid
@@ -50,30 +109,10 @@ const Page = () => (
             lg={3}
           >
             <OverviewTotalCustomers
-              difference={16}
-              positive={false}
+              // difference={16}
+              //positive={false}
               sx={{ height: '100%' }}
-              value="1.6k"
-            />
-          </Grid>
-          <Grid
-            xs={12}
-            sm={6}
-            lg={3}
-          >
-            <OverviewTasksProgress
-              sx={{ height: '100%' }}
-              value={75.5}
-            />
-          </Grid>
-          <Grid
-            xs={12}
-            sm={6}
-            lg={3}
-          >
-            <OverviewTotalProfit
-              sx={{ height: '100%' }}
-              value="$15k"
+              value={systemMetrics.total_customers}
             />
           </Grid>
           <Grid
@@ -221,7 +260,8 @@ const Page = () => (
       </Container>
     </Box>
   </>
-);
+  )
+};
 
 Page.getLayout = (page) => (
   <DashboardLayout>
