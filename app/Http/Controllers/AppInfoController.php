@@ -100,11 +100,10 @@ class AppInfoController extends Controller
     public function batchUpdate(UpdateAppInfoBatchRequest $request): JsonResponse
     {
         try {
-            $data = $this->appInfoService->batchUpdate($request);
+            $this->appInfoService->batchUpdate($request);
 
             return response()->json([
                 'message' => __('Info has been updated successfully!'),
-                'data' => $data,
             ], Response::HTTP_OK);
         } catch (Exception $exception) {
             Log::error($exception->getMessage());
