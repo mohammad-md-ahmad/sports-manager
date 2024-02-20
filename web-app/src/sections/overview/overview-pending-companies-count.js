@@ -4,7 +4,7 @@ import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
 import BuildingOffice2Icon from '@heroicons/react/24/solid/BuildingOffice2Icon';
 import { Avatar, Card, CardContent, Stack, SvgIcon, Typography } from '@mui/material';
 
-export const OverviewPendingCompanies = (props) => {
+export const OverviewPendingCompaniesCount = (props) => {
   const { difference, positive = false, sx, value } = props;
 
   return (
@@ -77,7 +77,7 @@ export const OverviewPendingCompanies = (props) => {
   );
 };
 
-OverviewPendingCompanies.propTypes = {
+OverviewPendingCompaniesCount.propTypes = {
   difference: PropTypes.number,
   positive: PropTypes.bool,
   value: PropTypes.string.isRequired,
