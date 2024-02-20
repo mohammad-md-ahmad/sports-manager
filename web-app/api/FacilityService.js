@@ -13,6 +13,10 @@ class FacilityService extends AxiosService {
         return this.get(`/facilities?${this.objectToQueryParams(data)}`);
     }
 
+    async getFacility(data) {
+        return this.get(`/companies/${data.companyUuid}/facilities/${data.uuid}`);
+    }
+
     async listByCompany(companyUuid) {
         return this.get(`/companies/${companyUuid}/facilities`);
     }

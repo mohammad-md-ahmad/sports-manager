@@ -105,7 +105,7 @@ const Page = () => {
   const submitForm = (values) => {
     let data = objectToArray({ ...values });
     console.log(data);
-    appInfoService.save(data).then((response) => {
+    appInfoService.save({ 'app_info': data }).then((response) => {
 
     }).catch((error) => {
       // Handle API request errors here

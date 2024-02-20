@@ -10,7 +10,7 @@ class AppInfoService extends AxiosService {
     }
 
     async save(data) {
-        return this.post(`/app-info`, data);
+        return this.post(`/app-info/batch`, data);
     }
 
 }
