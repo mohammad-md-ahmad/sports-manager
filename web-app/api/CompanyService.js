@@ -5,8 +5,8 @@ class CompanyService extends AxiosService {
         super();
     }
 
-    async list() {
-        return this.get(`/companies`);
+    async list(data) {
+        return this.get(`/companies?${this.objectToQueryParams(data)}`);
     }
 
     async getCompany(uuid) {

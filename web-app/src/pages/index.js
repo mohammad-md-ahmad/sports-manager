@@ -10,11 +10,50 @@ import { OverviewTasksProgress } from 'src/sections/overview/overview-tasks-prog
 import { OverviewTotalCustomers } from 'src/sections/overview/overview-total-customers';
 import { OverviewTotalProfit } from 'src/sections/overview/overview-total-profit';
 import { OverviewTraffic } from 'src/sections/overview/overview-traffic';
+import { OverviewTotalCompanies } from 'src/sections/overview/overview-total-companies';
+import { OverviewTotalBookingRequests } from 'src/sections/overview/overview-total-booking-requests';
+import ReportsService from 'api/ReportsService';
+import { useEffect, useState } from 'react';
+import { OverviewPendingCompaniesCount } from 'src/sections/overview/overview-pending-companies-count';
+import CompanyService from 'api/CompanyService';
+import { CompanyStatus } from 'helpers/constants';
+import { OverviewPendingApprovalCompanies } from 'src/sections/overview/overview-pending-approval-companies';
 
 const now = new Date();
 
-const Page = () => (
-  <>
+const Page = () => {
+  const reportsService = new ReportsService();
+  const companyService = new CompanyService();
+  const [systemMetrics, setSystemMetrics] = useState({});
+  const [pendingApprovalCompanies, setPendingApprovalCompanies] = useState([]);
+
+  useEffect(() => {
+    reportsService.getReport({ key: 'SystemMetrics' }).then((response) => {
+      setSystemMetrics(response.data?.data);
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+
+    loadPendingApprovalCompanies();
+
+  }, [])
+
+
+  const loadPendingApprovalCompanies = () => {
+    companyService.list({ status: CompanyStatus.PendingApproval }).then((response) => {
+      setPendingApprovalCompanies(response.data?.data?.data);
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
+  }
+
+  return (<>
     <Head>
       <title>
         Overview | Liber
@@ -37,11 +76,11 @@ const Page = () => (
             sm={6}
             lg={3}
           >
-            <OverviewBudget
-              difference={12}
-              positive
+            <OverviewTotalCompanies
+              //difference={16}
+              //positive={true}
               sx={{ height: '100%' }}
-              value="$24k"
+              value={systemMetrics.total_companies}
             />
           </Grid>
           <Grid
@@ -49,11 +88,22 @@ const Page = () => (
             sm={6}
             lg={3}
           >
-            <OverviewTotalCustomers
-              difference={16}
-              positive={false}
+            <OverviewPendingCompaniesCount
+              //difference={16}
+              //positive={true}
               sx={{ height: '100%' }}
-              value="1.6k"
+              value={pendingApprovalCompanies?.length}
+            />
+
+          </Grid>
+          <Grid
+            xs={12}
+            sm={6}
+            lg={3}
+          >
+            <OverviewTotalBookingRequests
+              sx={{ height: '100%' }}
+              value={systemMetrics.total_booking_requests}
             />
           </Grid>
           <Grid
@@ -61,22 +111,12 @@ const Page = () => (
             sm={6}
             lg={3}
           >
-            <OverviewTasksProgress
+            <OverviewTotalBookingRequests
               sx={{ height: '100%' }}
-              value={75.5}
+              value={systemMetrics.total_booking_requests}
             />
           </Grid>
-          <Grid
-            xs={12}
-            sm={6}
-            lg={3}
-          >
-            <OverviewTotalProfit
-              sx={{ height: '100%' }}
-              value="$15k"
-            />
-          </Grid>
-          <Grid
+          {/* <Grid
             xs={12}
             lg={8}
           >
@@ -93,8 +133,8 @@ const Page = () => (
               ]}
               sx={{ height: '100%' }}
             />
-          </Grid>
-          <Grid
+          </Grid> */}
+          {/* <Grid
             xs={12}
             md={6}
             lg={4}
@@ -104,7 +144,7 @@ const Page = () => (
               labels={['Desktop', 'Tablet', 'Phone']}
               sx={{ height: '100%' }}
             />
-          </Grid>
+          </Grid> */}
           <Grid
             xs={12}
             md={6}
@@ -151,69 +191,9 @@ const Page = () => (
             md={12}
             lg={8}
           >
-            <OverviewLatestOrders
-              orders={[
-                {
-                  id: 'f69f88012978187a6c12897f',
-                  ref: 'DEV1049',
-                  amount: 30.5,
-                  customer: {
-                    name: 'Ekaterina Tankova'
-                  },
-                  createdAt: 1555016400000,
-                  status: 'pending'
-                },
-                {
-                  id: '9eaa1c7dd4433f413c308ce2',
-                  ref: 'DEV1048',
-                  amount: 25.1,
-                  customer: {
-                    name: 'Cao Yu'
-                  },
-                  createdAt: 1555016400000,
-                  status: 'delivered'
-                },
-                {
-                  id: '01a5230c811bd04996ce7c13',
-                  ref: 'DEV1047',
-                  amount: 10.99,
-                  customer: {
-                    name: 'Alexa Richardson'
-                  },
-                  createdAt: 1554930000000,
-                  status: 'refunded'
-                },
-                {
-                  id: '1f4e1bd0a87cea23cdb83d18',
-                  ref: 'DEV1046',
-                  amount: 96.43,
-                  customer: {
-                    name: 'Anje Keizer'
-                  },
-                  createdAt: 1554757200000,
-                  status: 'pending'
-                },
-                {
-                  id: '9f974f239d29ede969367103',
-                  ref: 'DEV1045',
-                  amount: 32.54,
-                  customer: {
-                    name: 'Clarke Gillebert'
-                  },
-                  createdAt: 1554670800000,
-                  status: 'delivered'
-                },
-                {
-                  id: 'ffc83c1560ec2f66a1c05596',
-                  ref: 'DEV1044',
-                  amount: 16.76,
-                  customer: {
-                    name: 'Adam Denisov'
-                  },
-                  createdAt: 1554670800000,
-                  status: 'delivered'
-                }
-              ]}
+            <OverviewPendingApprovalCompanies
+              companies={pendingApprovalCompanies}
+              loadData={loadPendingApprovalCompanies}
               sx={{ height: '100%' }}
             />
           </Grid>
@@ -221,7 +201,8 @@ const Page = () => (
       </Container>
     </Box>
   </>
-);
+  )
+};
 
 Page.getLayout = (page) => (
   <DashboardLayout>
