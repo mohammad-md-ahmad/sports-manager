@@ -58,7 +58,7 @@ export default function About(): React.JSX.Element {
             if (supported) {
                 return Linking.openURL(url);
             } else {
-                // Fallback: Open WhatsApp using a standard HTTP link
+                // Fallback: Open Email using a standard HTTP link
                 return Linking.openURL(url);
             }
         } catch (error) {
