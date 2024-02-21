@@ -1,9 +1,9 @@
 {
-  "name": "material-kit-react",
-  "version": "3.0.0",
-  "author": "Devias",
+  "name": "liber",
+  "version": "1.0.0",
+  "author": "Quad business house",
   "licence": "MIT",
-  "homepage": "https://devias.io",
+  "homepage": "https://liber.quad-bh.com",
   "proxy": "http:s//liber.quad-bh.com",
   "private": false,
   "scripts": {
