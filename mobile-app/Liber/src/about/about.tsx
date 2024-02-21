@@ -42,7 +42,6 @@ export default function About(): React.JSX.Element {
             if (supported) {
                 return Linking.openURL(url);
             } else {
-                console.error('WhatsApp is not installed on the device');
                 // Fallback: Open WhatsApp using a standard HTTP link
                 return Linking.openURL(`https://wa.me/${appInfo?.phone}`);
             }
@@ -59,7 +58,6 @@ export default function About(): React.JSX.Element {
             if (supported) {
                 return Linking.openURL(url);
             } else {
-                console.error('Email app is not installed on the device');
                 // Fallback: Open WhatsApp using a standard HTTP link
                 return Linking.openURL(url);
             }
