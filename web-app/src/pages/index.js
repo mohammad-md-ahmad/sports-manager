@@ -18,6 +18,7 @@ import { OverviewPendingCompaniesCount } from 'src/sections/overview/overview-pe
 import CompanyService from 'api/CompanyService';
 import { CompanyStatus } from 'helpers/constants';
 import { OverviewPendingApprovalCompanies } from 'src/sections/overview/overview-pending-approval-companies';
+import { OverviewLatestCustomers } from 'src/sections/overview/overview-latest-customers';
 
 const now = new Date();
 
@@ -101,9 +102,11 @@ const Page = () => {
             sm={6}
             lg={3}
           >
-            <OverviewTotalBookingRequests
+            <OverviewTotalCustomers
+              // difference={16}
+              //positive={false}
               sx={{ height: '100%' }}
-              value={systemMetrics.total_booking_requests}
+              value={systemMetrics.total_customers}
             />
           </Grid>
           <Grid
@@ -148,48 +151,16 @@ const Page = () => {
           <Grid
             xs={12}
             md={6}
-            lg={4}
+            lg={6}
           >
-            <OverviewLatestProducts
-              products={[
-                {
-                  id: '5ece2c077e39da27658aa8a9',
-                  image: '/assets/products/product-1.png',
-                  name: 'Healthcare Erbology',
-                  updatedAt: subHours(now, 6).getTime()
-                },
-                {
-                  id: '5ece2c0d16f70bff2cf86cd8',
-                  image: '/assets/products/product-2.png',
-                  name: 'Makeup Lancome Rouge',
-                  updatedAt: subDays(subHours(now, 8), 2).getTime()
-                },
-                {
-                  id: 'b393ce1b09c1254c3a92c827',
-                  image: '/assets/products/product-5.png',
-                  name: 'Skincare Soja CO',
-                  updatedAt: subDays(subHours(now, 1), 1).getTime()
-                },
-                {
-                  id: 'a6ede15670da63f49f752c89',
-                  image: '/assets/products/product-6.png',
-                  name: 'Makeup Lipstick',
-                  updatedAt: subDays(subHours(now, 3), 3).getTime()
-                },
-                {
-                  id: 'bcad5524fe3a2f8f8620ceda',
-                  image: '/assets/products/product-7.png',
-                  name: 'Healthcare Ritual',
-                  updatedAt: subDays(subHours(now, 5), 6).getTime()
-                }
-              ]}
+            <OverviewLatestCustomers
               sx={{ height: '100%' }}
             />
           </Grid>
           <Grid
             xs={12}
-            md={12}
-            lg={8}
+            md={6}
+            lg={6}
           >
             <OverviewPendingApprovalCompanies
               companies={pendingApprovalCompanies}
