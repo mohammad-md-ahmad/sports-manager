@@ -23,7 +23,7 @@ enum Report
     {
         return [
             self::CustomerDemographics->name => __('Customer Demographics'),
-            self::SystemMetrics => __('System Metrics and Totals'),
+            self::SystemMetrics->name => __('System Metrics and Totals'),
         ];
     }
 }
