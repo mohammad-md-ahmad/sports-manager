@@ -41,6 +41,8 @@ Route::prefix('register')->group(function () {
 
 Route::prefix('app-info')->group(function () {
     Route::get('/', [AppInfoController::class, 'get'])->name('app-info.get');
+    Route::get('/get-all', [AppInfoController::class, 'getAllAppInfos'])->name('app-info.get-all');
+    Route::get('/get-all/keys', [AppInfoController::class, 'getAllAppInfoKeys'])->name('app-info.get-all-keys');
 });
 
 Route::get('/lists', [MiscController::class, 'lists'])->name('lists');
