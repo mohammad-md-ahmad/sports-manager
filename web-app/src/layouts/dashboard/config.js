@@ -11,6 +11,7 @@ import MegaphoneIcon from '@heroicons/react/24/solid/MegaphoneIcon';
 import ChatBubbleOvalLeftEllipsisIcon from '@heroicons/react/24/solid/ChatBubbleOvalLeftEllipsisIcon';
 import PaperAirplaneIcon from '@heroicons/react/24/solid/PaperAirplaneIcon';
 import InformationCircleIcon from '@heroicons/react/24/solid/InformationCircleIcon';
+import WalletIcon from '@heroicons/react/24/solid/WalletIcon';
 import { SvgIcon } from '@mui/material';
 
 export const items = [
@@ -74,6 +75,15 @@ export const items = [
     icon: (
       <SvgIcon fontSize="small">
         <ChatBubbleOvalLeftEllipsisIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: 'Subscription Plans ',
+    path: '/subscriptionPlans',
+    icon: (
+      <SvgIcon fontSize="small">
+        <WalletIcon />
       </SvgIcon>
     )
   },
