@@ -10,6 +10,7 @@ use Dyrynda\Database\Support\GeneratesUuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
 
@@ -17,6 +18,7 @@ use Money\Money;
  * @property string $id
  * @property string $name
  * @property string $description
+ * @property Currency $currency
  */
 class SubscriptionPlan extends Model
 {
@@ -53,6 +55,11 @@ class SubscriptionPlan extends Model
     protected $appends = [
         'decimal_price',
     ];
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
 
     public function priceMoneyValue(): Attribute
     {
