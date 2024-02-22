@@ -24,6 +24,10 @@ class CompanyService extends AxiosService {
     async deleteCompany(data) {
         return this.delete('/companies/' + data.uuid);
     }
+
+    setSubscriptionPlan(data) {
+        return this.put('/companies/subscription-plan/' + data.uuid, data);
+    }
 }
 
 export default CompanyService;

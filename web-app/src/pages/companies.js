@@ -22,6 +22,7 @@ import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import DeleteConfirmationDialog from 'src/components/deleteConfirmationDialog';
 import { CompanyStatus } from 'helpers/constants';
 import CheckIcon from '@mui/icons-material/Check';
+import SelectSubscriptioPlan from 'src/components/selectSubscriptioPlan';
 
 
 const Page = () => {
@@ -32,7 +33,27 @@ const Page = () => {
     const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
     const [idToBeDeleted, setIdToBeDeleted] = useState();
 
-    const handleDeleteClick = (id) => () => {
+    const [isPlanDialogOpen, setPlanDialogOpen] = useState(false);
+
+    const [company, setCompany] = useState(null);
+
+    const handlePlanClick = (company) => {
+        console.log('handlePlanClick', company);
+        setCompany(company);
+        setPlanDialogOpen(true);
+    };
+
+    const handlePlanCancel = () => {
+        setPlanDialogOpen(false);
+    };
+
+    const handlePlanConfirm = () => {
+        setCompany(null);
+        setPlanDialogOpen(false);
+    };
+
+
+    const handleDeleteClick = (id) => {
         setDeleteDialogOpen(true);
         setIdToBeDeleted(id);
     };
@@ -163,6 +184,21 @@ const Page = () => {
             }
         },
         {
+            field: 'plan',
+            type: 'actions',
+            headerName: 'Plan',
+            width: 50,
+            cellClassName: 'actions',
+            getActions: (params) => {
+                return [
+                    <IconButton color="danger"
+                        key={"company-plan-" + params?.row?.uuid}
+                        onClick={() => handlePlanClick(params?.row)}>
+                        <CheckIcon />
+                    </IconButton>
+                ];
+            }
+        }, {
             field: 'actions',
             type: 'actions',
             headerName: 'Actions',
@@ -171,7 +207,7 @@ const Page = () => {
             getActions: (params) => {
                 return [
                     <GridActionsCellItem
-                        key={"company-"+id}
+                        key={"company-delete-" + params?.row?.uuid}
                         icon={<DeleteIcon />}
                         label="Delete"
                         onClick={() => handleDeleteClick(params?.row?.uuid)}
@@ -272,6 +308,16 @@ const Page = () => {
                                     onClose={handleDeleteCancel}
                                     onConfirm={handleDeleteConfirm}
                                 />
+
+                                {company &&
+                                    <SelectSubscriptioPlan
+                                        company={company}
+                                        open={isPlanDialogOpen}
+                                        onClose={handlePlanCancel}
+                                        onConfirm={handlePlanConfirm}
+                                    />
+                                }
+
                             </Card>
                         </Grid>
                     </Stack>
