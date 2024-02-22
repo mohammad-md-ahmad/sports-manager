@@ -19,6 +19,25 @@ class SubscriptionPlanController extends Controller
     ) {
     }
 
+    public function get(Request $request): JsonResponse
+    {
+        try {
+            $data = $this->subscriptionPlanService->getAll($request);
+
+            return response()->json([
+                'message' => __('Subscription Plans has been retrieved successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to retrieve Subscription Plan!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
     public function getAll(Request $request): JsonResponse
     {
         try {
