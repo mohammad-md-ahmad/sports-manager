@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Log;
 
 class SubscriptionPlanService implements SubscriptionPlanServiceInterface
 {
+    public function getAll(): LengthAwarePaginator
+    {
+        try {
+            return SubscriptionPlan::jsonPaginate();
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
     public function store(CreateSubscriptionPlanRequest $data): SubscriptionPlan
     {
         try {

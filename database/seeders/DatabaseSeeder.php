@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AppInfoSeeder::class,
             AppListSeeder::class,
+            SubscriptionPlanSeeder::class,
         ]);
     }
 }
