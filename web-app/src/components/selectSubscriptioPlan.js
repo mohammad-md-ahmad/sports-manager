@@ -115,6 +115,7 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
     const handleSelectChange = (field, value) => {
         setSelectPlan(value);
         formik.setFieldValue(field, value ? value['uuid'] : null);
+        formik.setFieldValue('price', value ? value['price'] : null);
     }
 
     return (
