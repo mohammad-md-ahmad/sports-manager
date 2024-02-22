@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Contracts\Services\SubscriptionPlanServiceInterface;
 use App\Models\SubscriptionPlan;
 use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
+use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\GetSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\UpdateSubscriptionPlanRequest;
 use Exception;
@@ -67,6 +68,28 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
             $subscriptionPlan->refresh();
 
             return $subscriptionPlan;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function delete(DeleteSubscriptionPlanRequest $data): bool
+    {
+        try {
+            /** @var SubscriptionPlan $subscriptionPlan */
+            $subscriptionPlan = SubscriptionPlan::findOrFail($data->id);
+
+            DB::beginTransaction();
+
+            $subscriptionPlan->delete();
+
+            DB::commit();
+
+            return true;
         } catch (Exception $exception) {
             DB::rollBack();
 
