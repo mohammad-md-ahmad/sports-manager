@@ -17,6 +17,7 @@ use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SportController;
+use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -204,6 +205,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::get('/get-all/keys', [AppInfoController::class, 'getAllAppInfoKeys'])->name('app-info.get-all-keys');
         Route::post('/', [AppInfoController::class, 'update'])->name('app-info.update');
         Route::post('/batch', [AppInfoController::class, 'batchUpdate'])->name('app-info.batch-update');
+    });
+
+    Route::prefix('subscription-plans')->group(function () {
+
+        Route::get('/{uuid}', [SubscriptionPlanController::class, 'get'])->name('subscription-plans.get');
+        Route::get('/', [SubscriptionPlanController::class, 'getAll'])->name('subscription-plans.get-all');
+        Route::put('/{uuid}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
     });
 });
 

@@ -21,6 +21,7 @@ use App\Contracts\Services\PushNotificationServiceInterface;
 use App\Contracts\Services\RatingServiceInterface;
 use App\Contracts\Services\ReportServiceInterface;
 use App\Contracts\Services\SportServiceInterface;
+use App\Contracts\Services\SubscriptionPlanServiceInterface;
 use App\Contracts\Services\UserServiceInterface;
 use App\Core\Formatters\Money\DecimalMoneyFormatter;
 use App\Core\Parsers\Money\DecimalMoneyParser;
@@ -43,6 +44,7 @@ use App\Services\PushNotificationService;
 use App\Services\RatingService;
 use App\Services\ReportService;
 use App\Services\SportService;
+use App\Services\SubscriptionPlanService;
 use App\Services\UserService;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
@@ -75,6 +77,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AdvertisementServiceInterface::class, AdvertisementService::class);
         $this->app->bind(SportServiceInterface::class, SportService::class);
         $this->app->bind(PushNotificationServiceInterface::class, PushNotificationService::class);
+        $this->app->bind(SubscriptionPlanServiceInterface::class, SubscriptionPlanService::class);
     }
 
     /**
