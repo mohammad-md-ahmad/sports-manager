@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Contracts\Services\SubscriptionPlanServiceInterface;
 use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
+use App\Services\Data\SubscriptionPlan\GetSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\UpdateSubscriptionPlanRequest;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -21,10 +22,10 @@ class SubscriptionPlanController extends Controller
     ) {
     }
 
-    public function get(Request $request): JsonResponse
+    public function get(GetSubscriptionPlanRequest $request): JsonResponse
     {
         try {
-            $data = $this->subscriptionPlanService->getAll($request);
+            $data = $this->subscriptionPlanService->get($request);
 
             return response()->json([
                 'message' => __('Subscription Plans has been retrieved successfully!'),

@@ -209,8 +209,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::prefix('subscription-plans')->group(function () {
 
-        Route::get('/{uuid}', [SubscriptionPlanController::class, 'get'])->name('subscription-plans.get');
         Route::get('/', [SubscriptionPlanController::class, 'getAll'])->name('subscription-plans.get-all');
+        Route::get('/{uuid}', [SubscriptionPlanController::class, 'get'])->name('subscription-plans.get');
         Route::post('/', [SubscriptionPlanController::class, 'store'])->name('subscription-plans.store');
         Route::put('/{uuid}', [SubscriptionPlanController::class, 'update'])->name('subscription-plans.update');
         Route::delete('/{uuid}', [SubscriptionPlanController::class, 'delete'])->name('subscription-plans.delete');
