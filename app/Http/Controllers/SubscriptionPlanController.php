@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\SubscriptionPlanServiceInterface;
+use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\UpdateSubscriptionPlanRequest;
 use Exception;
@@ -53,6 +54,25 @@ class SubscriptionPlanController extends Controller
 
             return response()->json([
                 'message' => __('Unable to retrieve Subscription Plan!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function store(CreateSubscriptionPlanRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->subscriptionPlanService->store($request);
+
+            return response()->json([
+                'message' => __('Subscription Plan has been created successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to create Subscription Plan!'),
                 'errors' => $exception->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }

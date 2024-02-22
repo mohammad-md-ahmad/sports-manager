@@ -45,8 +45,16 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
     public function store(CreateSubscriptionPlanRequest $data): SubscriptionPlan
     {
         try {
-            return SubscriptionPlan::create($data->toArray());
+            DB::beginTransaction();
+
+            $subscriptionPlan = SubscriptionPlan::create($data->toArray());
+
+            DB::commit();
+
+            return $subscriptionPlan;
         } catch (Exception $exception) {
+            DB::rollBack();
+
             Log::error($exception->getMessage());
 
             throw $exception;
@@ -58,8 +66,6 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
         try {
             /** @var SubscriptionPlan $subscriptionPlan */
             $subscriptionPlan = SubscriptionPlan::findOrFail($data->id);
-
-            DB::beginTransaction();
 
             $subscriptionPlan->update($data->toArray());
 
