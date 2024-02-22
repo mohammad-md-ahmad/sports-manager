@@ -22,11 +22,14 @@ import CompanyService from 'api/CompanyService';
 import MiscService from 'api/MiscService';
 import { string, array, object as yupObject } from "yup";
 import { useFormik } from 'formik';
+import SendNotificationService from 'api/SendNotificationService';
+import { UserType } from 'helpers/constants';
 
 const Page = () => {
 
   const companyService = new CompanyService();
   const miscService = new MiscService();
+  const sendNotificationService = new SendNotificationService();
 
   const initialFormDataValues = {
     country_uuid: "",
@@ -79,7 +82,13 @@ const Page = () => {
     miscService.lists().then((response) => {
       setCountries(response.data?.data?.countries);
 
-      const outputArray = Object.entries(response.data?.data?.user_types).map(([id, label]) => ({ id, label }));
+      const outputArray = Object.keys(response.data?.data?.user_types)
+        .filter((key) => key !== "ADMIN")
+        .map((key) => ({
+          id: key,
+          label: response.data?.data?.user_types[key].replace(/User$/, ''),
+        }));
+
       setUserTypes(outputArray);
 
       companyService.list().then((response) => {
@@ -98,36 +107,37 @@ const Page = () => {
   }, [])
 
   const handleSelectChange = (field, value) => {
-    setSelectedObject({ ...selectedObject, [field]: value })
 
-    formik.setFieldValue(field, value ? value['country_uuid'] : null);
+
+    if (field == 'user_type') {
+      setSelectedObject({ ...selectedObject, [field]: value, 'company_uuid': {} })
+      formik.setFieldValue(field, value ? value['id'] : null);
+      formik.setFieldValue('company_uuid', '');
+    }
+
+    if (field == 'company_uuid') {
+      setSelectedObject({ ...selectedObject, [field]: value })
+      formik.setFieldValue(field, value ? value['uuid'] : null);
+    }
+
+
+    if (field == 'country_uuid') {
+      setSelectedObject({ ...selectedObject, [field]: value })
+      formik.setFieldValue(field, value ? value['country_uuid'] : null);
+    }
   }
 
   const submitForm = (values) => {
     let data = { ...values }
-    if (companyId) {
-      data['address'] = data['createAddressRequest'];
-      delete data['createAddressRequest'];
 
-      companyService.update(data).then((response) => {
+    sendNotificationService.send(data).then((response) => {
 
-      }).catch((error) => {
-        // Handle API request errors here
-        console.error(error);
-        //throw new Error('Please check your email and password');
-        throw new Error(error.message);
-      });
-    } else {
-      companyService.create(data).then((response) => {
-
-      }).catch((error) => {
-        // Handle API request errors here
-        console.error(error);
-        //throw new Error('Please check your email and password');
-        throw new Error(error.message);
-      });
-    }
-
+    }).catch((error) => {
+      // Handle API request errors here
+      console.error(error);
+      //throw new Error('Please check your email and password');
+      throw new Error(error.message);
+    });
   }
 
   return (
@@ -186,24 +196,6 @@ const Page = () => {
                   >
                     <Stack spacing={3}>
                       <Autocomplete
-                        options={companies}
-                        value={selectedObject['company_uuid']}
-                        getOptionLabel={option => option['name'] ?? ''}
-                        onChange={(event, value) => handleSelectChange('company_uuid', value)}
-                        renderInput={
-                          params => (
-                            <TextField
-                              {...params}
-                              label="Companies"
-                              fullWidth
-                              error={!!(formik.touched.company_uuid && formik.errors.company_uuid)}
-                              helperText={formik.touched.company_uuid && formik.errors.company_uuid ? formik.errors.company_uuid : ""}
-                            />
-                          )
-                        }
-                      />
-
-                      <Autocomplete
                         options={userTypes}
                         value={selectedObject['user_type']}
                         getOptionLabel={option => option['label'] ?? ''}
@@ -221,6 +213,25 @@ const Page = () => {
                         }
                       />
 
+
+                      <Autocomplete
+                        options={companies}
+                        value={selectedObject['company_uuid']}
+                        getOptionLabel={option => option['name'] ?? ''}
+                        onChange={(event, value) => handleSelectChange('company_uuid', value)}
+                        disabled={formik.values?.user_type != UserType.CompanyUser}
+                        renderInput={
+                          params => (
+                            <TextField
+                              {...params}
+                              label="Companies"
+                              fullWidth
+                              error={!!(formik.touched.company_uuid && formik.errors.company_uuid)}
+                              helperText={formik.touched.company_uuid && formik.errors.company_uuid ? formik.errors.company_uuid : ""}
+                            />
+                          )
+                        }
+                      />
                     </Stack>
 
                   </Grid>
