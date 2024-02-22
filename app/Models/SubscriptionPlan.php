@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\MoneyValue;
 use App\Contracts\Formatters\Money\DecimalMoneyFormatterInterface;
+use App\Enums\SubscriptionPlanType;
 use Dyrynda\Database\Casts\EfficientUuid;
 use Dyrynda\Database\Support\BindsOnUuid;
 use Dyrynda\Database\Support\GeneratesUuid;
@@ -18,6 +19,7 @@ use Money\Money;
  * @property string $id
  * @property string $name
  * @property string $description
+ * @property SubscriptionPlanType $type
  * @property Currency $currency
  */
 class SubscriptionPlan extends Model
@@ -36,7 +38,7 @@ class SubscriptionPlan extends Model
         'uuid',
         'name',
         'description',
-        'flag',
+        'type',
         'price',
         'currency_id',
         'is_enabled',
@@ -50,6 +52,7 @@ class SubscriptionPlan extends Model
     protected $casts = [
         'uuid' => EfficientUuid::class,
         'price_money_value' => MoneyValue::class,
+        'type' => SubscriptionPlanType::class,
     ];
 
     protected $appends = [

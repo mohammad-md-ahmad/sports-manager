@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\SubscriptionPlanType;
 use App\Models\Currency;
 use App\Models\SubscriptionPlan;
 use Illuminate\Database\Seeder;
@@ -17,6 +18,7 @@ class SubscriptionPlanSeeder extends Seeder
             'name' => 'standard',
         ], [
             'description' => 'The standard plan.',
+            'type' => SubscriptionPlanType::Standard->name,
             'price' => '1000',
             'currency_id' => Currency::first()->id ?? null,
             'is_enabled' => true,
@@ -26,6 +28,7 @@ class SubscriptionPlanSeeder extends Seeder
             'name' => 'premium',
         ], [
             'description' => 'The premium plan with full access to reports.',
+            'type' => SubscriptionPlanType::Premium->name,
             'price' => '2000',
             'currency_id' => Currency::first()->id ?? null,
             'is_enabled' => true,

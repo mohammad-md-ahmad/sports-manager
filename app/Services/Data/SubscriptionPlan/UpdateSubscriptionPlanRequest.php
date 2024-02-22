@@ -20,11 +20,19 @@ class UpdateSubscriptionPlanRequest extends Data
         public ?string $id = null,
         public ?string $name = null,
         public ?string $description = null,
+        public ?string $type = null,
         public ?float $price = null,
         #[MapInputName('currency_uuid')]
         #[WithCast(UuidToEntityCaster::class, Currency::class)]
         public ?string $currency_id = null,
         public ?bool $is_enabled = true,
     ) {
+    }
+
+    public static function rules(): array
+    {
+        return [
+            'type' => ['nullable', 'string', 'in:'.implode(',', array_column(SubscriptionPlan::cases(), 'name'))],
+        ];
     }
 }

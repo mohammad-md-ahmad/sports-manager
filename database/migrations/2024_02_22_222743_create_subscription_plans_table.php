@@ -16,6 +16,7 @@ return new class extends Migration
             $table->efficientUuid('uuid')->unique();
             $table->string('name', 100)->unique();
             $table->string('description');
+            $table->string('type', 50);
             $table->unsignedBigInteger('price')->nullable(false)->default(0);
             $table->smallInteger('currency_id', false, true);
             $table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('cascade');
