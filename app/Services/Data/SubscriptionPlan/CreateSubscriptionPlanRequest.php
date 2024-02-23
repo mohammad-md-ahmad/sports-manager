@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services\Data\SubscriptionPlan;
 
+use App\Enums\SubscriptionPlanType;
 use App\Models\Currency;
-use App\Models\SubscriptionPlan;
 use App\Services\Data\Core\UuidToEntityCaster;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Attributes\Validation\Unique;
@@ -30,7 +30,7 @@ class CreateSubscriptionPlanRequest extends Data
     public static function rules(): array
     {
         return [
-            'type' => ['required', 'string', 'in:'.implode(',', array_column(SubscriptionPlan::cases(), 'name'))],
+            'type' => ['required', 'string', 'in:'.implode(',', array_column(SubscriptionPlanType::cases(), 'name'))],
         ];
     }
 }

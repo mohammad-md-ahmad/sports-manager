@@ -53,6 +53,7 @@ class SubscriptionPlan extends Model
         'uuid' => EfficientUuid::class,
         'price_money_value' => MoneyValue::class,
         'type' => SubscriptionPlanType::class,
+        'is_enabled' => 'boolean',
     ];
 
     protected $appends = [

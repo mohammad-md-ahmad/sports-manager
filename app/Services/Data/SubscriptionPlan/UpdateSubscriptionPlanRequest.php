@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Data\SubscriptionPlan;
 
+use App\Enums\SubscriptionPlanType;
 use App\Models\Currency;
 use App\Models\SubscriptionPlan;
 use App\Services\Data\Core\UuidToEntityCaster;
@@ -32,7 +33,7 @@ class UpdateSubscriptionPlanRequest extends Data
     public static function rules(): array
     {
         return [
-            'type' => ['nullable', 'string', 'in:'.implode(',', array_column(SubscriptionPlan::cases(), 'name'))],
+            'type' => ['nullable', 'string', 'in:'.implode(',', array_column(SubscriptionPlanType::cases(), 'name'))],
         ];
     }
 }
