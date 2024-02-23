@@ -19,4 +19,12 @@ enum SubscriptionPlanType
             self::Premium => __('Premium'),
         };
     }
+
+    public static function toArray()
+    {
+        return [
+            self::Standard->name => __('Standard'),
+            self::Premium->name => __('Premium'),
+        ];
+    }
 }
