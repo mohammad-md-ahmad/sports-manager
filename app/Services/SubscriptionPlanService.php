@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use App\Contracts\Services\SubscriptionPlanServiceInterface;
+use App\Models\Currency;
 use App\Models\SubscriptionPlan;
 use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
@@ -17,6 +19,11 @@ use Illuminate\Support\Facades\Log;
 
 class SubscriptionPlanService implements SubscriptionPlanServiceInterface
 {
+    public function __construct(
+        protected DecimalMoneyParserInterface $moneyParser,
+    ) {
+    }
+
     public function get(GetSubscriptionPlanRequest $data): SubscriptionPlan
     {
         try {
@@ -47,7 +54,12 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
         try {
             DB::beginTransaction();
 
-            $subscriptionPlan = SubscriptionPlan::create($data->toArray());
+            /** @var Currency $currency */
+            $currency = Currency::findOrFail($data->currency_id);
+
+            $price = $this->moneyParser->parse($data->price, $currency->iso_short_code);
+
+            $subscriptionPlan = SubscriptionPlan::create(array_merge($data->toArray(), ['price' => $price]));
 
             DB::commit();
 
@@ -66,6 +78,13 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
         try {
             /** @var SubscriptionPlan $subscriptionPlan */
             $subscriptionPlan = SubscriptionPlan::findOrFail($data->id);
+
+            /** @var Currency $currency */
+            $currency = Currency::findOrFail($data->currency_id);
+
+            $data->price = $this->moneyParser->parse($data->price, $currency->iso_short_code);
+
+            DB::beginTransaction();
 
             $subscriptionPlan->update($data->toArray());
 

@@ -19,7 +19,7 @@ class CreateSubscriptionPlanRequest extends Data
         public string $name,
         public string $description,
         public string $type,
-        public float $price,
+        public string $price,
         #[MapInputName('currency_uuid')]
         #[WithCast(UuidToEntityCaster::class, Currency::class)]
         public string $currency_id,

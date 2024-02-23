@@ -22,7 +22,7 @@ class UpdateSubscriptionPlanRequest extends Data
         public ?string $name = null,
         public ?string $description = null,
         public ?string $type = null,
-        public ?float $price = null,
+        public ?string $price = null,
         #[MapInputName('currency_uuid')]
         #[WithCast(UuidToEntityCaster::class, Currency::class)]
         public ?string $currency_id = null,

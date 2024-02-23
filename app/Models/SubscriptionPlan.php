@@ -54,6 +54,7 @@ class SubscriptionPlan extends Model
         'price_money_value' => MoneyValue::class,
         'type' => SubscriptionPlanType::class,
         'is_enabled' => 'boolean',
+        'price' => MoneyValue::class,
     ];
 
     protected $appends = [
