@@ -30,6 +30,20 @@ class CompanySubscriptionPlan extends Model
     use SoftDeletes;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'company_id',
+        'subscription_plan_id',
+        'price',
+        'currency_id',
+        'effective_from',
+        'effective_to',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>

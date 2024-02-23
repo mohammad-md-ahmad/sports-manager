@@ -16,6 +16,7 @@ use App\Services\Data\SubscriptionPlan\GetSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\UpdateSubscriptionPlanRequest;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -134,9 +135,11 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
 
             $price = $this->moneyParser->parse($data->decimal_price, $currency->iso_short_code);
 
+            $modelData = array_merge(Arr::except($data->toArray(), ['company', 'decimal_price']), ['price' => $price, 'company_id' => (string) $data->company->id]);
+
             DB::beginTransaction();
 
-            $companySubscriptionPlan = CompanySubscriptionPlan::create(array_merge($data->toArray(), ['price' => $price]));
+            $companySubscriptionPlan = CompanySubscriptionPlan::create($modelData);
 
             DB::commit();
 

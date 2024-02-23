@@ -21,6 +21,8 @@ return new class extends Migration
             $table->dateTime('effective_from');
             $table->dateTime('effective_to');
             $table->unsignedBigInteger('price');
+            $table->smallInteger('currency_id', false, true);
+            $table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
