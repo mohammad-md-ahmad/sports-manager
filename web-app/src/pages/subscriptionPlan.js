@@ -41,7 +41,7 @@ const Page = () => {
     const initialFormDataValues = {
         name: "",
         price: "",
-        currency_id: "",
+        currency_uuid: "",
         description: "",
         type: "",
         is_enabled: false,
@@ -50,7 +50,7 @@ const Page = () => {
     const formDataValidateSchema = yupObject().shape({
         name: string().required('Name is required'),
         price: string().required('Price is required'),
-        currency_id: string().required('Currency is required'),
+        currency_uuid: string().required('Currency is required'),
         description: string().required('Description is required'),
         type: string().required('Type is required'),
     });
@@ -58,7 +58,7 @@ const Page = () => {
     const initialTouched = {
         name: false,
         price: false,
-        currency_id: false,
+        currency_uuid: false,
         description: false,
         type: false,
         is_enabled: false,
@@ -71,6 +71,7 @@ const Page = () => {
         onSubmit: async (values) => {
             try {
                 // Validate the form values using the validation schema
+                console.log(values);
                 await formDataValidateSchema.validate(values, { abortEarly: false });
 
                 // If validation succeeds, you can proceed with your submit logic
@@ -109,10 +110,11 @@ const Page = () => {
             subscriptionPlanService.getPlan(planId).then(async (response) => {
 
                 let planData = { ...response.data.data };
+                planData.is_enabled = planData.is_enabled == 1;
                 formik.setValues(planData);
                 console.log(planData);
                 setSelectedType({ id: planData?.type, label: planData?.type });
-                setSelectedCurrency({ id: planData?.currency_id, label: planData?.currency?.iso_short_code });
+                setSelectedCurrency({ id: planData?.currency_uuid, label: planData?.currency?.iso_short_code });
             }).catch((error) => {
                 // Handle API request errors here
                 console.error(error);
@@ -128,6 +130,7 @@ const Page = () => {
     }
 
     const handleCurrencySelectChange = (field, value) => {
+        console.log(field, value);
         setSelectedCurrency(value);
         formik.setFieldValue(field, value ? value['id'] : null);
     }
@@ -136,7 +139,6 @@ const Page = () => {
         let data = { ...values }
 
         if (planId) {
-            console.log('data', data)
             subscriptionPlanService.update(data).then((response) => {
 
             }).catch((error) => {
@@ -230,15 +232,15 @@ const Page = () => {
                                                 options={currencies}
                                                 value={selectedCurrency}
                                                 getOptionLabel={option => option['label'] ?? ''}
-                                                onChange={(event, value) => handleCurrencySelectChange('currency_id', value)}
+                                                onChange={(event, value) => handleCurrencySelectChange('currency_uuid', value)}
                                                 renderInput={
                                                     params => (
                                                         <TextField
                                                             {...params}
                                                             label="Currency"
                                                             fullWidth
-                                                            error={!!(formik.touched.currency_id && formik.errors.currency_id)}
-                                                            helperText={formik.touched.currency_id && formik.errors.currency_id ? formik.errors.currency_id : ""}
+                                                            error={!!(formik.touched.currency_uuid && formik.errors.currency_uuid)}
+                                                            helperText={formik.touched.currency_uuid && formik.errors.currency_uuid ? formik.errors.currency_uuid : ""}
                                                         />
                                                     )
                                                 }
