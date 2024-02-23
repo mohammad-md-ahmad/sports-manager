@@ -35,12 +35,12 @@ class MiscController extends Controller
                 ];
             });
         $lists['currencies'] = Currency::get()
-        ->map(function ($currency) {
-            return [
-                'uuid' => $currency->uuid,
-                'iso_short_code' => $currency->iso_short_code,
-            ];
-        });
+            ->map(function ($currency) {
+                return [
+                    'uuid' => $currency->uuid,
+                    'iso_short_code' => $currency->iso_short_code,
+                ];
+            });
         $lists['sports'] = Sport::all();
         $lists['user_genders'] = UserGender::toArray();
         $lists['subscription_plan_types'] = SubscriptionPlanType::toArray();
