@@ -110,7 +110,7 @@ const Page = () => {
 
                 let planData = { ...response.data.data };
                 formik.setValues(planData);
-
+                console.log(planData);
                 setSelectedType({ id: planData?.type, label: planData?.type });
                 setSelectedCurrency({ id: planData?.currency_id, label: planData?.currency?.iso_short_code });
             }).catch((error) => {
@@ -134,7 +134,9 @@ const Page = () => {
 
     const submitForm = (values) => {
         let data = { ...values }
+
         if (planId) {
+            console.log('data', data)
             subscriptionPlanService.update(data).then((response) => {
 
             }).catch((error) => {
@@ -224,6 +226,24 @@ const Page = () => {
                                                 helperText={formik.touched.name && formik.errors.name ? formik.errors.name : ""}
                                             />
 
+                                            <Autocomplete
+                                                options={currencies}
+                                                value={selectedCurrency}
+                                                getOptionLabel={option => option['label'] ?? ''}
+                                                onChange={(event, value) => handleCurrencySelectChange('currency_id', value)}
+                                                renderInput={
+                                                    params => (
+                                                        <TextField
+                                                            {...params}
+                                                            label="Currency"
+                                                            fullWidth
+                                                            error={!!(formik.touched.currency_id && formik.errors.currency_id)}
+                                                            helperText={formik.touched.currency_id && formik.errors.currency_id ? formik.errors.currency_id : ""}
+                                                        />
+                                                    )
+                                                }
+                                            />
+
                                             <FormControl component="fieldset">
                                                 <FormGroup>
                                                     <FormControlLabel
@@ -247,11 +267,7 @@ const Page = () => {
                                         md={6}
                                         lg={6}
                                     >
-                                        <Grid
-                                            xs={12}
-                                            md={6}
-                                            lg={6}
-                                        >
+                                        <Stack spacing={3}>
                                             <Autocomplete
                                                 options={types}
                                                 value={selectedType}
@@ -269,7 +285,20 @@ const Page = () => {
                                                     )
                                                 }
                                             />
-                                        </Grid>
+
+                                            <TextField
+                                                fullWidth
+                                                required
+                                                label="Price"
+                                                name="price"
+                                                value={formik.values.price}
+                                                onBlur={formik.handleBlur}
+                                                onChange={formik.handleChange('price')}
+                                                error={!!(formik.touched.price && formik.errors.price)}
+                                                helperText={formik.touched.price && formik.errors.price ? formik.errors.price : ""}
+                                            />
+
+                                        </Stack>
                                     </Grid>
                                     <Grid
                                         xs={12}
@@ -293,18 +322,7 @@ const Page = () => {
                                         spacing={3}
                                     >
                                         <Stack spacing={3}>
-                                            <TextField
-                                                fullWidth
-                                                required
-                                                label="Price"
-                                                name="price"
-                                                multiline
-                                                value={formik.values.price}
-                                                onBlur={formik.handleBlur}
-                                                onChange={formik.handleChange('price')}
-                                                error={!!(formik.touched.price && formik.errors.price)}
-                                                helperText={formik.touched.price && formik.errors.price ? formik.errors.price : ""}
-                                            />
+
 
                                         </Stack>
                                         <Grid
@@ -312,23 +330,7 @@ const Page = () => {
                                             md={6}
                                             lg={6}
                                         >
-                                            <Autocomplete
-                                                options={currencies}
-                                                value={selectedCurrency}
-                                                getOptionLabel={option => option['label'] ?? ''}
-                                                onChange={(event, value) => handleCurrencySelectChange('currency_id', value)}
-                                                renderInput={
-                                                    params => (
-                                                        <TextField
-                                                            {...params}
-                                                            label="Currency"
-                                                            fullWidth
-                                                            error={!!(formik.touched.currency_id && formik.errors.currency_id)}
-                                                            helperText={formik.touched.currency_id && formik.errors.currency_id ? formik.errors.currency_id : ""}
-                                                        />
-                                                    )
-                                                }
-                                            />
+
                                         </Grid>
                                     </Grid>
                                 </Grid>

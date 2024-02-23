@@ -14,7 +14,7 @@ class SubscriptionPlanService extends AxiosService {
     }
 
     async update(data) {
-        return this.put(`/subscription-plans/${uuid}`, data);
+        return this.put(`/subscription-plans/${data.uuid}`, data);
     }
 }
 
