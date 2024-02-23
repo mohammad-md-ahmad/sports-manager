@@ -6,8 +6,10 @@ namespace App\Services;
 
 use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use App\Contracts\Services\SubscriptionPlanServiceInterface;
+use App\Models\CompanySubscriptionPlan;
 use App\Models\Currency;
 use App\Models\SubscriptionPlan;
+use App\Services\Data\SubscriptionPlan\CreateCompanySubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\GetSubscriptionPlanRequest;
@@ -115,6 +117,30 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
             DB::commit();
 
             return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function storeCompanySubscriptionPlan(CreateCompanySubscriptionPlanRequest $data): CompanySubscriptionPlan
+    {
+        try {
+            /** @var Currency $currency */
+            $currency = Currency::findOrFail($data->currency_id);
+
+            $price = $this->moneyParser->parse($data->decimal_price, $currency->iso_short_code);
+
+            DB::beginTransaction();
+
+            $companySubscriptionPlan = CompanySubscriptionPlan::create(array_merge($data->toArray(), ['price' => $price]));
+
+            DB::commit();
+
+            return $companySubscriptionPlan;
         } catch (Exception $exception) {
             DB::rollBack();
 

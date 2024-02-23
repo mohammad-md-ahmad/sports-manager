@@ -91,6 +91,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
                 Route::post('/', [CompanySurveyController::class, 'store'])->name('company-surveys.create');
             });
+
+            Route::prefix('subscription-plans')->group(function () {
+
+                Route::post('/', [SubscriptionPlanController::class, 'storeCompanySubscriptionPlan'])->name('company.subscription-plans.store');
+            });
         });
     });
 

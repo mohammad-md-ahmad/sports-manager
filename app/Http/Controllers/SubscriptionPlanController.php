@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Contracts\Services\SubscriptionPlanServiceInterface;
+use App\Services\Data\SubscriptionPlan\CreateCompanySubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\GetSubscriptionPlanRequest;
@@ -111,6 +112,25 @@ class SubscriptionPlanController extends Controller
 
             return response()->json([
                 'message' => __('Unable to deleted Subscription Plan!'),
+                'errors' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
+    }
+
+    public function storeCompanySubscriptionPlan(CreateCompanySubscriptionPlanRequest $request): JsonResponse
+    {
+        try {
+            $data = $this->subscriptionPlanService->storeCompanySubscriptionPlan($request);
+
+            return response()->json([
+                'message' => __('Company Subscription Plan has been created successfully!'),
+                'data' => $data,
+            ], Response::HTTP_OK);
+        } catch (Exception $exception) {
+            Log::error($exception->getMessage());
+
+            return response()->json([
+                'message' => __('Unable to create Company Subscription Plan!'),
                 'errors' => $exception->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }
