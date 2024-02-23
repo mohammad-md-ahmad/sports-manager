@@ -52,12 +52,12 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
     public function store(CreateSubscriptionPlanRequest $data): SubscriptionPlan
     {
         try {
-            DB::beginTransaction();
-
             /** @var Currency $currency */
             $currency = Currency::findOrFail($data->currency_id);
 
             $price = $this->moneyParser->parse($data->price, $currency->iso_short_code);
+
+            DB::beginTransaction();
 
             $subscriptionPlan = SubscriptionPlan::create(array_merge($data->toArray(), ['price' => $price]));
 
@@ -82,11 +82,11 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
             /** @var Currency $currency */
             $currency = Currency::findOrFail($data->currency_id);
 
-            $data->price = $this->moneyParser->parse($data->price, $currency->iso_short_code);
+            $price = $this->moneyParser->parse($data->price, $currency->iso_short_code);
 
             DB::beginTransaction();
 
-            $subscriptionPlan->update($data->toArray());
+            $subscriptionPlan->update(array_merge($data->toArray(), ['price' => $price]));
 
             DB::commit();
 
