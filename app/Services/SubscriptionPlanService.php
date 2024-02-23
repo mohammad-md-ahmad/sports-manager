@@ -55,7 +55,7 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
             /** @var Currency $currency */
             $currency = Currency::findOrFail($data->currency_id);
 
-            $price = $this->moneyParser->parse($data->price, $currency->iso_short_code);
+            $price = $this->moneyParser->parse($data->decimal_price, $currency->iso_short_code);
 
             DB::beginTransaction();
 
@@ -82,7 +82,7 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
             /** @var Currency $currency */
             $currency = Currency::findOrFail($data->currency_id);
 
-            $price = $this->moneyParser->parse($data->price, $currency->iso_short_code);
+            $price = $this->moneyParser->parse($data->decimal_price, $currency->iso_short_code);
 
             DB::beginTransaction();
 
