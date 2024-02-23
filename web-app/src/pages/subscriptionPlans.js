@@ -43,9 +43,23 @@ const Page = () => {
             field: 'name',
             headerName: 'Name',
             width: 250
-        }, {
-            field: 'price',
+        },
+        {
+            field: 'decimal_price',
             headerName: 'Price',
+            width: 250
+        },
+        {
+            field: null,
+            headerName: 'Currency',
+            width: 250,
+            renderCell: (params) => {
+                return (params.row?.currency?.iso_short_code);
+            }
+        },
+        {
+            field: 'type',
+            headerName: 'Type',
             width: 250
         },
         {
@@ -67,7 +81,7 @@ const Page = () => {
         <>
             <Head>
                 <title>
-                    Subscription Plan | Liber
+                    Subscription Plans | Liber
                 </title>
             </Head>
             <Box
@@ -86,7 +100,7 @@ const Page = () => {
                         >
                             <Stack spacing={1}>
                                 <Typography variant="h4">
-                                    Subscription Plan
+                                    Subscription Plans
                                 </Typography>
                                 <Stack
                                     alignItems="center"
