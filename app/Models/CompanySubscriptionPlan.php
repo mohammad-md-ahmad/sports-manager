@@ -107,8 +107,9 @@ class CompanySubscriptionPlan extends Model
     {
         return Attribute::make(
             get: function () {
-                $now = now(); // Get the current datetime
-                $isWithinEffectiveDates = $now->gte($this->effective_from) && $now->lte($this->effective_to);
+                $now = now()->startOfDay(); // Get current date at start of day
+                $isWithinEffectiveDates = $now->gte($this->effective_from->startOfDay()) && $now->lte($this->effective_to->startOfDay());
+
 
                 $companyId = $this->company_id; // Assuming you have a company_id attribute
                 $lastPlan = CompanySubscriptionPlan::where('company_id', $companyId)
