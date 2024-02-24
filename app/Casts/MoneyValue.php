@@ -62,7 +62,7 @@ class MoneyValue implements CastsAttributes
 
     private function getCurrency($model, $key)
     {
-        if (isset($model->moeny_currency_map) && array_key_exists($key, $model->money_currency_map)) {
+        if (isset($model->money_currency_map) && array_key_exists($key, $model->money_currency_map)) {
             $currency = $model->money_currency_map[$key];
 
             if (! method_exists($model, $currency)) {

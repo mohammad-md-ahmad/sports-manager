@@ -150,4 +150,10 @@ class Company extends Model
     {
         return $this->hasMany(CompanySubscriptionPlan::class);
     }
+
+    public function latestSubscriptionPlan()
+    {
+        return $this->hasOne(CompanySubscriptionPlan::class)
+            ->latest('id');
+    }
 }
