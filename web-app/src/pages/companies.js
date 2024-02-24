@@ -20,8 +20,9 @@ import { DataGrid, GridActionsCellItem, GridToolbar } from '@mui/x-data-grid';
 import { useRouter } from 'next/router';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import DeleteConfirmationDialog from 'src/components/deleteConfirmationDialog';
-import { CompanyStatus } from 'helpers/constants';
+import { CompanyStatus, SubscriptionPlanTypes } from 'helpers/constants';
 import CheckIcon from '@mui/icons-material/Check';
+import CloseIcon from '@mui/icons-material/Close';
 import SelectSubscriptioPlan from 'src/components/selectSubscriptioPlan';
 
 
@@ -187,15 +188,23 @@ const Page = () => {
             field: 'plan',
             type: 'actions',
             headerName: 'Plan',
-            width: 50,
+            width: 150,
             cellClassName: 'actions',
+
             getActions: (params) => {
                 return [
-                    <IconButton color="danger"
-                        key={"company-plan-" + params?.row?.uuid}
-                        onClick={() => handlePlanClick(params?.row)}>
-                        <CheckIcon />
-                    </IconButton>
+                    <Button
+                        color={params?.row?.latest_subscription_plan?.is_active ? "success" : "warning"}
+                        startIcon={(
+                            <SvgIcon fontSize="small">
+                                {params?.row?.latest_subscription_plan?.is_active ? <CheckIcon /> : <CloseIcon />}
+                            </SvgIcon>
+                        )}
+                        variant="contained"
+                        onClick={() => handlePlanClick(params?.row)}
+                    >
+                        {params?.row?.latest_subscription_plan ? params?.row?.latest_subscription_plan?.subscription_plan?.type : SubscriptionPlanTypes.Standard}
+                    </Button>
                 ];
             }
         }, {

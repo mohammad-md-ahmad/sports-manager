@@ -42,21 +42,21 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
 
     const initialFormDataValues = {
         subscription_plan_uuid: "",
-        price: "",
+        decimal_price: "",
         effective_from: "",
         effective_to: "",
     }
 
     const formDataValidateSchema = yupObject().shape({
         subscription_plan_uuid: string().required('Plan is required'),
-        price: string().required('Price is required'),
+        decimal_price: string().required('Price is required'),
         effective_from: string().required('Effective from is required'),
         effective_to: string().required('Effective to is required'),
     });
 
     const initialTouched = {
         subscription_plan_uuid: false,
-        price: false,
+        decimal_price: false,
         effective_from: false,
         effective_to: false,
     }
@@ -64,7 +64,7 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
     useEffect(() => {
         if (open) {
             formik.setFieldValue('subscription_plan_uuid', '');
-            formik.setFieldValue('price', '');
+            formik.setFieldValue('decimal_price', '');
 
             setSelectPlan(null)
         }
@@ -109,17 +109,12 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
         let data = { ...values }
         data['company_uuid'] = company?.uuid;
 
-
-        console.log(data['effective_from']);
-        console.log(data['effective_to']);
-
         if (data['effective_from'])
             data['effective_from'] = format(data['effective_from'], 'yyyy-MM-dd HH:mm:ss')
 
         if (data['effective_to'])
             data['effective_to'] = format(data['effective_to'], 'yyyy-MM-dd HH:mm:ss')
 
-        console.log(data);
         companyService.setSubscriptionPlan(data).then((response) => {
 
         }).catch((error) => {
@@ -136,11 +131,10 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
     const handleSelectChange = (field, value) => {
         setSelectPlan(value);
         formik.setFieldValue(field, value ? value['uuid'] : null);
-        formik.setFieldValue('price', value ? value['decimal_price'] : null);
+        formik.setFieldValue('decimal_price', value ? value['decimal_price'] : null);
     }
 
     const handleDateChange = (field, date) => {
-        console.log(field, date);
         formik.setFieldValue(field, date);
     };
 
@@ -218,13 +212,13 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
                                                 <TextField
                                                     fullWidth
                                                     label="Price"
-                                                    name="price"
+                                                    name="decimal_price"
                                                     required
-                                                    value={formik.values.price}
+                                                    value={formik.values.decimal_price}
                                                     onBlur={formik.handleBlur}
-                                                    onChange={formik.handleChange('price')}
-                                                    error={!!(formik.touched.price && formik.errors.price)}
-                                                    helperText={formik.touched.price && formik.errors.price ? formik.errors.price : ""}
+                                                    onChange={formik.handleChange('decimal_price')}
+                                                    error={!!(formik.touched.decimal_price && formik.errors.decimal_price)}
+                                                    helperText={formik.touched.decimal_price && formik.errors.decimal_price ? formik.errors.decimal_price : ""}
                                                 />
 
                                                 <DatePicker

@@ -24,27 +24,6 @@ export default function Reports(): React.JSX.Element {
 
     const companyCurrentPlan = useSelector(state => state.companyCurrentPlan);
 
-    const checkIfPremiumAndActive = () => {
-        if (!companyCurrentPlan)
-            return false;
-
-        const currentDate = new Date();
-        const effective_from = new Date(companyCurrentPlan.effective_from);
-        const effective_to = new Date(companyCurrentPlan.effective_to);
-
-        if (companyCurrentPlan.subscriptionPlan.type == SubscriptionPlanType.Premium
-            && isDateBetween(currentDate, effective_from, effective_to)) {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    function isDateBetween(currentDate, startDate, endDate) {
-        return currentDate >= startDate && currentDate <= endDate;
-    }
-
     useFocusEffect(
         React.useCallback(() => {
             // This code will execute when the component gains focus (navigated to).
@@ -61,14 +40,14 @@ export default function Reports(): React.JSX.Element {
     return (
         <ScrollView style={styles.scrollView}>
             <SafeAreaView style={styles.container}>
-                {checkIfPremiumAndActive() ?
+                {companyCurrentPlan?.is_active ?
                     <>
                         <DemographicsReport reportsData={reportsData}></DemographicsReport>
                         <RevenuePerYearReport reportsData={reportsData}></RevenuePerYearReport>
                     </> :
                     <>
                         <View style={styles.section}>
-                            <Text style={styles.sectionTitle}>You must have the Premium plan to see the reports</Text>
+                            <Text style={styles.sectionTitle}>You must have an active Premium plan to see the reports</Text>
                         </View>
                     </>
                 }

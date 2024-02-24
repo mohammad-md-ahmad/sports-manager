@@ -30,3 +30,9 @@ export const CompanyFacilityStatus = {
     Disabled: "Disabled"
 
 }
+
+export const SubscriptionPlanTypes = {
+    Premium: "Premium",
+    Standard: "Standard"
+
+}
