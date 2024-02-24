@@ -207,23 +207,6 @@ const Page = () => {
                     </Button>
                 ];
             }
-        }, {
-            field: 'actions',
-            type: 'actions',
-            headerName: 'Actions',
-            width: 140,
-            cellClassName: 'actions',
-            getActions: (params) => {
-                return [
-                    <GridActionsCellItem
-                        key={"company-delete-" + params?.row?.uuid}
-                        icon={<DeleteIcon />}
-                        label="Delete"
-                        onClick={() => handleDeleteClick(params?.row?.uuid)}
-                        color="inherit"
-                    />,
-                ];
-            }
         }
     ];
 
