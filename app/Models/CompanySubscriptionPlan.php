@@ -65,6 +65,11 @@ class CompanySubscriptionPlan extends Model
         return $this->belongsTo(Currency::class);
     }
 
+    public function subscriptionPlan(): BelongsTo
+    {
+        return $this->belongsTo(SubscriptionPlan::class);
+    }
+
     public function priceMoneyValue(): Attribute
     {
         return Attribute::make(

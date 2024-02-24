@@ -143,6 +143,9 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
 
             DB::commit();
 
+            /** @var CompanySubscriptionPlan $companySubscriptionPlan */
+            $companySubscriptionPlan = CompanySubscriptionPlan::with(['currency', 'subscriptionPlan'])->findOrFail($companySubscriptionPlan->id);
+
             return $companySubscriptionPlan;
         } catch (Exception $exception) {
             DB::rollBack();
