@@ -37,7 +37,7 @@ class CompanyService implements CompanyServiceInterface
 {
     use ImageUpload;
 
-    private array $relationships = ['address', 'gallery', 'ratings', 'paymentMethods', 'subscriptionPlans.subscriptionPlan'];
+    private array $relationships = ['address', 'gallery', 'ratings', 'paymentMethods', 'latestSubscriptionPlan.subscriptionPlan'];
 
     public function __construct(
         protected UserServiceInterface $userService,

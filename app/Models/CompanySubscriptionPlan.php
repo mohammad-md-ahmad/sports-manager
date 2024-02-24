@@ -59,6 +59,7 @@ class CompanySubscriptionPlan extends Model
 
     protected $appends = [
         'decimal_price',
+        'is_active',
     ];
 
     protected $money_currency_map = [
@@ -98,6 +99,23 @@ class CompanySubscriptionPlan extends Model
         return Attribute::make(
             get: function () {
                 return app(DecimalMoneyFormatterInterface::class)->format($this->price_money_value);
+            }
+        );
+    }
+
+    public function isActive(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $now = now(); // Get the current datetime
+                $isWithinEffectiveDates = $now->gte($this->effective_from) && $now->lte($this->effective_to);
+
+                $companyId = $this->company_id; // Assuming you have a company_id attribute
+                $lastPlan = CompanySubscriptionPlan::where('company_id', $companyId)
+                    ->latest()
+                    ->first();
+
+                return $isWithinEffectiveDates && $this->id === $lastPlan->id;
             }
         );
     }
