@@ -122,6 +122,7 @@ class SubscriptionPlanController extends Controller
         try {
             $data = $this->subscriptionPlanService->storeCompanySubscriptionPlan($request);
 
+            // dd($data);
             return response()->json([
                 'message' => __('Company Subscription Plan has been created successfully!'),
                 'data' => $data,

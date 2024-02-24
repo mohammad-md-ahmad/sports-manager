@@ -130,10 +130,10 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
     public function storeCompanySubscriptionPlan(CreateCompanySubscriptionPlanRequest $data): CompanySubscriptionPlan
     {
         try {
-            /** @var Currency $currency */
-            $currency = Currency::findOrFail($data->currency_id);
+            /** @var SubscriptionPlan $subscriptionPlan */
+            $subscriptionPlan = SubscriptionPlan::findOrFail($data->subscription_plan_id);
 
-            $price = $this->moneyParser->parse($data->decimal_price, $currency->iso_short_code);
+            $price = $this->moneyParser->parse($data->decimal_price, $subscriptionPlan->currency->iso_short_code);
 
             $modelData = array_merge(Arr::except($data->toArray(), ['company', 'decimal_price']), ['price' => $price, 'company_id' => (string) $data->company->id]);
 
@@ -144,7 +144,7 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
             DB::commit();
 
             /** @var CompanySubscriptionPlan $companySubscriptionPlan */
-            $companySubscriptionPlan = CompanySubscriptionPlan::with(['currency', 'subscriptionPlan'])->findOrFail($companySubscriptionPlan->id);
+            $companySubscriptionPlan = CompanySubscriptionPlan::with(['subscriptionPlan'])->findOrFail($companySubscriptionPlan->id);
 
             return $companySubscriptionPlan;
         } catch (Exception $exception) {

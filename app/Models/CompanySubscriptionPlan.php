@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Money\Money;
+use Staudenmeir\EloquentHasManyDeep\HasRelationships;
 
 /**
  * @property string $id
@@ -27,6 +28,7 @@ class CompanySubscriptionPlan extends Model
     use BindsOnUuid;
     use GeneratesUuid;
     use HasFactory;
+    use HasRelationships;
     use SoftDeletes;
 
     /**
@@ -38,7 +40,6 @@ class CompanySubscriptionPlan extends Model
         'company_id',
         'subscription_plan_id',
         'price',
-        'currency_id',
         'effective_from',
         'effective_to',
     ];
@@ -60,21 +61,34 @@ class CompanySubscriptionPlan extends Model
         'decimal_price',
     ];
 
-    public function currency(): BelongsTo
-    {
-        return $this->belongsTo(Currency::class);
-    }
+    protected $money_currency_map = [
+        'price' => 'currency',
+    ];
 
     public function subscriptionPlan(): BelongsTo
     {
         return $this->belongsTo(SubscriptionPlan::class);
     }
 
+    public function currency()
+    {
+        return $this->subscriptionPlan->currency();
+    }
+
     public function priceMoneyValue(): Attribute
     {
         return Attribute::make(
             get: function () {
-                return Money::{$this->currency->iso_short_code}($this->attributes['price']);
+                $subscriptionPlan = $this->subscriptionPlan()->first(); // Load the subscription plan
+
+                if ($subscriptionPlan) {
+                    $currencyCode = $subscriptionPlan->currency->iso_short_code;
+
+                    return Money::$currencyCode($this->attributes['price']);
+                }
+
+                // Default to USD if subscription plan or currency is not found
+                return Money::USD($this->attributes['price']);
             }
         );
     }
