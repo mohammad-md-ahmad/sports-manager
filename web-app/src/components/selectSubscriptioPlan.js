@@ -28,32 +28,42 @@ import { string, array, object as yupObject } from "yup";
 import { useFormik } from 'formik';
 import SubscriptionPlanService from 'api/SubscriptionPlanService';
 import { useEffect, useRef, useState } from 'react';
+import { DatePicker } from '@mui/x-date-pickers';
+import CompanyService from 'api/CompanyService';
+import { format } from 'date-fns';
 
 const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
 
     const subscriptionPlanService = new SubscriptionPlanService();
+    const companyService = new CompanyService();
     const [plans, setPlans] = useState([]);
 
     const [selectPlan, setSelectPlan] = useState(null);
 
     const initialFormDataValues = {
-        plan_uuid: "",
+        subscription_plan_uuid: "",
         price: "",
+        effective_from: "",
+        effective_to: "",
     }
 
     const formDataValidateSchema = yupObject().shape({
-        plan_uuid: string().required('Plan is required'),
+        subscription_plan_uuid: string().required('Plan is required'),
         price: string().required('Price is required'),
+        effective_from: string().required('Effective from is required'),
+        effective_to: string().required('Effective to is required'),
     });
 
     const initialTouched = {
-        plan_uuid: false,
+        subscription_plan_uuid: false,
         price: false,
+        effective_from: false,
+        effective_to: false,
     }
 
     useEffect(() => {
         if (open) {
-            formik.setFieldValue('plan_uuid', '');
+            formik.setFieldValue('subscription_plan_uuid', '');
             formik.setFieldValue('price', '');
 
             setSelectPlan(null)
@@ -97,9 +107,20 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
 
     const submitForm = (values) => {
         let data = { ...values }
-        data['uuid'] = company?.uuid;
+        data['company_uuid'] = company?.uuid;
 
-        subscriptionPlanService.setSubscriptionPlan(data).then((response) => {
+
+        console.log(data['effective_from']);
+        console.log(data['effective_to']);
+
+        if (data['effective_from'])
+            data['effective_from'] = format(data['effective_from'], 'yyyy-MM-dd HH:mm:ss')
+
+        if (data['effective_to'])
+            data['effective_to'] = format(data['effective_to'], 'yyyy-MM-dd HH:mm:ss')
+
+        console.log(data);
+        companyService.setSubscriptionPlan(data).then((response) => {
 
         }).catch((error) => {
             // Handle API request errors here
@@ -115,25 +136,32 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
     const handleSelectChange = (field, value) => {
         setSelectPlan(value);
         formik.setFieldValue(field, value ? value['uuid'] : null);
-        formik.setFieldValue('price', value ? value['price'] : null);
+        formik.setFieldValue('price', value ? value['decimal_price'] : null);
     }
 
+    const handleDateChange = (field, date) => {
+        console.log(field, date);
+        formik.setFieldValue(field, date);
+    };
+
+
     return (
-        <Dialog open={open} onClose={onClose}>
-            <DialogTitle>Select Subscription Plan for {company?.name}</DialogTitle>
-            <DialogContent>
-                <>
-                    <Box
-                        component="main"
-                        sx={{
-                            flexGrow: 1,
-                            py: 2
-                        }}
-                    >
-                        <form
-                            noValidate
-                            onSubmit={formik.handleSubmit}
+        <form
+            noValidate
+            onSubmit={formik.handleSubmit}
+        >
+            <Dialog open={open} onClose={onClose}>
+                <DialogTitle>Select Subscription Plan for {company?.name}</DialogTitle>
+                <DialogContent>
+                    <>
+                        <Box
+                            component="main"
+                            sx={{
+                                flexGrow: 1,
+                                py: 2
+                            }}
                         >
+
                             <Container maxWidth="xl">
                                 <Stack>
                                     <Grid
@@ -150,7 +178,7 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
                                                     options={plans}
                                                     value={selectPlan}
                                                     getOptionLabel={option => option['name'] ?? ''}
-                                                    onChange={(event, value) => handleSelectChange('plan_uuid', value)}
+                                                    onChange={(event, value) => handleSelectChange('subscription_plan_uuid', value)}
                                                     renderInput={
                                                         params => (
                                                             <TextField
@@ -158,13 +186,25 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
                                                                 {...params}
                                                                 label="Plan"
                                                                 fullWidth
-                                                                error={!!(formik.touched.plan_uuid && formik.errors.plan_uuid)}
-                                                                helperText={formik.touched.plan_uuid && formik.errors.plan_uuid ? formik.errors.plan_uuid : ""}
+                                                                error={!!(formik.touched.subscription_plan_uuid && formik.errors.subscription_plan_uuid)}
+                                                                helperText={formik.touched.subscription_plan_uuid && formik.errors.subscription_plan_uuid ? formik.errors.subscription_plan_uuid : ""}
                                                             />
                                                         )
                                                     }
                                                 ></Autocomplete>
 
+                                                <DatePicker
+                                                    fullWidth
+                                                    required
+                                                    label="Effective From *"
+                                                    name="effective_from"
+                                                    value={formik.values.effective_from}
+                                                    onBlur={formik.handleBlur}
+                                                    onChange={(value) => handleDateChange('effective_from', value)}
+                                                    error={!!(formik.touched.effective_from && formik.errors.effective_from)}
+                                                    helperText={formik.touched.effective_from && formik.errors.effective_from ? formik.errors.effective_from : ""}
+                                                    renderInput={(params) => <TextField required {...params} />}
+                                                />
 
                                             </Stack>
                                         </Grid>
@@ -187,6 +227,19 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
                                                     helperText={formik.touched.price && formik.errors.price ? formik.errors.price : ""}
                                                 />
 
+                                                <DatePicker
+                                                    fullWidth
+                                                    required
+                                                    label="Effective To *"
+                                                    name="effective_to"
+                                                    value={formik.values.effective_to}
+                                                    onBlur={formik.handleBlur}
+                                                    onChange={(value) => handleDateChange('effective_to', value)}
+                                                    error={!!(formik.touched.effective_to && formik.errors.effective_to)}
+                                                    helperText={formik.touched.effective_to && formik.errors.effective_to ? formik.errors.effective_to : ""}
+                                                    renderInput={(params) => <TextField required {...params} />}
+                                                />
+
                                             </Stack>
 
                                         </Grid>
@@ -200,19 +253,20 @@ const SelectSubscriptioPlan = ({ open, onClose, onConfirm, company }) => {
                                     </Grid>
                                 </Stack>
                             </Container>
-                        </form>
-                    </Box >
-                </>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose} color="primary">
-                    Cancel
-                </Button>
-                <Button type='submit' color="secondary">
-                    Submit
-                </Button>
-            </DialogActions>
-        </Dialog>
+
+                        </Box >
+                    </>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={onClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button type='submit' color="secondary" onClick={formik.handleSubmit}>
+                        Submit
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </form>
     );
 };
 

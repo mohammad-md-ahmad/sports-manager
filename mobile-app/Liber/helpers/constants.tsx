@@ -56,6 +56,7 @@ export enum Screens {
     SurviesList = "SurviesList",
     SurveyForm = "SurveyForm",
     SurveyFillForm = "SurveyFillForm",
+    Plan = "Plan",
 }
 
 export enum SlotStatus {
@@ -83,7 +84,9 @@ export enum GlobaSateKey {
     SetSports = "SET_SPORTS",
     SetUserGenders = "SET_USER_GENDERS",
     SetReportNames = "SET_REPORT_NAMES",
-    ResetStore = "ResetStore"
+    ResetStore = "ResetStore",
+    SetCompanyPlans = "SET_COMPANY_PLANS",
+    SetCompanyCurrentPlan = "SET_COMPANY_CURRENT_PLAN"
 }
 
 export enum ReportNames {
@@ -138,4 +141,9 @@ export enum NotificationStatus {
 export enum DashboardCardType {
     Company = 'Company',
     Ad = 'Ad'
+}
+
+export enum SubscriptionPlanType {
+    Standard = 'Standard',
+    Premium = 'Premium'
 }

@@ -4,6 +4,7 @@ import {
     SafeAreaView,
     ScrollView,
     StyleSheet,
+    Text,
 } from "react-native";
 import globalStyles from "../../styles/styles";
 import colors from "../../styles/colors";
@@ -11,12 +12,38 @@ import DemographicsReport from "./demographicsReport";
 import RevenuePerYearReport from "./revenuePerYearReport";
 import { useFocusEffect } from "@react-navigation/native";
 import ReportsService from "../../api/ReportsService";
-import { ReportNames } from "../../helpers/constants";
+import { ReportNames, SubscriptionPlanType } from "../../helpers/constants";
+import { useSelector } from "react-redux";
+import fonts from "../../styles/fonts";
+import { View } from "react-native";
 
 export default function Reports(): React.JSX.Element {
     const reportsService = new ReportsService();
 
     const [reportsData, setReportsData] = useState(null);
+
+    const companyCurrentPlan = useSelector(state => state.companyCurrentPlan);
+
+    const checkIfPremiumAndActive = () => {
+        if (!companyCurrentPlan)
+            return false;
+
+        const currentDate = new Date();
+        const effective_from = new Date(companyCurrentPlan.effective_from);
+        const effective_to = new Date(companyCurrentPlan.effective_to);
+
+        if (companyCurrentPlan.subscriptionPlan.type == SubscriptionPlanType.Premium
+            && isDateBetween(currentDate, effective_from, effective_to)) {
+            return true;
+        }
+
+        return false;
+    }
+
+
+    function isDateBetween(currentDate, startDate, endDate) {
+        return currentDate >= startDate && currentDate <= endDate;
+    }
 
     useFocusEffect(
         React.useCallback(() => {
@@ -34,8 +61,18 @@ export default function Reports(): React.JSX.Element {
     return (
         <ScrollView style={styles.scrollView}>
             <SafeAreaView style={styles.container}>
-                <DemographicsReport reportsData={reportsData}></DemographicsReport>
-                <RevenuePerYearReport reportsData={reportsData}></RevenuePerYearReport>
+                {checkIfPremiumAndActive() ?
+                    <>
+                        <DemographicsReport reportsData={reportsData}></DemographicsReport>
+                        <RevenuePerYearReport reportsData={reportsData}></RevenuePerYearReport>
+                    </> :
+                    <>
+                        <View style={styles.section}>
+                            <Text style={styles.sectionTitle}>You must have the Premium plan to see the reports</Text>
+                        </View>
+                    </>
+                }
+
             </SafeAreaView >
         </ScrollView>
     );
@@ -55,5 +92,15 @@ const styles = StyleSheet.create({
         marginHorizontal: 15,
         marginTop: 7,
         marginBottom: 7
+    },
+    section: {
+        ...globalStyles.text,
+        fontFamily: fonts.Poppins.regular,
+        marginTop: 20,
+    },
+    sectionTitle: {
+        ...globalStyles.text,
+        fontFamily: fonts.Poppins.bold,
+        color: colors.PrimaryBlue,
     },
 })

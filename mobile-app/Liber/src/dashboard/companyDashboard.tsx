@@ -50,7 +50,6 @@ export default function CompanyDashboard(): React.JSX.Element {
                 else {
                     companyService.list({}).then((companiesRespones) => {
                         companiesData = companiesRespones.data?.data?.data;
-
                         buildCombinedData(companiesData, adsData);
                         dispatch({ type: GlobaSateKey.SetCompaniesList, payload: companiesRespones.data?.data?.data });
                     }).catch((error) => {
@@ -60,6 +59,14 @@ export default function CompanyDashboard(): React.JSX.Element {
             })
             .catch((error) => {
             });
+
+        companyService.getCompany().then((company) => {
+            let compnayPlans = company.data?.data?.subscription_plans ?? [];
+            dispatch({ type: GlobaSateKey.SetCompanyPlans, payload: compnayPlans });
+            if (compnayPlans.length > 0)
+                dispatch({ type: GlobaSateKey.SetCompanyCurrentPlan, payload: compnayPlans[compnayPlans.length - 1] });
+        }).catch((error) => {
+        })
     }
 
     const buildCombinedData = (companiesData, adsData) => {
@@ -68,7 +75,7 @@ export default function CompanyDashboard(): React.JSX.Element {
         for (let i = 0; i < companiesData.length; i++) {
             if (i % 3 == 0 && i != 0) {
                 if (adsData[adsCounter]) {
-                    adsData[i].cardType = DashboardCardType.Ad;
+                    adsData[adsCounter].cardType = DashboardCardType.Ad;
                     combinedArray.push(adsData[adsCounter]);
                     adsCounter++;
                 }
@@ -76,6 +83,7 @@ export default function CompanyDashboard(): React.JSX.Element {
             companiesData[i].cardType = DashboardCardType.Company;
             combinedArray.push(companiesData[i]);
         }
+
         setCombinedData(combinedArray);
     }
 

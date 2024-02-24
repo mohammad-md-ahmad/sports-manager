@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import CompanyPhotos from './companyPhotos';
 import RatingRowWithNumber from '../common/ratingRowWithNumber';
 import CompanySurveyService from '../../api/CompanySurveyService';
+import CompanyPlan from './companyPlan';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -81,6 +82,7 @@ export default function CompanyProfile() {
                 {/* <Tab.Screen name={Screens.Facilities} options={{ title: 'Booking' }} component={Facilities} />
                 <Tab.Screen name={Screens.Calendar} options={{ title: 'Calendar' }} component={AgendaScreen} /> */}
                 <Tab.Screen name={Screens.Ratings} options={{ title: 'Rating' }} component={Rating} />
+                <Tab.Screen name={Screens.Plan} options={{ title: 'Plan' }} component={CompanyPlan} />
             </Tab.Navigator>
         </>
     );

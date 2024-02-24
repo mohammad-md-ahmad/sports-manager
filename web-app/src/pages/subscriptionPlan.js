@@ -28,7 +28,6 @@ import { string, array, object as yupObject } from "yup";
 import { useFormik } from 'formik';
 import SubscriptionPlanService from 'api/SubscriptionPlanService';
 import { useEffect, useRef, useState } from 'react';
-import { imageUrlToBase64 } from 'helpers/functions';
 import MiscService from 'api/MiscService';
 
 const Page = () => {
@@ -40,7 +39,7 @@ const Page = () => {
 
     const initialFormDataValues = {
         name: "",
-        price: "",
+        decimal_price: "",
         currency_uuid: "",
         description: "",
         type: "",
@@ -49,7 +48,7 @@ const Page = () => {
 
     const formDataValidateSchema = yupObject().shape({
         name: string().required('Name is required'),
-        price: string().required('Price is required'),
+        decimal_price: string().required('Price is required'),
         currency_uuid: string().required('Currency is required'),
         description: string().required('Description is required'),
         type: string().required('Type is required'),
@@ -57,7 +56,7 @@ const Page = () => {
 
     const initialTouched = {
         name: false,
-        price: false,
+        decimal_price: false,
         currency_uuid: false,
         description: false,
         type: false,
@@ -111,8 +110,9 @@ const Page = () => {
 
                 let planData = { ...response.data.data };
                 planData.is_enabled = planData.is_enabled == 1;
+                planData.currency_uuid = planData.currency?.uuid;
                 formik.setValues(planData);
-                console.log(planData);
+                console.log('planData', planData);
                 setSelectedType({ id: planData?.type, label: planData?.type });
                 setSelectedCurrency({ id: planData?.currency_uuid, label: planData?.currency?.iso_short_code });
             }).catch((error) => {
@@ -130,7 +130,6 @@ const Page = () => {
     }
 
     const handleCurrencySelectChange = (field, value) => {
-        console.log(field, value);
         setSelectedCurrency(value);
         formik.setFieldValue(field, value ? value['id'] : null);
     }
@@ -292,12 +291,12 @@ const Page = () => {
                                                 fullWidth
                                                 required
                                                 label="Price"
-                                                name="price"
-                                                value={formik.values.price}
+                                                name="decimal_price"
+                                                value={formik.values.decimal_price}
                                                 onBlur={formik.handleBlur}
-                                                onChange={formik.handleChange('price')}
-                                                error={!!(formik.touched.price && formik.errors.price)}
-                                                helperText={formik.touched.price && formik.errors.price ? formik.errors.price : ""}
+                                                onChange={formik.handleChange('decimal_price')}
+                                                error={!!(formik.touched.decimal_price && formik.errors.decimal_price)}
+                                                helperText={formik.touched.decimal_price && formik.errors.decimal_price ? formik.errors.decimal_price : ""}
                                             />
 
                                         </Stack>

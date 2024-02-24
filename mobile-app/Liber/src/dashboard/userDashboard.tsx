@@ -45,6 +45,8 @@ export default function CompanyDashboard(): React.JSX.Element {
 
                 if (companiesList) {
                     companiesData = companiesRespones.data?.data?.data;
+
+                    console.log(companiesData);
                     buildCombinedData(companiesData, adsData);
                 }
                 else {
@@ -68,7 +70,7 @@ export default function CompanyDashboard(): React.JSX.Element {
         for (let i = 0; i < companiesData.length; i++) {
             if (i % 3 == 0 && i != 0) {
                 if (adsData[adsCounter]) {
-                    adsData[i].cardType = DashboardCardType.Ad;
+                    adsData[adsCounter].cardType = DashboardCardType.Ad;
                     combinedArray.push(adsData[adsCounter]);
                     adsCounter++;
                 }
@@ -76,6 +78,8 @@ export default function CompanyDashboard(): React.JSX.Element {
             companiesData[i].cardType = DashboardCardType.Company;
             combinedArray.push(companiesData[i]);
         }
+
+        console.log(combinedArray);
         setCombinedData(combinedArray);
     }
 

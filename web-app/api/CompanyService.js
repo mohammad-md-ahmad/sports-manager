@@ -26,7 +26,7 @@ class CompanyService extends AxiosService {
     }
 
     setSubscriptionPlan(data) {
-        return this.put('/companies/subscription-plan/' + data.uuid, data);
+        return this.post(`companies/${data.company_uuid}/subscription-plans/`, data);
     }
 }
 
