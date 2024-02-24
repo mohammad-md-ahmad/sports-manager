@@ -145,4 +145,9 @@ class Company extends Model
     {
         return $this->morphMany(EntityPaymentMethod::class, 'entity');
     }
+
+    public function subscriptionPlans(): HasMany
+    {
+        return $this->hasMany(CompanySubscriptionPlan::class);
+    }
 }

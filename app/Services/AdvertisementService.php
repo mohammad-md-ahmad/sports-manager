@@ -28,7 +28,7 @@ class AdvertisementService implements AdvertisementServiceInterface
     public function getAll(GetAllAdvertisementsRequest $data): LengthAwarePaginator
     {
         try {
-            $advertisements = Advertisement::query()->jsonPaginate();
+            $advertisements = Advertisement::query()->with(['gallery'])->jsonPaginate();
 
             return $advertisements;
         } catch (Exception $exception) {

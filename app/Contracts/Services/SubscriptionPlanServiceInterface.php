@@ -2,7 +2,9 @@
 
 namespace App\Contracts\Services;
 
+use App\Models\CompanySubscriptionPlan;
 use App\Models\SubscriptionPlan;
+use App\Services\Data\SubscriptionPlan\CreateCompanySubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\GetSubscriptionPlanRequest;
@@ -20,4 +22,6 @@ interface SubscriptionPlanServiceInterface
     public function update(UpdateSubscriptionPlanRequest $data): SubscriptionPlan;
 
     public function delete(DeleteSubscriptionPlanRequest $data): bool;
+
+    public function storeCompanySubscriptionPlan(CreateCompanySubscriptionPlanRequest $data): CompanySubscriptionPlan;
 }

@@ -6,14 +6,17 @@ namespace App\Services;
 
 use App\Contracts\Parsers\Money\DecimalMoneyParserInterface;
 use App\Contracts\Services\SubscriptionPlanServiceInterface;
+use App\Models\CompanySubscriptionPlan;
 use App\Models\Currency;
 use App\Models\SubscriptionPlan;
+use App\Services\Data\SubscriptionPlan\CreateCompanySubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\CreateSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\DeleteSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\GetSubscriptionPlanRequest;
 use App\Services\Data\SubscriptionPlan\UpdateSubscriptionPlanRequest;
 use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -115,6 +118,35 @@ class SubscriptionPlanService implements SubscriptionPlanServiceInterface
             DB::commit();
 
             return true;
+        } catch (Exception $exception) {
+            DB::rollBack();
+
+            Log::error($exception->getMessage());
+
+            throw $exception;
+        }
+    }
+
+    public function storeCompanySubscriptionPlan(CreateCompanySubscriptionPlanRequest $data): CompanySubscriptionPlan
+    {
+        try {
+            /** @var Currency $currency */
+            $currency = Currency::findOrFail($data->currency_id);
+
+            $price = $this->moneyParser->parse($data->decimal_price, $currency->iso_short_code);
+
+            $modelData = array_merge(Arr::except($data->toArray(), ['company', 'decimal_price']), ['price' => $price, 'company_id' => (string) $data->company->id]);
+
+            DB::beginTransaction();
+
+            $companySubscriptionPlan = CompanySubscriptionPlan::create($modelData);
+
+            DB::commit();
+
+            /** @var CompanySubscriptionPlan $companySubscriptionPlan */
+            $companySubscriptionPlan = CompanySubscriptionPlan::with(['currency', 'subscriptionPlan'])->findOrFail($companySubscriptionPlan->id);
+
+            return $companySubscriptionPlan;
         } catch (Exception $exception) {
             DB::rollBack();
 
