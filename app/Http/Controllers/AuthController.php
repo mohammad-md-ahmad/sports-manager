@@ -44,14 +44,14 @@ class AuthController extends Controller
 
             if ($user->type != UserType::ADMIN && $request->is('web-api/*')) {
                 // Invalidate user's token and throw an authorization exception
-                Auth::user()->tokens()->delete();
+//                Auth::user()->tokens()->delete();
                 throw new AuthorizationException(__('You are not authorized to access this resource.'));
             }
 
             if ($user->type == UserType::COMPANY_USER) {
                 $userCompany = $user->company();
 
-                Auth::user()->tokens()->delete();
+//                Auth::user()->tokens()->delete();
 
                 if ($userCompany && $userCompany->status->isDisabled()) {
                     throw new AuthorizationException(__('You have no access for this resource or your account had been disabled.'));
