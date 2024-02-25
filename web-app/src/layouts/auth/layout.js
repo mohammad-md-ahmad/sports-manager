@@ -97,7 +97,7 @@ export const Layout = (props) => {
             </Typography>
             <img
               alt=""
-              src={`${process.env.BASE_PATH}"/assets/auth-illustration.svg"}
+              src={`${process.env.BASE_PATH}/assets/auth-illustration.svg`}
             />
           </Box>
         </Grid>
