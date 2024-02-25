@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import {
     Linking,
+    ScrollView,
     StyleSheet,
     Text,
     TouchableOpacity,
@@ -12,12 +13,41 @@ import AppInfoService from "../../api/AppInfoService";
 import colors from "../../styles/colors";
 import fonts from "../../styles/fonts";
 import Icon from 'react-native-vector-icons/FontAwesome'; // You can use another icon library
+import SubscriptionPlanService from "../../api/SubscriptionPlanService";
+import { useSelector } from "react-redux";
+import { UserType } from "../../helpers/constants";
 
 export default function About(): React.JSX.Element {
 
     const appInfoService = new AppInfoService();
+    const subscriptionPlanService = new SubscriptionPlanService();
+    const user = useSelector(state => state.authUserData);
 
     const [appInfo, setAppInfo] = useState([]);
+    const [subscriptionPlans, setSubscriptionPlans] = useState([]);
+
+    const getPlans = () => {
+        let plans = subscriptionPlans.map((item) => (
+            <View style={styles.cardContainer}>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Name:</Text>
+                    <Text style={styles.value}>{item.name}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Type:</Text>
+                    <Text style={styles.value}>{item.type}</Text>
+                </View>
+                <View style={styles.row}>
+                    <Text style={styles.label}>Price:</Text>
+                    <Text style={styles.value}> {item.decimal_price} {item.currency.iso_short_code}</Text>
+                </View>
+                <Text style={styles.description}>{item.description}</Text>
+                {/* Add more details or styling as needed */}
+            </View>));
+
+        return plans;
+    }
+
     useEffect(() => {
         appInfoService.getAllInfo()
             .then((response) => {
@@ -29,6 +59,13 @@ export default function About(): React.JSX.Element {
                 }, {});
                 console.log('resultObject', resultObject)
                 setAppInfo(resultObject);
+
+                subscriptionPlanService.list()
+                    .then((subscriptionResponse) => {
+                        setSubscriptionPlans(subscriptionResponse?.data?.data?.data);
+                    }).catch((error) => {
+                    });
+
             }).catch((error) => {
             });
 
@@ -86,11 +123,27 @@ export default function About(): React.JSX.Element {
                     Click to open Email
                 </Text>
             </TouchableOpacity>
+
+            {(subscriptionPlans.length > 0 && user.type == UserType.CompanyUser) &&
+                <ScrollView>
+                    {getPlans()}
+                </ScrollView>
+            }
         </View>
     );
 };
 
 const styles = StyleSheet.create({
+    cardContainer: {
+        backgroundColor: 'white',
+        borderRadius: 8,
+        padding: 10,
+        marginTop: 7,
+        marginBottom: 7,
+        borderWidth: 1,
+        borderColor: '#ddd',
+        marginHorizontal: 10,
+    },
     container: {
         flex: 1,
         padding: 20,
@@ -134,5 +187,28 @@ const styles = StyleSheet.create({
         fontFamily: fonts.Poppins.regular,
         marginBottom: 5,
         color: colors.PrimaryBlue,
-    }
+    },
+    label: {
+        ...globalStyles.text,
+        fontSize: 18,
+        fontFamily: fonts.Poppins.bold,
+        color: colors.PrimaryBlue,
+        width: 100,
+    },
+    value: {
+        ...globalStyles.text,
+        fontSize: 18,
+        fontFamily: fonts.Poppins.regular,
+        color: colors.PrimaryBlue
+    },
+    description: {
+        ...globalStyles.text,
+        marginTop: 10,
+        fontSize: 19,
+        fontFamily: fonts.Poppins.medium,
+        color: colors.PrimaryBlue
+    },
+    row: {
+        flexDirection: 'row',
+    },
 });
