@@ -17,6 +17,7 @@ use App\Http\Controllers\RatingController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SportController;
+use App\Http\Controllers\SubscriptionPlanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,6 +54,11 @@ Route::prefix('advertisements')->group(function () {
 
 Route::prefix('sports')->group(function () {
     Route::get('/all', [SportController::class, 'getAll'])->name('sports.get-all');
+});
+
+Route::prefix('subscription-plans')->group(function () {
+
+    Route::get('/', [SubscriptionPlanController::class, 'getAll'])->name('subscription-plans.get-all');
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
