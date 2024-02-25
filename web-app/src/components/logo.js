@@ -7,7 +7,7 @@ export const Logo = () => {
   return (
     <img
       alt=""
-      src="/assets/logos/logo-liber-name.png"
+      src={`${process.env.BASE_PATH}/assets/logos/logo-liber-name.png`}
     />
   );
 };
