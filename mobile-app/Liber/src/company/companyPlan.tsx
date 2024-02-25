@@ -20,10 +20,11 @@ export default function CompanyPlan(): React.JSX.Element {
 
     return (
         <View style={styles.containerView}>
-            <Text style={styles.description}>{companyCurrentPlan?.name}</Text>
-            <Text style={styles.description}>{companyCurrentPlan?.type}</Text>
-            <Text style={styles.description}>{companyCurrentPlan?.effective_from}</Text>
-            <Text style={styles.description}>{companyCurrentPlan?.effective_to}</Text>
+            <Text style={styles.description}>Plan Name : {companyCurrentPlan?.subscription_plan?.name}</Text>
+            <Text style={styles.description}>Plan Type : {companyCurrentPlan?.subscription_plan?.type}</Text>
+            <Text style={styles.description}>Is Active : {companyCurrentPlan?.is_active ? 'Yes' : 'No'}</Text>
+            <Text style={styles.description}>Effective From : {companyCurrentPlan?.effective_from ? companyCurrentPlan?.effective_from.split(' ')[0] : ''}</Text>
+            <Text style={styles.description}>Effective To : {companyCurrentPlan?.effective_to ? companyCurrentPlan?.effective_to.split(' ')[0] : ''}</Text>
         </View>
     );
 }

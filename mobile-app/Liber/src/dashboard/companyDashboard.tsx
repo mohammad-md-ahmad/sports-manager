@@ -61,10 +61,8 @@ export default function CompanyDashboard(): React.JSX.Element {
             });
 
         companyService.getCompany().then((company) => {
-            let compnayPlans = company.data?.data?.subscription_plans ?? [];
-            dispatch({ type: GlobaSateKey.SetCompanyPlans, payload: compnayPlans });
-            if (compnayPlans.length > 0)
-                dispatch({ type: GlobaSateKey.SetCompanyCurrentPlan, payload: compnayPlans[compnayPlans.length - 1] });
+            if (company.data?.data?.latest_subscription_plan)
+                dispatch({ type: GlobaSateKey.SetCompanyCurrentPlan, payload: company.data?.data?.latest_subscription_plan });
         }).catch((error) => {
         })
     }

@@ -275,6 +275,25 @@ const Page = () => {
     setValue(newValue);
   };
 
+
+  const getPlanName = () => {
+    let latestPlan = formik?.values?.latest_subscription_plan;
+    if (latestPlan) {
+      return latestPlan.subscription_plan?.type;
+    }
+
+    return '';
+  }
+
+  const getPlanDates = () => {
+    let latestPlan = formik?.values?.latest_subscription_plan;
+    if (latestPlan) {
+      return latestPlan.effective_from.split(' ')[0] + ' - ' + latestPlan.effective_to.split(' ')[0];
+    }
+
+    return '';
+  }
+
   return (
     <>
       <Head>
@@ -359,6 +378,18 @@ const Page = () => {
                                 width: 120
                               }}
                             />
+                            <Typography
+                              gutterBottom
+                              variant="h5"
+                            >
+                              {getPlanName()}
+                            </Typography>
+                            <Typography
+                              color="text.secondary"
+                              variant="body2"
+                            >
+                              {getPlanDates()}
+                            </Typography>
                           </Box>
                         </CardContent>
                         <Divider />
