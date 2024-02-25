@@ -191,9 +191,10 @@ const Page = () => {
             width: 150,
             cellClassName: 'actions',
 
-            getActions: (params) => {
+            getActions: (params, index) => {
                 return [
                     <Button
+                      key={"companies-actions-btn-" + index}
                         color={params?.row?.latest_subscription_plan?.is_active ? "success" : "warning"}
                         startIcon={(
                             <SvgIcon fontSize="small">
