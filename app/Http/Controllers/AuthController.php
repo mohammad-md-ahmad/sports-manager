@@ -19,7 +19,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    public function login(LoginRequest $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
         try {
             //forget all session attributes other than the CSRF token
@@ -30,15 +30,28 @@ class AuthController extends Controller
 
             Session::forget($forgetAttributes);
 
-            if (! Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
+            $loginDTO = LoginRequest::from([
+                'username' => $request->get('username'),
+                'password' => $request->get('password'),
+            ]);
+
+            if (! Auth::attempt(['username' => $loginDTO->username, 'password' => $loginDTO->password])) {
                 throw new AuthenticationException(__('Username or Password are incorrect!'));
             }
 
             /** @var User $user */
             $user = Auth::user();
 
+            if ($user->type != UserType::ADMIN && $request->is('web-api/*')) {
+                // Invalidate user's token and throw an authorization exception
+                Auth::user()->tokens()->delete();
+                throw new AuthorizationException(__('You are not authorized to access this resource.'));
+            }
+
             if ($user->type == UserType::COMPANY_USER) {
                 $userCompany = $user->company();
+
+                Auth::user()->tokens()->delete();
 
                 if ($userCompany && $userCompany->status->isDisabled()) {
                     throw new AuthorizationException(__('You have no access for this resource or your account had been disabled.'));
