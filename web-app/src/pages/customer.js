@@ -152,7 +152,7 @@ const Page = () => {
       setGenders(outputArray);
 
       if (customerId) {
-        userService.getCustomer(customerId).then(async (response) => {
+        userService.getUser(customerId).then(async (response) => {
 
           let customerData = { ...response.data.data };
           customerData['createAddressRequest'] = customerData['address'];
