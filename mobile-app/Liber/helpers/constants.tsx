@@ -1,9 +1,9 @@
 import { API_URL, ASSETS_URL, IMAGES_URL } from '@env';
 
 const Constants = {
-    apiUrl: API_URL ?? 'https://liber.quad-bh.com/api',
-    assetsUrl: ASSETS_URL ?? 'https://liber.quad-bh.com/storage',
-    imagesUrl: IMAGES_URL ?? 'https://liber.quad-bh.com/files/images',
+    apiUrl: 'https://liber.quad-bh.com/api',
+    assetsUrl: 'https://liber.quad-bh.com/storage',
+    imagesUrl: 'https://liber.quad-bh.com/files/images',
     tokenKey: 'auth_token',
     userDataKey: 'user_data',
     companyDataKey: 'company_data',
